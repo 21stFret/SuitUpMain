@@ -12,7 +12,7 @@ public class PlayerSavedData : MonoBehaviour
     public WeaponData[] _altWeaponData;
     public int _playerCash;
     public int _killCount;
-    public int _highScore;
+    public int _waveScore;
     public Vector2 playerLoadout;
 
     private void Awake()
@@ -51,10 +51,10 @@ public class PlayerSavedData : MonoBehaviour
     public void UpdateKillCount(int count)
     {
         _killCount += count;
-        if (_killCount > _highScore)
+        if (_killCount > _waveScore)
         {
-            _highScore = _killCount;
-            PlayerPrefs.SetInt("HighScore", _highScore);
+            _waveScore = _killCount;
+            PlayerPrefs.SetInt("HighScore", _waveScore);
         }
     }
 
@@ -90,15 +90,15 @@ public class PlayerSavedData : MonoBehaviour
         _playerLevel = 0;
         _playerCash = 0;
         _killCount = 0;
-        _highScore = 0;
+        _waveScore = 0;
         CreateWeaponData();
-        playerLoadout = new Vector2(0, 0);
+        playerLoadout = new Vector2(-1, -1);
         SavePlayerData();
     }
 
     public void CreateWeaponData()
     {
-        _mainWeaponData = new WeaponData[1];
+        _mainWeaponData = new WeaponData[2];
         for (int i = 0; i < _mainWeaponData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
@@ -135,7 +135,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.playerLevel = _playerLevel;
         saveData.playerCash = _playerCash;
         saveData.killCount = _killCount;
-        saveData.highScore = _highScore;
+        saveData.highScore = _waveScore;
         saveData.mainWeaponData = _mainWeaponData;
         saveData.altWeaponData = _altWeaponData;
         saveData.playerLoadout = playerLoadout;
@@ -166,7 +166,7 @@ public class PlayerSavedData : MonoBehaviour
             _playerLevel = saveData.playerLevel;
             _playerCash = saveData.playerCash;
             _killCount = saveData.killCount;
-            _highScore = saveData.highScore;
+            _waveScore = saveData.highScore;
             _mainWeaponData = saveData.mainWeaponData;
             _altWeaponData = saveData.altWeaponData;
             playerLoadout = saveData.playerLoadout;
@@ -176,6 +176,7 @@ public class PlayerSavedData : MonoBehaviour
         else
         {
             print("No data found to load");
+            ResetAllData();
         }
     }
 }

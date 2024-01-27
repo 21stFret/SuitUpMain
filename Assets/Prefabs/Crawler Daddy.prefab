@@ -44628,10 +44628,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.95
-  m_Height: 4.64
-  m_Direction: 2
-  m_Center: {x: 1.5510515e-10, y: 0.9699999, z: 0.12590301}
+  m_Radius: 1.27
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &3861124043722804793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44662,6 +44662,7 @@ MonoBehaviour:
   stunned: 0
   IgnorelayerMask: 2
   ShootlayerMask: 8
+  immune: 0
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 5
   explosionRadius: 6

@@ -10015,15 +10015,22 @@ MonoBehaviour:
     unlocked: 0
     level: 0
     exp: 0
-  _damage: 010000000200000003000000
-  _fireRate:
-  - 0.8
-  - 0.5
-  - 0.1
-  _range:
-  - 0.8
-  - 0.5
-  - 0.1
+  baseWeaponInfo:
+    _damage: 010000000200000003000000
+    _fireRate:
+    - 0.2
+    - 0.2
+    - 0.2
+    _range:
+    - 1
+    - 1
+    - 1
+  weaponEffects:
+    weaponAudioSource: {fileID: 3573105458296607397}
+    weaponClose: {fileID: 8300000, guid: d9eac4dfc29abe64faa49306ee4b4205, type: 3}
+    weaponLoop: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
+    weaponEffect: {fileID: 1946771559557481415}
+    weaponLights: {fileID: 876022053645517812}
   damage: 324207744
   fireRate: 0
   range: 0
@@ -10031,17 +10038,12 @@ MonoBehaviour:
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
-  weaponAudioSource: {fileID: 3573105458296607397}
-  weaponClose: {fileID: 8300000, guid: d9eac4dfc29abe64faa49306ee4b4205, type: 3}
-  weaponLoop: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
-  weaponEffect: {fileID: 1946771559557481415}
-  weaponLights: {fileID: 876022053645517812}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
-  weaponRechargeRate: 0
-  weaponUseRate: 0
-  fuelSprite: {fileID: 0}
+  weaponRechargeRate: 0.5
+  weaponFuelUseRate: 1.5
+  fuelSprite: {fileID: 21300000, guid: 881be348f1894fc458cd8b4a0728e41a, type: 3}
   flameTrigger: {fileID: 7967985738750339073}
 --- !u!1 &7266232509237295231
 GameObject:

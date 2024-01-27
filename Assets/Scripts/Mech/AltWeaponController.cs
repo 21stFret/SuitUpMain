@@ -16,18 +16,10 @@ public class AltWeaponController : MonoBehaviour
 
     public bool isAiming;
 
-    public bool addInputs;
-
     public void Init(MechWeapon mechWeapon)
     {
         equipedWeapon = mechWeapon;
         ResetAim();
-        equipedWeapon.Init();
-        if (!addInputs)
-        {
-            return;
-        }
-
         SetWeaponInputs();
     }
 
@@ -37,6 +29,12 @@ public class AltWeaponController : MonoBehaviour
         FireInputAction = gameplayActionMap.FindAction("Fire");
         FireInputAction.performed += GetFireInput;
         FireInputAction.canceled += FireRelease;
+    }
+
+    public void ClearWeaponInputs()
+    {
+        FireInputAction.performed -= GetFireInput;
+        FireInputAction.canceled -= FireRelease;
     }
 
     private void GetFireInput(InputAction.CallbackContext context)
@@ -50,13 +48,11 @@ public class AltWeaponController : MonoBehaviour
     }
     public void Fire()
     {
-        equipedWeapon.isFiring = true;
         equipedWeapon.Fire();
     }
 
     public void Stop()
     {
-        equipedWeapon.isFiring = false;
         equipedWeapon.Stop();
     }
 

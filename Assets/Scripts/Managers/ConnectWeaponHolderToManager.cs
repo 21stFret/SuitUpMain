@@ -7,7 +7,7 @@ public class ConnectWeaponHolderToManager : MonoBehaviour
     public MechWeapon[] mainWeapons;
     public MechWeapon[] altWeapons;
 
-    void Start()
+    public void SetupWeaponsManager()
     {
         WeaponsManager.instance.GetWeaponsFromHolder(this);
     }

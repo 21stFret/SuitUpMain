@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public int killCount;
     public PlayerInput playerInput;
     public MechLoadOut mechLoadOut;
+    public ConnectWeaponHolderToManager weaponHolder;
+    public AltWeaponController altWeaponController;
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
+        weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         objectSpawner.isActive = true;
@@ -41,6 +44,10 @@ public class GameManager : MonoBehaviour
     {
         killCount += count;
         gameUI.UpdateKillCount(killCount);
+        if(killCount > PlayerSavedData.instance._killCount)
+        {
+            PlayerSavedData.instance._killCount = killCount;
+        }
     }
 
     public void SwapPlayerInput(string inputMap)
@@ -57,6 +64,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        altWeaponController.ClearWeaponInputs();
+        PlayerSavedData.instance.SavePlayerData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 }

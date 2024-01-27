@@ -25,8 +25,10 @@ public class WeaponsPanelUI : MonoBehaviour
 
     private void ChangeWeaponImage()
     {
-        mainImage.sprite = mainWeaponSprites[currentMainIndex];
-        altImage.sprite = altWeaponSprites[currentAltIndex];
+        if (currentMainIndex >= 0) { mainImage.sprite = mainWeaponSprites[currentMainIndex]; }
+
+        if (currentAltIndex >= 0) { altImage.sprite = altWeaponSprites[currentAltIndex]; }
+
     }
 
     public void NextMainWeapon()

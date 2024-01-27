@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MechLoadOut : MonoBehaviour
 {
+    public bool battleLoadout;
     public WeaponsManager weaponsManager;
     public MechWeapon mainWeapon;
     public MechWeapon altWeapon;
@@ -22,21 +23,36 @@ public class MechLoadOut : MonoBehaviour
     public void EquipMainWeapon()
     {
         RemoveMainWeapon();
+        if (weaponsManager.mainWeapon < 0) { return; }
         mainWeapon = weaponsManager._mainWeapons[weaponsManager.mainWeapon];
+        mainWeapon.gameObject.SetActive(true);
         mainWeapon.transform.SetParent(mainWeaponMount);
         mainWeapon.transform.localPosition = Vector3.zero;
         mainWeapon.transform.localRotation = Quaternion.identity;
-        mainWeapon.Init();
+
+        if(battleLoadout)
+        {
+            mainWeapon.Init();
+        }
+
     }
 
     public void EquipAltWeapon()
     {
         RemoveAltWeapon();
+        if (weaponsManager.altWeapon < 0) { return; }
         altWeapon = weaponsManager._altWeapons[weaponsManager.altWeapon];
         altWeapon.transform.SetParent(altWeaponMount);
-        altWeaponController.Init(altWeapon);
+        altWeapon.gameObject.SetActive(true);
         altWeapon.transform.localPosition = Vector3.zero;
         altWeapon.transform.localRotation = Quaternion.identity;
+
+        if(battleLoadout)
+        {
+            altWeaponController.Init(altWeapon);
+            altWeapon.Init();
+        }
+
     }
 
     public void RemoveMainWeapon()
@@ -45,6 +61,7 @@ public class MechLoadOut : MonoBehaviour
         {
             mainWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
             weaponsHanger.SetMainWeaponPositionToSlot(mainWeapon);
+            mainWeapon.gameObject.SetActive(false);
             mainWeapon = null;
         }
     }
@@ -55,6 +72,7 @@ public class MechLoadOut : MonoBehaviour
         {
             altWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
             weaponsHanger.SetAltWeaponPositionToSlot(altWeapon);
+            //altWeapon.gameObject.SetActive(false);
             altWeapon = null;
         }
     }

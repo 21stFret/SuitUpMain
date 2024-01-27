@@ -276,15 +276,22 @@ MonoBehaviour:
     unlocked: 0
     level: 0
     exp: 0
-  _damage: 010000000200000003000000
-  _fireRate:
-  - 0.8
-  - 0.5
-  - 0.1
-  _range:
-  - 0.8
-  - 0.5
-  - 0.1
+  baseWeaponInfo:
+    _damage: 010000000200000002000000
+    _fireRate:
+    - 0.6
+    - 0.4
+    - 0.2
+    _range:
+    - 15
+    - 20
+    - 25
+  weaponEffects:
+    weaponAudioSource: {fileID: 0}
+    weaponClose: {fileID: 0}
+    weaponLoop: {fileID: 0}
+    weaponEffect: {fileID: 0}
+    weaponLights: {fileID: 0}
   damage: 0
   fireRate: 0
   range: 0
@@ -292,16 +299,12 @@ MonoBehaviour:
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
-  weaponAudioSource: {fileID: 0}
-  weaponClose: {fileID: 0}
-  weaponLoop: {fileID: 0}
-  weaponEffect: {fileID: 0}
-  weaponLights: {fileID: 0}
+  sensor: {fileID: 922689415931832637}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
   weaponRechargeRate: 0
-  weaponUseRate: 0
+  weaponFuelUseRate: 0
   fuelSprite: {fileID: 0}
   sensor: {fileID: 922689415931832637}
   hasTarget: 0
@@ -316,7 +319,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3055774610300258993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55d3d85d87c57694e9fcd35625a46543, type: 3}
+  m_Script: {fileID: 11500000, guid: 004fb84e92cf2e249bb905581e7557d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TurretSocket:
@@ -328,7 +331,6 @@ MonoBehaviour:
   vulcanMuzzle: {fileID: 400002, guid: ca6dec307275d294ba519247d04b6733, type: 3}
   vulcanImpact: {fileID: 400000, guid: bfa7781c328a236468eda51a8ae2be55, type: 3}
   vulcanOffset: 0
-  vulcanDamage: 0
 --- !u!1 &3055774610300258995
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,13 +1,32 @@
+using Micosmo.SensorToolkit;
+using System;
 using UnityEngine;
+
+[Serializable]
+public struct BaseWeaponInfo
+{
+    public int[] _damage;
+    public float[] _fireRate;
+    public float[] _range;
+}
+
+[Serializable]
+public struct WeaponEffects
+{
+    public AudioSource weaponAudioSource;
+    public AudioClip weaponClose;
+    public AudioClip weaponLoop;
+
+    public ParticleSystem weaponEffect;
+    public GameObject weaponLights;
+}
 
 public class MechWeapon : MonoBehaviour
 {
     public WeaponData weaponData;
-    public int[] _damage;
-    [SerializeField]
-    private float[] _fireRate;
-    [SerializeField]
-    private float[] _range;
+    public BaseWeaponInfo baseWeaponInfo;
+    public WeaponEffects weaponEffects;
+
     public int damage;
     public float fireRate;
     public float range;
@@ -15,19 +34,15 @@ public class MechWeapon : MonoBehaviour
     public int maxAmmo;
     public float reloadTime;
     public bool isFiring;
-
-    public AudioSource weaponAudioSource;
-    public AudioClip weaponClose;
-    public AudioClip weaponLoop;
-
-    public ParticleSystem weaponEffect;
-    public GameObject weaponLights;
-
+    [Header("Main Weapon")]
+    public LOSSensor sensor;
+    public Vector3 aimOffest;
+    [Header("Alt Weapon")]
     public WeaponUI weaponUI;
     public float weaponFuel;
     public float weaponFuelMax = 100;
     public float weaponRechargeRate;
-    public float weaponUseRate;
+    public float weaponFuelUseRate;
     public Sprite fuelSprite;
 
     public virtual void Init()
@@ -35,54 +50,64 @@ public class MechWeapon : MonoBehaviour
         weaponFuel = weaponFuelMax;
         SetValues();
 
+        if(weaponData.mainWeapon)
+        {
+            sensor.enabled = true;
+        }
+
+
         if (weaponUI == null)
         {
             return;
         }
 
         weaponUI.UpdateWeaponUI(weaponFuel);
+        weaponUI.SetFuelImage(fuelSprite);
 
     }
 
     private void SetValues()
     {
         print("Setting values for " + name);
-        damage = _damage[weaponData.level];
-        fireRate = _fireRate[weaponData.level];
-        range = _range[weaponData.level];
+        damage = baseWeaponInfo._damage[weaponData.level];
+        fireRate = baseWeaponInfo._fireRate[weaponData.level];
+        range = baseWeaponInfo._range[weaponData.level];
+
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         FuelManagement();
     }
 
     public virtual void Fire()
     {
+        isFiring = true;
         //Debug.Log("Firing " + name);
-        if (weaponEffect != null)
+        if (weaponEffects.weaponEffect != null)
         {
-            weaponEffect.Play();
+            weaponEffects.weaponEffect.Play();
         }
-        weaponAudioSource.clip = weaponLoop;
-        weaponAudioSource.loop = true;
-        weaponAudioSource.Play();
-        weaponLights.SetActive(true);
+        weaponEffects.weaponAudioSource.clip = weaponEffects.weaponLoop;
+        weaponEffects.weaponAudioSource.loop = true;
+        weaponEffects.weaponAudioSource.Play();
+        weaponEffects.weaponLights.SetActive(true);
         weaponUI.SetUITrigger(false);
     }
 
     public virtual void Stop()
     {
+        isFiring = false;
         //Debug.Log("Stopping " + name);
-        if (weaponEffect != null)
+        if (weaponEffects.weaponEffect != null)
         {
-            weaponEffect.Stop();
+            weaponEffects.weaponEffect.Stop();
         }
-        weaponAudioSource.Stop();
-        weaponAudioSource.clip = weaponClose;
-        weaponAudioSource.loop = false;
-        weaponAudioSource.Play();
-        weaponLights.SetActive(false);
+        weaponEffects.weaponAudioSource.Stop();
+        weaponEffects.weaponAudioSource.clip = weaponEffects.weaponClose;
+        weaponEffects.weaponAudioSource.loop = false;
+        weaponEffects.weaponAudioSource.Play();
+        weaponEffects.weaponLights.SetActive(false);
         weaponUI.SetUITrigger(true);
     }
 
@@ -90,12 +115,14 @@ public class MechWeapon : MonoBehaviour
     {
         if (isFiring)
         {
-            weaponFuel -= weaponUseRate;
-
             if (weaponFuel <= 0)
             {
                 Stop();
+                return;
             }
+
+            weaponFuel -= weaponFuelUseRate;
+
         }
 
         if (weaponFuel >= weaponFuelMax)

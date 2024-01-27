@@ -49,6 +49,13 @@ public class Crawler : MonoBehaviour
         stunned = true;
         navMeshAgent.enabled = false;
         yield return new WaitForSeconds(stunTime);
+
+        if (dead)
+        {
+            stunned = false;
+            yield break;
+        }
+
         navMeshAgent.enabled = true;
         stunned = false;
     }
@@ -173,10 +180,6 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
-        if(stunTime >0)
-        {
-            StartCoroutine(SwitchOffNavMesh(stunTime));
-        }
 
         if(dead)
         {
@@ -188,6 +191,12 @@ public class Crawler : MonoBehaviour
         {
             Die();
         }
+
+        else if (stunTime > 0)
+        {
+            StartCoroutine(SwitchOffNavMesh(stunTime));
+        }
+
     }
 
     private void FlashRed()
