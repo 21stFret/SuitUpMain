@@ -42,7 +42,7 @@ public class Shotgun : MechWeapon
         if (hasTarget)
         {
             _timer += Time.deltaTime;
-            if (_timer > fireRate)
+            if (_timer > speed)
             {
                 for (int i = 0; i < shotsPerBurst; i++)
                 {

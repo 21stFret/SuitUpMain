@@ -9,9 +9,9 @@ public class Crawler : MonoBehaviour
 {
     private RangeSensor rangeSensor;
     public Transform target;
-    public int health;
+    public float health;
     public int healthMax;
-    public int damage;
+    public int attackDamage;
     public NavMeshAgent navMeshAgent;
     public ParticleSystem DeathBlood;
     public Animator animator;
@@ -131,7 +131,7 @@ public class Crawler : MonoBehaviour
         transform.LookAt(new Vector3(blah.x, transform.position.y, blah.z));
     }
 
-    private void Attack()
+    public virtual void Attack()
     {
         DistanceToTarget = Vector3.Distance(transform.position, target.position);
         if (DistanceToTarget < attackDistance)
@@ -164,7 +164,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        targethealth.TakeDamage(damage, this);
+        targethealth.TakeDamage(attackDamage, this);
     }
 
     private IEnumerator SpawnImmunity()
@@ -174,7 +174,7 @@ public class Crawler : MonoBehaviour
         immune = false;
     }
 
-    public void TakeDamage(int damage, float stunTime = 0)
+    public void TakeDamage(float damage, float stunTime = 0)
     {
         if(immune)
         {
@@ -210,6 +210,7 @@ public class Crawler : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         meshRenderer.material.SetFloat("_FlashOn", 0);
     }
+
 
     public void FindClosestTarget()
     {

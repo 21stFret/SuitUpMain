@@ -51,7 +51,7 @@ public class LightningRodController : MechWeapon
         if (hitSwitch)
         {
             timer += Time.deltaTime;
-            if(timer >= fireRate)
+            if(timer >= speed)
             {
                 Zap();
                 timer = 0;
@@ -63,7 +63,7 @@ public class LightningRodController : MechWeapon
     {
         for (int i = 0; i < crawlers.Count; i++)
         {
-            crawlers[i].TakeDamage(damage, fireRate);
+            crawlers[i].TakeDamage(damage, speed);
         }
     }
 

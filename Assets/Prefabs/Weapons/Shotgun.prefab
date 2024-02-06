@@ -67,7 +67,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1065789662638526104}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f00a8324cac4f1e84ad1644ec747516, type: 3}
   m_Name: 
@@ -279,39 +279,46 @@ MonoBehaviour:
     level: 0
     exp: 0
   baseWeaponInfo:
-    _damage: 010000000200000003000000
-    _fireRate:
-    - 2
-    - 1.5
+    _damage:
     - 1
+    - 2
+    - 3
+    _fireRate:
+    - 1
+    - 0.8
+    - 0.5
     _range:
     - 10
     - 15
     - 20
+    _cost: e8030000d0070000b80b0000
   weaponEffects:
     weaponAudioSource: {fileID: 5015531487984303210}
     weaponClose: {fileID: 8300000, guid: 9db28af8564ff3f44ba56f1523e6561b, type: 3}
     weaponLoop: {fileID: 0}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 0}
+  weaponName: 
   damage: 0
-  fireRate: 0
+  speed: 0
   range: 0
   ammo: 0
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
   sensor: {fileID: 2020328232867911747}
+  aimOffest: {x: 0, y: 0, z: 0}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
   weaponRechargeRate: 0
   weaponFuelUseRate: 0
   fuelSprite: {fileID: 21300000, guid: 2b33a847d562875408cd37b5ab2957d3, type: 3}
-  sensor: {fileID: 2020328232867911747}
   hasTarget: 0
   gunturret: {fileID: 1591700063719516111}
   weaponController: {fileID: 2673801093487598846}
+  shotsPerBurst: 0
+  spreadAngle: 0
 --- !u!114 &4584076103464758133
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ public class DroneController : MonoBehaviour
     {
         if(CashCollector.Instance.cash < airDropCost)
         {
-            fade.PlayTween();
+            fade.FadeIn();
             return;
         }
         CashCollector.Instance.AddCash(-airDropCost);

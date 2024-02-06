@@ -4,10 +4,11 @@ using TMPro;
 
 public class ObjectSpawner : MonoBehaviour
 {
-    [Header("Spawn Settings")]
+    [Header("Object Pools")]
     [SerializeField] private List<Crawler> crawlers = new List<Crawler>();
     [SerializeField] private List<CrawlerDaddy> crawlerDaddy =  new List<CrawlerDaddy>();
     [SerializeField] private List<Transform> spawnPoints;
+    [Header("Spawn Settings")]
     private Transform spawnPoint;
     [SerializeField] private float roundTimer;
     [SerializeField] private int spawnAmmount;
@@ -30,7 +31,6 @@ public class ObjectSpawner : MonoBehaviour
     private void Start()
     {
         spawnRound = 0;
-        Spawn();
     }
 
     private void Update()

@@ -10016,7 +10016,10 @@ MonoBehaviour:
     level: 0
     exp: 0
   baseWeaponInfo:
-    _damage: 010000000200000003000000
+    _damage:
+    - 1
+    - 2
+    - 3
     _fireRate:
     - 0.2
     - 0.2
@@ -10025,19 +10028,23 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    _cost: 
   weaponEffects:
     weaponAudioSource: {fileID: 3573105458296607397}
     weaponClose: {fileID: 8300000, guid: d9eac4dfc29abe64faa49306ee4b4205, type: 3}
     weaponLoop: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
     weaponEffect: {fileID: 1946771559557481415}
     weaponLights: {fileID: 876022053645517812}
-  damage: 324207744
-  fireRate: 0
+  weaponName: 
+  damage: 324207740
+  speed: 0
   range: 0
   ammo: 0
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
+  sensor: {fileID: 0}
+  aimOffest: {x: 0, y: 0, z: 0}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
@@ -15167,7 +15174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400024, guid: 79150fedb950c394f9f3f3bb76d2d14b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.050000258
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 400024, guid: 79150fedb950c394f9f3f3bb76d2d14b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -15175,7 +15182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400024, guid: 79150fedb950c394f9f3f3bb76d2d14b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.59000015
+      value: 0.509
       objectReference: {fileID: 0}
     - target: {fileID: 400024, guid: 79150fedb950c394f9f3f3bb76d2d14b, type: 3}
       propertyPath: m_LocalRotation.w

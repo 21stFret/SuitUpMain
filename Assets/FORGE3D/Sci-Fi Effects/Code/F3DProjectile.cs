@@ -21,7 +21,7 @@ namespace FORGE3D
         float timer = 0f; // Projectile timer
         float fxOffset; // Offset of fxImpact
 
-        public int impactDamage;
+        public float impactDamage;
 
         public FORGE3dProjectileWeapon _weaponController;
 

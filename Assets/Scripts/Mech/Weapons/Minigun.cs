@@ -41,7 +41,7 @@ public class Minigun : MechWeapon
         if(hasTarget)
         {
             _timer += Time.deltaTime;
-           if(_timer > fireRate)
+           if(_timer > speed)
             {
                 weaponController.Fire(damage);
                 _timer = 0.0f;

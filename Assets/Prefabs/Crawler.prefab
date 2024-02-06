@@ -299,24 +299,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 3941810313144788156}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb4d5be29c51cf941acbc0c36e587bce, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cf41834e4c530549ba5784f5474f041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   health: 0
-  healthMax: 6
-  damage: 2
+  healthMax: 5
+  attackDamage: 1
   navMeshAgent: {fileID: 4026478879676073533}
   DeathBlood: {fileID: 7485218815324124808}
   animator: {fileID: 4026478879676073528}
   hasTarget: 0
   deathNoise: {fileID: 418313318034436250}
-  attackDistance: 3
+  attackDistance: 2
   DistanceToTarget: 0
-  speed: 8
-  randomRadius: 5
+  speed: 5
+  randomRadius: 1
   canSeeTarget: 0
-  meshRenderer: {fileID: 3988977173442188252}
+  meshRenderer: {fileID: 0}
   stunned: 0
   IgnorelayerMask: 2
   ShootlayerMask: 8

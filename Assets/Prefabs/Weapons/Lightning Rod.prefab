@@ -39008,8 +39008,10 @@ MonoBehaviour:
     level: 0
     exp: 0
   baseWeaponInfo:
-    level: 0
-    _damage: 010000000200000003000000
+    _damage:
+    - 1
+    - 2
+    - 3
     _fireRate:
     - 1
     - 1
@@ -39018,36 +39020,28 @@ MonoBehaviour:
     - 1
     - 1
     - 1
-    damage: 0
-    fireRate: 0
-    range: 0
-    ammo: 0
-    maxAmmo: 0
-    reloadTime: 0
-    isFiring: 0
-    weaponFuel: 0
-    weaponFuelMax: 0
-    weaponRechargeRate: 0
-    weaponUseRate: 0
-    fuelSprite: {fileID: 0}
+    _cost: 
   weaponEffects:
     weaponAudioSource: {fileID: 3573105458296607397}
     weaponClose: {fileID: 8300000, guid: 59ae4c7218192d443af48fa96d0883fe, type: 3}
     weaponLoop: {fileID: 8300000, guid: 206809617a9f6dc4e813dfc96abc1da3, type: 3}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 4312708514340103555}
+  weaponName: 
   damage: 1
-  fireRate: 0
+  speed: 0
   range: 0
   ammo: 0
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
+  sensor: {fileID: 0}
+  aimOffest: {x: 0, y: 0, z: 0}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
   weaponRechargeRate: 0
-  weaponUseRate: 0
+  weaponFuelUseRate: 0
   fuelSprite: {fileID: 0}
   crawlers: []
   crawlerIndex: 0

@@ -5,9 +5,10 @@ using UnityEngine;
 [Serializable]
 public struct BaseWeaponInfo
 {
-    public int[] _damage;
+    public float[] _damage;
     public float[] _fireRate;
     public float[] _range;
+    public int[] _cost;
 }
 
 [Serializable]
@@ -26,9 +27,9 @@ public class MechWeapon : MonoBehaviour
     public WeaponData weaponData;
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
-
-    public int damage;
-    public float fireRate;
+    public string weaponName;
+    public float damage;
+    public float speed;
     public float range;
     public int ammo;
     public int maxAmmo;
@@ -70,7 +71,7 @@ public class MechWeapon : MonoBehaviour
     {
         print("Setting values for " + name);
         damage = baseWeaponInfo._damage[weaponData.level];
-        fireRate = baseWeaponInfo._fireRate[weaponData.level];
+        speed = baseWeaponInfo._fireRate[weaponData.level];
         range = baseWeaponInfo._range[weaponData.level];
 
     }

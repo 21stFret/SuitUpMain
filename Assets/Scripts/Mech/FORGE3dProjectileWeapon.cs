@@ -17,7 +17,7 @@ public class FORGE3dProjectileWeapon : MonoBehaviour
     public Transform vulcanMuzzle; 
     public Transform vulcanImpact; 
     public float vulcanOffset;
-    private int vulcanDamage;
+    private float vulcanDamage;
 
     private void Awake()
     {
@@ -37,13 +37,13 @@ public class FORGE3dProjectileWeapon : MonoBehaviour
             curSocket = 0;
     }
 
-    public void Fire(int dam)
+    public void Fire(float dam)
     {
         vulcanDamage = dam;
         Vulcan();
     }
 
-    public void Shotgun(int dam, int index, float angle, int burst)
+    public void Shotgun(float dam, int index, float angle, int burst)
     {
         float rand = UnityEngine.Random.Range(-3, 3);
         // Spawn muzzle flash and projectile at current socket position

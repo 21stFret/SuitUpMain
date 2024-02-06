@@ -102,25 +102,23 @@ public class PlayerSavedData : MonoBehaviour
         for (int i = 0; i < _mainWeaponData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
-            WeaponData index = _mainWeaponData[i];
-            index = weaponData;
-            index.weaponIndex = i;
-            index.unlocked = false;
-            index.level = 0;
-            index.exp = 0;
-            index.mainWeapon = true;
+            _mainWeaponData[i] = weaponData;
+            _mainWeaponData[i].weaponIndex = i;
+            _mainWeaponData[i].unlocked = false;
+            _mainWeaponData[i].level = 0;
+            _mainWeaponData[i].exp = 0;
+            _mainWeaponData[i].mainWeapon = true;
         }
         _altWeaponData = new WeaponData[2];
         for (int i = 0; i < _altWeaponData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
-            WeaponData index = _altWeaponData[i];
-            index = weaponData;
-            index.weaponIndex = i;
-            index.unlocked = false;
-            index.level = 0;
-            index.exp = 0;
-            index.mainWeapon = false;
+            _altWeaponData[i] = weaponData;
+            _altWeaponData[i].weaponIndex = i;
+            _altWeaponData[i].unlocked = false;
+            _altWeaponData[i].level = 0;
+            _altWeaponData[i].exp = 0;
+            _altWeaponData[i].mainWeapon = false;
         }
     }
 

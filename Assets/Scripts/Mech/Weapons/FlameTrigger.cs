@@ -7,7 +7,7 @@ public class FlameTrigger : MonoBehaviour
     public List<Crawler> crawlers = new List<Crawler>();
     private Collider col;
     public float shotSpeed;
-    public int shotDamage;
+    public float shotDamage;
     private bool isOn;
 
     private float timer;
@@ -18,7 +18,7 @@ public class FlameTrigger : MonoBehaviour
         col.enabled = false;
     }
 
-    public void InitFlameTrigger(int damage, float speed)
+    public void InitFlameTrigger(float damage, float speed)
     {
         shotDamage = damage;
         shotSpeed = speed;

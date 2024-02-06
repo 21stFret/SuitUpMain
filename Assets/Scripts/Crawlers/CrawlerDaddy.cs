@@ -34,7 +34,7 @@ public class CrawlerDaddy : Crawler
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
                 if(rb.GetComponent<TargetHealth>().mechHealth != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(damage, this);
+                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamage, this);
                 }
             }
         }

@@ -9,20 +9,10 @@ namespace FORGE3D
         public ParticleSystem heat; // Heat particles
 
         int lightState; // Point light state flag (fading in or out)
-        bool despawn; // Despawn state flag
-
-        ParticleSystem ps;
-
-        void Start()
-        {
-            ps = GetComponent<ParticleSystem>();
-        }
 
         // OnSpawned called by pool manager 
         void OnSpawned()
         {
-            despawn = false;
-
             lightState = 1;
             pLight.intensity = 0f;
         }
@@ -40,27 +30,6 @@ namespace FORGE3D
 
         void Update()
         {
-            // Despawn on mouse
-            /*
-            if (Input.GetMouseButtonUp(0))
-            {
-                if (!despawn)
-                {
-                    // Set despawn flag and add despawn timer allowing particles fading
-                    despawn = true;
-                    F3DTime.time.AddTimer(1f, 1, OnDespawn);
-
-                    // Stop the particle systems
-                    ps.Stop();
-                    if (heat)
-                        heat.Stop(); 
-
-                    // Toggle light state
-                    pLight.intensity = 0.6f;
-                    lightState = -1;
-                }
-            }
-            */
             // Fade in point light
             if (lightState == 1)
             {

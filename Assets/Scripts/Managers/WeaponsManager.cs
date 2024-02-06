@@ -75,6 +75,26 @@ public class WeaponsManager : MonoBehaviour
         _mainWeapons = holder.mainWeapons;
         _altWeapons = holder.altWeapons;
     }
+    
+    public void UnlockWeapon(int index, bool mainWeapon)
+    {
+        var weapon = mainWeapon ? _mainWeapons[index] : _altWeapons[index];
+        weapon.weaponData.unlocked = true;
+        UpdateWeaponData();
+    }
+
+    public void LevelUpWeapon(int index, bool mainWeapon)
+    {
+        var weapon = mainWeapon ? _mainWeapons[index] : _altWeapons[index];
+        if (weapon.baseWeaponInfo._cost[weapon.weaponData.level] >= PlayerSavedData.instance._playerCash)
+        {
+            return;
+        }
+        PlayerSavedData.instance._playerCash -= weapon.baseWeaponInfo._cost[weapon.weaponData.level];
+        weapon.weaponData.level++;
+        weapon.weaponData.exp = 0;
+        UpdateWeaponData();
+    }
 }
 
 [System.Serializable]
