@@ -22,8 +22,11 @@ namespace FORGE3D
         float fxOffset; // Offset of fxImpact
 
         public float impactDamage;
+        public float impactForce;
+        public int pierceCount;
+        public bool isStun;
 
-        public FORGE3dProjectileWeapon _weaponController;
+        public ProjectileWeapon _weaponController;
 
         void Awake()
         {
@@ -77,7 +80,7 @@ namespace FORGE3D
         }
 
         // Apply hit force on impact
-        void ApplyForce(float force)
+        void ApplyForce(float force, bool stun)
         {
             if (hitPoint.rigidbody == null)
             { return; }
@@ -87,10 +90,12 @@ namespace FORGE3D
                 var crawler = hitPoint.collider.GetComponent<Crawler>();
                 crawler.TakeDamage(impactDamage);
                 // for shots that stun the crawler
-                //crawler.StartCoroutine(crawler.SwitchOffNavMesh());
-                hitPoint.rigidbody.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
+                if(stun)
+                {
+                    crawler.StartCoroutine(crawler.SwitchOffNavMesh(0.2f));
+                    hitPoint.rigidbody.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
+                }
             }
-
         }
 
         void Update()
@@ -101,38 +106,17 @@ namespace FORGE3D
                 // Execute once
                 if (!isFXSpawned)
                 {
-                    // Invoke corresponding method that spawns FX
-                    switch (fxType)
-                    {
-                        case F3DFXType.Vulcan:
-                            _weaponController.VulcanImpact(hitPoint.point + hitPoint.normal * fxOffset);
-                            ApplyForce(0f);
-                            break;
-
-                        case F3DFXType.SoloGun:
-                            F3DFXController.instance.SoloGunImpact(hitPoint.point + hitPoint.normal * fxOffset);
-                            ApplyForce(25f);
-                            break;
-
-                        case F3DFXType.Seeker:
-                            F3DFXController.instance.SeekerImpact(hitPoint.point + hitPoint.normal * fxOffset);
-                            ApplyForce(30f);
-                            break;
-
-                        case F3DFXType.PlasmaGun:
-                            F3DFXController.instance.PlasmaGunImpact(hitPoint.point + hitPoint.normal * fxOffset);
-                            ApplyForce(25f);
-                            break;
-
-                        case F3DFXType.LaserImpulse:
-                            F3DFXController.instance.LaserImpulseImpact(hitPoint.point + hitPoint.normal * fxOffset);
-                            ApplyForce(25f);
-                            break;
-                    }
-
+                    _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset);
+                    ApplyForce(impactForce, isStun);
                     isFXSpawned = true;
                 }
-
+                if(pierceCount > 0)
+                {
+                    pierceCount--;
+                    isHit = false;
+                    isFXSpawned = false;
+                    return;
+                }
                 // Despawn current projectile 
                 if (!DelayDespawn || (DelayDespawn && (timer >= despawnDelay)))
                     OnProjectileDestroy();
@@ -141,7 +125,6 @@ namespace FORGE3D
             // No collision occurred yet
             else
             {
-                Debug.DrawLine(transform.position, transform.position + transform.forward * RaycastAdvance, Color.cyan);
                 // Projectile step per frame based on velocity and time
                 Vector3 step = transform.forward * Time.deltaTime * velocity;
                 if(step.magnitude > RaycastAdvance)

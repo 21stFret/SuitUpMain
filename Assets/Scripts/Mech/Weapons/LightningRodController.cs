@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using FORGE3D;
 using System.Collections.Generic;
+using System;
 
 
 public class LightningRodController : MechWeapon
@@ -19,6 +20,7 @@ public class LightningRodController : MechWeapon
     public GameObject lightning;
     public GameObject crawlerHit;
     public Vector3 hitOffset;
+    public Vector3 raycastOffset;
 
     public override void Init()
     {
@@ -74,6 +76,7 @@ public class LightningRodController : MechWeapon
             UnlinkAllLightning();
             return;
         }
+
         if (hitt.collider.CompareTag("Enemy"))
         {
             hit = hitt;
@@ -105,20 +108,19 @@ public class LightningRodController : MechWeapon
     public void LightningArc(Transform nextHit)
     {
         Collider[] colliders = Physics.OverlapSphere(nextHit.position, chainRange*2, crawlerLayer);
+        Array.Sort(colliders, (x, y) => Vector3.Distance(nextHit.position, x.transform.position).CompareTo(Vector3.Distance(nextHit.position, y.transform.position)));
         for(int i = 0; i< colliders.Length; i++)
         {
             if (colliders[i].CompareTag("Enemy"))
             {
                 if (crawlers.Find(x => x.transform == colliders[i].transform))
                 {
-                    print("Already Hit");
                     continue;
                 }
 
                 crawlerIndex++;
                 if (crawlerIndex >= chainAmount)
                 {
-                    print("Max Chain");
                     LightningLinkCrawlers();
                     return;
                 }
@@ -127,12 +129,10 @@ public class LightningRodController : MechWeapon
         }
         print("Reached " + crawlerIndex + " / " + colliders.Length);
         LightningLinkCrawlers();
-        return;
     }
 
     private void LightningLinkCrawlers()
     {
-        print("Linked to Crawlers");
         for(int i = 0; i < crawlers.Count; i++)
         {
             if (i+1< crawlers.Count)
@@ -141,20 +141,19 @@ public class LightningRodController : MechWeapon
                 newGO.SetActive(true);
                 newGO.transform.position = hit.transform.position + hitOffset;
                 newGO.transform.forward = crawlers[i+1].transform.position - newGO.transform.position;
+                newGO.GetComponent<F3DLightning>().SetTarget(crawlers[i+1].transform);
             }
         }
     }
 
     private void UnlinkAllLightning()
     {
-        print("Unlinked");
         hitSwitch = false;
         crawlerIndex = 0;
         crawlers.Clear();
         for (int i = 0; i < lightningChains.Count; i++)
         {
             lightningChains[i].gameObject.SetActive(false);
-            lightningChains[i].transform.forward = Vector3.forward;
         }
     }
     

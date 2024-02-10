@@ -5,6 +5,7 @@ using UnityEngine;
 [Serializable]
 public struct BaseWeaponInfo
 {
+    public string weaponName;
     public float[] _damage;
     public float[] _fireRate;
     public float[] _range;
@@ -27,8 +28,8 @@ public class MechWeapon : MonoBehaviour
     public WeaponData weaponData;
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
-    public string weaponName;
     public float damage;
+    public float force;
     public float speed;
     public float range;
     public int ammo;
@@ -54,6 +55,7 @@ public class MechWeapon : MonoBehaviour
         if(weaponData.mainWeapon)
         {
             sensor.enabled = true;
+            Debug.Log("Main Weapon sensor enabled");
         }
 
 

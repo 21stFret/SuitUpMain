@@ -8,7 +8,7 @@ public class Shotgun : MechWeapon
     public bool hasTarget;
     public GameObject gunturret;
     private Animator _animator;
-    public FORGE3dProjectileWeapon weaponController;
+    public ProjectileWeapon weaponController;
 
     private float _timer;
 
@@ -36,9 +36,6 @@ public class Shotgun : MechWeapon
             _timer = 0.0f;
         }
 
-        _animator.SetBool("HasTarget", hasTarget);
-
-
         if (hasTarget)
         {
             _timer += Time.deltaTime;
@@ -46,10 +43,10 @@ public class Shotgun : MechWeapon
             {
                 for (int i = 0; i < shotsPerBurst; i++)
                 {
-                    weaponController.Shotgun(damage, i, spreadAngle, shotsPerBurst);
+                    weaponController.Shotgun(damage, force, i, spreadAngle, shotsPerBurst);
                 }
                 _timer = 0.0f;
-                //print("Fired");
+                _animator.SetTrigger("Recoil");
             }
         }
 

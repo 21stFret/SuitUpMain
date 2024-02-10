@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class ObjectSpawner : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private List<Transform> spawnPoints;
     [Header("Spawn Settings")]
     private Transform spawnPoint;
+    public PortalEffect portalEffect;
     [SerializeField] private float roundTimer;
     [SerializeField] private int spawnAmmount;
     public int baseSpawnAmmount;
@@ -30,7 +32,7 @@ public class ObjectSpawner : MonoBehaviour
 
     private void Start()
     {
-        spawnRound = 0;
+        //spawnRound = 0;
     }
 
     private void Update()
@@ -43,14 +45,14 @@ public class ObjectSpawner : MonoBehaviour
         timeElapsed += Time.deltaTime;
         if (timeElapsed >= roundTimer)
         {
-            Spawn();
+            BeginSpawning();
             timeElapsed = 0f;
             if(spawnRound > PlayerSavedData.instance._waveScore)
             {
                 PlayerSavedData.instance._waveScore = spawnRound;
             }
         }
-        timeText.text = ((roundTimer-timeElapsed)).ToString("0");
+        timeText.text = ((roundTimer-timeElapsed)).ToString("00:00");
     }
 
     private void SelectSpawnPoint()
@@ -59,19 +61,22 @@ public class ObjectSpawner : MonoBehaviour
         spawnPoint = spawnPoints[randomSpawnPoint];
     }
 
-    private void Spawn()
+    private void BeginSpawning()
     {
         SpawnRoundMultiplier();
         SelectSpawnPoint();
+        StartCoroutine(SpawnDelay());
+    }
 
-        for(int i = 0; i < spawnAmmount; i++)
+    private void SpawnCrawlers()
+    {
+        for (int i = 0; i < spawnAmmount; i++)
         {
-            Vector2 randomCircle = Random.insideUnitCircle * 3;
+            Vector2 randomCircle = Random.insideUnitCircle * 2;
             Vector3 randomPoint = new Vector3(randomCircle.x, 0, randomCircle.y) + spawnPoint.position;
             crawlers[i].transform.position = randomPoint;
             crawlers[i].transform.rotation = Quaternion.identity;
-            crawlers[i].GetComponent<Crawler>().Respawn();
-            crawlers.Remove(crawlers[i]);
+            StartCoroutine(SpawnRandomizer(crawlers[i], Random.Range(0, 1.3f)));
         }
         if (spawnRound > 3)
         {
@@ -81,10 +86,32 @@ public class ObjectSpawner : MonoBehaviour
                 Vector3 randomPoint = new Vector3(randomCircle.x, 0, randomCircle.y) + spawnPoint.position;
                 crawlerDaddy[i].transform.position = randomPoint;
                 crawlerDaddy[i].transform.rotation = Quaternion.identity;
-                crawlerDaddy[i].Respawn();
+                crawlerDaddy[i].Spawn();
                 crawlerDaddy.Remove(crawlerDaddy[i]);
             }
         }
+    }
+
+    private IEnumerator SpawnDelay()
+    {
+        PLaySpawnEffect();
+        yield return new WaitForSeconds(1f);
+        SpawnCrawlers();
+    }
+
+
+    private IEnumerator SpawnRandomizer(Crawler bug, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        bug.Spawn();
+        crawlers.Remove(bug);
+    }
+
+    private void PLaySpawnEffect()
+    {
+        portalEffect.transform.position = spawnPoint.position;
+        portalEffect.transform.rotation = spawnPoint.rotation;
+        portalEffect.StartEffect();
     }
 
     public void SpawnAtPoint(Vector3 point, int spawnAmount)
@@ -93,7 +120,7 @@ public class ObjectSpawner : MonoBehaviour
         {
             crawlers[i].transform.position = point;
             crawlers[i].transform.rotation = Quaternion.identity;
-            crawlers[i].Respawn();
+            crawlers[i].Spawn();
             crawlers.Remove(crawlers[i]);
         }
     }   

@@ -42,6 +42,18 @@ namespace FORGE3D
         private MeshRenderer meshRenderer;
         public F3DMissileLauncher launcher;
 
+
+        public float upLaunchTimer;
+        public float upLaunchTime;
+        public float range;
+        public LayerMask crawlerLayer;
+        public float forceStrength;
+        public float impactDamage;
+
+        private Vector3 randomOffset;
+        public float randomOffsetStrength;
+
+
         private void Awake()
         {
             // Cache transform and get all particle systems attached
@@ -59,6 +71,8 @@ namespace FORGE3D
             targetLastPos = Vector3.zero;
             step = Vector3.zero;
             meshRenderer.enabled = true;
+            transform.forward = Vector3.up;
+            randomOffset = Random.insideUnitSphere * randomOffsetStrength;
         }
 
         // OnDespawned called by pool manager 
@@ -112,6 +126,28 @@ namespace FORGE3D
             }
         }
 
+        private void ApplyForceToCrawlers()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
+            foreach (Collider collider in colliders)
+            {
+                Crawler crawler = collider.GetComponent<Crawler>();
+                if (crawler != null)
+                {
+                    crawler.DealyedDamage(impactDamage, 1f);
+                    crawler.StartCoroutine(crawler.SwitchOffNavMesh(1f));
+                    Rigidbody crawlerRigidbody = crawler.GetComponent<Rigidbody>();
+                    if (crawlerRigidbody != null)
+                    {
+                        Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
+                        forceDirection.y = 0.5f;
+                        crawlerRigidbody.AddForce(forceDirection * forceStrength, ForceMode.Impulse);
+                        crawlerRigidbody.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
+
         private void Update()
         {
             // If something was hit
@@ -122,8 +158,9 @@ namespace FORGE3D
                 {
                     // Put your calls to effect manager that spawns explosion on hit
                     // .....
-
+                    ApplyForceToCrawlers();
                     launcher.SpawnExplosion(transform.position);
+
 
                     isFXSpawned = true;
                 }
@@ -147,23 +184,27 @@ namespace FORGE3D
                         transform.rotation = Quaternion.Lerp(transform.rotation,
                             Quaternion.LookRotation(hitPos - transform.position), Time.deltaTime*alignSpeed);
                     }
-                    else if (missileType == MissileType.Guided)
+                    upLaunchTimer += Time.deltaTime;    
+                    if(upLaunchTimer > upLaunchTime)
                     {
-                        transform.rotation = Quaternion.Lerp(transform.rotation,
-                            Quaternion.LookRotation(target.position - transform.position), Time.deltaTime*alignSpeed);
+                        if (missileType == MissileType.Guided)
+                        {
+                            transform.rotation = Quaternion.Lerp(transform.rotation,
+                                Quaternion.LookRotation((target.position + randomOffset)  - transform.position), Time.deltaTime * alignSpeed);
+                        }
                     }
+
+
                 }
 
                 // Missile step per frame based on velocity and time
                 step = transform.forward*Time.deltaTime*velocity;
 
-                if (target != null && missileType != MissileType.Unguided &&
-                    Vector3.SqrMagnitude(transform.position - target.position) <= detonationDistance)
+                if (target != null && Vector3.SqrMagnitude(transform.position - target.position) <= detonationDistance)
                 {
                     OnHit();
                 }
-                else if (missileType == MissileType.Unguided &&
-                         Physics.Raycast(transform.position, transform.forward, step.magnitude*RaycastAdvance, layerMask))
+                if (Physics.Raycast(transform.position, transform.forward, step.magnitude*RaycastAdvance, layerMask))
                 {
                     OnHit();
                 }

@@ -277,14 +277,15 @@ MonoBehaviour:
     level: 0
     exp: 0
   baseWeaponInfo:
+    weaponName: minigun
     _damage:
     - 0.5
     - 0.7
     - 1
     _fireRate:
-    - 0.4
-    - 0.3
     - 0.2
+    - 0.1
+    - 0.05
     _range:
     - 15
     - 20
@@ -296,8 +297,8 @@ MonoBehaviour:
     weaponLoop: {fileID: 0}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 0}
-  weaponName: 
   damage: 0
+  force: 0
   speed: 0
   range: 0
   ammo: 0
@@ -336,7 +337,6 @@ MonoBehaviour:
   vulcanProjectile: {fileID: 400000, guid: e496166a742ada640b89650ebebbd052, type: 3}
   vulcanMuzzle: {fileID: 400002, guid: ca6dec307275d294ba519247d04b6733, type: 3}
   vulcanImpact: {fileID: 400000, guid: bfa7781c328a236468eda51a8ae2be55, type: 3}
-  vulcanOffset: 0
 --- !u!1 &3055774610300258995
 GameObject:
   m_ObjectHideFlags: 0

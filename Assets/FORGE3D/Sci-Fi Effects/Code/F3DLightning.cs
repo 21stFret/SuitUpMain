@@ -39,6 +39,8 @@ namespace FORGE3D
 
         public LightningRodController lightningRodController;
 
+        public Transform target;
+
         void Awake()
         {
             // Get line renderer component
@@ -86,53 +88,74 @@ namespace FORGE3D
             }
         }
 
+        public void SetTarget(Transform target)
+        {
+            this.target = target;
+        }
+
         // Hit point calculation
         void Raycast()
         {
             // Prepare structure and create ray
             hitPoint = new RaycastHit();
             Ray ray = new Ray(transform.position, transform.forward);
-
-            // Calculate default beam proportion multiplier based on default scale and maximum length
-            float propMult = MaxBeamLength*(beamScale/10f);
-
-            // Raycast
-            if (Physics.Raycast(ray, out hitPoint, MaxBeamLength, layerMask))
+            if(lightningRodController != null)
             {
-                // Get current beam length
-                beamLength = Vector3.Distance(transform.position, hitPoint.point);
-
-                // Update line renderer
-                if (!Oscillate)
-                    lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
-
-                // Calculate default beam proportion multiplier based on default scale and current length
-                propMult = beamLength*(beamScale/10f);
-
-                // Apply hit force to rigidbody
-                //ApplyForce(0.1f);
-
-
-
-
-                // Adjust impact effect position
-                if (rayImpact)
-                    rayImpact.position = hitPoint.point - transform.forward*0.5f;
+                ray = new Ray(transform.position + lightningRodController.raycastOffset, transform.forward);
+                Debug.DrawRay(transform.position + lightningRodController.raycastOffset, transform.forward * MaxBeamLength, Color.red);
             }
 
-            // Nothing was his
-            else
+            // Calculate default beam proportion multiplier based on default scale and maximum length
+            float propMult = MaxBeamLength * (beamScale / 10f);
+
+            if (target != null)
             {
-                // Set beam to maximum length
-                beamLength = MaxBeamLength;
+                beamLength = Vector3.Distance(transform.position, target.position);
 
                 // Update beam length
                 if (!Oscillate)
                     lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
-
+                propMult = beamLength * (beamScale / 10f);
                 // Adjust impact effect position
                 if (rayImpact)
-                    rayImpact.position = transform.position + transform.forward*beamLength;
+                    rayImpact.position = target.position - transform.forward + Vector3.up * 0.5f;
+            }
+            else
+            {
+                // Raycast
+                if (Physics.Raycast(ray, out hitPoint, MaxBeamLength, layerMask))
+                {
+                    // Get current beam length
+                    beamLength = Vector3.Distance(transform.position, hitPoint.point);
+
+                    // Update line renderer
+                    if (!Oscillate)
+                        lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
+
+                    // Calculate default beam proportion multiplier based on default scale and current length
+                    propMult = beamLength * (beamScale / 10f);
+
+                    // Apply hit force to rigidbody
+                    //ApplyForce(0.1f);
+
+                    // Adjust impact effect position
+                    if (rayImpact)
+                        rayImpact.position = hitPoint.point - transform.forward * 0.5f;
+                }
+                // Nothing was hit
+                else
+                {
+                    // Set beam to maximum length
+                    beamLength = MaxBeamLength;
+
+                    // Update beam length
+                    if (!Oscillate)
+                        lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
+
+                    // Adjust impact effect position
+                    if (rayImpact)
+                        rayImpact.position = transform.position + transform.forward * (beamLength - 0.5f);
+                }
             }
 
             if (lightningRodController != null)
@@ -198,7 +221,7 @@ namespace FORGE3D
                         new Vector3(GetRandomNoise(), GetRandomNoise(), (beamLength/(points - 1))*i));
 
                 // Set last point manually 
-                lineRenderer.SetPosition(points - 1, new Vector3(0f, 0f, beamLength));
+                lineRenderer.SetPosition(points - 1, new Vector3(0f, -1f, beamLength));
             }
         }
 

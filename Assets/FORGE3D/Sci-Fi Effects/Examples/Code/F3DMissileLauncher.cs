@@ -20,8 +20,8 @@ namespace FORGE3D
         // Use this for initialization
         private void Start()
         {
-            missileType = F3DMissile.MissileType.Unguided;
-            missileTypeLabel.text = "Missile crateType: Unguided";
+            missileType = F3DMissile.MissileType.Guided;
+            //missileTypeLabel.text = "Missile crateType: Unguided";
         }
 
         // Spawns explosion
@@ -29,12 +29,40 @@ namespace FORGE3D
         {
             F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(explosionPrefab, position, Quaternion.identity, null);
+            F3DAudioController.instance.SniperHit(position);
         }
 
+        public void LaunchMissiles(int amount)
+        {
+            for (var i = 0; i < amount; i++)
+            {
+                LaunchMissile();
+            }
+        }
+
+
+        public void LaunchMissile()
+        {
+            var randomSocketId = Random.Range(0, socket.Length);
+            var tMissile = F3DPoolManager.Pools["GeneratedPool"].Spawn(missilePrefab,
+                socket[randomSocketId].position, socket[randomSocketId].rotation, null);
+
+            if (tMissile != null)
+            {
+                var missile = tMissile.GetComponent<F3DMissile>();
+
+                missile.launcher = this;
+                missile.missileType = missileType;
+
+                if (target != null)
+                    missile.target = target;
+            }
+        }
 
         // Processes input for launching missile
         private void ProcessInput()
         {
+            /*
             if (Input.GetMouseButtonDown(0))
             {
                 var randomSocketId = Random.Range(0, socket.Length);
@@ -52,6 +80,7 @@ namespace FORGE3D
                         missile.target = target;
                 }
             }
+            */
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {

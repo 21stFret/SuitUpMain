@@ -34,7 +34,7 @@ namespace FORGE3D
             meshRenderer.material.SetFloat(alphaID, 0);
             F3DTime.time.AddTimer(StartDelay, 1, ToggleGrow);
             F3DTime.time.AddTimer(FadeDelay, 1, ToggleGrow);
-            transform.localScale = new Vector3(1f, 1f, 1f);
+            //transform.localScale = new Vector3(1f, 1f, 1f);
             transform.localRotation = transform.localRotation * Quaternion.Euler(0, 0, Random.Range(-360, 360));
         }
 
@@ -51,7 +51,7 @@ namespace FORGE3D
             {
                 transform.localScale = Vector3.Lerp(transform.localScale, ScaleTo, Time.deltaTime * ScaleTime);
 
-                alpha = Mathf.Lerp(alpha, 1, Time.deltaTime * ColorTime);
+                alpha = Mathf.Lerp(alpha, 0.5f, Time.deltaTime * ColorTime);
                 meshRenderer.material.SetFloat(alphaID, alpha);
             }
             else

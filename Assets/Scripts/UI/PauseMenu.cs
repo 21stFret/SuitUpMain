@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject CheatsMenu;
     public bool isPaused;
     public PlayerInput playerInput;
     public EventSystem eventSystem;
@@ -33,6 +34,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        CheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
         isPaused = false;

@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 using FORGE3D;
+using UnityEngine.EventSystems;
 
 public class DroneController : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class DroneController : MonoBehaviour
     public TMP_Text[] texts;
     public PlayerInput playerInput;
     public DoTweenFade fade;
+    public EventSystem eventSystem;
+    public GameObject firstSelected;
+    public F3DMissileLauncher missileLauncher;
 
     public void OnOpenMenu()
     {
@@ -25,6 +29,7 @@ public class DroneController : MonoBehaviour
         airdropMenu.SetActive(true);
         UpdatePrice();
         playerInput.SwitchCurrentActionMap("UI");
+        eventSystem.SetSelectedGameObject(firstSelected);
     }
 
     public void OnCloseMenu()
@@ -37,12 +42,25 @@ public class DroneController : MonoBehaviour
     {
         if(CashCollector.Instance.cash < airDropCost)
         {
-            fade.FadeIn();
+            fade.PlayTween();
             return;
         }
         CashCollector.Instance.AddCash(-airDropCost);
         crate.crateType = (CrateType)type;
         drone.Init();
+        airDropTimer.ResetAirDrop();
+        OnCloseMenu();
+    }
+
+    public void MissileStrike()
+    {
+        if (CashCollector.Instance.cash < airDropCost)
+        {
+            fade.PlayTween();
+            return;
+        }
+        missileLauncher.LaunchMissiles(5);
+        CashCollector.Instance.AddCash(-airDropCost);
         airDropTimer.ResetAirDrop();
         OnCloseMenu();
     }

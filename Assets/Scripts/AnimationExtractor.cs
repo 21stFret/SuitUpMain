@@ -72,7 +72,7 @@ public class AnimationExtractor : MonoBehaviour
                 //try to save to specified location
                 try
                 {
-                    AssetDatabase.CreateAsset(staticmesh, SaveLocation + AmountSavedSoFar.ToString() + _animation.clip.name + "_StaticFromSkinned" + ".asset");
+                    //AssetDatabase.CreateAsset(staticmesh, SaveLocation + AmountSavedSoFar.ToString() + _animation.clip.name + "_StaticFromSkinned" + ".asset");
                 }
                 //if the location is invalid, throw an error
                 catch

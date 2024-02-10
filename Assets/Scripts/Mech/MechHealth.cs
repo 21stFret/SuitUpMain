@@ -14,6 +14,7 @@ public class MechHealth : MonoBehaviour
     public Color damageLightColor;
     public Color damagefalshColor;
     public SkinnedMeshRenderer meshRenderer;
+    public DoTweenFade screenFlash;
 
     private void Start()
     {
@@ -42,8 +43,11 @@ public class MechHealth : MonoBehaviour
         }
         updatingUI = true;
 
+        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (health / 100));
+
         image.DOFillAmount(health / 100, 0.4f).OnComplete(()=>updatingUI = false);
         image.DOColor(flashcolor, 0.18f).SetLoops(2, LoopType.Yoyo);
+        screenFlash.PlayTween();
         SetEmmisveHeatlh();
 
         if(healed)

@@ -207,8 +207,8 @@ namespace FORGE3D
                 if (aSrc != null)
                 {
                     aSrc.pitch = Random.Range(0.9f, 1f);
-                    aSrc.volume = Random.Range(0.8f, 1f);
-                    aSrc.minDistance = 8f;
+                    aSrc.volume = 1f;
+                    aSrc.minDistance = 20f;
                     aSrc.loop = false;
                     aSrc.Play();
 

@@ -16,9 +16,9 @@ public class CrawlerSpitter : Crawler
         base.Die();
     }
 
-    public override void Respawn()
+    public override void Spawn()
     {
-        base.Respawn();
+        base.Spawn();
     }
 
     private void CycleProjectiles()

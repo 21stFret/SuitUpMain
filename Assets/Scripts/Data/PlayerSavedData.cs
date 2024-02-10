@@ -14,6 +14,7 @@ public class PlayerSavedData : MonoBehaviour
     public int _killCount;
     public int _waveScore;
     public Vector2 playerLoadout;
+    public bool _firstLoad;
 
     private void Awake()
     {
@@ -75,7 +76,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void UpdateAltWeaponData(WeaponData weaponData, int index)
     {
-        _mainWeaponData[index] = weaponData;
+        _altWeaponData[index] = weaponData;
     }
 
     public void UpdatePlayerLoadout(Vector2 loadout)
@@ -85,6 +86,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void ResetAllData()
     {
+        _firstLoad = true;
         _BGMVolume = 0.5f;
         _SFXVolume = 0.5f;
         _playerLevel = 0;
@@ -137,6 +139,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.mainWeaponData = _mainWeaponData;
         saveData.altWeaponData = _altWeaponData;
         saveData.playerLoadout = playerLoadout;
+        saveData.firstLoad = _firstLoad;
 
         // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData);
@@ -168,6 +171,7 @@ public class PlayerSavedData : MonoBehaviour
             _mainWeaponData = saveData.mainWeaponData;
             _altWeaponData = saveData.altWeaponData;
             playerLoadout = saveData.playerLoadout;
+            _firstLoad = saveData.firstLoad;
 
             print("Loaded Data Complete" + jsonData);
         }
@@ -190,4 +194,5 @@ public class SaveData
     public int killCount;
     public int highScore;
     public Vector2 playerLoadout;
+    public bool firstLoad;
 }

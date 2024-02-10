@@ -8,7 +8,7 @@ public class Minigun : MechWeapon
     public bool hasTarget;
     public GameObject gunturret;
     private Animator _animator;
-    public FORGE3dProjectileWeapon weaponController;
+    public ProjectileWeapon weaponController;
 
     public GameObject target;
 
@@ -26,7 +26,6 @@ public class Minigun : MechWeapon
         if (target != null)
         {
             hasTarget = true;
-            //gunturret.transform.LookAt(target.transform);
             gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, target.transform.position - gunturret.transform.position + aimOffest, Time.deltaTime * 10.0f);
         }
         else
@@ -43,7 +42,7 @@ public class Minigun : MechWeapon
             _timer += Time.deltaTime;
            if(_timer > speed)
             {
-                weaponController.Fire(damage);
+                weaponController.Minigun(damage);
                 _timer = 0.0f;
                 //print("Fired");
             }

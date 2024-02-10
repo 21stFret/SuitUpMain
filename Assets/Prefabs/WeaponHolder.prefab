@@ -276,7 +276,7 @@ PrefabInstance:
     - target: {fileID: 748719405579742603, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.264
+      value: -3.96
       objectReference: {fileID: 0}
     - target: {fileID: 748719405579742603, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
@@ -323,10 +323,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1047609938760171379, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 53e4f7a090e75a643b5d1fe418cc6ece, type: 3}
+    - target: {fileID: 1047609938760171379, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b95577aef16748c40bd404ccfe56287b, type: 2}
     - target: {fileID: 1065789662638526104, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
       propertyPath: m_Name
       value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 5799835829619983334, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5799835829619983334, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5799835829619983334, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5799835829619983334, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

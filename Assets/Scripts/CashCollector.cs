@@ -22,22 +22,11 @@ public class CashCollector : MonoBehaviour
 
     public void AddCash(int amount)
     {
-        currentCash += amount;
+        PlayerSavedData.instance.UpdatePlayerCash(amount);
+        currentCash = PlayerSavedData.instance._playerCash;
         UpdateUI();
-        SaveCash();
     }
 
-    public void ResetCash()
-    {
-        currentCash = 0;
-        UpdateUI();
-        SaveCash();
-    }
-
-    public void SaveCash()
-    {         
-        PlayerSavedData.instance._playerCash = currentCash;
-    }
 
     private void UpdateUI()
     {
@@ -46,11 +35,13 @@ public class CashCollector : MonoBehaviour
         {
             return;
         }
+        cashText.color = Color.green;
         cashText.transform.DOPunchScale(new Vector3(1, 1, 1), 0.2f,5, 1).OnComplete(ResetScale);
     }
 
     private void ResetScale()
     {
+        cashText.color = Color.white;
         cashText.transform.localScale = new Vector3(2,2,2);
     }
 }

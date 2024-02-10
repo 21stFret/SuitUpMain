@@ -25,7 +25,6 @@ public class MechLoadOut : MonoBehaviour
         RemoveMainWeapon();
         if (weaponsManager.mainWeapon < 0) { return; }
         mainWeapon = weaponsManager._mainWeapons[weaponsManager.mainWeapon];
-        mainWeapon.gameObject.SetActive(true);
         mainWeapon.transform.SetParent(mainWeaponMount);
         mainWeapon.transform.localPosition = Vector3.zero;
         mainWeapon.transform.localRotation = Quaternion.identity;
@@ -43,7 +42,6 @@ public class MechLoadOut : MonoBehaviour
         if (weaponsManager.altWeapon < 0) { return; }
         altWeapon = weaponsManager._altWeapons[weaponsManager.altWeapon];
         altWeapon.transform.SetParent(altWeaponMount);
-        altWeapon.gameObject.SetActive(true);
         altWeapon.transform.localPosition = Vector3.zero;
         altWeapon.transform.localRotation = Quaternion.identity;
 
@@ -61,7 +59,6 @@ public class MechLoadOut : MonoBehaviour
         {
             mainWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
             weaponsHanger.SetMainWeaponPositionToSlot(mainWeapon);
-            mainWeapon.gameObject.SetActive(false);
             mainWeapon = null;
         }
     }
@@ -72,7 +69,6 @@ public class MechLoadOut : MonoBehaviour
         {
             altWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
             weaponsHanger.SetAltWeaponPositionToSlot(altWeapon);
-            //altWeapon.gameObject.SetActive(false);
             altWeapon = null;
         }
     }

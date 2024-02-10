@@ -15,7 +15,6 @@ public class CrawlerDaddy : Crawler
     public override void Die()
     {
         base.Die();
-        meshRenderer.enabled = false;
         DeathEffect.SetActive(true);
         ObjectSpawner.instance.SpawnAtPoint(transform.position + RandomUtils.RandomInsideSphere(2), spawnCount);
         ExplodeIfInRange();
@@ -40,9 +39,9 @@ public class CrawlerDaddy : Crawler
         }
     }
 
-    public override void Respawn()
+    public override void Spawn()
     {
-        base.Respawn();
+        base.Spawn();
         meshRenderer.enabled = true;
         DeathEffect.SetActive(false);
     }

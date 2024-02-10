@@ -14,6 +14,6 @@ public class DoTweenRotate : MonoBehaviour
     private void Start()
     {
         print("started tween rotation");
-        transform.DOLocalRotate(endRoatation, rotationSpeed).SetLoops(loopCount, loopType).SetEase(ease);
+        transform.DOLocalRotate(endRoatation, rotationSpeed, RotateMode.FastBeyond360).SetLoops(loopCount, loopType).SetEase(ease);
     }
 }

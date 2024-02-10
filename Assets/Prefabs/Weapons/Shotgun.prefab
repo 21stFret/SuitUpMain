@@ -279,6 +279,7 @@ MonoBehaviour:
     level: 0
     exp: 0
   baseWeaponInfo:
+    weaponName: shotgun
     _damage:
     - 1
     - 2
@@ -298,8 +299,8 @@ MonoBehaviour:
     weaponLoop: {fileID: 0}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 0}
-  weaponName: 
   damage: 0
+  force: 0
   speed: 0
   range: 0
   ammo: 0
@@ -317,8 +318,8 @@ MonoBehaviour:
   hasTarget: 0
   gunturret: {fileID: 1591700063719516111}
   weaponController: {fileID: 2673801093487598846}
-  shotsPerBurst: 0
-  spreadAngle: 0
+  shotsPerBurst: 5
+  spreadAngle: 25
 --- !u!114 &4584076103464758133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,10 +347,9 @@ MonoBehaviour:
   TurretSocket:
   - {fileID: 5799835829619983332}
   ShellParticles: []
-  vulcanProjectile: {fileID: 400000, guid: e496166a742ada640b89650ebebbd052, type: 3}
+  vulcanProjectile: {fileID: 400012, guid: 440fe57f42038354092415c07a4d55a9, type: 3}
   vulcanMuzzle: {fileID: 400000, guid: b16d97c287e513344af2399ff138cd27, type: 3}
   vulcanImpact: {fileID: 400000, guid: bfa7781c328a236468eda51a8ae2be55, type: 3}
-  vulcanOffset: 0
 --- !u!1 &1591700063719516111
 GameObject:
   m_ObjectHideFlags: 0

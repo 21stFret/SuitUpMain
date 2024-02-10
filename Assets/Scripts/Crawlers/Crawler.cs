@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using Micosmo.SensorToolkit;
 using Unity.VisualScripting;
+using DG.Tweening;
+using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 public class Crawler : MonoBehaviour
 {
@@ -12,16 +15,14 @@ public class Crawler : MonoBehaviour
     public float health;
     public int healthMax;
     public int attackDamage;
-    public NavMeshAgent navMeshAgent;
+    public float speed;
+    public CrawlerMovement crawlerMovement;
     public ParticleSystem DeathBlood;
+    public ParticleSystem _spawnEffect;
     public Animator animator;
     public bool hasTarget;
     private bool dead;
     public AudioSource deathNoise;
-    public float attackDistance;
-    public float DistanceToTarget;
-    public float speed;
-    public float randomRadius;
     public bool canSeeTarget;
     public SkinnedMeshRenderer meshRenderer;
     public bool stunned;
@@ -29,11 +30,13 @@ public class Crawler : MonoBehaviour
     public int IgnorelayerMask;
     public int ShootlayerMask;
     public bool immune;
+    public float randomRadius;
+    public float crawlerScale;
 
     private void Awake()
     {
         _collider = GetComponent<Collider>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        crawlerMovement = GetComponent<CrawlerMovement>();
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
@@ -47,7 +50,7 @@ public class Crawler : MonoBehaviour
     public IEnumerator SwitchOffNavMesh(float stunTime)
     {
         stunned = true;
-        navMeshAgent.enabled = false;
+        crawlerMovement.enabled = false;
         yield return new WaitForSeconds(stunTime);
 
         if (dead)
@@ -56,7 +59,7 @@ public class Crawler : MonoBehaviour
             yield break;
         }
 
-        navMeshAgent.enabled = true;
+        crawlerMovement.enabled = true;
         stunned = false;
     }
 
@@ -83,12 +86,12 @@ public class Crawler : MonoBehaviour
 
         if(stunned)
         {
-            navMeshAgent.speed = 0;
+            crawlerMovement.speed = 0;
             return;
         }
         else
         {
-            navMeshAgent.speed = speed;
+            crawlerMovement.speed = speed;
         }
 
         SetTargetDestination();
@@ -115,34 +118,31 @@ public class Crawler : MonoBehaviour
 
         if (canSeeTarget)
         {
-            navMeshAgent.SetDestination(target.position);
+            crawlerMovement.SetTarget(target);
         }
-        else if (navMeshAgent.destination == transform.position)
+        else
         {
             Vector3 randomPosition = Random.insideUnitSphere * randomRadius;
             randomPosition += target.position;
             NavMeshHit hitSample;
             if (NavMesh.SamplePosition(randomPosition, out hitSample, randomRadius, NavMesh.AllAreas))
             {
-                navMeshAgent.SetDestination(hitSample.position);
+                crawlerMovement.SetDestination(hitSample.position);
             }
         }
-        var blah = navMeshAgent.steeringTarget;
-        transform.LookAt(new Vector3(blah.x, transform.position.y, blah.z));
     }
 
     public virtual void Attack()
     {
-        DistanceToTarget = Vector3.Distance(transform.position, target.position);
-        if (DistanceToTarget < attackDistance)
+        if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
         {
             animator.SetBool("Attack", true);
-            navMeshAgent.speed = 0;
+            crawlerMovement.speed = 0;
         }
         else
         {
             animator.SetBool("Attack", false);
-            navMeshAgent.speed = speed;
+            crawlerMovement.speed = speed;
         }
     }
 
@@ -199,6 +199,17 @@ public class Crawler : MonoBehaviour
 
     }
 
+    public void DealyedDamage(float damage, float delay)
+    {
+        StartCoroutine(DealyedDamageCoroutine(damage, delay));
+    }
+
+    private IEnumerator DealyedDamageCoroutine(float damage, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        TakeDamage(damage);
+    }
+
     private void FlashRed()
     {
         StartCoroutine(FlashRedCoroutine());
@@ -232,14 +243,16 @@ public class Crawler : MonoBehaviour
         PlayDeathNoise();
         tag = "Untagged";
         gameObject.layer = IgnorelayerMask;
-        navMeshAgent.enabled = false;
+        crawlerMovement.enabled = false;
+        meshRenderer.enabled = false;
         target = null;
-        navMeshAgent.speed = 0;
+        crawlerMovement.speed = 0;
         animator.SetTrigger("Die");
         DeathBlood.Play();
         StartCoroutine(delayedColision());
         CashCollector.Instance.AddCash(10);
         GameManager.instance.UpdateKillCount(1);
+        ObjectSpawner.instance.AddtoRespawnList(this);
     }
 
     public void PlayDeathNoise()
@@ -248,27 +261,36 @@ public class Crawler : MonoBehaviour
         deathNoise.Play();
     }
 
-    public virtual void Respawn()
+    public virtual void Spawn()
     {
         if(dead)
         { 
             animator.SetTrigger("Respawn"); 
         }
-        tag = "Enemy";
-        gameObject.layer = ShootlayerMask;
+        transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
-        _collider.enabled = true;
-        navMeshAgent.enabled = true;
-        navMeshAgent.speed = speed;
-        dead = false;
+        StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
+    }
+
+    private IEnumerator SpawnEffect()
+    {
+        _spawnEffect.Play();
+        transform.DOScale(Random.Range(crawlerScale-0.1f, crawlerScale+0.1f), 0.4f);
+        yield return new WaitForSeconds(0.4f);
+        tag = "Enemy";
+        meshRenderer.enabled = true;
+        gameObject.layer = ShootlayerMask;
+        _collider.enabled = true;
+        crawlerMovement.enabled = true;
+        crawlerMovement.speed = speed;
+        dead = false;
     }
 
     private IEnumerator delayedColision()
     {
         yield return new WaitForSeconds(2f);
         _collider.enabled = false;
-        ObjectSpawner.instance.AddtoRespawnList(this);
     }
 }
 
