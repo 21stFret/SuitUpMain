@@ -37,6 +37,11 @@ public class ObjectSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TestSpawning();
+        }
+
         if (!isActive)
         {
             return;
@@ -68,26 +73,33 @@ public class ObjectSpawner : MonoBehaviour
         StartCoroutine(SpawnDelay());
     }
 
+    private void TestSpawning()
+    {
+        SelectSpawnPoint();
+        StartCoroutine(SpawnDelay());
+    }
+
     private void SpawnCrawlers()
     {
         for (int i = 0; i < spawnAmmount; i++)
         {
-            Vector2 randomCircle = Random.insideUnitCircle * 2;
-            Vector3 randomPoint = new Vector3(randomCircle.x, 0, randomCircle.y) + spawnPoint.position;
+            Vector3 randomCircle = Random.insideUnitSphere * 2;
+            randomCircle.z = 0;
+            Vector3 randomPoint = randomCircle + spawnPoint.position;
             crawlers[i].transform.position = randomPoint;
-            crawlers[i].transform.rotation = Quaternion.identity;
-            StartCoroutine(SpawnRandomizer(crawlers[i], Random.Range(0, 1.3f)));
+            crawlers[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y,0);
+            StartCoroutine(SpawnRandomizer(crawlers[i], i*0.1f));
         }
         if (spawnRound > 3)
         {
             for (int i = 0; i < spawnRound / 2; i++)
             {
-                Vector2 randomCircle = Random.insideUnitCircle * 3;
-                Vector3 randomPoint = new Vector3(randomCircle.x, 0, randomCircle.y) + spawnPoint.position;
+                Vector3 randomCircle = Random.insideUnitSphere * 3;
+                randomCircle.z = 0;
+                Vector3 randomPoint = randomCircle + spawnPoint.position;
                 crawlerDaddy[i].transform.position = randomPoint;
-                crawlerDaddy[i].transform.rotation = Quaternion.identity;
-                crawlerDaddy[i].Spawn();
-                crawlerDaddy.Remove(crawlerDaddy[i]);
+                crawlerDaddy[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+                StartCoroutine(SpawnRandomizer(crawlerDaddy[i], i * 0.1f));
             }
         }
     }
@@ -104,7 +116,15 @@ public class ObjectSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         bug.Spawn();
-        crawlers.Remove(bug);
+        bug.rb.AddForce(bug.transform.forward * Random.Range(5,10), ForceMode.Impulse); 
+        if(bug.GetComponent<CrawlerDaddy>() != null)
+        {
+            crawlerDaddy.Remove((CrawlerDaddy)bug);
+        }
+        else
+        {
+            crawlers.Remove(bug);
+        }
     }
 
     private void PLaySpawnEffect()

@@ -12,7 +12,7 @@ public class LightningRodController : MechWeapon
     public List<Crawler> crawlers = new List<Crawler>();
     public int crawlerIndex;
     public int chainAmount;
-    public float chainRange;
+    public float lightningRange;
     public List<GameObject> lightningChains;
     public bool hitSwitch;
     public float timer;
@@ -107,7 +107,7 @@ public class LightningRodController : MechWeapon
 
     public void LightningArc(Transform nextHit)
     {
-        Collider[] colliders = Physics.OverlapSphere(nextHit.position, chainRange*2, crawlerLayer);
+        Collider[] colliders = Physics.OverlapSphere(nextHit.position, lightningRange, crawlerLayer);
         Array.Sort(colliders, (x, y) => Vector3.Distance(nextHit.position, x.transform.position).CompareTo(Vector3.Distance(nextHit.position, y.transform.position)));
         for(int i = 0; i< colliders.Length; i++)
         {

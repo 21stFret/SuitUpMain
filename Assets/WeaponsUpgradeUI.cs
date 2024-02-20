@@ -24,6 +24,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public StatsUI statsUI;
 
     private bool lockUpgradebutton; 
+    public GameObject lockedPanel;
 
     private void OnEnable()
     {
@@ -77,6 +78,17 @@ public class WeaponsUpgradeUI : MonoBehaviour
         currentWeapon.transform.rotation = weaponParent.rotation;
         currentWeapon.transform.SetParent(weaponParent);
         currentWeapon.transform.localScale = new Vector3(60, 60, 60);
+
+
+        if(currentWeapon.weaponData.unlocked)
+        {
+            ShowLockedPanel(true);
+        }
+    }
+
+    public void ShowLockedPanel(bool value)
+    {
+        //lockedPanel.SetActive(value);
     }
 
     public void NextWeapon()
@@ -108,6 +120,10 @@ public class WeaponsUpgradeUI : MonoBehaviour
         }
         
         if(!CheckCost(currentWeapon.baseWeaponInfo))
+        {
+            return;
+        }
+        if(lockUpgradebutton)
         {
             return;
         }
@@ -153,6 +169,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
             Uspeed.text = " Max";
             Urange.text = " Max";
             Ulevel.text = " Max";
+            cost.text = "Max";
             return;
         }
         Udamage.text = info._damage[weaponLevel + 1].ToString();

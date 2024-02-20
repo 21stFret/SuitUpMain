@@ -19,9 +19,9 @@ public class Minigun : MechWeapon
         _animator = GetComponent<Animator>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        target = sensor.GetStrongestDetection("Enemy");
+        target = sensor.GetNearestDetection("Enemy");
 
         if (target != null)
         {

@@ -7,11 +7,13 @@ using UnityEngine.InputSystem;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
-    public GameObject CheatsMenu;
+    public GameObject cheatsMenu;
+    public GameObject controlsMenu;
+    public GameObject settingsMenu;
     public bool isPaused;
     public PlayerInput playerInput;
     public EventSystem eventSystem;
-    public GameObject controlsButton;
+    public GameObject firstSelectedButton;
 
     void Start()
     {
@@ -29,13 +31,15 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0;
         isPaused = true;
         playerInput.SwitchCurrentActionMap("UI");
-        eventSystem.SetSelectedGameObject(controlsButton);
+        eventSystem.SetSelectedGameObject(firstSelectedButton);
     }
 
     public void ResumeGame()
     {
-        CheatsMenu.SetActive(false);
+        cheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
+        controlsMenu.SetActive(false);
+        settingsMenu.SetActive(false);
         Time.timeScale = 1;
         isPaused = false;
         playerInput.SwitchCurrentActionMap("Gameplay");

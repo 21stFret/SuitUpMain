@@ -5,8 +5,6 @@ using DG.Tweening;
 
 public class CashCollector : MonoBehaviour
 {
-    [SerializeField] private int currentCash;
-    public int cash { get { return currentCash; } }
     [SerializeField] public TMP_Text cashText;
     public static CashCollector Instance;
 
@@ -17,20 +15,20 @@ public class CashCollector : MonoBehaviour
 
     private void Start()
     {
-        UpdateUI();
+        UpdateUI(PlayerSavedData.instance._playerCash);
     }
 
     public void AddCash(int amount)
     {
         PlayerSavedData.instance.UpdatePlayerCash(amount);
-        currentCash = PlayerSavedData.instance._playerCash;
-        UpdateUI();
+
+        UpdateUI(PlayerSavedData.instance._playerCash);
     }
 
 
-    private void UpdateUI()
+    private void UpdateUI(int cash)
     {
-        cashText.text = "$" + currentCash.ToString();
+        cashText.text = "$" + cash.ToString();
         if(cashText.transform.localScale.x > 2)
         {
             return;

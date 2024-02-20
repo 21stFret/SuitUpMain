@@ -72,12 +72,8 @@ public class PulseShockwave : MonoBehaviour
             if (crawler != null)
             {
                 crawler.StartCoroutine(crawler.SwitchOffNavMesh(0.2f));
-                Rigidbody crawlerRigidbody = crawler.GetComponent<Rigidbody>();
-                if (crawlerRigidbody != null)
-                {
-                    Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
-                    crawlerRigidbody.AddForce(forceDirection * forceMagnitude , ForceMode.Impulse);
-                }
+                Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
+                crawler.rb.AddForce(forceDirection * forceMagnitude , ForceMode.Impulse);
             }
         }
     }

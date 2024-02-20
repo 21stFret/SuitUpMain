@@ -18,7 +18,7 @@ public class MechBattleController : MonoBehaviour
         characterController.Die();
         characterController.enabled = false;
         GameManager.instance.GameOver();
-        gameObject.layer = 2;
+        gameObject.layer = 1;
     }
 
     public void RepairArmour()

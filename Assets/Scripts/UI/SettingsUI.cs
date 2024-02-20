@@ -13,4 +13,14 @@ public class SettingsUI : MonoBehaviour
         BGM.value = AudioManager.instance.musicVolume;
         SFX.value = AudioManager.instance.sfxVolume;
     }
+
+    public void SetBGMVolume()
+    {
+        AudioManager.instance.SetMusicVolume(BGM.value);
+    }
+    
+    public void SetSFXVolume()
+    {
+        AudioManager.instance.SetSFXVolume(SFX.value);
+    }
 }

@@ -36,6 +36,7 @@ public class MechWeapon : MonoBehaviour
     public int maxAmmo;
     public float reloadTime;
     public bool isFiring;
+    public RangeSensor rangeSensor;
     [Header("Main Weapon")]
     public LOSSensor sensor;
     public Vector3 aimOffest;
@@ -46,15 +47,21 @@ public class MechWeapon : MonoBehaviour
     public float weaponRechargeRate;
     public float weaponFuelUseRate;
     public Sprite fuelSprite;
+    public LaserSight laserSight;
 
     public virtual void Init()
     {
         weaponFuel = weaponFuelMax;
+
         SetValues();
 
         if(weaponData.mainWeapon)
         {
+            rangeSensor = GetComponent<RangeSensor>();
+            rangeSensor.Sphere.Radius = range;
             sensor.enabled = true;
+            laserSight.gameObject.SetActive(true);
+            laserSight.SetLaserLength(range);
             Debug.Log("Main Weapon sensor enabled");
         }
 
@@ -75,7 +82,6 @@ public class MechWeapon : MonoBehaviour
         damage = baseWeaponInfo._damage[weaponData.level];
         speed = baseWeaponInfo._fireRate[weaponData.level];
         range = baseWeaponInfo._range[weaponData.level];
-
     }
 
     private void FixedUpdate()

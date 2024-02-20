@@ -44630,9 +44630,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.27
-  m_Height: 4
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 1.22, z: 0}
 --- !u!114 &3861124043722804793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44645,6 +44645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d2d0b7633b8ade4da5634b574a7e895, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 0}
   target: {fileID: 0}
   health: 0
   healthMax: 7
@@ -44662,8 +44663,9 @@ MonoBehaviour:
   IgnorelayerMask: 2
   ShootlayerMask: 8
   immune: 0
-  randomRadius: 0
+  randomLocationRadius: 3
   crawlerScale: 1
+  cashWorth: 30
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 4
   explosionRadius: 10

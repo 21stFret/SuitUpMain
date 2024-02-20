@@ -35,6 +35,7 @@ public class PlayerSavedData : MonoBehaviour
     private void Update()
     {
         // Testing Only
+        /*
         if(Input.GetKeyDown(KeyCode.S))
         {
             SavePlayerData();
@@ -47,6 +48,7 @@ public class PlayerSavedData : MonoBehaviour
         {
             ResetAllData();
         }
+        */
     }
 
     public void UpdateKillCount(int count)
@@ -94,7 +96,7 @@ public class PlayerSavedData : MonoBehaviour
         _killCount = 0;
         _waveScore = 0;
         CreateWeaponData();
-        playerLoadout = new Vector2(-1, -1);
+        playerLoadout = new Vector2(0, 0);
         SavePlayerData();
     }
 
@@ -122,6 +124,8 @@ public class PlayerSavedData : MonoBehaviour
             _altWeaponData[i].exp = 0;
             _altWeaponData[i].mainWeapon = false;
         }
+        _mainWeaponData[0].unlocked = true;
+        _altWeaponData[0].unlocked = true;
     }
 
     public void SavePlayerData()

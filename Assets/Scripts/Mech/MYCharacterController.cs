@@ -131,14 +131,14 @@ public class MYCharacterController : MonoBehaviour
             }
             aimDirection.transform.position = aimDirectionLoc;
             aimDirection.SetActive(true);
-            lookingDirection.SetActive(false);
+            //lookingDirection.SetActive(false);
             Vector3 lookDirection = aimDirectionLoc - transform.position;
             lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
         }
         else
         {
             aimDirection.SetActive(false);
-            lookingDirection.SetActive(true);
+            //lookingDirection.SetActive(true);
             aimDirectionLoc = Vector3.zero;
             lookRotation = Quaternion.LookRotation(direction, Vector3.up);
         }

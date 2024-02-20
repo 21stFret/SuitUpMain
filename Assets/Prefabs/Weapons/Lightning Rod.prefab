@@ -39020,9 +39020,9 @@ MonoBehaviour:
     - 0.5
     - 0.2
     _range:
-    - 10
+    - 12
     - 15
-    - 20
+    - 18
     _cost: e8030000d0070000b80b0000
   weaponEffects:
     weaponAudioSource: {fileID: 3573105458296607397}
@@ -39038,6 +39038,7 @@ MonoBehaviour:
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
+  rangeSensor: {fileID: 0}
   sensor: {fileID: 0}
   aimOffest: {x: 0, y: 0, z: 0}
   weaponUI: {fileID: 0}
@@ -39046,10 +39047,11 @@ MonoBehaviour:
   weaponRechargeRate: 0.6
   weaponFuelUseRate: 1
   fuelSprite: {fileID: 21300000, guid: b83785ae746ff8f449d169cb4e80c348, type: 3}
+  laserSight: {fileID: 0}
   crawlers: []
   crawlerIndex: 0
   chainAmount: 5
-  chainRange: 5
+  lightningRange: 0
   lightningChains:
   - {fileID: 8611655703468910208}
   - {fileID: 5247179827618213576}

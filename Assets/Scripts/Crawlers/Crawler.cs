@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 public class Crawler : MonoBehaviour
 {
     private RangeSensor rangeSensor;
+    public Rigidbody rb;
     public Transform target;
     public float health;
     public int healthMax;
@@ -26,19 +27,19 @@ public class Crawler : MonoBehaviour
     public bool canSeeTarget;
     public SkinnedMeshRenderer meshRenderer;
     public bool stunned;
-    private Collider _collider;
     public int IgnorelayerMask;
     public int ShootlayerMask;
     public bool immune;
-    public float randomRadius;
+    public float randomLocationRadius;
     public float crawlerScale;
+    public int cashWorth;
 
     private void Awake()
     {
-        _collider = GetComponent<Collider>();
         crawlerMovement = GetComponent<CrawlerMovement>();
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Start()
@@ -122,10 +123,10 @@ public class Crawler : MonoBehaviour
         }
         else
         {
-            Vector3 randomPosition = Random.insideUnitSphere * randomRadius;
+            Vector3 randomPosition = Random.insideUnitSphere * randomLocationRadius;
             randomPosition += target.position;
             NavMeshHit hitSample;
-            if (NavMesh.SamplePosition(randomPosition, out hitSample, randomRadius, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPosition, out hitSample, randomLocationRadius, NavMesh.AllAreas))
             {
                 crawlerMovement.SetDestination(hitSample.position);
             }
@@ -249,8 +250,7 @@ public class Crawler : MonoBehaviour
         crawlerMovement.speed = 0;
         animator.SetTrigger("Die");
         DeathBlood.Play();
-        StartCoroutine(delayedColision());
-        CashCollector.Instance.AddCash(10);
+        CashCollector.Instance.AddCash(cashWorth);
         GameManager.instance.UpdateKillCount(1);
         ObjectSpawner.instance.AddtoRespawnList(this);
     }
@@ -263,10 +263,6 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
-        if(dead)
-        { 
-            animator.SetTrigger("Respawn"); 
-        }
         transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
         StartCoroutine(SpawnEffect());
@@ -281,16 +277,9 @@ public class Crawler : MonoBehaviour
         tag = "Enemy";
         meshRenderer.enabled = true;
         gameObject.layer = ShootlayerMask;
-        _collider.enabled = true;
         crawlerMovement.enabled = true;
         crawlerMovement.speed = speed;
         dead = false;
-    }
-
-    private IEnumerator delayedColision()
-    {
-        yield return new WaitForSeconds(2f);
-        _collider.enabled = false;
     }
 }
 

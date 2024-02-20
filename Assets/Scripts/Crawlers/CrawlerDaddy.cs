@@ -16,7 +16,9 @@ public class CrawlerDaddy : Crawler
     {
         base.Die();
         DeathEffect.SetActive(true);
-        ObjectSpawner.instance.SpawnAtPoint(transform.position + RandomUtils.RandomInsideSphere(2), spawnCount);
+        Vector3 randomPoint = RandomUtils.RandomInsideSphere(2);
+        randomPoint.y = 0;
+        ObjectSpawner.instance.SpawnAtPoint(transform.position + randomPoint, spawnCount);
         ExplodeIfInRange();
     }
 
@@ -28,7 +30,6 @@ public class CrawlerDaddy : Crawler
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                print("Explode");
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
                 if(rb.GetComponent<TargetHealth>().mechHealth != null)
@@ -42,7 +43,6 @@ public class CrawlerDaddy : Crawler
     public override void Spawn()
     {
         base.Spawn();
-        meshRenderer.enabled = true;
         DeathEffect.SetActive(false);
     }
 }

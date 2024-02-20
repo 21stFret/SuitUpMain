@@ -56,6 +56,8 @@ namespace FORGE3D
             }
             else
             {
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, Time.deltaTime * ScaleTime);
+
                 alpha = Mathf.Lerp(alpha, 0, Time.deltaTime * ColorFadeTime);
                 meshRenderer.material.SetFloat(alphaID, alpha);
             }

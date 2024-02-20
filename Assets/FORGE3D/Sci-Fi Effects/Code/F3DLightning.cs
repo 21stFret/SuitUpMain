@@ -103,6 +103,7 @@ namespace FORGE3D
             {
                 ray = new Ray(transform.position + lightningRodController.raycastOffset, transform.forward);
                 Debug.DrawRay(transform.position + lightningRodController.raycastOffset, transform.forward * MaxBeamLength, Color.red);
+                MaxBeamLength = lightningRodController.range;
             }
 
             // Calculate default beam proportion multiplier based on default scale and maximum length

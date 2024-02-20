@@ -19,4 +19,6 @@ public class PortalEffect : MonoBehaviour
         _particleSystem.Play();
         _particleSystem2.Play();
     }
+
+
 }

@@ -283,13 +283,13 @@ MonoBehaviour:
     - 0.7
     - 1
     _fireRate:
+    - 0.25
     - 0.2
     - 0.1
-    - 0.05
     _range:
     - 15
-    - 20
-    - 25
+    - 18
+    - 22
     _cost: e8030000d0070000b80b0000
   weaponEffects:
     weaponAudioSource: {fileID: 0}
@@ -305,6 +305,7 @@ MonoBehaviour:
   maxAmmo: 0
   reloadTime: 0
   isFiring: 0
+  rangeSensor: {fileID: 0}
   sensor: {fileID: 922689415931832637}
   aimOffest: {x: 0, y: 0, z: 0}
   weaponUI: {fileID: 0}
@@ -313,6 +314,7 @@ MonoBehaviour:
   weaponRechargeRate: 0
   weaponFuelUseRate: 0
   fuelSprite: {fileID: 0}
+  laserSight: {fileID: 3735716276344981544}
   hasTarget: 0
   gunturret: {fileID: 3403235594171588617}
   weaponController: {fileID: 8005139676509938886}
@@ -694,5 +696,92 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3055774610300425875}
+  - {fileID: 1306963726741681047}
   m_Father: {fileID: 3055774610300425873}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5810849286818877867
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 534427814263605354}
+    m_Modifications:
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.016998291
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.076999426
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.8620007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6817453800255596364, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_Name
+      value: LaserSight
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ce1534329d396104dbf8dd7d2bbf6378, type: 3}
+--- !u!4 &1306963726741681047 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4793813754878485052, guid: ce1534329d396104dbf8dd7d2bbf6378,
+    type: 3}
+  m_PrefabInstance: {fileID: 5810849286818877867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3735716276344981544 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7166254545878374787, guid: ce1534329d396104dbf8dd7d2bbf6378,
+    type: 3}
+  m_PrefabInstance: {fileID: 5810849286818877867}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d515830ba6acdbc45820b2ac221b63ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

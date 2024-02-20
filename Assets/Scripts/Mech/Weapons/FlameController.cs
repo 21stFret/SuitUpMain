@@ -8,7 +8,7 @@ public class FlameController : MechWeapon
     public override void Init()
     {
         base.Init();
-        flameTrigger.InitFlameTrigger(damage, speed);
+        flameTrigger.InitFlameTrigger(damage, speed,range);
     }
 
     // Fire Weapon

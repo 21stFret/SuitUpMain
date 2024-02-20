@@ -1,11 +1,12 @@
+using Micosmo.SensorToolkit;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FlameTrigger : MonoBehaviour
 {
-    public List<Crawler> crawlers = new List<Crawler>();
-    private Collider col;
+    public FOVCollider fovCollider;
+    public TriggerSensor triggerSensor;
     public float shotSpeed;
     public float shotDamage;
     private bool isOn;
@@ -14,68 +15,40 @@ public class FlameTrigger : MonoBehaviour
 
     private void Awake()
     {
-        col = GetComponent<Collider>();
-        col.enabled = false;
     }
 
-    public void InitFlameTrigger(float damage, float speed)
+    public void InitFlameTrigger(float damage, float speed, float range)
     {
         shotDamage = damage;
         shotSpeed = speed;
+        fovCollider.Length = range;
     }
 
     public void SetCol(bool value)
     {
-        col.enabled = value;
+        fovCollider.enabled = value;
         isOn = value;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-
-        if (other.CompareTag("Enemy"))
-        {
-            crawlers.Add(other.GetComponent<Crawler>());
-        }
-
-        if (other.CompareTag("Tree"))
-        {
-            other.GetComponent<Tree>().TriggerOnFire();
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            if(crawlers.Count <= 0)
-            { return; }
-            crawlers.Remove(other.GetComponent<Crawler>());
-        }
     }
 
     private void Update()
     {
-        if(crawlers.Count <= 0)
-        { return; }
-
         if (!isOn)
         {
-            crawlers.Clear();
             timer = 0;
             return;
         }
 
+        if (triggerSensor.GetDetections().Count <= 0)
+        { return; }
+
         timer += Time.deltaTime;
         if(timer > shotSpeed)
         {
-            foreach (Crawler crawler in crawlers)
+            foreach (GameObject crawler in triggerSensor.GetDetections())
             {
-                crawler.TakeDamage(shotDamage);
+                crawler.GetComponent<Crawler>().TakeDamage(shotDamage);
             }
             timer = 0;
         }
-
-
     }
 }

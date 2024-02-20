@@ -44,7 +44,9 @@ public class AirDropDrone : MonoBehaviour
 
     private void GetDropOffLocation()
     {
-        endPos = targetPos.position + RandomUtils.RandomInsideSphere(5);
+        Vector3 randomPoint = RandomUtils.RandomInsideSphere(2);
+        randomPoint.y = 0;
+        endPos = targetPos.position + randomPoint;
         endPos.y = startPos.position.y -2;
     }
 
