@@ -40,6 +40,7 @@ public class MechWeapon : MonoBehaviour
     [Header("Main Weapon")]
     public LOSSensor sensor;
     public Vector3 aimOffest;
+    public LaserSight laserSight;
     [Header("Alt Weapon")]
     public WeaponUI weaponUI;
     public float weaponFuel;
@@ -47,7 +48,7 @@ public class MechWeapon : MonoBehaviour
     public float weaponRechargeRate;
     public float weaponFuelUseRate;
     public Sprite fuelSprite;
-    public LaserSight laserSight;
+
 
     public virtual void Init()
     {

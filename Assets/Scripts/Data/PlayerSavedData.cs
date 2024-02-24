@@ -12,8 +12,8 @@ public class PlayerSavedData : MonoBehaviour
     public WeaponData[] _altWeaponData;
     public int _playerCash;
     public int _killCount;
-    public int _waveScore;
-    public Vector2 playerLoadout;
+    public int _highScore;
+    public Vector2 _playerLoadout;
     public bool _firstLoad;
 
     private void Awake()
@@ -54,10 +54,10 @@ public class PlayerSavedData : MonoBehaviour
     public void UpdateKillCount(int count)
     {
         _killCount += count;
-        if (_killCount > _waveScore)
+        if (_killCount > _highScore)
         {
-            _waveScore = _killCount;
-            PlayerPrefs.SetInt("HighScore", _waveScore);
+            _highScore = _killCount;
+            PlayerPrefs.SetInt("HighScore", _highScore);
         }
     }
 
@@ -83,7 +83,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void UpdatePlayerLoadout(Vector2 loadout)
     {
-        playerLoadout = loadout;
+        _playerLoadout = loadout;
     }
 
     public void ResetAllData()
@@ -94,10 +94,11 @@ public class PlayerSavedData : MonoBehaviour
         _playerLevel = 0;
         _playerCash = 0;
         _killCount = 0;
-        _waveScore = 0;
+        _highScore = 0;
         CreateWeaponData();
-        playerLoadout = new Vector2(0, 0);
+        _playerLoadout = new Vector2(0, 0);
         SavePlayerData();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     public void CreateWeaponData()
@@ -139,10 +140,10 @@ public class PlayerSavedData : MonoBehaviour
         saveData.playerLevel = _playerLevel;
         saveData.playerCash = _playerCash;
         saveData.killCount = _killCount;
-        saveData.highScore = _waveScore;
+        saveData.highScore = _highScore;
         saveData.mainWeaponData = _mainWeaponData;
         saveData.altWeaponData = _altWeaponData;
-        saveData.playerLoadout = playerLoadout;
+        saveData.playerLoadout = _playerLoadout;
         saveData.firstLoad = _firstLoad;
 
         // Convert the SaveData instance to JSON
@@ -171,10 +172,10 @@ public class PlayerSavedData : MonoBehaviour
             _playerLevel = saveData.playerLevel;
             _playerCash = saveData.playerCash;
             _killCount = saveData.killCount;
-            _waveScore = saveData.highScore;
+            _highScore = saveData.highScore;
             _mainWeaponData = saveData.mainWeaponData;
             _altWeaponData = saveData.altWeaponData;
-            playerLoadout = saveData.playerLoadout;
+            _playerLoadout = saveData.playerLoadout;
             _firstLoad = saveData.firstLoad;
 
             print("Loaded Data Complete" + jsonData);

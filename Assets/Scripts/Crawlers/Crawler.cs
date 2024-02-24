@@ -265,6 +265,7 @@ public class Crawler : MonoBehaviour
     {
         transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
+        animator.SetTrigger("Respawn");
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
     }

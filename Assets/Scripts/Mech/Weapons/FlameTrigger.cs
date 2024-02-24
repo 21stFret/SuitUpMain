@@ -44,9 +44,19 @@ public class FlameTrigger : MonoBehaviour
         timer += Time.deltaTime;
         if(timer > shotSpeed)
         {
-            foreach (GameObject crawler in triggerSensor.GetDetections())
+
+
+            foreach (GameObject hit in triggerSensor.GetDetections())
             {
-                crawler.GetComponent<Crawler>().TakeDamage(shotDamage);
+                if(hit.tag == "Tree")
+                {
+                    hit.GetComponent<Tree>().TriggerOnFire();
+                }
+                else
+                {
+                    hit.GetComponent<Crawler>().TakeDamage(shotDamage);
+                }
+
             }
             timer = 0;
         }

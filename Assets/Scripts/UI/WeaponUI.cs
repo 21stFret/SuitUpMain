@@ -14,7 +14,7 @@ public class WeaponUI : MonoBehaviour
     public void UpdateWeaponUI(float fuel)
     {
         weaponFuelText.text = fuel.ToString("0") + "%";
-        fuelImage.fillAmount = fuel / 100;
+        fuelBar.fillAmount = fuel / 100;
     }
 
     public void SetUITrigger(bool isOn)

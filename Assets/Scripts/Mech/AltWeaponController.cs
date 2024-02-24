@@ -7,6 +7,7 @@ public class AltWeaponController : MonoBehaviour
 {
     public InputActionAsset primaryActions;
     InputActionMap gameplayActionMap;
+    public PlayerInput playerInput;
     public InputAction FireInputAction;
     public MechWeapon equipedWeapon;
 
@@ -63,8 +64,15 @@ public class AltWeaponController : MonoBehaviour
 
     public void OnAim(InputAction.CallbackContext context)
     {
-
         Vector2 movementVector = context.ReadValue<Vector2>();
+        var cam = Camera.main;
+        if (playerInput.currentControlScheme == "PC")
+        {
+            movementVector.x -= cam.pixelWidth / 2;
+            movementVector.y -= cam.pixelHeight / 2;
+        }
+
+        //movementVector.Normalize();
         if (movementVector == Vector2.zero)
         {
             ResetAim();

@@ -31,14 +31,14 @@ public class WeaponsManager : MonoBehaviour
     public void SetMainWeaponIndex(int index)
     {
         mainWeapon = index;
-        PlayerSavedData.instance.playerLoadout.x = index;
+        PlayerSavedData.instance._playerLoadout.x = index;
         PlayerSavedData.instance.SavePlayerData();
     }
 
     public void SetAltWeaponIndex(int index)
     {
         altWeapon = index;
-        PlayerSavedData.instance.playerLoadout.y = index;
+        PlayerSavedData.instance._playerLoadout.y = index;
         PlayerSavedData.instance.SavePlayerData();
     }
 
@@ -53,8 +53,8 @@ public class WeaponsManager : MonoBehaviour
             _altWeapons[i].weaponData = altWeapons[i];
         }
 
-        mainWeapon = (int)PlayerSavedData.instance.playerLoadout.x;
-        altWeapon = (int)PlayerSavedData.instance.playerLoadout.y;
+        mainWeapon = (int)PlayerSavedData.instance._playerLoadout.x;
+        altWeapon = (int)PlayerSavedData.instance._playerLoadout.y;
     }
 
     public void UpdateWeaponData()

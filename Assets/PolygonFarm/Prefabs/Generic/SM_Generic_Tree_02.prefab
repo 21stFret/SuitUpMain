@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 64607460850331730}
   - component: {fileID: 4687101476005015827}
   - component: {fileID: 4604181162124187056}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Generic_Tree_02
   m_TagString: Tree
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.88
+  m_Radius: 0.6
   m_Height: 3.5115602
   m_Direction: 1
   m_Center: {x: -0.0000010430813, y: 0.63, z: 0.00000035762787}
@@ -155,6 +155,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4724602507275130}
     m_Modifications:
+    - target: {fileID: 3227121121450981307, guid: 3c0ab67272268d94e8b67482716f2d46,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3227121121450981311, guid: 3c0ab67272268d94e8b67482716f2d46,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3355654175815820447, guid: 3c0ab67272268d94e8b67482716f2d46,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5063269995654407170, guid: 3c0ab67272268d94e8b67482716f2d46,
         type: 3}
       propertyPath: m_RootOrder
@@ -217,6 +232,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5770441488106215552, guid: 3c0ab67272268d94e8b67482716f2d46,
         type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5770441488106215552, guid: 3c0ab67272268d94e8b67482716f2d46,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -248,6 +268,10 @@ PrefabInstance:
     - target: {fileID: 1412878908807930, guid: 77ca586a68388d14e82de484a13f2ff1, type: 3}
       propertyPath: m_Name
       value: SM_Generic_TreeDead_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1412878908807930, guid: 77ca586a68388d14e82de484a13f2ff1, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1412878908807930, guid: 77ca586a68388d14e82de484a13f2ff1, type: 3}
       propertyPath: m_IsActive

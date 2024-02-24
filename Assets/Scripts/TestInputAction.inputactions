@@ -87,7 +87,7 @@
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PC",
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -109,7 +109,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PC",
                     "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -127,6 +127,17 @@
                 },
                 {
                     "name": "",
+                    "id": "f87e8fb4-145c-407e-8356-a7e555c0246f",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "OpenMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0cc32ea4-2257-4604-a38e-07e499677551",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
@@ -137,12 +148,78 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "2D Vector",
+                    "id": "3085462e-fb60-4049-ad23-a1711a25931c",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "0e0eab55-bd83-4a9c-84ec-d16e4af8fc50",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "24893c5a-ab08-46aa-bc39-c86e4296195c",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "74dfb0f2-d635-488c-a1c4-74d584b08fb5",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "af85a40c-3fd1-4e5d-9c9c-6d2f0e61049d",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "396a5875-6bd1-4055-b6fa-ce6e0bd2534b",
                     "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
+                    "action": "Lock Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ecffcc6a-a5bf-4fb9-b231-9937f0a5cd52",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
                     "action": "Lock Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -160,11 +237,22 @@
                 },
                 {
                     "name": "",
-                    "id": "44863305-53bd-413c-831f-076b3ccf9cb8",
-                    "path": "<Gamepad>/buttonEast",
+                    "id": "8ad059cf-341d-470b-aad9-fd4b8d4f20cc",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "PC",
+                    "action": "Open Pause Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44863305-53bd-413c-831f-076b3ccf9cb8",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
                     "action": "Shockwave",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -350,6 +438,22 @@
             "devices": [
                 {
                     "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "PC",
+            "bindingGroup": "PC",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
                     "isOptional": false,
                     "isOR": false
                 }

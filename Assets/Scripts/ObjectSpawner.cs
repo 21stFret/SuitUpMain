@@ -52,9 +52,9 @@ public class ObjectSpawner : MonoBehaviour
         {
             BeginSpawning();
             timeElapsed = 0f;
-            if(spawnRound > PlayerSavedData.instance._waveScore)
+            if(spawnRound > PlayerSavedData.instance._highScore)
             {
-                PlayerSavedData.instance._waveScore = spawnRound;
+                PlayerSavedData.instance._highScore = spawnRound;
             }
         }
         timeText.text = ((roundTimer-timeElapsed)).ToString("00:00");
