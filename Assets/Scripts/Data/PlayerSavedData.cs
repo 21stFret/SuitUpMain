@@ -15,6 +15,7 @@ public class PlayerSavedData : MonoBehaviour
     public int _highScore;
     public Vector2 _playerLoadout;
     public bool _firstLoad;
+    public GameStats _gameStats;
 
     private void Awake()
     {
@@ -30,25 +31,6 @@ public class PlayerSavedData : MonoBehaviour
             Destroy(gameObject);
         }
 
-    }
-
-    private void Update()
-    {
-        // Testing Only
-        /*
-        if(Input.GetKeyDown(KeyCode.S))
-        {
-            SavePlayerData();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            LoadPlayerData();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ResetAllData();
-        }
-        */
     }
 
     public void UpdateKillCount(int count)
@@ -88,6 +70,12 @@ public class PlayerSavedData : MonoBehaviour
 
     public void ResetAllData()
     {
+        CreateData();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    public void CreateData()
+    {
         _firstLoad = true;
         _BGMVolume = 0.5f;
         _SFXVolume = 0.5f;
@@ -97,8 +85,8 @@ public class PlayerSavedData : MonoBehaviour
         _highScore = 0;
         CreateWeaponData();
         _playerLoadout = new Vector2(0, 0);
+        _gameStats = new GameStats();
         SavePlayerData();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     public void CreateWeaponData()
@@ -111,10 +99,9 @@ public class PlayerSavedData : MonoBehaviour
             _mainWeaponData[i].weaponIndex = i;
             _mainWeaponData[i].unlocked = false;
             _mainWeaponData[i].level = 0;
-            _mainWeaponData[i].exp = 0;
             _mainWeaponData[i].mainWeapon = true;
         }
-        _altWeaponData = new WeaponData[2];
+        _altWeaponData = new WeaponData[3];
         for (int i = 0; i < _altWeaponData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
@@ -122,7 +109,6 @@ public class PlayerSavedData : MonoBehaviour
             _altWeaponData[i].weaponIndex = i;
             _altWeaponData[i].unlocked = false;
             _altWeaponData[i].level = 0;
-            _altWeaponData[i].exp = 0;
             _altWeaponData[i].mainWeapon = false;
         }
         _mainWeaponData[0].unlocked = true;
@@ -145,6 +131,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.altWeaponData = _altWeaponData;
         saveData.playerLoadout = _playerLoadout;
         saveData.firstLoad = _firstLoad;
+        saveData.gameStats = _gameStats;
 
         // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData);
@@ -177,13 +164,14 @@ public class PlayerSavedData : MonoBehaviour
             _altWeaponData = saveData.altWeaponData;
             _playerLoadout = saveData.playerLoadout;
             _firstLoad = saveData.firstLoad;
+            _gameStats = saveData.gameStats;
 
             print("Loaded Data Complete" + jsonData);
         }
         else
         {
             print("No data found to load");
-            ResetAllData();
+            CreateData();
         }
     }
 }
@@ -200,4 +188,5 @@ public class SaveData
     public int highScore;
     public Vector2 playerLoadout;
     public bool firstLoad;
+    public GameStats gameStats;
 }

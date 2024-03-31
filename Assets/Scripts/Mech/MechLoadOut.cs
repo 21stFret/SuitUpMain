@@ -5,19 +5,31 @@ using UnityEngine;
 public class MechLoadOut : MonoBehaviour
 {
     public bool battleLoadout;
+    [HideInInspector]
     public WeaponsManager weaponsManager;
     public MechWeapon mainWeapon;
     public MechWeapon altWeapon;
-    public AltWeaponController altWeaponController;
+    public ManualWeaponController altWeaponController;
     public Transform mainWeaponMount;
     public Transform altWeaponMount;
+    [HideInInspector]
     public WeaponsHanger weaponsHanger;
+    public WeaponModManager weaponModManager;
+    public bool loadMainWeapon;
+    public bool loadAltWeapon;
 
     public void Init()
     {
         weaponsManager = WeaponsManager.instance;
-        EquipMainWeapon();
-        EquipAltWeapon();
+        if(loadMainWeapon)
+        {
+            EquipMainWeapon();
+        }
+        if(loadAltWeapon)
+        {
+            EquipAltWeapon();
+        }
+
     }
 
     public void EquipMainWeapon()
@@ -41,14 +53,18 @@ public class MechLoadOut : MonoBehaviour
         RemoveAltWeapon();
         if (weaponsManager.altWeapon < 0) { return; }
         altWeapon = weaponsManager._altWeapons[weaponsManager.altWeapon];
+        altWeapon.weaponFuelManager = transform.GetComponent<WeaponFuelManager>();
         altWeapon.transform.SetParent(altWeaponMount);
         altWeapon.transform.localPosition = Vector3.zero;
         altWeapon.transform.localRotation = Quaternion.identity;
 
         if(battleLoadout)
         {
+            altWeaponController.enabled = true;
             altWeaponController.Init(altWeapon);
             altWeapon.Init();
+            weaponModManager.weapon = altWeapon;
+            weaponModManager.altWeapon = altWeaponController;
         }
 
     }

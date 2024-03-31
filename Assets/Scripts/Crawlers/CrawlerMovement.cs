@@ -6,12 +6,12 @@ using static UnityEngine.ParticleSystem;
 
 public class CrawlerMovement : MonoBehaviour
 {
-    public Transform target;
-    public Vector3 destination;
+    private Transform target;
+    private Vector3 destination;
     public float speed;
     public float steerSpeed;
     public float stoppingDistance;
-    public Vector3 direction;
+    private Vector3 direction;
     private Rigidbody rb;
     public int rayAmount;
     public float rayDistance;
@@ -60,7 +60,8 @@ public class CrawlerMovement : MonoBehaviour
         {
             var z = i - rayAmount/2;
             Vector3 rayDirection = Quaternion.Euler(0, (90f / rayAmount) * z, 0) * transform.forward;
-
+            var raycastHeight = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            
             RaycastHit hit;
             if (Physics.Raycast(transform.position, rayDirection, out hit, rayDistance, layerMask))
             {
@@ -68,6 +69,7 @@ public class CrawlerMovement : MonoBehaviour
                 Vector3 steerDirection = -(hit.point - transform.position);
                 Debug.DrawRay(transform.position, steerDirection, Color.red);
                 // Steer away from the raycast hit
+                //steerDirection.y = 0;
                 direction = steerDirection;
             }
             else

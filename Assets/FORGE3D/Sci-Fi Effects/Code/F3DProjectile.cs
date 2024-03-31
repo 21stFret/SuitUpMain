@@ -24,9 +24,11 @@ namespace FORGE3D
         public float impactDamage;
         public float impactForce;
         public int pierceCount;
-        public bool isStun;
+        public float stunTime;
+        public float sphereCastRadius =0.2f;
 
         public ProjectileWeapon _weaponController;
+        public WeaponType weaponType;
 
         void Awake()
         {
@@ -80,7 +82,7 @@ namespace FORGE3D
         }
 
         // Apply hit force on impact
-        void ApplyForce(float force, bool stun)
+        void ApplyForce(float force, float stunTime)
         {
             if (hitPoint.rigidbody == null)
             { return; }
@@ -88,13 +90,8 @@ namespace FORGE3D
             if(hitPoint.collider.CompareTag("Enemy"))
             {
                 var crawler = hitPoint.collider.GetComponent<Crawler>();
-                crawler.TakeDamage(impactDamage);
-                // for shots that stun the crawler
-                if(stun)
-                {
-                    crawler.StartCoroutine(crawler.SwitchOffNavMesh(0.2f));
-                    hitPoint.rigidbody.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
-                }
+                crawler.TakeDamage(impactDamage, weaponType, stunTime);
+                crawler.rb.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
             }
         }
 
@@ -107,7 +104,7 @@ namespace FORGE3D
                 if (!isFXSpawned)
                 {
                     _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset);
-                    ApplyForce(impactForce, isStun);
+                    ApplyForce(impactForce, stunTime);
                     isFXSpawned = true;
                 }
                 if(pierceCount > 0)
@@ -132,7 +129,7 @@ namespace FORGE3D
                     step = step.normalized * RaycastAdvance;
                 }
 
-                SphereCastForColliders( 0.2f, layerMask);
+                SphereCastForColliders(sphereCastRadius, layerMask);
 
                 if (isHit)
                 {
@@ -159,10 +156,8 @@ namespace FORGE3D
         }
         void SphereCastForColliders(float radius, LayerMask layerMask)
         {
-            //RaycastHit[] colliders = Physics.SphereCastAll(transform.position, radius, transform.forward, 0.2f, layerMask);
-            if (Physics.Raycast(transform.position, transform.forward, out hitPoint, RaycastAdvance, layerMask))
+            if (Physics.SphereCast(transform.position, radius, transform.forward, out hitPoint, RaycastAdvance, layerMask))
             {
-                print(gameObject.name + " hit " + hitPoint.collider.name + " at point " + hitPoint.point + " with normal " + hitPoint.normal);
                 isHit = true;
             }
         }

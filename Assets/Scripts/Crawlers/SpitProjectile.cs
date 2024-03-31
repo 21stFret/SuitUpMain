@@ -13,33 +13,44 @@ public class SpitProjectile : MonoBehaviour
     public LayerMask layerMask;
     public GameObject explosionEffect;
     private Rigidbody _rigidbody;
+    private Vector3 targetLocation;
+    public float aimSpeed = 5f;
+    private bool inflight;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+
     }
 
-    public void Init(int damage)
+    public void Init(int damage, Transform target)
     {
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.velocity = Vector3.zero;
         gameObject.SetActive(true);
         _damage = damage;
+        targetLocation = target.position;
+        transform.forward = Vector3.up;
+        inflight = true;
     }
 
     private void Update()
     {
+        if(!inflight)
+        {
+            return;
+        }
+        transform.forward = Vector3.Lerp(transform.forward, targetLocation - transform.position, Time.deltaTime * aimSpeed);
         _rigidbody.velocity = transform.forward * speed;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 9)
-        {
-            Explode();
-        }
+        Explode();
     }
 
     private void Explode()
     {
+        inflight = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
         foreach (Collider collider in colliders)
         {
@@ -49,13 +60,13 @@ public class SpitProjectile : MonoBehaviour
                 print("Explode");
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
-                if (rb.GetComponent<TargetHealth>().mechHealth != null)
+                if (rb.GetComponent<TargetHealth>() != null)
                 {
                     rb.GetComponent<TargetHealth>().TakeDamage(_damage, null);
                 }
             }
         }
-        Instantiate(explosionEffect, transform.position, quaternion.identity);
+        //Instantiate(explosionEffect, transform.position, quaternion.identity);
         gameObject.SetActive(false);
     }
 

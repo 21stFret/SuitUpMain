@@ -34,7 +34,7 @@ public class WeaponsPanelUI : MonoBehaviour
     public void NextMainWeapon()
     {
         currentMainIndex++;
-        if (currentMainIndex >= mainWeaponSprites.Length)
+        if (currentMainIndex >= weaponsManager._mainWeapons.Length)
         {
             currentMainIndex = 0;
         }
@@ -45,7 +45,7 @@ public class WeaponsPanelUI : MonoBehaviour
     public void NextAltWeapon()
     {
         currentAltIndex++;
-        if (currentAltIndex >= altWeaponSprites.Length)
+        if (currentAltIndex >= weaponsManager._altWeapons.Length)
         {
             currentAltIndex = 0;
         }

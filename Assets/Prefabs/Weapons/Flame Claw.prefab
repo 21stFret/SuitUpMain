@@ -10047,13 +10047,13 @@ MonoBehaviour:
   rangeSensor: {fileID: 0}
   sensor: {fileID: 0}
   aimOffest: {x: 0, y: 0, z: 0}
+  laserSight: {fileID: 0}
   weaponUI: {fileID: 0}
   weaponFuel: 0
   weaponFuelMax: 100
   weaponRechargeRate: 0.5
   weaponFuelUseRate: 1.2
   fuelSprite: {fileID: 21300000, guid: 881be348f1894fc458cd8b4a0728e41a, type: 3}
-  laserSight: {fileID: 0}
   flameTrigger: {fileID: 7967985738750339073}
 --- !u!1 &7266232509237295231
 GameObject:
@@ -15060,6 +15060,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.00000061839813
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 6515ec5146c37c64697c75ff256f8d87, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 777f34780a8192b45bb6c1e818093a0f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15255,6 +15259,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.00000061839813
       objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 79150fedb950c394f9f3f3bb76d2d14b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 777f34780a8192b45bb6c1e818093a0f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

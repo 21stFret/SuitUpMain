@@ -31,7 +31,13 @@ public class DoTweenFade : MonoBehaviour
 
     public void FadeOut()
     {
-        canvasGroup.DOFade(0, fadeDuration);
-        image.DOFade(0, fadeDuration);
+        if (canvasGroup != null)
+        {
+            canvasGroup.DOFade(0, fadeDuration);
+        }
+        if (image != null)
+        {
+            image.DOFade(0, fadeDuration);
+        }
     }
 }

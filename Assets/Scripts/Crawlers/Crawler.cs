@@ -8,34 +8,61 @@ using DG.Tweening;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
 
+public enum CrawlerType
+{
+    Crawler,
+    Daddy,
+    Albino,
+    Spitter
+}
+
 public class Crawler : MonoBehaviour
 {
     private RangeSensor rangeSensor;
+    [HideInInspector]
     public Rigidbody rb;
+    [HideInInspector]
+    public CrawlerMovement crawlerMovement;
+    [HideInInspector]
+    public SkinnedMeshRenderer meshRenderer;
+    [HideInInspector]
     public Transform target;
-    public float health;
+    private Collider _collider;
+    public GameObject groundCollider;
+
+    [SerializeField]
+    private float health;
     public int healthMax;
     public int attackDamage;
     public float speed;
-    public CrawlerMovement crawlerMovement;
     public ParticleSystem DeathBlood;
     public ParticleSystem _spawnEffect;
-    public Animator animator;
-    public bool hasTarget;
+    protected Animator animator;
+    private bool hasTarget;
     private bool dead;
     public AudioSource deathNoise;
-    public bool canSeeTarget;
-    public SkinnedMeshRenderer meshRenderer;
-    public bool stunned;
-    public int IgnorelayerMask;
-    public int ShootlayerMask;
-    public bool immune;
+    private bool canSeeTarget;
+    protected bool inRange;
+
+    private bool stunned;
+    [SerializeField]
+    private bool immune;
     public float randomLocationRadius;
     public float crawlerScale;
     public int cashWorth;
+    public float groundLevel;
+
+    public CrawlerType crawlerType;
 
     private void Awake()
     {
+        Init();
+    }
+
+    public void Init()
+    {
+        _collider = GetComponent<Collider>();
+        animator = GetComponent<Animator>();
         crawlerMovement = GetComponent<CrawlerMovement>();
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -45,13 +72,14 @@ public class Crawler : MonoBehaviour
     private void Start()
     {
         hasTarget = false;
-        health = healthMax;
+        dead = false;
     }
 
-    public IEnumerator SwitchOffNavMesh(float stunTime)
+    public IEnumerator StunCralwer(float stunTime)
     {
         stunned = true;
         crawlerMovement.enabled = false;
+        animator.speed = 0;
         yield return new WaitForSeconds(stunTime);
 
         if (dead)
@@ -62,6 +90,7 @@ public class Crawler : MonoBehaviour
 
         crawlerMovement.enabled = true;
         stunned = false;
+        animator.speed = 1;
     }
 
     void Update()
@@ -85,18 +114,8 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        if(stunned)
-        {
-            crawlerMovement.speed = 0;
-            return;
-        }
-        else
-        {
-            crawlerMovement.speed = speed;
-        }
-
         SetTargetDestination();
-        Attack();
+        CheckDistance();
     }
 
     private void SetTargetDestination()
@@ -125,26 +144,29 @@ public class Crawler : MonoBehaviour
         {
             Vector3 randomPosition = Random.insideUnitSphere * randomLocationRadius;
             randomPosition += target.position;
-            NavMeshHit hitSample;
-            if (NavMesh.SamplePosition(randomPosition, out hitSample, randomLocationRadius, NavMesh.AllAreas))
-            {
-                crawlerMovement.SetDestination(hitSample.position);
-            }
+            crawlerMovement.SetDestination(randomPosition);
+        }
+    }
+
+    private void CheckDistance()
+    {
+        if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
+        {
+            inRange = true;
+            Attack();
+        }
+        else
+        {
+            inRange = false;
+            animator.SetBool("Attack", false);
+            crawlerMovement.speed = speed;
         }
     }
 
     public virtual void Attack()
     {
-        if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
-        {
-            animator.SetBool("Attack", true);
-            crawlerMovement.speed = 0;
-        }
-        else
-        {
-            animator.SetBool("Attack", false);
-            crawlerMovement.speed = speed;
-        }
+        animator.SetBool("Attack", true);
+        crawlerMovement.speed = 0;
     }
 
     public void DoDamage()
@@ -175,9 +197,16 @@ public class Crawler : MonoBehaviour
         immune = false;
     }
 
-    public void TakeDamage(float damage, float stunTime = 0)
+    public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
-        if(immune)
+        FlashRed();
+
+        if (stunTime > 0)
+        {
+            StartCoroutine(StunCralwer(stunTime));
+        }
+
+        if (immune)
         {
             return;
         }
@@ -186,29 +215,26 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
+
         health -= damage;
-        FlashRed();
+
         if (health <= 0 )
         {
-            Die();
-        }
-
-        else if (stunTime > 0)
-        {
-            StartCoroutine(SwitchOffNavMesh(stunTime));
+            Die(killedBy);
         }
 
     }
 
-    public void DealyedDamage(float damage, float delay)
+    public void DealyedDamage(float damage, float delay, WeaponType weapon)
     {
-        StartCoroutine(DealyedDamageCoroutine(damage, delay));
+        StartCoroutine(StunCralwer(delay));
+        StartCoroutine(DealyedDamageCoroutine(damage, delay, weapon));
     }
 
-    private IEnumerator DealyedDamageCoroutine(float damage, float delay)
+    private IEnumerator DealyedDamageCoroutine(float damage, float delay, WeaponType weapon)
     {
         yield return new WaitForSeconds(delay);
-        TakeDamage(damage);
+        TakeDamage(damage, weapon);
     }
 
     private void FlashRed()
@@ -222,7 +248,6 @@ public class Crawler : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         meshRenderer.material.SetFloat("_FlashOn", 0);
     }
-
 
     public void FindClosestTarget()
     {
@@ -238,21 +263,32 @@ public class Crawler : MonoBehaviour
         hasTarget = true;
     }
 
-    public virtual void Die()
+    public virtual void Die(WeaponType weapon)
     {
         dead = true;
         PlayDeathNoise();
         tag = "Untagged";
-        gameObject.layer = IgnorelayerMask;
+        GetComponent<Collider>().enabled = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        _collider.enabled = false;
+        groundCollider.SetActive(false);
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
         crawlerMovement.speed = 0;
         animator.SetTrigger("Die");
         DeathBlood.Play();
-        CashCollector.Instance.AddCash(cashWorth);
-        GameManager.instance.UpdateKillCount(1);
-        ObjectSpawner.instance.AddtoRespawnList(this);
+        CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
+
+        if (CashCollector.Instance != null)
+        {
+            CashCollector.Instance.AddCash(cashWorth);
+        }
+
+        if(GameManager.instance != null)
+        {
+            GameManager.instance.UpdateKillCount(1, weapon);
+        }
     }
 
     public void PlayDeathNoise()
@@ -263,6 +299,13 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
+        rb.velocity = Vector3.zero;
+        health = healthMax;
+        if (transform.position.y< groundLevel)
+        {
+            print("Crawler spawned below ground");
+            transform.position = new Vector3(transform.position.x, groundLevel + 1, transform.position.z);
+        }
         transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
         animator.SetTrigger("Respawn");
@@ -274,10 +317,12 @@ public class Crawler : MonoBehaviour
     {
         _spawnEffect.Play();
         transform.DOScale(Random.Range(crawlerScale-0.1f, crawlerScale+0.1f), 0.4f);
+        meshRenderer.enabled = true;
+        _collider.enabled = true;
+        groundCollider.SetActive(true);
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";
-        meshRenderer.enabled = true;
-        gameObject.layer = ShootlayerMask;
         crawlerMovement.enabled = true;
         crawlerMovement.speed = speed;
         dead = false;

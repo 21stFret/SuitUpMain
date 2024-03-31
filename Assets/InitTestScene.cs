@@ -1,0 +1,28 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InitTestScene : MonoBehaviour
+{
+    public MechLoadOut mechLoadOut;
+    public ConnectWeaponHolderToManager weaponHolder;
+    public CrawlerSpawner crawlerSpawner;
+    public bool spawnersActive = true;
+    public float delay = 0.2f;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Invoke("DelayedStart", delay);
+    }
+
+    public void DelayedStart()
+    {
+        weaponHolder.SetupWeaponsManager();
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        mechLoadOut.Init();
+        crawlerSpawner.isActive = spawnersActive;
+        AudioManager.instance.PlayMusic(1);
+    }
+}

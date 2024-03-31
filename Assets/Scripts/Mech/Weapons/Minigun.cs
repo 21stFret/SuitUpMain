@@ -8,7 +8,7 @@ public class Minigun : MechWeapon
     public bool hasTarget;
     public GameObject gunturret;
     private Animator _animator;
-    public ProjectileWeapon weaponController;
+    public ProjectileWeapon projectileWeapon;
 
     public GameObject target;
 
@@ -40,9 +40,9 @@ public class Minigun : MechWeapon
         if(hasTarget)
         {
             _timer += Time.deltaTime;
-           if(_timer > speed)
+           if(_timer > fireRate)
             {
-                weaponController.Minigun(damage);
+                projectileWeapon.Minigun(damage);
                 _timer = 0.0f;
                 //print("Fired");
             }

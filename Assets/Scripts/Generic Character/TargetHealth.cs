@@ -19,7 +19,7 @@ public class TargetHealth : MonoBehaviour
         health = healthMax;
     }
 
-    public void TakeDamage(int damage, Crawler attacker)
+    public void TakeDamage(float damage, Crawler attacker = null)
     {
         attaker = attacker;
         if (!invincible)

@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
     public PlayerInput playerInput;
     public EventSystem eventSystem;
     public GameObject firstSelectedButton;
+    public bool menuLocked;
 
     void Start()
     {
@@ -27,6 +28,11 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        if(menuLocked)
+        {
+            return;
+        }
+        GameUI.instance.CloseAll();
         pauseMenu.SetActive(true);
         Time.timeScale = 0;
         isPaused = true;

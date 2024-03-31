@@ -35,16 +35,21 @@ public class ProjectileWeapon : MonoBehaviour
             curSocket = 0;
     }
 
-    public void Shotgun(float dam, float force, int index, float angle, int burst)
+    public void Shotgun(float dam, float force, int index, float angle, int burst, int acutalI, float stunTime)
     {
         float rand = UnityEngine.Random.Range(-3, 3);
+        float Angle = ((angle / burst)) + rand;
+        if(index<0)
+        {
+            Angle = -Angle;
+        }
         // Spawn muzzle flash and projectile at current socket position
         F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanMuzzle, TurretSocket[curSocket].position,
             TurretSocket[curSocket].rotation, TurretSocket[curSocket]);
         var newGO =
             F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanProjectile,
                 TurretSocket[curSocket].position,
-                TurretSocket[curSocket].rotation * Quaternion.Euler(0f, ((angle/burst) * index - (burst/2)) + rand, 0f), null).gameObject;
+                TurretSocket[curSocket].rotation * Quaternion.Euler(0f, Angle * acutalI, 0f), null).gameObject;
 
         var proj = newGO.gameObject.GetComponent<F3DProjectile>();
         if (proj)
@@ -52,12 +57,31 @@ public class ProjectileWeapon : MonoBehaviour
             proj.impactDamage = dam;
             proj.impactForce = force;
             proj._weaponController = this;
-            proj.isStun = true;
+            proj.stunTime = stunTime;
+            proj.weaponType = WeaponType.Shotgun;
         }
 
-        // Emit one bullet shell
-        if (ShellParticles.Length > 0)
-            ShellParticles[curSocket].Emit(1);
+        F3DAudioController.instance.VulcanShot(TurretSocket[curSocket].position);
+
+        AdvanceSocket();
+    }
+
+    public void Cryo(float dam, float force, float stunTime)
+    {
+        var newGO =
+            F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanProjectile,
+                TurretSocket[curSocket].position,
+                TurretSocket[curSocket].rotation).gameObject;
+
+        var proj = newGO.gameObject.GetComponent<F3DProjectile>();
+        if (proj)
+        {
+            proj.impactDamage = dam;
+            proj.impactForce = force;
+            proj._weaponController = this;
+            proj.stunTime = stunTime;
+            proj.weaponType = WeaponType.Cryo;
+        }
 
         F3DAudioController.instance.VulcanShot(TurretSocket[curSocket].position);
 
@@ -79,6 +103,7 @@ public class ProjectileWeapon : MonoBehaviour
         {
             proj.impactDamage = dam;
             proj._weaponController = this;
+            proj.weaponType = WeaponType.Minigun;
         }
 
 

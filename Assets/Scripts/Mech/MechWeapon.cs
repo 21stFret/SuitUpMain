@@ -2,6 +2,18 @@ using Micosmo.SensorToolkit;
 using System;
 using UnityEngine;
 
+public enum WeaponType
+{
+    Minigun,
+    Shotgun,
+    Flamer,
+    Lightning,
+    Cryo,
+    Grenade,
+    Beam,
+    AoE
+}
+
 [Serializable]
 public struct BaseWeaponInfo
 {
@@ -10,6 +22,7 @@ public struct BaseWeaponInfo
     public float[] _fireRate;
     public float[] _range;
     public int[] _cost;
+    public Sprite weaponSprite;
 }
 
 [Serializable]
@@ -25,35 +38,29 @@ public struct WeaponEffects
 
 public class MechWeapon : MonoBehaviour
 {
+    public WeaponFuelManager weaponFuelManager;
     public WeaponData weaponData;
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
     public float damage;
     public float force;
-    public float speed;
+    public float fireRate;
     public float range;
-    public int ammo;
-    public int maxAmmo;
-    public float reloadTime;
     public bool isFiring;
+    public bool isFiringAlt;
     public RangeSensor rangeSensor;
     [Header("Main Weapon")]
     public LOSSensor sensor;
     public Vector3 aimOffest;
     public LaserSight laserSight;
-    [Header("Alt Weapon")]
-    public WeaponUI weaponUI;
-    public float weaponFuel;
-    public float weaponFuelMax = 100;
+    [Header("Weapon Mods")]
+    public WeaponMod weaponMod;
     public float weaponRechargeRate;
     public float weaponFuelUseRate;
-    public Sprite fuelSprite;
 
 
     public virtual void Init()
     {
-        weaponFuel = weaponFuelMax;
-
         SetValues();
 
         if(weaponData.mainWeapon)
@@ -63,35 +70,77 @@ public class MechWeapon : MonoBehaviour
             sensor.enabled = true;
             laserSight.gameObject.SetActive(true);
             laserSight.SetLaserLength(range);
-            Debug.Log("Main Weapon sensor enabled");
         }
-
-
-        if (weaponUI == null)
+        else
         {
-            return;
+            weaponFuelManager.Init(this);
         }
+        if(weaponMod != null)
+        {
+            InitMod(weaponMod);
+        }
+    }
 
-        weaponUI.UpdateWeaponUI(weaponFuel);
-        weaponUI.SetFuelImage(fuelSprite);
-
+    public void InitMod(WeaponMod mod)
+    {
+        weaponMod = mod;
+        weaponMod.GetBaseWeapon(this);
+        // Add weapon modifers to stats
+        weaponMod.Init();
     }
 
     private void SetValues()
     {
-        print("Setting values for " + name);
+        //print("Setting values for " + name);
         damage = baseWeaponInfo._damage[weaponData.level];
-        speed = baseWeaponInfo._fireRate[weaponData.level];
+        fireRate = baseWeaponInfo._fireRate[weaponData.level];
         range = baseWeaponInfo._range[weaponData.level];
     }
 
-    private void FixedUpdate()
+    public virtual void FireAlt()
     {
-        FuelManagement();
+        if (isFiring)
+        {
+            return;
+        }
+
+        isFiringAlt = true;
+    }
+
+    public virtual void StopAlt()
+    {
+
+        isFiringAlt = false;
+    }
+
+
+    public void FireMod()
+    {
+        if(weaponMod == null)
+        {
+            //print("No weapon mod");
+            return;
+        }
+        weaponMod.Fire();
+    }
+
+    public void StopMod()
+    {
+        if (weaponMod == null)
+        {
+            //print("No weapon mod");
+            return;
+        }  
+        weaponMod.Stop();
     }
 
     public virtual void Fire()
     {
+        if(isFiringAlt)
+        {
+            return;
+        }
+
         isFiring = true;
         //Debug.Log("Firing " + name);
         if (weaponEffects.weaponEffect != null)
@@ -102,7 +151,11 @@ public class MechWeapon : MonoBehaviour
         weaponEffects.weaponAudioSource.loop = true;
         weaponEffects.weaponAudioSource.Play();
         weaponEffects.weaponLights.SetActive(true);
-        weaponUI.SetUITrigger(false);
+
+        if (weaponMod != null)
+        {
+            FireMod();
+        }
     }
 
     public virtual void Stop()
@@ -118,34 +171,11 @@ public class MechWeapon : MonoBehaviour
         weaponEffects.weaponAudioSource.loop = false;
         weaponEffects.weaponAudioSource.Play();
         weaponEffects.weaponLights.SetActive(false);
-        weaponUI.SetUITrigger(true);
+
+        if (weaponMod != null)
+        {
+            StopMod();
+        }
     }
 
-    private void FuelManagement()
-    {
-        if (isFiring)
-        {
-            if (weaponFuel <= 0)
-            {
-                Stop();
-                return;
-            }
-
-            weaponFuel -= weaponFuelUseRate;
-
-        }
-
-        if (weaponFuel >= weaponFuelMax)
-        { return; }
-
-        weaponFuel += weaponRechargeRate;
-
-        if (weaponUI == null)
-        {
-            return;
-        }
-
-        weaponUI.UpdateWeaponUI(weaponFuel);
-
-    }
 }

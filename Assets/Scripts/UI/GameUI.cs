@@ -9,11 +9,16 @@ using UnityEngine.EventSystems;
 public class GameUI : MonoBehaviour
 {
     public static GameUI instance;
+    public PauseMenu pauseMenu;
+    public DroneController droneController;
+    public ModUI modUI;
 
     public TMP_Text killCountText;
 
     public GameObject gameOverPanel;
+    public GameObject completePanel;
     public GameObject gameOverButton;
+    public GameObject completeButton;
     public EventSystem eventSystem;
 
     private void Awake()
@@ -35,6 +40,11 @@ public class GameUI : MonoBehaviour
         killCountText.text = "0";
     }
 
+    public void CloseAll()
+    {
+        droneController.airdropMenu.SetActive(false);
+    }
+
     public void UpdateKillCount(int killCount)
     {
         killCountText.text = killCount.ToString();
@@ -42,7 +52,15 @@ public class GameUI : MonoBehaviour
 
     public void ShowGameOverPanel()
     {
+        pauseMenu.menuLocked = true;
         gameOverPanel.SetActive(true);
         eventSystem.SetSelectedGameObject(gameOverButton);
+    }
+
+    public void ShowCompletePanel()
+    {
+        pauseMenu.menuLocked = true;
+        completePanel.SetActive(true);
+        eventSystem.SetSelectedGameObject(completeButton);
     }
 }

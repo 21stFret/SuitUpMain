@@ -7,8 +7,6 @@ public class AirDropTimer : MonoBehaviour
 {
     private float timeElapsed;
     public float airDropTime;
-    public GameObject text;
-    public GameObject buttonIcon;
     public Image cover;
     public bool activated;
 
@@ -38,8 +36,6 @@ public class AirDropTimer : MonoBehaviour
     private void ActivateButton(bool value)
     {
         activated = value;
-        text.SetActive(value);
-        buttonIcon.SetActive(value);
     }
 
     public void ResetAirDrop()

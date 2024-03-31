@@ -10,12 +10,7 @@ public class FlameTrigger : MonoBehaviour
     public float shotSpeed;
     public float shotDamage;
     private bool isOn;
-
     private float timer;
-
-    private void Awake()
-    {
-    }
 
     public void InitFlameTrigger(float damage, float speed, float range)
     {
@@ -52,9 +47,9 @@ public class FlameTrigger : MonoBehaviour
                 {
                     hit.GetComponent<Tree>().TriggerOnFire();
                 }
-                else
+                if(hit.tag == "Enemy")
                 {
-                    hit.GetComponent<Crawler>().TakeDamage(shotDamage);
+                    hit.GetComponent<Crawler>().TakeDamage(shotDamage, WeaponType.Flamer);
                 }
 
             }

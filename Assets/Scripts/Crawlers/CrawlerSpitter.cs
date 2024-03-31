@@ -10,10 +10,12 @@ public class CrawlerSpitter : Crawler
     public LayerMask layerMask;
     public GameObject[] spitProjectiles = new GameObject[3];
     private int spitIndex;
+    public float spitSpeed;
+    private float spitTimer;
 
-    public override void Die()
+    public override void Die(WeaponType killedBy)
     {
-        base.Die();
+        base.Die(killedBy);
     }
 
     public override void Spawn()
@@ -32,8 +34,20 @@ public class CrawlerSpitter : Crawler
 
     public void Spit()
     {
-        spitProjectiles[spitIndex].transform.position = transform.position;
-        spitProjectiles[spitIndex].transform.rotation = transform.rotation;
-        spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage);
+        animator.SetTrigger("Spit");
+        crawlerMovement.speed = 0;
+        CycleProjectiles();
+        spitProjectiles[spitIndex].transform.position = transform.position + transform.up * 3;
+        spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage, target);
+    }
+
+    public override void Attack()
+    {
+        spitTimer += Time.deltaTime;
+        if (spitTimer >= spitSpeed)
+        {
+            Spit();
+            spitTimer = 0;
+        }
     }
 }

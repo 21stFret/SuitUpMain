@@ -15,7 +15,6 @@ public class PulseShockwave : MonoBehaviour
     public float rechargeTime;
     public bool canUsePulseWave;
     public Image cover;
-    public GameObject buttonIcon;
     public AudioClip pulseWaveSound;
 
     public void PlayPulseWave(InputAction.CallbackContext context)
@@ -60,7 +59,7 @@ public class PulseShockwave : MonoBehaviour
 
     private void ActivateButton(bool value)
     {
-        buttonIcon.SetActive(value);
+
     }
 
     private void ApplyForceToCrawlers()
@@ -71,7 +70,7 @@ public class PulseShockwave : MonoBehaviour
             Crawler crawler = collider.GetComponent<Crawler>();
             if (crawler != null)
             {
-                crawler.StartCoroutine(crawler.SwitchOffNavMesh(0.2f));
+                crawler.StartCoroutine(crawler.StunCralwer(0.2f));
                 Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
                 crawler.rb.AddForce(forceDirection * forceMagnitude , ForceMode.Impulse);
             }

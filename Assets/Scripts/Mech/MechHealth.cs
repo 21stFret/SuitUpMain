@@ -30,7 +30,6 @@ public class MechHealth : MonoBehaviour
 
     public void UpdateHealth(float health, bool healed = false)
     {
-        print("Updaeted Health bar");
         Color flashcolor = damagefalshColor;
         if(healed)
         {
@@ -70,7 +69,7 @@ public class MechHealth : MonoBehaviour
     private void SetEmmisveHeatlh()
     {
         var material = meshRenderer.sharedMaterial;
-        material.SetColor("_EmissionColor", Color.Lerp(healthLightColor, damageLightColor, 1 - (image.fillAmount-0.2f)));
+        material.SetColor("_Emmission", Color.Lerp(healthLightColor, damageLightColor, 1 - (image.fillAmount-0.2f)));
         meshRenderer.material = material;
     }
 

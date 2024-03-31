@@ -12,6 +12,7 @@ public class LightningRodController : MechWeapon
     public List<Crawler> crawlers = new List<Crawler>();
     public int crawlerIndex;
     public int chainAmount;
+    public float stunTime;
     public float lightningRange;
     public List<GameObject> lightningChains;
     public bool hitSwitch;
@@ -53,7 +54,7 @@ public class LightningRodController : MechWeapon
         if (hitSwitch)
         {
             timer += Time.deltaTime;
-            if(timer >= speed)
+            if(timer >= fireRate)
             {
                 Zap();
                 timer = 0;
@@ -65,7 +66,7 @@ public class LightningRodController : MechWeapon
     {
         for (int i = 0; i < crawlers.Count; i++)
         {
-            crawlers[i].TakeDamage(damage, speed);
+            crawlers[i].TakeDamage(damage, WeaponType.Lightning, stunTime);
         }
     }
 
@@ -127,7 +128,7 @@ public class LightningRodController : MechWeapon
                 crawlers.Add(colliders[i].gameObject.GetComponent<Crawler>());
             }
         }
-        print("Reached " + crawlerIndex + " / " + colliders.Length);
+        //print("Reached " + crawlerIndex + " / " + colliders.Length);
         LightningLinkCrawlers();
     }
 

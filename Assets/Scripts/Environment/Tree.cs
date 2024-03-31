@@ -7,6 +7,7 @@ public class Tree : MonoBehaviour
     public GameObject fireRoot;
     public GameObject deadRoot;
     private bool burnt;
+    public float burnTime = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -33,10 +34,10 @@ public class Tree : MonoBehaviour
     {
         burnt=true;
         fireRoot.SetActive(true);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(burnTime);
         GetComponent<MeshRenderer>().enabled = false;
         deadRoot.SetActive(true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(burnTime-1);
         fireRoot.SetActive(false);
     }
 }

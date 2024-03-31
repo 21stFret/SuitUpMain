@@ -12,13 +12,11 @@ public class CrawlerDaddy : Crawler
     public float explosionForce = 1000f;
     public LayerMask layerMask;
 
-    public override void Die()
+    public override void Die(WeaponType killedBy)
     {
-        base.Die();
+        base.Die(killedBy);
         DeathEffect.SetActive(true);
-        Vector3 randomPoint = RandomUtils.RandomInsideSphere(2);
-        randomPoint.y = 0;
-        ObjectSpawner.instance.SpawnAtPoint(transform.position + randomPoint, spawnCount);
+        CrawlerSpawner.instance.SpawnAtPoint(transform.position, spawnCount);
         ExplodeIfInRange();
     }
 

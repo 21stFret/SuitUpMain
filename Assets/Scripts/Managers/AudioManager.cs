@@ -55,6 +55,14 @@ public class AudioManager : MonoBehaviour
         if (eventSystem.currentSelectedGameObject != lastSelectedObject)
         {
             lastSelectedObject = eventSystem.currentSelectedGameObject;
+            if(lastSelectedObject == null)
+            {
+                return;
+            }
+            if(lastSelectedObject.layer == 11)
+            {
+                return;
+            }
             if (buttonClicked)
             {
                 buttonClicked = false;
@@ -80,6 +88,7 @@ public class AudioManager : MonoBehaviour
         backgroundMusic.DOFade(0, 1f).OnComplete(FadeMusicIn);
         currentClipIndex = clipIndex;
     }
+
     private void FadeMusicIn()
     {
         backgroundMusic.clip = musicClips[currentClipIndex];

@@ -92,7 +92,6 @@ public class WeaponData
     public bool mainWeapon;
     public bool unlocked;
     public int level;
-    public int exp;
 }
 
 

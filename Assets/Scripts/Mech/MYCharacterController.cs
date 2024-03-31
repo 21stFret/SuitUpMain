@@ -52,20 +52,6 @@ public class MYCharacterController : MonoBehaviour
     {
         _moveInputVector = context.ReadValue<Vector2>();
         float inputedY = _moveInputVector.y;
-        /*
-        if(!isAimLocked)
-        {
-            CharacterAnimator.SetFloat("Forward", _moveInputVector.magnitude);
-        }
-        else
-        {
-            // Compare the transform forward with the input vector
-            if (Vector3.Dot(transform.forward, new Vector3(_moveInputVector.x, 0, _moveInputVector.y)) < 0)
-            {
-                CharacterAnimator.SetFloat("Forward", -_moveInputVector.magnitude);
-            }
-        }
-        */
         CharacterAnimator.SetFloat("InputMag", _moveInputVector.magnitude);
         CharacterAnimator.SetFloat("Forward", _moveInputVector.magnitude);
         CharacterAnimator.SetFloat("Turn", _moveInputVector.x);
