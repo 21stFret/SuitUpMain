@@ -87,11 +87,15 @@ namespace FORGE3D
             if (hitPoint.rigidbody == null)
             { return; }
             
+            TargetHealth targetHealth = hitPoint.collider.GetComponent<TargetHealth>();
+            if(targetHealth != null)
+            {
+                targetHealth.TakeDamage(impactDamage, weaponType, stunTime);
+                targetHealth.GetComponent<Rigidbody>().AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
+            }
+
             if(hitPoint.collider.CompareTag("Enemy"))
             {
-                var crawler = hitPoint.collider.GetComponent<Crawler>();
-                crawler.TakeDamage(impactDamage, weaponType, stunTime);
-                crawler.rb.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
             }
         }
 

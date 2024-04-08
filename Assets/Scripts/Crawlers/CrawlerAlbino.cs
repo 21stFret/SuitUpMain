@@ -40,10 +40,10 @@ public class CrawlerAlbino : Crawler
             {
                 Vector3 direction = collider.transform.position - smashLocation.position;
                 rb.AddForce(direction.normalized * smashForce, ForceMode.Impulse);
-                if(rb.GetComponent<TargetHealth>().mechHealth != null)
+                if(rb.GetComponent<TargetHealth>() != null)
                 {
                     float dam = (attackDamage *2) * Vector3.Distance(smashLocation.position, collider.transform.position) / smashRadius;
-                    rb.GetComponent<TargetHealth>().TakeDamage(dam, this);
+                    rb.GetComponent<TargetHealth>().TakeDamage(dam, WeaponType.Cralwer);
                 }
             }
         }

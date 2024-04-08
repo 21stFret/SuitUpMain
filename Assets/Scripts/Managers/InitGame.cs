@@ -25,13 +25,13 @@ public class InitGame : MonoBehaviour
         PlayerSavedData.instance.LoadPlayerData();
         if(PlayerSavedData.instance._firstLoad)
         {
-            PlayerSavedData.instance._firstLoad = false;
+            PlayerSavedData.instance.UpdateFirstLoad(false);
             // show welcome pop up
         }
         AudioManager.instance.Init();
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
-        statsUI.UpdateCash(PlayerSavedData.instance._playerCash);
+        statsUI.UpdateCash(PlayerSavedData.instance._Cash);
     }
 }

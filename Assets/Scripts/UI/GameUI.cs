@@ -12,13 +12,11 @@ public class GameUI : MonoBehaviour
     public PauseMenu pauseMenu;
     public DroneController droneController;
     public ModUI modUI;
-
     public TMP_Text killCountText;
-
-    public GameObject gameOverPanel;
     public GameObject completePanel;
-    public GameObject gameOverButton;
     public GameObject completeButton;
+    public TMP_Text gameEndText;
+    public RewardMenu rewardMenu;
     public EventSystem eventSystem;
 
     private void Awake()
@@ -50,17 +48,19 @@ public class GameUI : MonoBehaviour
         killCountText.text = killCount.ToString();
     }
 
-    public void ShowGameOverPanel()
+    public void ShowEndGamePanel(bool win)
     {
-        pauseMenu.menuLocked = true;
-        gameOverPanel.SetActive(true);
-        eventSystem.SetSelectedGameObject(gameOverButton);
-    }
-
-    public void ShowCompletePanel()
-    {
+        if(win)
+        {
+            gameEndText.text = "Mission \n Complete";
+        }
+        else
+        {
+            gameEndText.text = "Mission \n Failed";
+        }
         pauseMenu.menuLocked = true;
         completePanel.SetActive(true);
         eventSystem.SetSelectedGameObject(completeButton);
+        rewardMenu.SetRewards(GameManager.instance.killCount, GameManager.instance.expCount, GameManager.instance.artifactCount);
     }
 }

@@ -40,7 +40,7 @@ public class DroneController : MonoBehaviour
 
     public void InitDrone(int type)
     {
-        if(PlayerSavedData.instance._playerCash < airDropCost)
+        if(PlayerSavedData.instance._Cash < airDropCost)
         {
             fade.PlayTween();
             return;
@@ -54,7 +54,7 @@ public class DroneController : MonoBehaviour
 
     public void MissileStrike()
     {
-        if (PlayerSavedData.instance._playerCash < airDropCost)
+        if (PlayerSavedData.instance._Cash < airDropCost)
         {
             fade.PlayTween();
             return;

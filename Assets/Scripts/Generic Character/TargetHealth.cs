@@ -6,68 +6,48 @@ public class TargetHealth : MonoBehaviour
 {
     public float health;
     public float healthMax;
-    public GameObject flames;
-    public Crawler attaker;
-    public MechHealth mechHealth;
-    public Cinemachine.CinemachineImpulseSource impulseSource;
-    public GameObject deathEffect;
-    public GameObject mainObject;
     public bool invincible;
+
+    private Crawler _crawler;
+    private MechHealth _mech;
+    private Prop _prop;
 
     private void Start()
     {
         health = healthMax;
+        _crawler = GetComponent<Crawler>();
+        _mech = GetComponent<MechHealth>();
+        _prop = GetComponent<Prop>();
+        if(_mech != null)
+        {
+            _mech.UpdateHealth(health);
+        }
     }
 
-    public void TakeDamage(float damage, Crawler attacker = null)
+    public void TakeDamage(float damage, WeaponType weaponType, float stunTime = 0)
     {
-        attaker = attacker;
-        if (!invincible)
+        if (invincible)
         {
-            health -= damage;
+            damage = 0;
         }
 
-        if (mechHealth != null)
+        if (_crawler != null)
         {
-            if (damage < 0)
+            if(weaponType == WeaponType.Cralwer)
             {
-                if (health > healthMax)
-                {
-                    // could overheal
-                    health = healthMax;
-                }
-                mechHealth.UpdateHealth(health, true);
                 return;
             }
-
-            mechHealth.UpdateHealth(health);
-
-            // shakes camera
-            float damagePercent = Mathf.Clamp(damage/10, 0.1f, 0.6f);
-            impulseSource.GenerateImpulse(damagePercent);
+            _crawler.TakeDamage(damage, weaponType, stunTime);
         }
 
-        AudioManager.instance.PlayHurt();
-
-        if (health <= healthMax/2)
+        if (_mech != null)
         {
-            if(flames!= null)
-            {
-                flames.SetActive(true);
-            }
+            _mech.TakeDamage(damage);
         }
 
-
-        if (health <= 0)
+        if (_prop != null)
         {
-            print(this.name + "has been killed");
-            attaker.target = null;
-            deathEffect.SetActive(true);
-            mainObject.SetActive(false);
-            if (mechHealth != null)
-            {
-                MechBattleController.instance.OnDie();
-            }
+            _prop.TakeDamage(damage);
         }
     }
 }

@@ -11,26 +11,36 @@ public class SpitProjectile : MonoBehaviour
     public float explosionRadius = 10f;
     public float explosionForce = 1000f;
     public LayerMask layerMask;
-    public GameObject explosionEffect;
+    public ParticleSystem explosionEffect;
     private Rigidbody _rigidbody;
+    private Collider _collider;
     private Vector3 targetLocation;
     public float aimSpeed = 5f;
     private bool inflight;
-
-    private void Awake()
-    {
-
-    }
+    public GameObject trailEffect;
+    private bool aiming;
+    public float aimDealay = 0.2f;
 
     public void Init(int damage, Transform target)
     {
+        trailEffect.SetActive(true);
         _rigidbody = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
+        _collider.enabled = true;
         _rigidbody.velocity = Vector3.zero;
+        _rigidbody.constraints = RigidbodyConstraints.None;
         gameObject.SetActive(true);
         _damage = damage;
         targetLocation = target.position;
         transform.forward = Vector3.up;
         inflight = true;
+        aiming = false;
+        Invoke("DelayedAiming", aimDealay);
+    }
+
+    private void DelayedAiming()
+    {
+        aiming = true;
     }
 
     private void Update()
@@ -39,12 +49,19 @@ public class SpitProjectile : MonoBehaviour
         {
             return;
         }
-        transform.forward = Vector3.Lerp(transform.forward, targetLocation - transform.position, Time.deltaTime * aimSpeed);
         _rigidbody.velocity = transform.forward * speed;
+
+        if (!aiming)
+        {
+            return;
+        }
+        transform.forward = Vector3.Lerp(transform.forward, targetLocation - transform.position, Time.deltaTime * aimSpeed);
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        print("Hit " + other.name);
         Explode();
     }
 
@@ -57,17 +74,21 @@ public class SpitProjectile : MonoBehaviour
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                print("Explode");
+                print("Explode hit " + rb.name);
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
                 if (rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(_damage, null);
+                    rb.GetComponent<TargetHealth>().TakeDamage(_damage, WeaponType.Cralwer);
                 }
             }
         }
-        //Instantiate(explosionEffect, transform.position, quaternion.identity);
-        gameObject.SetActive(false);
+        explosionEffect.Play();
+        trailEffect.SetActive(false);
+        _collider.enabled = false;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        
     }
 
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEditor.Experimental.GraphView;
+using Micosmo.SensorToolkit.Example;
 
 public class MechHealth : MonoBehaviour
 {
@@ -13,8 +15,12 @@ public class MechHealth : MonoBehaviour
     [ColorUsage(true, true)]
     public Color damageLightColor;
     public Color damagefalshColor;
-    public SkinnedMeshRenderer meshRenderer;
+    private SkinnedMeshRenderer meshRenderer;
     public DoTweenFade screenFlash;
+    public Cinemachine.CinemachineImpulseSource impulseSource;
+    public GameObject deathEffect;
+    public GameObject mainObject;
+    public TargetHealth targetHealth;
 
     private void Start()
     {
@@ -28,8 +34,41 @@ public class MechHealth : MonoBehaviour
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
+    public void TakeDamage(float damage)
+    {
+        if (damage < 0)
+        {
+            if (targetHealth.health > targetHealth.healthMax)
+            {
+                // could overheal
+                targetHealth.health = targetHealth.healthMax;
+            }
+            UpdateHealth(targetHealth.health, true);
+            return;
+        }
+
+        targetHealth.health -= damage;
+
+        UpdateHealth(targetHealth.health);
+
+        // shakes camera
+        float damagePercent = Mathf.Clamp(damage / 10, 0.1f, 0.6f);
+        impulseSource.GenerateImpulse(damagePercent);
+
+        AudioManager.instance.PlayHurt();
+    }
+
     public void UpdateHealth(float health, bool healed = false)
     {
+
+        if (health <= 0)
+        {
+            image.fillAmount = 0;
+            MechBattleController.instance.OnDie();
+            return;
+        }
+
+
         Color flashcolor = damagefalshColor;
         if(healed)
         {

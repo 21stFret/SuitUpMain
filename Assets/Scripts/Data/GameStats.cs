@@ -15,5 +15,6 @@ public class GameStats
     public int grenadeKills;
     //Total Kills
     public int totalKills;
+    public int highestWave;
 
 }

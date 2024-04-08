@@ -11,11 +11,14 @@ public class GameManager : MonoBehaviour
     public CrawlerSpawner crawlerSpawner;
     public GameUI gameUI;
     public int killCount;
+    public int expCount;
+    public int cashCount;
+    public int artifactCount;
     public PlayerInput playerInput;
     public MechLoadOut mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public ManualWeaponController altWeaponController;
-    public GameStats gameStats;
+    private PlayerSavedData playerSavedData;
 
     private void Awake()
     {
@@ -33,24 +36,22 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
+        playerSavedData = PlayerSavedData.instance;
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
         mechLoadOut.Init();
         crawlerSpawner.isActive = true;
         AudioManager.instance.PlayMusic(1);
         killCount = 0;
+        expCount = 0;
+        cashCount = 0;
     }
 
     public void ReachedWaveNumber(int waveNumber)
     {
-        if (waveNumber > PlayerSavedData.instance._highScore)
+        if (waveNumber > playerSavedData._gameStats.highestWave)
         {
-            PlayerSavedData.instance._highScore = waveNumber;
-        }
-        if (waveNumber >= 10)
-        {
-            //PlayerAchievements.instance.SetAchievement("WAVE_10", true);
-            crawlerSpawner.isActive = false;
+            playerSavedData._gameStats.highestWave = waveNumber;
         }
     }
 
@@ -58,14 +59,11 @@ public class GameManager : MonoBehaviour
     {
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
-            // do logic when all enemies are dead
-            if (crawlerSpawner.spawnRound < crawlerSpawner.spawnRoundMax)
+            // do logic when all enemies are dead in final round
+            if (crawlerSpawner.spawnRound == crawlerSpawner.spawnRoundMax)
             {
-            }
-            else
-            {
-               // Mission Complete
-               CompleteMission();
+                // Mission Complete
+                EndGame(true);
             }
         }
     }
@@ -74,12 +72,13 @@ public class GameManager : MonoBehaviour
     {
         killCount += count;
         gameUI.UpdateKillCount(killCount);
-        if(killCount > PlayerSavedData.instance._killCount)
-        {
-            PlayerSavedData.instance._killCount = killCount;
-        }
         CheckPlayerAchievements(count, weapon);
         CheckActiveEnemies();
+    }
+
+    public void AddExp(int count)
+    {
+        expCount += count;
     }
 
     private void CheckPlayerAchievements(int count, WeaponType weapon)
@@ -88,7 +87,8 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        if (killCount >= 100)
+        int totalKills = playerSavedData._gameStats.totalKills + killCount;
+        if (totalKills > 100)
         {
             if (PlayerAchievements.instance.GetAchievement("KILL_100").id != null)
             {
@@ -98,43 +98,43 @@ public class GameManager : MonoBehaviour
         switch (weapon)
         {
             case WeaponType.Minigun:
-                gameStats.minigunKills += count;
-                if (gameStats.minigunKills >= 100)
+                playerSavedData._gameStats.minigunKills += count;
+                if (playerSavedData._gameStats.minigunKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("MINIGUN_100", true);
                 }
                 break;
             case WeaponType.Shotgun:
-                gameStats.shotgunKills += count;
-                if (gameStats.shotgunKills >= 100)
+                playerSavedData._gameStats.shotgunKills += count;
+                if (playerSavedData._gameStats.shotgunKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("SHOTGUN_100", true);
                 }
                 break;
-            case WeaponType.Flamer:
-                gameStats.flamerKills += count;
-                if (gameStats.flamerKills >= 100)
+            case WeaponType.Flame:
+                playerSavedData._gameStats.flamerKills += count;
+                if (playerSavedData._gameStats.flamerKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("FLAMER_100", true);
                 }
                 break;
             case WeaponType.Lightning:
-                gameStats.lightningKills += count;
-                if (gameStats.lightningKills >= 100)
+                playerSavedData._gameStats.lightningKills += count;
+                if (playerSavedData._gameStats.lightningKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("LIGHTNING_100", true);
                 }
                 break;
             case WeaponType.Cryo:
-                gameStats.cryoKills += count;
-                if (gameStats.cryoKills >= 100)
+                playerSavedData._gameStats.cryoKills += count;
+                if (playerSavedData._gameStats.cryoKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("CRYO_100", true);
                 }
                 break;
             case WeaponType.Grenade:
-                gameStats.grenadeKills += count;
-                if (gameStats.grenadeKills >= 100)
+                playerSavedData._gameStats.grenadeKills += count;
+                if (playerSavedData._gameStats.grenadeKills >= 100)
                 {
                     PlayerAchievements.instance.SetAchievement("GRENADE_100", true);
                 }
@@ -147,31 +147,20 @@ public class GameManager : MonoBehaviour
         playerInput.SwitchCurrentActionMap(inputMap);
     }
 
-    public void GameOver()
-    {
-        EndGame();
-        crawlerSpawner.isActive = false;
-        gameUI.ShowGameOverPanel();
-        SwapPlayerInput("UI");
-    }
-
-    private void CompleteMission()
-    {
-        print("Mission Complete!");
-        EndGame();
-        crawlerSpawner.isActive = false;
-        gameUI.ShowCompletePanel();
-        SwapPlayerInput("UI");
-    }
-
     public void LoadMainMenu()
     {
         altWeaponController.ClearWeaponInputs();
         SceneLoader.instance.LoadScene(1);
     }
 
-    private void EndGame()
+    public void EndGame(bool won)
     {
-        PlayerSavedData.instance.SavePlayerData();
+        crawlerSpawner.isActive = false;
+        gameUI.ShowEndGamePanel(won);
+        SwapPlayerInput("UI");
+        playerSavedData.UpdatePlayerCash(cashCount);
+        playerSavedData.UpdatePlayerExp(expCount);
+        playerSavedData.UpdatePlayerArtifact(artifactCount);
+        playerSavedData.SavePlayerData();
     }
 }

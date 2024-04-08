@@ -55,13 +55,19 @@ public class Pickup : MonoBehaviour
         pickupRenderer.enabled = true;
         pickupLight.enabled = true;
         pickupRenderer.material.color = pickupColor;
-        pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 10);
+        pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
         pickupLight.color = pickupColor;
     }
 
     private void PickUp()
     {
+
         ModUI.instance.OpenModUI(pickupType);
+        if (GameManager.instance == null)
+        {
+            return;
+        }
+        GameManager.instance.artifactCount++;
     }
 
     private void RemovePickup()

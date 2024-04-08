@@ -21999,12 +21999,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   healthMax: 100
-  flames: {fileID: 0}
-  attaker: {fileID: 0}
-  mechHealth: {fileID: 6329598924691163358}
-  impulseSource: {fileID: 7926855109315850022}
-  deathEffect: {fileID: 6092388055686581626}
-  mainObject: {fileID: 4834883123767186782}
   invincible: 0
 --- !u!114 &6329598924691163358
 MonoBehaviour:
@@ -22025,6 +22019,10 @@ MonoBehaviour:
   damagefalshColor: {r: 0.6886792, g: 0.016242431, b: 0.016242431, a: 1}
   meshRenderer: {fileID: 0}
   screenFlash: {fileID: 0}
+  impulseSource: {fileID: 7926855109315850022}
+  deathEffect: {fileID: 6092388055686581626}
+  mainObject: {fileID: 4834883123767186782}
+  targetHealth: {fileID: 5979783455418939766}
 --- !u!54 &364384307396218630
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -22432,6 +22430,8 @@ MonoBehaviour:
   altWeaponMount: {fileID: 6156397064106762240}
   weaponsHanger: {fileID: 0}
   weaponModManager: {fileID: 0}
+  loadMainWeapon: 0
+  loadAltWeapon: 0
 --- !u!114 &1554726410975775876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22456,11 +22456,11 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
-  FireAltInputAction:
-    m_Name: Fire Alt Input
+  FireManualInputAction:
+    m_Name: Fire Manual Input
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 59946a6e-b837-4950-9689-1f25d98fb903
+    m_Id: 08cb3394-bd22-4fb5-b5c3-c6c8f109a6a4
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []

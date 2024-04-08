@@ -17,13 +17,17 @@ public class MechBattleController : MonoBehaviour
     {
         characterController.Die();
         characterController.enabled = false;
-        GameManager.instance.GameOver();
+        if(GameManager.instance != null)
+        {
+            GameManager.instance.EndGame(false);
+        }
+
         gameObject.layer = 1;
     }
 
     public void RepairArmour()
     {
-        mechHealth.TakeDamage(-50, null);
+        mechHealth.TakeDamage(-50, WeaponType.Minigun);
         print("Repaired Amrour");
     }
 

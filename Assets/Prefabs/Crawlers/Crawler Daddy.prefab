@@ -44647,6 +44647,7 @@ GameObject:
   - component: {fileID: 4989875668414133667}
   - component: {fileID: 8622847323071165262}
   - component: {fileID: 3227063600712833630}
+  - component: {fileID: 2550985015025176912}
   m_Layer: 8
   m_Name: Crawler Daddy
   m_TagString: Enemy
@@ -44743,9 +44744,11 @@ MonoBehaviour:
   DeathBlood: {fileID: 6652521355583307667}
   _spawnEffect: {fileID: 7649532295506273425}
   deathNoise: {fileID: 1945245659488322145}
+  immune: 0
   randomLocationRadius: 3
   crawlerScale: 1
   cashWorth: 30
+  expWorth: 12
   groundLevel: 0
   crawlerType: 1
   DeathEffect: {fileID: 5698520181082743242}
@@ -44841,15 +44844,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad473b26ffd16d499fb9d7c6d864494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   speed: 0
-  steerSpeed: 3
+  steerSpeed: 4
+  lookSpeed: 200
   stoppingDistance: 5
+  direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 4353
   distanceToTarget: 0
+  tracking: 1
+--- !u!114 &2550985015025176912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7598384467349045470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828434b4ca129924187efe14870ad81c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  healthMax: 0
+  invincible: 0
 --- !u!1 &7907839350698568565
 GameObject:
   m_ObjectHideFlags: 0

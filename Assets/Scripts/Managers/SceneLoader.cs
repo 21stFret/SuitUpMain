@@ -29,6 +29,10 @@ public class SceneLoader : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(loadinBar == null)
+        {
+            return;
+        }
         loadinBar.enabled = false;
         blackout.FadeOut();
     }

@@ -14,6 +14,9 @@ public class WeaponModManager : MonoBehaviour
         currentMod = mods[modIndex];
         weapon.weaponMod = currentMod;
         currentMod.baseWeapon = weapon;
+        currentMod.transform.SetParent(weapon.transform);
+        currentMod.transform.localPosition = Vector3.zero;
+        currentMod.transform.localRotation = Quaternion.identity;
         altWeapon.SetAltWeaponInputs();
 
     }

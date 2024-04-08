@@ -10,7 +10,7 @@ public class WeaponsManager : MonoBehaviour
     public MechWeapon[] _altWeapons;
     public int mainWeapon;
     public int altWeapon;
-
+    private PlayerSavedData _playerSavedData;
 
     private void Awake()
     {
@@ -31,19 +31,20 @@ public class WeaponsManager : MonoBehaviour
     public void SetMainWeaponIndex(int index)
     {
         mainWeapon = index;
-        PlayerSavedData.instance._playerLoadout.x = index;
-        PlayerSavedData.instance.SavePlayerData();
+        _playerSavedData.UpdateMainWeaponLoadout( index);
+        _playerSavedData.SavePlayerData();
     }
 
     public void SetAltWeaponIndex(int index)
     {
         altWeapon = index;
-        PlayerSavedData.instance._playerLoadout.y = index;
-        PlayerSavedData.instance.SavePlayerData();
+        _playerSavedData.UpdateAltWeaponLoadout(index);
+        _playerSavedData.SavePlayerData();
     }
 
     public void LoadWeaponsData(WeaponData[] mainWeapons, WeaponData[] altWeapons)
     {
+        _playerSavedData = PlayerSavedData.instance;
         for (int i = 0; i < mainWeapons.Length; i++)
         {
             _mainWeapons[i].weaponData = mainWeapons[i];
@@ -53,21 +54,21 @@ public class WeaponsManager : MonoBehaviour
             _altWeapons[i].weaponData = altWeapons[i];
         }
 
-        mainWeapon = (int)PlayerSavedData.instance._playerLoadout.x;
-        altWeapon = (int)PlayerSavedData.instance._playerLoadout.y;
+        mainWeapon = (int)_playerSavedData._playerLoadout.x;
+        altWeapon = (int)_playerSavedData._playerLoadout.y;
     }
 
     public void UpdateWeaponData()
     {
         for (int i = 0; i < _mainWeapons.Length; i++)
         {
-            PlayerSavedData.instance.UpdateMainWeaponData(_mainWeapons[i].weaponData, i);
+            _playerSavedData.UpdateMainWeaponData(_mainWeapons[i].weaponData, i);
         }
         for (int i = 0; i < _altWeapons.Length; i++)
         {
-            PlayerSavedData.instance.UpdateAltWeaponData(_altWeapons[i].weaponData, i);
+            _playerSavedData.UpdateAltWeaponData(_altWeapons[i].weaponData, i);
         }
-        PlayerSavedData.instance.SavePlayerData();
+        _playerSavedData.SavePlayerData();
     }
 
     public void GetWeaponsFromHolder(ConnectWeaponHolderToManager holder)

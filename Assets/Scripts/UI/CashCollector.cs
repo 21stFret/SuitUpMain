@@ -15,14 +15,14 @@ public class CashCollector : MonoBehaviour
 
     private void Start()
     {
-        UpdateUI(PlayerSavedData.instance._playerCash);
+        UpdateUI(PlayerSavedData.instance._Cash);
     }
 
     public void AddCash(int amount)
     {
-        PlayerSavedData.instance.UpdatePlayerCash(amount);
+        GameManager.instance.cashCount += amount;
 
-        UpdateUI(PlayerSavedData.instance._playerCash);
+        UpdateUI(GameManager.instance.cashCount);
     }
 
 

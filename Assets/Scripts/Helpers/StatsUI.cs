@@ -21,7 +21,7 @@ public class StatsUI : MonoBehaviour
 
     public void RemoveCash(int cash)
     {
-        cashedCash = PlayerSavedData.instance._playerCash;
+        cashedCash = PlayerSavedData.instance._Cash;
         PlayerSavedData.instance.UpdatePlayerCash(-cash);
         removingCash = true;
     }
@@ -37,7 +37,7 @@ public class StatsUI : MonoBehaviour
         {
             _cash.color = Color.red;
             cashLerp += Time.deltaTime * 2;
-            _cash.text = "$" + Mathf.Lerp(cashedCash, PlayerSavedData.instance._playerCash, cashLerp).ToString("0");
+            _cash.text = "$" + Mathf.Lerp(cashedCash, PlayerSavedData.instance._Cash, cashLerp).ToString("0");
             if(cashLerp >= 1)
             {
                 _cash.color = Color.white;

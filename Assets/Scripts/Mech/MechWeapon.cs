@@ -6,12 +6,13 @@ public enum WeaponType
 {
     Minigun,
     Shotgun,
-    Flamer,
+    Flame,
     Lightning,
     Cryo,
     Grenade,
     Beam,
-    AoE
+    AoE,
+    Cralwer,
 }
 
 [Serializable]

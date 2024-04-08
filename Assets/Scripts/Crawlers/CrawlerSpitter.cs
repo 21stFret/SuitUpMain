@@ -12,6 +12,7 @@ public class CrawlerSpitter : Crawler
     private int spitIndex;
     public float spitSpeed;
     private float spitTimer;
+    public float escapeDistance;
 
     public override void Die(WeaponType killedBy)
     {
@@ -21,6 +22,7 @@ public class CrawlerSpitter : Crawler
     public override void Spawn()
     {
         base.Spawn();
+        spitTimer = spitSpeed;
     }
 
     private void CycleProjectiles()
@@ -32,22 +34,38 @@ public class CrawlerSpitter : Crawler
         }
     }
 
-    public void Spit()
+    public IEnumerator Spit()
     {
         animator.SetTrigger("Spit");
-        crawlerMovement.speed = 0;
+        yield return new WaitForSeconds(0.3f);
         CycleProjectiles();
-        spitProjectiles[spitIndex].transform.position = transform.position + transform.up * 3;
+        spitProjectiles[spitIndex].transform.SetParent(null);
+        spitProjectiles[spitIndex].transform.position = transform.position + (transform.up * 3) + transform.forward;
         spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage, target);
     }
 
     public override void Attack()
     {
+        crawlerMovement.speed = 0;
         spitTimer += Time.deltaTime;
-        if (spitTimer >= spitSpeed)
+        if (spitTimer > spitSpeed)
         {
-            Spit();
+            StartCoroutine(Spit());
             spitTimer = 0;
         }
+    }
+
+    public override void CheckDistance()
+    {
+        if(crawlerMovement.distanceToTarget < escapeDistance)
+        {
+            animator.SetBool("InRange", false);
+            crawlerMovement.tracking = false;
+            crawlerMovement.speed = speed;
+            crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
+            return;
+        }
+        base.CheckDistance();
+        crawlerMovement.tracking = true;
     }
 }

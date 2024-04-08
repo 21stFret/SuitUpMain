@@ -5,17 +5,17 @@ using UnityEngine;
 public class PlayerSavedData : MonoBehaviour
 {
     public static PlayerSavedData instance;
-    public float _BGMVolume;
-    public float _SFXVolume;
-    public int _playerLevel;
-    public WeaponData[] _mainWeaponData;
-    public WeaponData[] _altWeaponData;
-    public int _playerCash;
-    public int _killCount;
-    public int _highScore;
-    public Vector2 _playerLoadout;
-    public bool _firstLoad;
-    public GameStats _gameStats;
+    public float _BGMVolume             {get; private set;} 
+    public float _SFXVolume             {get; private set;} 
+    public int _playerLevel             {get; private set;} 
+    public WeaponData[] _mainWeaponData {get; private set;} 
+    public WeaponData[] _altWeaponData  {get; private set;} 
+    public int _Cash                    {get; private set;} 
+    public int _Exp                     {get; private set;} 
+    public int _Artifact                {get; private set;} 
+    public Vector2 _playerLoadout       {get; private set;} 
+    public bool _firstLoad              {get; private set;} 
+    public GameStats _gameStats         {get; private set;} 
 
     private void Awake()
     {
@@ -33,24 +33,34 @@ public class PlayerSavedData : MonoBehaviour
 
     }
 
-    public void UpdateKillCount(int count)
-    {
-        _killCount += count;
-        if (_killCount > _highScore)
-        {
-            _highScore = _killCount;
-            PlayerPrefs.SetInt("HighScore", _highScore);
-        }
-    }
-
     public void UpdatePlayerCash(int amount)
     {
-        _playerCash += amount;
+        _Cash += amount;
+    }
+
+    public void UpdatePlayerArtifact(int amount)
+    {
+        _Artifact += amount;
     }
 
     public void UpdatePlayerLevel(int level)
     {
         _playerLevel = level;
+    }
+
+    public void UpdatePlayerExp(int exp)
+    {
+        _Exp += exp;
+        CheckLevel();
+    }
+
+    private void CheckLevel()
+    {
+        var requiredExp = 100 + (20* _playerLevel);
+        if(_Exp >= requiredExp)
+        {
+            _playerLevel++;
+        }
     }
 
     public void UpdateMainWeaponData(WeaponData weaponData, int index)
@@ -63,9 +73,31 @@ public class PlayerSavedData : MonoBehaviour
         _altWeaponData[index] = weaponData;
     }
 
-    public void UpdatePlayerLoadout(Vector2 loadout)
+    public void UpdateMainWeaponLoadout(int mainWeapon)
     {
+        Vector2 loadout = new Vector2(mainWeapon, _playerLoadout.y);
         _playerLoadout = loadout;
+    }
+
+    public void UpdateAltWeaponLoadout(int altWeapon)
+    {
+        Vector2 loadout = new Vector2(_playerLoadout.x, altWeapon);
+        _playerLoadout = loadout;
+    }
+
+    public void UpdateFirstLoad(bool firstLoad)
+    {
+        _firstLoad = firstLoad;
+    }
+
+    public void UpdateBGMVolume(float volume)
+    {
+        _BGMVolume = volume;
+    }
+
+    public void UpdateSFXVolume(float volume)
+    {
+        _SFXVolume = volume;
     }
 
     public void ResetAllData()
@@ -80,9 +112,9 @@ public class PlayerSavedData : MonoBehaviour
         _BGMVolume = 0.5f;
         _SFXVolume = 0.5f;
         _playerLevel = 0;
-        _playerCash = 0;
-        _killCount = 0;
-        _highScore = 0;
+        _Cash = 0;
+        _Exp = 0;
+        _Artifact = 0;
         CreateWeaponData();
         _playerLoadout = new Vector2(0, 0);
         _gameStats = new GameStats();
@@ -124,9 +156,9 @@ public class PlayerSavedData : MonoBehaviour
         saveData.BGMVolume = _BGMVolume;
         saveData.SFXVolume = _SFXVolume;
         saveData.playerLevel = _playerLevel;
-        saveData.playerCash = _playerCash;
-        saveData.killCount = _killCount;
-        saveData.highScore = _highScore;
+        saveData.playerCash = _Cash;
+        saveData.playerExp = _Exp;
+        saveData.playerArtifact = _Artifact;
         saveData.mainWeaponData = _mainWeaponData;
         saveData.altWeaponData = _altWeaponData;
         saveData.playerLoadout = _playerLoadout;
@@ -157,9 +189,9 @@ public class PlayerSavedData : MonoBehaviour
             _BGMVolume = saveData.BGMVolume;
             _SFXVolume = saveData.SFXVolume;
             _playerLevel = saveData.playerLevel;
-            _playerCash = saveData.playerCash;
-            _killCount = saveData.killCount;
-            _highScore = saveData.highScore;
+            _Cash = saveData.playerCash;
+            _Exp = saveData.playerExp;
+            _Artifact = saveData.playerArtifact;
             _mainWeaponData = saveData.mainWeaponData;
             _altWeaponData = saveData.altWeaponData;
             _playerLoadout = saveData.playerLoadout;
@@ -184,8 +216,8 @@ public class SaveData
     public WeaponData[] mainWeaponData;
     public WeaponData[] altWeaponData;
     public int playerCash;
-    public int killCount;
-    public int highScore;
+    public int playerExp;
+    public int playerArtifact;
     public Vector2 playerLoadout;
     public bool firstLoad;
     public GameStats gameStats;

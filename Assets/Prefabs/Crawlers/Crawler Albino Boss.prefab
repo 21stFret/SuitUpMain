@@ -940,9 +940,11 @@ MonoBehaviour:
   DeathBlood: {fileID: 2826704839551399695}
   _spawnEffect: {fileID: 997474832806693610}
   deathNoise: {fileID: 1684373086875704436}
+  immune: 0
   randomLocationRadius: 3
   crawlerScale: 2
   cashWorth: 100
+  expWorth: 50
   groundLevel: 0
   crawlerType: 0
   smashEffect: {fileID: 0}
@@ -1013,15 +1015,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad473b26ffd16d499fb9d7c6d864494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destination: {x: 0, y: 0, z: 0}
   speed: 0
   steerSpeed: 3
+  lookSpeed: 0
   stoppingDistance: 7
+  direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 4
   layerMask:
     serializedVersion: 2
     m_Bits: 951
   distanceToTarget: 0
+  tracking: 1
 --- !u!1 &5013036389789904594
 GameObject:
   m_ObjectHideFlags: 0

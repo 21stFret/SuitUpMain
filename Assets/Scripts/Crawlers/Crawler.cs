@@ -43,13 +43,12 @@ public class Crawler : MonoBehaviour
     public AudioSource deathNoise;
     private bool canSeeTarget;
     protected bool inRange;
-
-    private bool stunned;
     [SerializeField]
     private bool immune;
     public float randomLocationRadius;
     public float crawlerScale;
     public int cashWorth;
+    public int expWorth;
     public float groundLevel;
 
     public CrawlerType crawlerType;
@@ -77,19 +76,16 @@ public class Crawler : MonoBehaviour
 
     public IEnumerator StunCralwer(float stunTime)
     {
-        stunned = true;
         crawlerMovement.enabled = false;
         animator.speed = 0;
         yield return new WaitForSeconds(stunTime);
 
         if (dead)
         {
-            stunned = false;
             yield break;
         }
 
         crawlerMovement.enabled = true;
-        stunned = false;
         animator.speed = 1;
     }
 
@@ -114,8 +110,22 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        SetTargetDestination();
+        //SetTargetDestination();
+        crawlerMovement.SetTarget(target);
         CheckDistance();
+    }
+    public void FindClosestTarget()
+    {
+        if (hasTarget)
+        { return; }
+
+        if (!rangeSensor.GetNearestDetection())
+        {
+            return;
+        }
+        target = rangeSensor.GetNearestDetection().transform;
+
+        hasTarget = true;
     }
 
     private void SetTargetDestination()
@@ -148,24 +158,25 @@ public class Crawler : MonoBehaviour
         }
     }
 
-    private void CheckDistance()
+    public virtual void CheckDistance()
     {
         if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
         {
             inRange = true;
+            animator.SetBool("InRange", true);
             Attack();
         }
         else
         {
             inRange = false;
-            animator.SetBool("Attack", false);
+            animator.SetBool("InRange", false);
             crawlerMovement.speed = speed;
         }
     }
 
     public virtual void Attack()
     {
-        animator.SetBool("Attack", true);
+        animator.SetTrigger("Attack");
         crawlerMovement.speed = 0;
     }
 
@@ -187,7 +198,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        targethealth.TakeDamage(attackDamage, this);
+        targethealth.TakeDamage(attackDamage, WeaponType.Cralwer);
     }
 
     private IEnumerator SpawnImmunity()
@@ -197,6 +208,7 @@ public class Crawler : MonoBehaviour
         immune = false;
     }
 
+    
     public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
         FlashRed();
@@ -224,7 +236,7 @@ public class Crawler : MonoBehaviour
         }
 
     }
-
+    
     public void DealyedDamage(float damage, float delay, WeaponType weapon)
     {
         StartCoroutine(StunCralwer(delay));
@@ -247,20 +259,6 @@ public class Crawler : MonoBehaviour
         meshRenderer.material.SetFloat("_FlashOn", 1);
         yield return new WaitForSeconds(0.1f);
         meshRenderer.material.SetFloat("_FlashOn", 0);
-    }
-
-    public void FindClosestTarget()
-    {
-        if(hasTarget)
-        { return; }
-
-        if(!rangeSensor.GetNearestDetection())
-        {
-            return;
-        }
-        target = rangeSensor.GetNearestDetection().transform;
-
-        hasTarget = true;
     }
 
     public virtual void Die(WeaponType weapon)
@@ -288,6 +286,7 @@ public class Crawler : MonoBehaviour
         if(GameManager.instance != null)
         {
             GameManager.instance.UpdateKillCount(1, weapon);
+            GameManager.instance.AddExp(expWorth);
         }
     }
 

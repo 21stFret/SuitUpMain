@@ -9,7 +9,7 @@ public class LightningRodController : MechWeapon
 
     public RaycastHit hit;
     [Header("Lightning Rod")]
-    public List<Crawler> crawlers = new List<Crawler>();
+    public List<TargetHealth> targets = new List<TargetHealth>();
     public int crawlerIndex;
     public int chainAmount;
     public float stunTime;
@@ -64,9 +64,9 @@ public class LightningRodController : MechWeapon
 
     private void Zap()
     {
-        for (int i = 0; i < crawlers.Count; i++)
+        for (int i = 0; i < targets.Count; i++)
         {
-            crawlers[i].TakeDamage(damage, WeaponType.Lightning, stunTime);
+            targets[i].TakeDamage(damage, WeaponType.Lightning, stunTime);
         }
     }
 
@@ -95,7 +95,7 @@ public class LightningRodController : MechWeapon
 
             if(!hitSwitch)
             {
-                crawlers.Add(crawlerHit.GetComponent<Crawler>());
+                targets.Add(crawlerHit.GetComponent<TargetHealth>());
                 hitSwitch = true;
             }
             LightningArc(crawlerHit.transform);
@@ -114,7 +114,7 @@ public class LightningRodController : MechWeapon
         {
             if (colliders[i].CompareTag("Enemy"))
             {
-                if (crawlers.Find(x => x.transform == colliders[i].transform))
+                if (targets.Find(x => x.transform == colliders[i].transform))
                 {
                     continue;
                 }
@@ -125,7 +125,7 @@ public class LightningRodController : MechWeapon
                     LightningLinkCrawlers();
                     return;
                 }
-                crawlers.Add(colliders[i].gameObject.GetComponent<Crawler>());
+                targets.Add(colliders[i].gameObject.GetComponent<TargetHealth>());
             }
         }
         //print("Reached " + crawlerIndex + " / " + colliders.Length);
@@ -134,15 +134,15 @@ public class LightningRodController : MechWeapon
 
     private void LightningLinkCrawlers()
     {
-        for(int i = 0; i < crawlers.Count; i++)
+        for(int i = 0; i < targets.Count; i++)
         {
-            if (i+1< crawlers.Count)
+            if (i+1< targets.Count)
             {
                 var newGO = lightningChains[i];
                 newGO.SetActive(true);
                 newGO.transform.position = hit.transform.position + hitOffset;
-                newGO.transform.forward = crawlers[i+1].transform.position - newGO.transform.position;
-                newGO.GetComponent<F3DLightning>().SetTarget(crawlers[i+1].transform);
+                newGO.transform.forward = targets[i+1].transform.position - newGO.transform.position;
+                newGO.GetComponent<F3DLightning>().SetTarget(targets[i+1].transform);
             }
         }
     }
@@ -151,7 +151,7 @@ public class LightningRodController : MechWeapon
     {
         hitSwitch = false;
         crawlerIndex = 0;
-        crawlers.Clear();
+        targets.Clear();
         for (int i = 0; i < lightningChains.Count; i++)
         {
             lightningChains[i].gameObject.SetActive(false);

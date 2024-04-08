@@ -44,6 +44,11 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(CloseAchMenu());
     }
 
+    public void ResetData()
+    {
+        PlayerSavedData.instance.ResetAllData();
+    }
+
     public IEnumerator OpenRDMenu()
     {
         PauseInput(true);

@@ -30,9 +30,9 @@ public class CrawlerDaddy : Crawler
             {
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
-                if(rb.GetComponent<TargetHealth>().mechHealth != null)
+                if(rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamage, this);
+                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
                 }
             }
         }

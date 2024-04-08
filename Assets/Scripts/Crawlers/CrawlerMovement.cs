@@ -7,16 +7,20 @@ using static UnityEngine.ParticleSystem;
 public class CrawlerMovement : MonoBehaviour
 {
     private Transform target;
+    [SerializeField]
     private Vector3 destination;
     public float speed;
     public float steerSpeed;
+    public float lookSpeed;
     public float stoppingDistance;
+    [SerializeField]
     private Vector3 direction;
     private Rigidbody rb;
     public int rayAmount;
     public float rayDistance;
     public LayerMask layerMask;
     public float distanceToTarget;
+    public bool tracking = true;
 
 
     private void Awake()
@@ -37,19 +41,36 @@ public class CrawlerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (target != null)
+        if(target != null)
         {
-            direction = target.position - transform.position;
             distanceToTarget = Vector3.Distance(target.position, transform.position);
+        }
+
+        if (tracking)
+        {
+            if (target != null)
+            {
+                direction = target.position - transform.position;
+
+            }
+            else
+            {
+                direction = destination - transform.position;
+            }
         }
         else
         {
-            direction = destination - transform.position;
+            if(Vector3.Distance(destination, transform.position) > 1)
+            {
+                direction = destination - transform.position;
+            }
+
         }
         RayCastSteering();
         Debug.DrawRay(transform.position, direction * 5, Color.blue);
         var dir = Vector3.Lerp(transform.forward, direction.normalized, Time.deltaTime * steerSpeed);
-        transform.forward = Vector3.Lerp(transform.forward, direction.normalized, Time.deltaTime * steerSpeed);
+        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
         rb.MovePosition(transform.position + dir.normalized * speed * Time.deltaTime);
 
     }

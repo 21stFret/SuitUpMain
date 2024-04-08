@@ -140,7 +140,7 @@ public class AudioManager : MonoBehaviour
     {
         musicVolume = volume;
         backgroundMusic.volume = musicVolume;
-        PlayerSavedData.instance._BGMVolume = musicVolume;
+        PlayerSavedData.instance.UpdateBGMVolume(musicVolume);
         PlayerSavedData.instance.SavePlayerData();
     }
 
@@ -149,7 +149,7 @@ public class AudioManager : MonoBehaviour
     {
         sfxVolume = volume;
         soundEffect.volume = sfxVolume;
-        PlayerSavedData.instance._SFXVolume = sfxVolume;
+        PlayerSavedData.instance.UpdateSFXVolume(sfxVolume);
         PlayerSavedData.instance.SavePlayerData();
     }
 }

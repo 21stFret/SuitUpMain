@@ -148,7 +148,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public bool CheckCost(BaseWeaponInfo info)
     {
-        if (info._cost[weaponsManager._altWeapons[index].weaponData.level] > PlayerSavedData.instance._playerCash)
+        if (info._cost[weaponsManager._altWeapons[index].weaponData.level] > PlayerSavedData.instance._Cash)
         {
             cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
             print("Not enough cash");

@@ -47,10 +47,12 @@ public class FlameTrigger : MonoBehaviour
                 {
                     hit.GetComponent<Tree>().TriggerOnFire();
                 }
-                if(hit.tag == "Enemy")
+                TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
+                if (targetHealth != null)
                 {
-                    hit.GetComponent<Crawler>().TakeDamage(shotDamage, WeaponType.Flamer);
+                    targetHealth.TakeDamage(shotDamage, WeaponType.Flame);
                 }
+
 
             }
             timer = 0;
