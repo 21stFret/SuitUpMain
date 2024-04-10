@@ -35,6 +35,11 @@ public class AchievementUI : MonoBehaviour
         UpdateInfoBox();
     }
 
+    public void TESTAcheivment()
+    {
+        playerAchievements.UnlockAchievement("KILL_100");
+    }
+
     public void UpdateInfoBox()
     {
         if(_selected == eventSystem.currentSelectedGameObject)

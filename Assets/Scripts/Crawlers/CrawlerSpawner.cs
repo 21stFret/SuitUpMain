@@ -89,8 +89,6 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void BeginSpawning()
     {
-
-
         if(!isActive)
         {
             return;
@@ -110,17 +108,17 @@ public class CrawlerSpawner : MonoBehaviour
             GameManager.instance.ReachedWaveNumber(spawnRound);
         }
 
+        currentWave = waveManager.battleWaves[spawnRound-1];
+        waveText.text = "Wave " + (spawnRound).ToString();
+        roundTimer = currentWave.roundTimer;
+
         if (spawnRound == spawnRoundMax)
         {
             print("Max Round Reached");
             isActive = false;
             timeText.text = "";
-            return;
+            waveText.text = "Final Wave";
         }
-
-        currentWave = waveManager.battleWaves[spawnRound];
-        waveText.text = "Wave " + (spawnRound).ToString();
-        roundTimer = currentWave.roundTimer;
 
     }
 

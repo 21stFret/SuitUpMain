@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
     public ConnectWeaponHolderToManager weaponHolder;
     public ManualWeaponController altWeaponController;
     private PlayerSavedData playerSavedData;
+    public List<GameObject> rooms = new List<GameObject>();
+    public RoomPortal RoomPortal;
+    public int currentRoomIndex;
+    public bool endlessMode;
 
     private void Awake()
     {
@@ -57,15 +61,29 @@ public class GameManager : MonoBehaviour
 
     public void CheckActiveEnemies()
     {
-        if (crawlerSpawner.activeCrawlerCount == 0)
+        // do logic when all enemies are dead in final round
+        if (crawlerSpawner.spawnRound >= crawlerSpawner.spawnRoundMax)
         {
-            // do logic when all enemies are dead in final round
-            if (crawlerSpawner.spawnRound == crawlerSpawner.spawnRoundMax)
+            if (crawlerSpawner.activeCrawlerCount == 0)
             {
-                // Mission Complete
-                EndGame(true);
+                if(currentRoomIndex==rooms.Count)
+                {
+                    // Mission Complete
+                    EndGame(true);
+                }
+                else
+                {
+                    SpawnPortalToNextRoom();
+                }
+
             }
         }
+    }
+
+    public void SpawnPortalToNextRoom()
+    {
+        RoomPortal.portalEffect.StartEffect();
+        RoomPortal._active = true;
     }
 
     public void UpdateKillCount(int count, WeaponType weapon)
@@ -151,6 +169,39 @@ public class GameManager : MonoBehaviour
     {
         altWeaponController.ClearWeaponInputs();
         SceneLoader.instance.LoadScene(1);
+    }
+
+    public void LoadNextRoom()
+    {
+        StartCoroutine(DelayedLoadNextRoom());
+    }
+
+    private void LoadRoom()
+    {
+        if (currentRoomIndex == rooms.Count)
+        {
+            if(endlessMode)
+            {
+                rooms[currentRoomIndex].SetActive(false);
+                currentRoomIndex = 0;
+                rooms[currentRoomIndex].SetActive(true);
+                return;
+            }
+            
+            print("End Game, no more rooms");
+            return;
+        }
+        rooms[currentRoomIndex].SetActive(false);
+        currentRoomIndex++;
+        rooms[currentRoomIndex].SetActive(true);
+    }
+
+    public IEnumerator DelayedLoadNextRoom()
+    {
+        yield return new WaitForSeconds(2);
+        LoadRoom();
+        yield return new WaitForSeconds(2);
+        RoomPortal.portalEffect.StopEffect();
     }
 
     public void EndGame(bool won)

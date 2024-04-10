@@ -25,4 +25,9 @@ public class DoTweenScale : MonoBehaviour
     {
         transform.DOScale(endPos, duration).SetLoops(loopCount, loopType).SetEase(ease);
     }
+
+    public void ReverseTween()
+    {
+        transform.DOScale(Vector3.zero, duration).SetLoops(loopCount, loopType).SetEase(ease);
+    }
 }

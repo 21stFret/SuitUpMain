@@ -88,6 +88,7 @@ public class PlayerAchievements : MonoBehaviour
         print("Setting " + achievement.id + " to " + achieved);
         achievement.achieved = achieved;
         achievements[achievements.FindIndex(a => a.id == id)] = achievement;
+        UnlockAchievement(id);
     }
 
     public void SetAchievementByName(string idName, bool achieved)
@@ -97,7 +98,7 @@ public class PlayerAchievements : MonoBehaviour
         achievements[achievements.FindIndex(a => a.name == idName)] = achievement;
     }
 
-    public void UpdateSteamAchievements(string id)
+    public void UnlockAchievement(string id)
     {
         steamAchievements.UnlockAchievement(id);
     }

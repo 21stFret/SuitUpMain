@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using UnityEditor.Experimental.GraphView;
-using Micosmo.SensorToolkit.Example;
 
 public class MechHealth : MonoBehaviour
 {

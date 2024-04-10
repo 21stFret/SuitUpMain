@@ -60,7 +60,8 @@ public class GameUI : MonoBehaviour
         }
         pauseMenu.menuLocked = true;
         completePanel.SetActive(true);
+        completePanel.GetComponentInParent<DoTweenFade>().PlayTween();
         eventSystem.SetSelectedGameObject(completeButton);
-        rewardMenu.SetRewards(GameManager.instance.killCount, GameManager.instance.expCount, GameManager.instance.artifactCount);
+        rewardMenu.SetRewards(GameManager.instance.cashCount, GameManager.instance.expCount, GameManager.instance.artifactCount);
     }
 }
