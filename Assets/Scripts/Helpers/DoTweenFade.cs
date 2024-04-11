@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DoTweenFade : MonoBehaviour
 {
     public CanvasGroup canvasGroup;
+    public Material material;
     public Image image;
     public float fadeDuration = 1;
     public LoopType loopType;
@@ -27,6 +28,26 @@ public class DoTweenFade : MonoBehaviour
         {
             image.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType);
         }
+        if(material != null)
+        {
+            material.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType);
+        }
+    }
+
+    public void FadeIn()
+    {
+        if (canvasGroup != null)
+        {
+            canvasGroup.DOFade(1, fadeDuration);
+        }
+        if (image != null)
+        {
+            image.DOFade(1, fadeDuration);
+        }
+        if (material != null)
+        {
+            material.DOFade(1, fadeDuration);
+        }
     }
 
     public void FadeOut()
@@ -38,6 +59,10 @@ public class DoTweenFade : MonoBehaviour
         if (image != null)
         {
             image.DOFade(0, fadeDuration);
+        }
+        if (material != null)
+        {
+            material.DOFade(0, fadeDuration);
         }
     }
 }

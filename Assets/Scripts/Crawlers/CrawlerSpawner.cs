@@ -16,7 +16,7 @@ public class CrawlerSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     private Transform spawnPoint;
     public PortalEffect portalEffect;
-    [SerializeField] private float roundTimer;
+    [SerializeField] public float roundTimer;
     public int spawnRound;
     public int spawnRoundMax;
 
@@ -25,7 +25,7 @@ public class CrawlerSpawner : MonoBehaviour
     public TMP_Text waveText;
 
     public static CrawlerSpawner instance;
-    public WaveManager waveManager;
+    public RoomWaves waveManager;
     public BattleWave currentWave;
 
     public bool isActive;
@@ -236,10 +236,10 @@ public class CrawlerSpawner : MonoBehaviour
                 crawlers.Add(crawler);
                 break;
             case CrawlerType.Daddy:
-                crawlerDaddy.Add((CrawlerDaddy)crawler);
+                crawlerDaddy.Add(crawler);
                 break;
             case CrawlerType.Albino:
-                albinos.Add((Crawler)crawler);
+                albinos.Add(crawler);
                 break;
             case CrawlerType.Spitter:
                 spitters.Add(crawler);
@@ -255,7 +255,7 @@ public class CrawlerSpawner : MonoBehaviour
                 crawlers.Remove(crawler);
                 break;
             case CrawlerType.Daddy:
-                crawlerDaddy.Remove((CrawlerDaddy)crawler);
+                crawlerDaddy.Remove(crawler);
                 break;
             case CrawlerType.Albino:
                 albinos.Remove(crawler);

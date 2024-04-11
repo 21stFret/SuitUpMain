@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public ManualWeaponController altWeaponController;
     private PlayerSavedData playerSavedData;
     public List<GameObject> rooms = new List<GameObject>();
+    public List<RoomWaves> roomWaves = new List<RoomWaves>();
     public RoomPortal RoomPortal;
     public int currentRoomIndex;
     public bool endlessMode;
@@ -198,10 +199,25 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator DelayedLoadNextRoom()
     {
+        gameUI.gameUIFade.FadeOut();
         yield return new WaitForSeconds(2);
         LoadRoom();
-        yield return new WaitForSeconds(2);
+        UpdateCrawlerSpawner();
         RoomPortal.portalEffect.StopEffect();
+        yield return new WaitForSeconds(1);
+        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        yield return new WaitForSeconds(1);
+        gameUI.gameUIFade.FadeIn();
+
+    }
+
+    public void UpdateCrawlerSpawner()
+    {
+        crawlerSpawner.spawnRound = 0;
+        crawlerSpawner.roundTimer = 5;
+        crawlerSpawner.waveText.text = "Here they come...";
+        crawlerSpawner.waveManager = roomWaves[currentRoomIndex];
+        crawlerSpawner.isActive = true;
     }
 
     public void EndGame(bool won)

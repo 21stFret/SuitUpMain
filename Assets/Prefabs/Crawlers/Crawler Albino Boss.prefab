@@ -817,6 +817,7 @@ GameObject:
   - component: {fileID: 4010931031861782175}
   - component: {fileID: 2406123097587197689}
   - component: {fileID: 9177073066803892415}
+  - component: {fileID: 4414502184644092993}
   m_Layer: 8
   m_Name: Crawler Albino Boss
   m_TagString: Enemy
@@ -936,7 +937,7 @@ MonoBehaviour:
   health: 0
   healthMax: 100
   attackDamage: 5
-  speed: 5
+  speed: 8
   DeathBlood: {fileID: 2826704839551399695}
   _spawnEffect: {fileID: 997474832806693610}
   deathNoise: {fileID: 1684373086875704436}
@@ -949,7 +950,7 @@ MonoBehaviour:
   crawlerType: 0
   smashEffect: {fileID: 0}
   smashRadius: 10
-  smashDistance: 3
+  smashDistance: 25
   smashForce: 10
   smashLocation: {fileID: 20825722472486986}
   smashLayerMask:
@@ -1018,7 +1019,7 @@ MonoBehaviour:
   destination: {x: 0, y: 0, z: 0}
   speed: 0
   steerSpeed: 3
-  lookSpeed: 0
+  lookSpeed: 300
   stoppingDistance: 7
   direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
@@ -1028,6 +1029,21 @@ MonoBehaviour:
     m_Bits: 951
   distanceToTarget: 0
   tracking: 1
+--- !u!114 &4414502184644092993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984240859197601673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828434b4ca129924187efe14870ad81c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  healthMax: 0
+  invincible: 0
 --- !u!1 &5013036389789904594
 GameObject:
   m_ObjectHideFlags: 0

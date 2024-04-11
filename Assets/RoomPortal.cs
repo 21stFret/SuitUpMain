@@ -14,7 +14,8 @@ public class RoomPortal : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            visualPortalEffect.StartEffect();
+            visualPortalEffect.gameObject.SetActive(true);
+            visualPortalEffect.StartFirstPersonEffect();
             GameManager.instance.LoadNextRoom();
             _active = false;
         }

@@ -12,20 +12,28 @@ public class CrawlerAlbino : Crawler
     public LayerMask smashLayerMask;
     private float smashTimer;
     public float smashCooldown;
+    public float smashmovementDelay;
+    private bool smashing;
 
-    public override void Attack()
+    public override void CheckDistance()
     {
-        base.Attack();
-
-        if(crawlerMovement.distanceToTarget< crawlerMovement.stoppingDistance + smashDistance)
+        if (crawlerMovement.distanceToTarget < smashDistance)
         {
             smashTimer += Time.deltaTime;
             if (smashTimer > smashCooldown)
             {
                 animator.SetTrigger("Smash Attack");
                 smashTimer = 0;
+                StartCoroutine(SmashMovementDelay());
             }
         }
+        if(smashing)
+        {
+            return;
+        }
+
+        base.CheckDistance();
+
     }
 
     public void Smash()
@@ -35,17 +43,33 @@ public class CrawlerAlbino : Crawler
         Collider[] colliders = Physics.OverlapSphere(smashLocation.position, smashRadius, smashLayerMask);
         foreach (Collider collider in colliders)
         {
+            TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
+            if (targetHealth == null)
+            {
+                continue;
+            }
+            float dist = Vector3.Distance(smashLocation.position, collider.transform.position);
+            float ratio1 = Mathf.Clamp01(1 - dist / smashRadius);
+            float dam = (attackDamage * 2) * ratio1;
+            dam = Mathf.Clamp(dam, attackDamage, attackDamage * 2);
+            targetHealth.TakeDamage(dam, WeaponType.Cralwer);
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 Vector3 direction = collider.transform.position - smashLocation.position;
                 rb.AddForce(direction.normalized * smashForce, ForceMode.Impulse);
-                if(rb.GetComponent<TargetHealth>() != null)
-                {
-                    float dam = (attackDamage *2) * Vector3.Distance(smashLocation.position, collider.transform.position) / smashRadius;
-                    rb.GetComponent<TargetHealth>().TakeDamage(dam, WeaponType.Cralwer);
-                }
             }
         }
+
+    }
+
+    private IEnumerator SmashMovementDelay()
+    {
+        smashing = true;
+        var cachedspeed = crawlerMovement.speed;
+        crawlerMovement.speed = 0;
+        yield return new WaitForSeconds(smashmovementDelay);
+        crawlerMovement.speed = cachedspeed;
+        smashing = false;
     }
 }

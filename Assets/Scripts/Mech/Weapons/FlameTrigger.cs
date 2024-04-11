@@ -43,10 +43,6 @@ public class FlameTrigger : MonoBehaviour
 
             foreach (GameObject hit in triggerSensor.GetDetections())
             {
-                if(hit.tag == "Tree")
-                {
-                    hit.GetComponent<Tree>().TriggerOnFire();
-                }
                 TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {

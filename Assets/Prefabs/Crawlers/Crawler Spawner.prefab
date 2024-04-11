@@ -113,7 +113,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5324139003130122692}
   - component: {fileID: 4060391928576397664}
-  - component: {fileID: 6752045196010046944}
   m_Layer: 0
   m_Name: Crawler Spawner
   m_TagString: Untagged
@@ -285,47 +284,16 @@ MonoBehaviour:
   - {fileID: 2251148140651158207}
   portalEffect: {fileID: 4270849139081246781}
   roundTimer: 5
-  spawnRound: 0
+  spawnRound: 2
   spawnRoundMax: 10
   timeElapsed: 0
   timeText: {fileID: 0}
   waveText: {fileID: 0}
-  waveManager: {fileID: 6752045196010046944}
+  waveManager: {fileID: 11400000, guid: 9af89aece653f564b942fad52a96368a, type: 2}
   currentWave:
     crawlersInWave: []
     roundTimer: 0
   isActive: 0
---- !u!114 &6752045196010046944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3495101151743346905}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d998f4b5d09a5354097ab8a07d1b6314, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  battleWaves:
-  - crawlersInWave:
-    - type: 0
-      count: 3
-    - type: 1
-      count: 1
-    roundTimer: 10
-  - crawlersInWave:
-    - type: 0
-      count: 5
-    roundTimer: 10
-  - crawlersInWave:
-    - type: 0
-      count: 2
-    - type: 1
-      count: 1
-    - type: 3
-      count: 2
-    roundTimer: 10
 --- !u!1 &5054052039086913932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1104,8 +1072,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9177073066803892415, guid: 58ffa824141be3242883086890a0ac2b,
         type: 3}
+      propertyPath: lookSpeed
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 9177073066803892415, guid: 58ffa824141be3242883086890a0ac2b,
+        type: 3}
+      propertyPath: steerSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9177073066803892415, guid: 58ffa824141be3242883086890a0ac2b,
+        type: 3}
       propertyPath: layerMask.m_Bits
-      value: 4353
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10303,10 +10281,35 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5324139003130122692}
     m_Modifications:
+    - target: {fileID: 777289365609611341, guid: d93562e48ea1b58408cac2e361774630,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 3505980306801440214, guid: d93562e48ea1b58408cac2e361774630,
         type: 3}
       propertyPath: m_Name
       value: Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 5959826411778379319, guid: d93562e48ea1b58408cac2e361774630,
+        type: 3}
+      propertyPath: portalEffectDuration
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358266920897204044, guid: d93562e48ea1b58408cac2e361774630,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358266920897204044, guid: d93562e48ea1b58408cac2e361774630,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7358266920897204044, guid: d93562e48ea1b58408cac2e361774630,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7358266920897204044, guid: d93562e48ea1b58408cac2e361774630,
         type: 3}

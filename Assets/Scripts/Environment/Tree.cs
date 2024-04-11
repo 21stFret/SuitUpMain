@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tree : MonoBehaviour
+public class Tree : Prop
 {
     public GameObject fireRoot;
     public GameObject deadRoot;
@@ -15,10 +15,13 @@ public class Tree : MonoBehaviour
         burnt = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Die()
     {
-        
+        if(burnt)
+        {
+            return;
+        }
+        TriggerOnFire();
     }
 
     public void TriggerOnFire()

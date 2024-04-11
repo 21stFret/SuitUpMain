@@ -20,7 +20,7 @@ public class TargetHealth : MonoBehaviour
         _prop = GetComponent<Prop>();
         if(_mech != null)
         {
-            _mech.UpdateHealth(health);
+            _mech.UpdateHealth(health, true);
         }
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PortalEffect : MonoBehaviour
 {
     public DoTweenScale doTweenScale;
+    public DoTweenFade doTweenFade;
     public ParticleSystem _particleSystem;
     public ParticleSystem _particleSystem2;
     public FORGE3D.F3DWarpJumpTunnel[] f3DWarpJumpTunnel;
@@ -26,6 +27,31 @@ public class PortalEffect : MonoBehaviour
         {
             StartCoroutine(DealyedStopEffect());
         }
+    }
+
+    public void StartFirstPersonEffect()
+    {
+        for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
+        {
+            f3DWarpJumpTunnel[i].FadeDelay = portalEffectDuration;
+            f3DWarpJumpTunnel[i].infinite = infinite;
+            f3DWarpJumpTunnel[i].OnSpawned();
+
+        }
+        doTweenFade.FadeIn();
+        _particleSystem.Play();
+        _particleSystem2.Play();
+    }
+
+    public void StopFirstPersonEffect()
+    {
+        for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
+        {
+            f3DWarpJumpTunnel[i].ToggleGrow();
+        }
+        doTweenFade.FadeOut();
+        _particleSystem.Stop();
+        _particleSystem2.Stop();
     }
 
     public void StopEffect()

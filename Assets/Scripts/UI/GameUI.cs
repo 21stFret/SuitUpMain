@@ -18,6 +18,7 @@ public class GameUI : MonoBehaviour
     public TMP_Text gameEndText;
     public RewardMenu rewardMenu;
     public EventSystem eventSystem;
+    public DoTweenFade gameUIFade;
 
     private void Awake()
     {
