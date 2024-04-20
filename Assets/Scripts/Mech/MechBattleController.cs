@@ -19,11 +19,13 @@ public class MechBattleController : MonoBehaviour
         characterController.enabled = false;
         if(GameManager.instance != null)
         {
-            GameManager.instance.EndGame(false);
+            GameManager.instance.EndGameCall(false);
         }
 
         gameObject.layer = 1;
     }
+
+
 
     public void RepairArmour()
     {

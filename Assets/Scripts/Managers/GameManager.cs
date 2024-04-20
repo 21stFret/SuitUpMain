@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public int expCount;
     public int cashCount;
     public int artifactCount;
+    public int crawlerParts;
     public PlayerInput playerInput;
     public MechLoadOut mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
@@ -22,8 +23,10 @@ public class GameManager : MonoBehaviour
     public List<GameObject> rooms = new List<GameObject>();
     public List<RoomWaves> roomWaves = new List<RoomWaves>();
     public RoomPortal RoomPortal;
+    public Pickup roomDrop;
     public int currentRoomIndex;
     public bool endlessMode;
+    public bool gameActive;
 
     private void Awake()
     {
@@ -32,20 +35,25 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-    }
+        if(SetupGame.instance!=null)
+        {
+            SetupGame.instance.LinkGameManager(this);
+        }
+        else
+        {
+            Invoke("DelayedStart", 0.1f);
+        }
 
-    private void Start()
-    {
-        DelayedStart();
     }
 
     public void DelayedStart()
     {
+        gameActive = true;
         playerSavedData = PlayerSavedData.instance;
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
         mechLoadOut.Init();
-        crawlerSpawner.isActive = true;
+        UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
         killCount = 0;
         expCount = 0;
@@ -67,7 +75,12 @@ public class GameManager : MonoBehaviour
         {
             if (crawlerSpawner.activeCrawlerCount == 0)
             {
-                if(currentRoomIndex==rooms.Count)
+                if(endlessMode)
+                {
+                    SpawnPortalToNextRoom();
+                    return;
+                }
+                if(currentRoomIndex==rooms.Count-1)
                 {
                     // Mission Complete
                     EndGame(true);
@@ -85,6 +98,8 @@ public class GameManager : MonoBehaviour
     {
         RoomPortal.portalEffect.StartEffect();
         RoomPortal._active = true;
+        roomDrop.gameObject.SetActive(true);
+        roomDrop.Init();
     }
 
     public void UpdateKillCount(int count, WeaponType weapon)
@@ -134,21 +149,21 @@ public class GameManager : MonoBehaviour
                 playerSavedData._gameStats.flamerKills += count;
                 if (playerSavedData._gameStats.flamerKills >= 100)
                 {
-                    PlayerAchievements.instance.SetAchievement("FLAMER_100", true);
+                    PlayerAchievements.instance.SetAchievement("BURN_100", true);
                 }
                 break;
             case WeaponType.Lightning:
                 playerSavedData._gameStats.lightningKills += count;
                 if (playerSavedData._gameStats.lightningKills >= 100)
                 {
-                    PlayerAchievements.instance.SetAchievement("LIGHTNING_100", true);
+                    PlayerAchievements.instance.SetAchievement("SHOCK_100", true);
                 }
                 break;
             case WeaponType.Cryo:
                 playerSavedData._gameStats.cryoKills += count;
                 if (playerSavedData._gameStats.cryoKills >= 100)
                 {
-                    PlayerAchievements.instance.SetAchievement("CRYO_100", true);
+                    PlayerAchievements.instance.SetAchievement("FREEZE_100", true);
                 }
                 break;
             case WeaponType.Grenade:
@@ -220,8 +235,9 @@ public class GameManager : MonoBehaviour
         crawlerSpawner.isActive = true;
     }
 
-    public void EndGame(bool won)
+    private void EndGame(bool won)
     {
+        gameActive = false;
         crawlerSpawner.isActive = false;
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
@@ -229,5 +245,16 @@ public class GameManager : MonoBehaviour
         playerSavedData.UpdatePlayerExp(expCount);
         playerSavedData.UpdatePlayerArtifact(artifactCount);
         playerSavedData.SavePlayerData();
+    }
+
+    private IEnumerator EndGameDelay(bool win)
+    {
+        yield return new WaitForSeconds(1f);
+        EndGame(win);
+    }
+
+    public void EndGameCall(bool win)
+    {
+        StartCoroutine(EndGameDelay(win));
     }
 }

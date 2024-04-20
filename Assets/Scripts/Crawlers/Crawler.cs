@@ -28,7 +28,7 @@ public class Crawler : MonoBehaviour
     [HideInInspector]
     public Transform target;
     private Collider _collider;
-    public GameObject groundCollider;
+
 
     [SerializeField]
     private float health;
@@ -49,9 +49,11 @@ public class Crawler : MonoBehaviour
     public float crawlerScale;
     public int cashWorth;
     public int expWorth;
-    public float groundLevel;
+
 
     public CrawlerType crawlerType;
+
+    public GameObject partPrefab;
 
     private void Awake()
     {
@@ -269,7 +271,7 @@ public class Crawler : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
-        groundCollider.SetActive(false);
+        crawlerMovement.groundCollider.enabled= false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
@@ -288,6 +290,11 @@ public class Crawler : MonoBehaviour
             GameManager.instance.UpdateKillCount(1, weapon);
             GameManager.instance.AddExp(expWorth);
         }
+
+        if (Random.Range(0, 100) < 30)
+        {
+            Instantiate(partPrefab, transform.position +(transform.up *2), Quaternion.identity);
+        }
     }
 
     public void PlayDeathNoise()
@@ -300,16 +307,17 @@ public class Crawler : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         health = healthMax;
-        if (transform.position.y< groundLevel)
+        if (transform.position.y< crawlerMovement.groundLevel)
         {
             print("Crawler spawned below ground");
-            transform.position = new Vector3(transform.position.x, groundLevel + 1, transform.position.z);
+            transform.position = new Vector3(transform.position.x, crawlerMovement.groundLevel + 1, transform.position.z);
         }
         transform.localScale = Vector3.zero;
         gameObject.SetActive(true);
         animator.SetTrigger("Respawn");
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
+        rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
     }
 
     private IEnumerator SpawnEffect()
@@ -318,7 +326,7 @@ public class Crawler : MonoBehaviour
         transform.DOScale(Random.Range(crawlerScale-0.1f, crawlerScale+0.1f), 0.4f);
         meshRenderer.enabled = true;
         _collider.enabled = true;
-        groundCollider.SetActive(true);
+        crawlerMovement.groundCollider.enabled = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";

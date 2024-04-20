@@ -15,19 +15,21 @@ MonoBehaviour:
   battleWaves:
   - crawlersInWave:
     - type: 0
-      count: 1
+      count: 20
     roundTimer: 10
   - crawlersInWave:
     - type: 0
-      count: 1
+      count: 20
     - type: 1
-      count: 1
+      count: 5
     roundTimer: 10
   - crawlersInWave:
     - type: 0
-      count: 1
+      count: 20
     - type: 3
-      count: 1
+      count: 3
+    - type: 1
+      count: 2
     roundTimer: 10
   - crawlersInWave:
     - type: 0
@@ -36,14 +38,14 @@ MonoBehaviour:
       count: 2
     - type: 1
       count: 1
-    roundTimer: 0
+    roundTimer: 10
   - crawlersInWave:
     - type: 0
       count: 15
     - type: 3
-      count: 1
+      count: 5
     - type: 1
-      count: 1
+      count: 5
     - type: 2
       count: 1
     roundTimer: 10

@@ -19,9 +19,23 @@ public class DroneController : MonoBehaviour
     public EventSystem eventSystem;
     public GameObject firstSelected;
     public F3DMissileLauncher missileLauncher;
+    private GameUI gameUI;
 
-    public void OnOpenMenu()
+    private void Start()
     {
+        gameUI = GameUI.instance;
+    }
+
+    public void OnOpenMenu(InputAction.CallbackContext context)
+    {
+        if(!context.performed)
+        {
+            return;
+        }
+        if(gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
+        {
+            return;
+        }
         if(!airDropTimer.activated)
         {
             return;
@@ -32,37 +46,61 @@ public class DroneController : MonoBehaviour
         eventSystem.SetSelectedGameObject(firstSelected);
     }
 
-    public void OnCloseMenu()
+    public void OnCloseMenu(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+        if (GameUI.instance.pauseMenu.isPaused)
+        {
+            return;
+        }
+        CloseMenu();
+    }
+
+    private void CloseMenu()
     {
         airdropMenu.SetActive(false);
         playerInput.SwitchCurrentActionMap("Gameplay");
     }
 
-    public void InitDrone(int type)
-    {
-        if(PlayerSavedData.instance._Cash < airDropCost)
-        {
-            fade.PlayTween();
-            return;
-        }
-        CashCollector.Instance.AddCash(-airDropCost);
-        crate.crateType = (CrateType)type;
-        drone.Init();
-        airDropTimer.ResetAirDrop();
-        OnCloseMenu();
-    }
-
-    public void MissileStrike()
+    public void InitAirSupport(int type)
     {
         if (PlayerSavedData.instance._Cash < airDropCost)
         {
             fade.PlayTween();
             return;
         }
-        missileLauncher.LaunchMissiles(5);
+        switch (type)
+        {
+            case 0:
+                InitDrone(0);
+                break;
+            case 1:
+                InitDrone(1);
+                break;
+            case 2:
+                InitDrone(2);
+                break;
+            case 3:
+                MissileStrike();
+                break;
+        }
         CashCollector.Instance.AddCash(-airDropCost);
         airDropTimer.ResetAirDrop();
-        OnCloseMenu();
+        CloseMenu();
+    }
+
+    public void InitDrone(int type)
+    {
+        crate.crateType = (CrateType)type;
+        drone.Init();
+    }
+
+    public void MissileStrike()
+    {
+        missileLauncher.LaunchMissiles(5);
     }
 
     private void UpdatePrice()

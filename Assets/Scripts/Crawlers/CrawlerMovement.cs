@@ -21,6 +21,8 @@ public class CrawlerMovement : MonoBehaviour
     public LayerMask layerMask;
     public float distanceToTarget;
     public bool tracking = true;
+    public float groundLevel;
+    public Collider groundCollider;
 
 
     private void Awake()
@@ -81,16 +83,18 @@ public class CrawlerMovement : MonoBehaviour
         {
             var z = i - rayAmount/2;
             Vector3 rayDirection = Quaternion.Euler(0, (90f / rayAmount) * z, 0) * transform.forward;
-            var raycastHeight = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
-            
+            var raycastPos = new Vector3(transform.position.x, transform.position.y, transform.position.z +0.5f);
+
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, rayDirection, out hit, rayDistance, layerMask))
+            if (Physics.Raycast(raycastPos, rayDirection, out hit, rayDistance, layerMask))
             {
-                //Vector3 steerDirection = Vector3.Reflect(rayDirection, hit.normal);
+                if(hit.collider == groundCollider)
+                {                     
+                    continue;
+                }
+                //print("hit " + hit.collider.name);
                 Vector3 steerDirection = -(hit.point - transform.position);
                 Debug.DrawRay(transform.position, steerDirection, Color.red);
-                // Steer away from the raycast hit
-                //steerDirection.y = 0;
                 direction = steerDirection;
             }
             else

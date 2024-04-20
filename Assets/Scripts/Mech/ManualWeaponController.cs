@@ -17,12 +17,13 @@ public class ManualWeaponController : MonoBehaviour
     public float rotationSpeed;
 
     public bool isAiming;
-
+    private bool initialized;
     public void Init(MechWeapon mechWeapon)
     {
         equipedWeapon = mechWeapon;
         ResetAim();
         SetManualWeaponInputs();
+        initialized = true;
     }
 
     private void SetManualWeaponInputs()
@@ -90,6 +91,10 @@ public class ManualWeaponController : MonoBehaviour
 
     public void Update()
     {
+        if (!initialized)
+        {
+            return;
+        }
         Aiming();
     }
 

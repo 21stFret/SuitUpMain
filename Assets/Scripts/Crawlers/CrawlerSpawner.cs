@@ -10,7 +10,7 @@ public class CrawlerSpawner : MonoBehaviour
     [SerializeField] private List<Crawler> crawlerDaddy =  new List<Crawler>();
     [SerializeField] private List<Crawler> albinos =  new List<Crawler>();
     [SerializeField] private List<Crawler> spitters =  new List<Crawler>();
-    [SerializeField] private List<Crawler> activeCrawlers = new List<Crawler>();
+    private List<Crawler> activeCrawlers = new List<Crawler>();
     public int activeCrawlerCount { get { return activeCrawlers.Count; } }
     [SerializeField] private List<Transform> spawnPoints;
     [Header("Spawn Settings")]
@@ -143,8 +143,7 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void SpawnWave()
     {
-        var wave = currentWave;
-        var waveCrawlers = wave.crawlersInWave; 
+        var waveCrawlers = currentWave.crawlersInWave; 
         for (int i = 0; i < waveCrawlers.Length; i++)
         {
             SpawnCrawler(waveCrawlers[i].type, waveCrawlers[i].count);
@@ -201,7 +200,6 @@ public class CrawlerSpawner : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         bug.Spawn();
-        bug.rb.AddForce(bug.transform.forward * Random.Range(5,10), ForceMode.Impulse); 
     }
 
     private void PLaySpawnEffect()
@@ -215,7 +213,6 @@ public class CrawlerSpawner : MonoBehaviour
     {
         for (int i = 0; i < spawnAmount; i++)
         {
-
             Vector3 randomCircle = Random.insideUnitSphere;
             randomCircle.y = 1;
             var point1 = point + randomCircle;

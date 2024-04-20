@@ -77,7 +77,8 @@ AudioSource:
   m_GameObject: {fileID: 2568106461961924178}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -39003,12 +39004,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495ca1da2266e4a4caa4c9eb1fa84356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponFuelManager: {fileID: 0}
   weaponData:
     weaponIndex: 0
     mainWeapon: 0
     unlocked: 0
     level: 0
-    exp: 0
   baseWeaponInfo:
     weaponName: shocker
     _damage:
@@ -39024,6 +39025,7 @@ MonoBehaviour:
     - 15
     - 18
     _cost: e8030000d0070000b80b0000
+    weaponSprite: {fileID: 0}
   weaponEffects:
     weaponAudioSource: {fileID: 3573105458296607397}
     weaponClose: {fileID: 8300000, guid: 59ae4c7218192d443af48fa96d0883fe, type: 3}
@@ -39032,25 +39034,21 @@ MonoBehaviour:
     weaponLights: {fileID: 4312708514340103555}
   damage: 1
   force: 0
-  speed: 0
+  fireRate: 0
   range: 0
-  ammo: 0
-  maxAmmo: 0
-  reloadTime: 0
   isFiring: 0
+  isFiringAlt: 0
   rangeSensor: {fileID: 0}
   sensor: {fileID: 0}
   aimOffest: {x: 0, y: 0, z: 0}
   laserSight: {fileID: 0}
-  weaponUI: {fileID: 0}
-  weaponFuel: 0
-  weaponFuelMax: 100
+  weaponMod: {fileID: 0}
   weaponRechargeRate: 0.6
   weaponFuelUseRate: 1
-  fuelSprite: {fileID: 21300000, guid: b83785ae746ff8f449d169cb4e80c348, type: 3}
-  crawlers: []
+  targets: []
   crawlerIndex: 0
   chainAmount: 5
+  stunTime: 0
   lightningRange: 5
   lightningChains:
   - {fileID: 8611655703468910208}

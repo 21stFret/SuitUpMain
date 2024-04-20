@@ -322,7 +322,6 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
-  groundCollider: {fileID: 1553360118073370218}
   health: 0
   healthMax: 3
   attackDamage: 1
@@ -335,8 +334,9 @@ MonoBehaviour:
   crawlerScale: 0.5
   cashWorth: 10
   expWorth: 3
-  groundLevel: 0
   crawlerType: 0
+  partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
+    type: 3}
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -433,9 +433,11 @@ MonoBehaviour:
   rayDistance: 3
   layerMask:
     serializedVersion: 2
-    m_Bits: 4353
+    m_Bits: 4225
   distanceToTarget: 0
   tracking: 1
+  groundLevel: 0
+  groundCollider: {fileID: 1512139350355409810}
 --- !u!136 &8265754060228884709
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1861,7 +1863,8 @@ AudioSource:
   m_GameObject: {fileID: 5735611911670001989}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: ef7cb1973eb6b8f46ae579d0bb826849, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1

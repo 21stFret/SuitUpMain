@@ -34488,7 +34488,8 @@ AudioSource:
   m_GameObject: {fileID: 6060950455682695529}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: ef7cb1973eb6b8f46ae579d0bb826849, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -44736,7 +44737,6 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
-  groundCollider: {fileID: 6125026521287767358}
   health: 0
   healthMax: 7
   attackDamage: 5
@@ -44749,8 +44749,9 @@ MonoBehaviour:
   crawlerScale: 1
   cashWorth: 30
   expWorth: 12
-  groundLevel: 0
   crawlerType: 1
+  partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
+    type: 3}
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 4
   explosionRadius: 10
@@ -44854,9 +44855,11 @@ MonoBehaviour:
   rayDistance: 4
   layerMask:
     serializedVersion: 2
-    m_Bits: 4353
+    m_Bits: 4225
   distanceToTarget: 0
   tracking: 1
+  groundLevel: 0
+  groundCollider: {fileID: 5908647079581510130}
 --- !u!114 &2550985015025176912
 MonoBehaviour:
   m_ObjectHideFlags: 0

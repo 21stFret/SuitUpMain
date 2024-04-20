@@ -34,20 +34,9 @@ public class MechHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (damage < 0)
-        {
-            if (targetHealth.health > targetHealth.healthMax)
-            {
-                // could overheal
-                targetHealth.health = targetHealth.healthMax;
-            }
-            UpdateHealth(targetHealth.health, true);
-            return;
-        }
-
         targetHealth.health -= damage;
 
-        UpdateHealth(targetHealth.health);
+        UpdateHealth(targetHealth.health, damage<0);
 
         // shakes camera
         float damagePercent = Mathf.Clamp(damage / 10, 0.1f, 0.6f);
@@ -61,9 +50,16 @@ public class MechHealth : MonoBehaviour
 
         if (health <= 0)
         {
+            DOTween.Kill(image);
             image.fillAmount = 0;
             MechBattleController.instance.OnDie();
+            deathEffect.SetActive(true);
+            mainObject.SetActive(false);
             return;
+        }
+        if(health>targetHealth.healthMax)
+        {
+            health = targetHealth.healthMax;
         }
 
 
@@ -74,13 +70,14 @@ public class MechHealth : MonoBehaviour
         }
         if (updatingUI)
         {
-            image.fillAmount = (health / 100);
+            image.fillAmount = (health / targetHealth.healthMax);
             return;
         }
         updatingUI = true;
 
-        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (health / 100));
-        image.DOFillAmount(health / 100, 0.4f).OnComplete(()=>updatingUI = false);
+        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (health / targetHealth.healthMax));
+        image.fillAmount = Mathf.Lerp(image.fillAmount, health / targetHealth.healthMax, 0.4f);
+        image.DOFillAmount(health / targetHealth.healthMax, 0.4f).OnComplete(()=>updatingUI = false);
         image.DOColor(flashcolor, 0.18f).SetLoops(2, LoopType.Yoyo);
         SetEmmisveHeatlh();
 

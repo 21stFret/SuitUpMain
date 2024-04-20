@@ -7,6 +7,7 @@ public class InitGame : MonoBehaviour
     public MechLoadOut mechLoadOut;
     public StatsUI statsUI;
     public ConnectWeaponHolderToManager weaponHolder;
+    public bool MainMenu;
 
     private void OnEnable()
     {
@@ -20,15 +21,21 @@ public class InitGame : MonoBehaviour
 
     private void DelayedStart()
     {
-        print("Init Main Menu");
-        Time.timeScale = 1;
         PlayerSavedData.instance.LoadPlayerData();
-        if(PlayerSavedData.instance._firstLoad)
+
+        if (!MainMenu)
         {
-            PlayerSavedData.instance.UpdateFirstLoad(false);
-            // show welcome pop up
+            Time.timeScale = 1;
+            if (PlayerSavedData.instance._firstLoad)
+            {
+                PlayerSavedData.instance.UpdateFirstLoad(false);
+                // show welcome pop up
+            }
+            AudioManager.instance.Init();
+            return;
         }
-        AudioManager.instance.Init();
+
+        print("Init Main Menu");
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();

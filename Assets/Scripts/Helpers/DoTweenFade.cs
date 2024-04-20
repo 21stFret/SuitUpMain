@@ -38,14 +38,17 @@ public class DoTweenFade : MonoBehaviour
     {
         if (canvasGroup != null)
         {
+            canvasGroup.alpha = 0;
             canvasGroup.DOFade(1, fadeDuration);
         }
         if (image != null)
         {
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
             image.DOFade(1, fadeDuration);
         }
         if (material != null)
         {
+            material.color = new Color(material.color.r, material.color.g, material.color.b, 0);
             material.DOFade(1, fadeDuration);
         }
     }

@@ -1,3 +1,4 @@
+using Micosmo.SensorToolkit.Example;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,18 +12,16 @@ public class ModUI : MonoBehaviour
     public WeaponModManager weaponModManager;
     public EventSystem eventSystem;
 
-    private void Awake()
-    {
-        instance = this;
-    }
-
     public void OpenModUI(PickupType type)
     {
+        GameManager.instance.SwapPlayerInput("UI");
         modUI.SetActive(true);
-        foreach (var button in modButtons)
+        for (int i = 0; i < modButtons.Length; i++)
         {
-            foreach (var stat in button.modStats)
+            var button = modButtons[i];
+            for (int j = 0; j < button.modStats.Length; j++)
             {
+                var stat = button.modStats[j];
                 stat.gameObject.SetActive(false);
             }
             button.gameObject.SetActive(false);
@@ -32,11 +31,13 @@ public class ModUI : MonoBehaviour
             DisplayWeaponMods();
         }
         eventSystem.SetSelectedGameObject(modButtons[0].gameObject);
+
     }
 
     public void CloseModUI()
     {
         modUI.SetActive(false);
+        GameManager.instance.SwapPlayerInput("Gameplay");
     }
 
     public void DisplayWeaponMods()

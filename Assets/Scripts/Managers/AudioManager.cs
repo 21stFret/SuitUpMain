@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
+using UnityEngine.Audio;
 
 
 public enum SFX
@@ -21,7 +22,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] musicClips;
     public AudioClip[] effectClips;
     public AudioClip[] hurtClips;
-
+    public AudioMixer audioMixer;
     public AudioSource backgroundMusic;
     public AudioSource soundEffect;
     [Range(0, 1)]
@@ -48,6 +49,11 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        //Init();
     }
 
     private void Update()
@@ -78,14 +84,16 @@ public class AudioManager : MonoBehaviour
         musicVolume = PlayerSavedData.instance._BGMVolume;
         sfxVolume = PlayerSavedData.instance._SFXVolume;
         // Set initial volumes
-        backgroundMusic.volume = musicVolume;
-        soundEffect.volume = sfxVolume;
+        audioMixer.SetFloat("BGMVolume", Mathf.Log10(musicVolume) * 20);
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
     }
 
     // Play a music clip
     public void PlayMusic(int clipIndex)
     {
-        backgroundMusic.DOFade(0, 1f).OnComplete(FadeMusicIn);
+        DOVirtual.Float(musicVolume, 0.0001f, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20)).OnComplete(FadeMusicIn);
+        //DOTween.To(() => volume, x => volume = x, 0.0001f, 1f).OnComplete(() => FadeMusicIn());
+        //audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
         currentClipIndex = clipIndex;
     }
 
@@ -93,7 +101,9 @@ public class AudioManager : MonoBehaviour
     {
         backgroundMusic.clip = musicClips[currentClipIndex];
         backgroundMusic.Play();
-        backgroundMusic.DOFade(musicVolume, 1f);
+        DOVirtual.Float(0.0001f, musicVolume, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20));
+        //DOTween.To(() => volume, x => volume = x, musicVolume, 1f);
+        //audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
     }
 
     // Play a sound effect clip
@@ -139,7 +149,7 @@ public class AudioManager : MonoBehaviour
     public void SetMusicVolume(float volume)
     {
         musicVolume = volume;
-        backgroundMusic.volume = musicVolume;
+        audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
         PlayerSavedData.instance.UpdateBGMVolume(musicVolume);
         PlayerSavedData.instance.SavePlayerData();
     }
@@ -148,7 +158,7 @@ public class AudioManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         sfxVolume = volume;
-        soundEffect.volume = sfxVolume;
+        audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
         PlayerSavedData.instance.UpdateSFXVolume(sfxVolume);
         PlayerSavedData.instance.SavePlayerData();
     }

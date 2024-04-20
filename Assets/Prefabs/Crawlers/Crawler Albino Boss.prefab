@@ -933,7 +933,6 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
-  groundCollider: {fileID: 1204463484634151484}
   health: 0
   healthMax: 100
   attackDamage: 5
@@ -946,8 +945,9 @@ MonoBehaviour:
   crawlerScale: 2
   cashWorth: 100
   expWorth: 50
-  groundLevel: 0
   crawlerType: 0
+  partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
+    type: 3}
   smashEffect: {fileID: 0}
   smashRadius: 10
   smashDistance: 25
@@ -957,6 +957,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   smashCooldown: 3
+  smashmovementDelay: 0
 --- !u!114 &2406123097587197689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1026,9 +1027,11 @@ MonoBehaviour:
   rayDistance: 4
   layerMask:
     serializedVersion: 2
-    m_Bits: 951
+    m_Bits: 0
   distanceToTarget: 0
   tracking: 1
+  groundLevel: 0
+  groundCollider: {fileID: 2831431334942594346}
 --- !u!114 &4414502184644092993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1700,7 +1703,8 @@ AudioSource:
   m_GameObject: {fileID: 8216631474000342480}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: ef7cb1973eb6b8f46ae579d0bb826849, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1

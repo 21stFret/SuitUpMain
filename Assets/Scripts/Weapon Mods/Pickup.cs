@@ -21,6 +21,11 @@ public class Pickup : MonoBehaviour
 
     private void Start()
     {
+        Init();
+    }
+
+    public void Init()
+    {
         pickupRenderer = GetComponent<Renderer>();
         pickupCollider = GetComponent<Collider>();
         pickupLight = GetComponentInChildren<Light>();
@@ -61,8 +66,7 @@ public class Pickup : MonoBehaviour
 
     private void PickUp()
     {
-
-        ModUI.instance.OpenModUI(pickupType);
+        GameUI.instance.OpenModUI(pickupType);
         if (GameManager.instance == null)
         {
             return;

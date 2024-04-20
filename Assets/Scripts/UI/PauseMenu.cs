@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject menu;
     public GameObject cheatsMenu;
     public GameObject controlsMenu;
     public GameObject settingsMenu;
@@ -34,16 +35,19 @@ public class PauseMenu : MonoBehaviour
         }
         GameUI.instance.CloseAll();
         pauseMenu.SetActive(true);
+        menu.SetActive(true);
         Time.timeScale = 0;
         isPaused = true;
         playerInput.SwitchCurrentActionMap("UI");
         eventSystem.SetSelectedGameObject(firstSelectedButton);
+        MechBattleController.instance.characterController.runAudio.Stop();
     }
 
     public void ResumeGame()
     {
         cheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
+        menu.SetActive(false);
         controlsMenu.SetActive(false);
         settingsMenu.SetActive(false);
         Time.timeScale = 1;

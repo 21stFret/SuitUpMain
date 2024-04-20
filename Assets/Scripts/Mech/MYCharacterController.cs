@@ -27,6 +27,7 @@ public class MYCharacterController : MonoBehaviour
 
     private void PlayRunningFSX()
     {
+
         if (isRunning)
         {
             if (!runAudio.isPlaying)
