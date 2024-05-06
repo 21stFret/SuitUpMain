@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
+#if UNITY_EDITOR
 public class ScaleRandomIzer : EditorWindow
 {
     float minScale = 0.5f;
@@ -33,3 +35,4 @@ public class ScaleRandomIzer : EditorWindow
         }
     }
 }
+#endif

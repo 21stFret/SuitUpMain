@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class PlayerSavedData : MonoBehaviour
@@ -168,8 +171,32 @@ public class PlayerSavedData : MonoBehaviour
         // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData);
 
-        // Save the JSON data to a file
-        System.IO.File.WriteAllText("saveData.json", jsonData);
+        byte[] byteData;
+
+        byteData = Encoding.ASCII.GetBytes(jsonData);
+
+        string dataPath = Application.persistentDataPath.ToString();
+
+        // create the file in the path if it doesn't exist
+        // if the file path or name does not exist, return the default SO
+        if (!Directory.Exists(Path.GetDirectoryName(dataPath)))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(dataPath));
+        }
+
+        // attempt to save here data
+        try
+        {
+            // save datahere
+            File.WriteAllBytes(dataPath, byteData);
+            Debug.Log("Save data to: " + dataPath);
+        }
+        catch (Exception e)
+        {
+            // write out error here
+            Debug.LogError("Failed to save data to: " + dataPath);
+            Debug.LogError("Error " + e.Message);
+        }
 
         print("Saved Data Complete" + jsonData);
     }
