@@ -21898,10 +21898,11 @@ AudioSource:
   m_GameObject: {fileID: 8800413595774208468}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: ecae3faa7c1595043955d58fae2fef84, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.278
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -22017,10 +22018,10 @@ MonoBehaviour:
   healthLightColor: {r: 12.844471, g: 9.383855, b: 0, a: 1}
   damageLightColor: {r: 15.104688, g: 0, b: 0, a: 1}
   damagefalshColor: {r: 0.6886792, g: 0.016242431, b: 0.016242431, a: 1}
-  meshRenderer: {fileID: 0}
   screenFlash: {fileID: 0}
   impulseSource: {fileID: 7926855109315850022}
   deathEffect: {fileID: 6092388055686581626}
+  deathClip: {fileID: 8300000, guid: 0e06c997f66813242af742395e3e0dc3, type: 3}
   mainObject: {fileID: 4834883123767186782}
   targetHealth: {fileID: 5979783455418939766}
 --- !u!54 &364384307396218630
@@ -22308,6 +22309,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 208be2e1-2c8d-4b34-990a-9ae171ab45ac
     m_ActionName: UI/Any[/Keyboard/anyKey,/XInputControllerWindows/start,/Mouse/press]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b6238ec4-d232-462c-8cb9-c06d9637149f
+    m_ActionName: UI/CycleMenuHeaderLeft[/XInputControllerWindows/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ac06486b-b4a4-4f26-8d8e-e0943442809f
+    m_ActionName: UI/CycleMenuHeaderRIght[/XInputControllerWindows/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 630f5e1a-9f72-48bd-8f48-d8f2a1445425
+    m_ActionName: UI/ReturntoMainMenu[/Keyboard/escape,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Default
   m_DefaultActionMap: Gameplay
@@ -22485,7 +22498,6 @@ MonoBehaviour:
   weapon: {fileID: 0}
   uiEnabled: 0
   weaponUI: {fileID: 0}
-  fuelSprite: {fileID: 21300000, guid: 671ab1252c8f6fc44989cbd36747d5f6, type: 3}
   weaponFuel: 0
   weaponFuelMax: 100
   weaponRechargeRate: 0

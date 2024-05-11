@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,7 +10,9 @@ using UnityEngine.InputSystem;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu instance;
     public GameObject mainMenu;
+    public GameObject playButton;
     public GameObject loadOutMenu;
     public GameObject RDMenu;
     public GameObject AchMenu;
@@ -17,14 +20,20 @@ public class MainMenu : MonoBehaviour
     public MechLoadOut loadOut;
     public SceneLoader sceneLoader;
     public GameObject[] menus;
+    public GameObject[] menuBUttons;
     public int currentMenuIndex;
     public VirtualCameraSwitcher virtualCameraSwitcher;
     public TMP_Text headerText;
+    private bool inMainMenu;
+    public GameObject header;
+    public GameObject header3dUI;
 
     private void Start()
     {
         AudioManager.instance.PlayMusic(0);
         sceneLoader = SceneLoader.instance;
+        inMainMenu = true;
+        instance = this;
     }
 
     public void StartGame()
@@ -38,14 +47,40 @@ public class MainMenu : MonoBehaviour
     }
 
     #region New Way
+    public void CycleUP(InputAction.CallbackContext context)
+    {
+        if(inMainMenu)
+        {
+            return;
+        }
+        if (context.performed)
+        {
+            StartCoroutine(OpenMenu(false));
+        }
+
+    }
+
     public void CycleUP()
     {
         StartCoroutine(OpenMenu(true));
-    }
-
+    }    
+    
     public void CycleDOwn()
     {
         StartCoroutine(OpenMenu(false));
+    }
+
+    public void CycleDOwn(InputAction.CallbackContext context)
+    {
+        if (inMainMenu)
+        {
+            return;
+        }
+        if (context.performed)
+        {
+            StartCoroutine(OpenMenu(true));
+        }
+
     }
 
     public IEnumerator OpenMenu(bool up)
@@ -73,9 +108,14 @@ public class MainMenu : MonoBehaviour
         PauseInput(true);
         ToggleText(false);
         yield return new WaitForSeconds(0.8f);
+        if (menus[menu].name == "load out")
+        {
+            loadOut.Init();
+        }
         menus[menu].SetActive(true);
         menus[menu].GetComponent<DoTweenFade>().FadeIn();
         menus[currentMenuIndex].SetActive(false);
+        EventSystem.current.SetSelectedGameObject(menuBUttons[menu]);
         PauseInput(false);
         currentMenuIndex = menu;
         ToggleText(true);
@@ -96,18 +136,61 @@ public class MainMenu : MonoBehaviour
     }
     #endregion
 
-    public IEnumerator OpenLoadOutMenu()
+    public void OpenInLoadout()
     {
         virtualCameraSwitcher.SwitchToVirtualCamera(1);
         currentMenuIndex = 0;
-        mainMenu.GetComponent<DoTweenFade>().FadeOut();
+        ToggleText(true);
         PauseInput(true);
-        yield return new WaitForSeconds(0.8f);
+        header.SetActive(true);
+        header3dUI.SetActive(true);
+        header.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.GetComponent<DoTweenFade>().canvasGroup.alpha = 0;
         loadOutMenu.SetActive(true);
         loadOutMenu.GetComponent<DoTweenFade>().FadeIn();
         mainMenu.SetActive(false);
         PauseInput(false);
+        inMainMenu = false;
+        EventSystem.current.SetSelectedGameObject(menuBUttons[0]);
+    }
+
+    public IEnumerator OpenMainMenu()
+    {
+        virtualCameraSwitcher.SwitchToVirtualCamera(0);
+        currentMenuIndex = 0;
+        loadOutMenu.GetComponent<DoTweenFade>().FadeOut();
+        header.GetComponent<DoTweenFade>().FadeOut();
+        PauseInput(true);
+        yield return new WaitForSeconds(0.8f);
+        header3dUI.SetActive(false);
+        mainMenu.SetActive(true);
+        mainMenu.GetComponent<DoTweenFade>().FadeIn();
+        loadOutMenu.SetActive(false);
+        header.SetActive(false);
+        PauseInput(false);
+        inMainMenu = true;
+        EventSystem.current.SetSelectedGameObject(playButton);
+    }
+
+    public IEnumerator OpenLoadOutMenu()
+    {
+
+        virtualCameraSwitcher.SwitchToVirtualCamera(1);
+        currentMenuIndex = 0;
+        ToggleText(true);
+        mainMenu.GetComponent<DoTweenFade>().FadeOut();
+        PauseInput(true);
+        yield return new WaitForSeconds(0.8f);
+        header.SetActive(true);
+        header3dUI.SetActive(true);
+        header.GetComponent<DoTweenFade>().FadeIn();
+        loadOutMenu.GetComponent<DoTweenFade>().canvasGroup.alpha = 0;
+        loadOutMenu.SetActive(true);
+        loadOutMenu.GetComponent<DoTweenFade>().FadeIn();
+        mainMenu.SetActive(false);
+        PauseInput(false);
+        inMainMenu = false;
+        EventSystem.current.SetSelectedGameObject(menuBUttons[0]);
     }
 
     public IEnumerator OpenRDMenu()
@@ -174,12 +257,25 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(OpenLoadOutMenu());
     }
 
+    public void OpenMainMenuButton(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            StartCoroutine(OpenMainMenu());
+        }
+    }    
+    
+    public void OpenMainMenuButton()
+    {
+        StartCoroutine(OpenMainMenu());
+    }
+
     public void Quit()
     {
         Application.Quit();
     }
 
-    private void PauseInput(bool pause)
+    public void PauseInput(bool pause)
     {
         if (pause)
         {

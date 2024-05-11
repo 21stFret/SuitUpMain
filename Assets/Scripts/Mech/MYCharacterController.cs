@@ -47,6 +47,7 @@ public class MYCharacterController : MonoBehaviour
     public void Die()
     {
         isRunning = false;
+        runAudio.Stop();
     }
 
     public void OnMove(InputAction.CallbackContext context)

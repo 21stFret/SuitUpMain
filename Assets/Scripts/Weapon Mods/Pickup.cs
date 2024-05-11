@@ -28,7 +28,7 @@ public class Pickup : MonoBehaviour
     {
         pickupRenderer = GetComponent<Renderer>();
         pickupCollider = GetComponent<Collider>();
-        pickupLight = GetComponentInChildren<Light>();
+        pickupLight = GetComponentInChildren<Light>(true);
 
         SetupPickup();
     }
@@ -53,13 +53,12 @@ public class Pickup : MonoBehaviour
                 pickupColor = Color.green;
                 break;
             case PickupType.Bonus:
-                pickupColor = Color.blue;
+                pickupColor = Color.cyan;
                 break;
         }
         pickupCollider.enabled = true;
         pickupRenderer.enabled = true;
         pickupLight.enabled = true;
-        pickupRenderer.material.color = pickupColor;
         pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
         pickupLight.color = pickupColor;
     }
@@ -71,7 +70,7 @@ public class Pickup : MonoBehaviour
         {
             return;
         }
-        GameManager.instance.artifactCount++;
+        CashCollector.Instance.AddArtifact(1);
     }
 
     private void RemovePickup()

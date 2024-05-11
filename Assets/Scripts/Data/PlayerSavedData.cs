@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Profiling;
 
 public class PlayerSavedData : MonoBehaviour
 {
@@ -126,7 +128,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void CreateWeaponData()
     {
-        _mainWeaponData = new WeaponData[2];
+        _mainWeaponData = new WeaponData[3];
         for (int i = 0; i < _mainWeaponData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
@@ -169,67 +171,95 @@ public class PlayerSavedData : MonoBehaviour
         saveData.gameStats = _gameStats;
 
         // Convert the SaveData instance to JSON
-        string jsonData = JsonUtility.ToJson(saveData);
+        string jsonData = JsonUtility.ToJson(saveData, true);
 
         byte[] byteData;
 
         byteData = Encoding.ASCII.GetBytes(jsonData);
 
         string dataPath = Application.persistentDataPath.ToString();
+        string dataFileName = "saveData.sav";
+        string fullPath = Path.Combine(dataPath, dataFileName);
 
         // create the file in the path if it doesn't exist
         // if the file path or name does not exist, return the default SO
-        if (!Directory.Exists(Path.GetDirectoryName(dataPath)))
+        if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(dataPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
         }
 
         // attempt to save here data
         try
         {
             // save datahere
-            File.WriteAllBytes(dataPath, byteData);
-            Debug.Log("Save data to: " + dataPath);
+            using (FileStream stream = new FileStream(fullPath, FileMode.Create))
+            {
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(jsonData);
+                }
+            }
+            print("Saved Data Complete" + jsonData);
+            print("Saved Data Path" + fullPath);
         }
         catch (Exception e)
         {
             // write out error here
-            Debug.LogError("Failed to save data to: " + dataPath);
+            Debug.LogError("Failed to save data to: " + fullPath);
             Debug.LogError("Error " + e.Message);
+            return;
         }
 
-        print("Saved Data Complete" + jsonData);
+
     }
 
     public void LoadPlayerData()
     {
-        // Check if the save file exists
-        if (System.IO.File.Exists("saveData.json"))
+        string dataPath = Application.persistentDataPath.ToString();
+        string dataFileName = "saveData.sav";
+        string fullPath = Path.Combine(dataPath, dataFileName);
+
+        if (File.Exists(fullPath))
         {
-            // Read the JSON data from the file
-            string jsonData = System.IO.File.ReadAllText("saveData.json");
+            try
+            {
+                // load the serialized data from the file
+                string dataToLoad = "";
+                using (FileStream stream = new FileStream(fullPath, FileMode.Open))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        dataToLoad = reader.ReadToEnd();
+                    }
+                }
 
-            // Convert the JSON data to a SaveData instance
-            SaveData saveData = JsonUtility.FromJson<SaveData>(jsonData);
+                // deserialize the data from Json back into the C# object
+                SaveData saveData = JsonUtility.FromJson<SaveData>(dataToLoad);
+                _BGMVolume = saveData.BGMVolume;
+                _SFXVolume = saveData.SFXVolume;
+                _playerLevel = saveData.playerLevel;
+                _Cash = saveData.playerCash;
+                _Exp = saveData.playerExp;
+                _Artifact = saveData.playerArtifact;
+                _mainWeaponData = saveData.mainWeaponData;
+                _altWeaponData = saveData.altWeaponData;
+                _playerLoadout = saveData.playerLoadout;
+                _firstLoad = saveData.firstLoad;
+                _gameStats = saveData.gameStats;
 
-            // Assign the values from the SaveData instance to the PlayerSavedData instance
-            _BGMVolume = saveData.BGMVolume;
-            _SFXVolume = saveData.SFXVolume;
-            _playerLevel = saveData.playerLevel;
-            _Cash = saveData.playerCash;
-            _Exp = saveData.playerExp;
-            _Artifact = saveData.playerArtifact;
-            _mainWeaponData = saveData.mainWeaponData;
-            _altWeaponData = saveData.altWeaponData;
-            _playerLoadout = saveData.playerLoadout;
-            _firstLoad = saveData.firstLoad;
-            _gameStats = saveData.gameStats;
+                print("Loaded Data Complete" + dataToLoad);
+            }
+            catch (Exception e)
+            {
 
-            print("Loaded Data Complete" + jsonData);
+                Debug.LogError("Error occured when trying to load file at path: "
+                    + fullPath + " and backup did not work.\n" + e);
+
+            }
         }
         else
         {
-            print("No data found to load");
+            print("No data found to load, creating data");
             CreateData();
         }
     }
@@ -237,15 +267,15 @@ public class PlayerSavedData : MonoBehaviour
 
 public class SaveData
 {
-    public float BGMVolume;
-    public float SFXVolume;
     public int playerLevel;
-    public WeaponData[] mainWeaponData;
-    public WeaponData[] altWeaponData;
     public int playerCash;
     public int playerExp;
     public int playerArtifact;
+    public GameStats gameStats;
+    public WeaponData[] mainWeaponData;
+    public WeaponData[] altWeaponData;
     public Vector2 playerLoadout;
     public bool firstLoad;
-    public GameStats gameStats;
+    public float BGMVolume;
+    public float SFXVolume;
 }

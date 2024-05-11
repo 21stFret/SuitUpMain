@@ -1,40 +1,56 @@
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlameGrenadeController : MechWeapon
+public class FlameGrenadeController : WeaponMod
 {
     public GameObject[] flameGrenades;
     private int currentGrenade;
+    public float shotTimer;
+    private bool overideFire;
 
     public override void Init()
     {
         base.Init();
-        //modType = WeaponType.Grenade;
+        baseWeapon.weaponOverride = true;
+        baseWeapon.weaponFuelManager.constantUse = false;
     }
 
-    public override void FireAlt()
+    public void Update()
     {
-        base.Fire();
-        /*
-        if (baseWeapon.weaponFuelManager.weaponFuel >= modFuelCost)
+        if (!overideFire)
         {
-            baseWeapon.weaponFuelManager.weaponFuel -= modFuelCost;
+            return;
+        }
+        shotTimer += Time.deltaTime;
+        if (shotTimer >= baseWeapon.fireRate)
+        {
+            shotTimer = 0;
+
             flameGrenades[currentGrenade].SetActive(true);
-            flameGrenades[currentGrenade].transform.position = baseWeapon.transform.position + baseWeapon.transform.forward;
-            flameGrenades[currentGrenade].transform.rotation = baseWeapon.transform.rotation;
-            flameGrenades[currentGrenade].GetComponent<FlameGrenade>().Init(baseWeapon.damage, baseWeapon.range);
+            flameGrenades[currentGrenade].transform.position = transform.position + transform.forward;
+            flameGrenades[currentGrenade].transform.rotation = transform.rotation;
+            flameGrenades[currentGrenade].GetComponent<FlameGrenade>().Init(damage, range);
             currentGrenade++;
             if (currentGrenade >= flameGrenades.Length)
             {
                 currentGrenade = 0;
             }
+            baseWeapon.weaponFuelManager.weaponFuel -= baseWeapon.weaponFuelManager.weaponFuelRate;
         }
-        */
     }
 
-    public override void StopAlt()
+    public override void Fire()
+    {
+        base.Fire();
+        overideFire = true;
+    }
+
+    public override void Stop()
     {
         base.Stop();
+        shotTimer = 0;
+        overideFire = false;
     }
 }

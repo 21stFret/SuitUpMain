@@ -46,8 +46,7 @@ public class PlayerAchievements : MonoBehaviour
             achievement.achieved = false;
             achievements.Add(achievement);
         }
-    
-    
+        SetAcheivementFromSteam();
     }
 
     public void SetAcheivementFromSteam()
@@ -57,49 +56,17 @@ public class PlayerAchievements : MonoBehaviour
             return;
         }
 
-        foreach (Achievement achievement in achievements)
+        for (int i = 0; i < achievements.Count; i++)
         {
-            SetAchievement(achievement.id, steamAchievements.CheckAchievement(achievement.id));
+            Achievement achievement = achievements[i];
+            achievement.achieved = steamAchievements.CheckAchievement(achievement.id);
+            achievements[i] = achievement;
         }
     }
 
-    public Achievement GetAchievement(string id)
+    public void SetAchievement(string id)
     {
-        Achievement achievement = achievements.Find(a => a.id == id);
-        if(achievement.id == null)
-        {
-            print ("Achievement not found");
-        }
-        else
-        {
-            print("Achievement found: " + achievement.id);
-        }
-        return achievement;
-    }
-
-    public void SetAchievement(string id, bool achieved)
-    {
-        Achievement achievement = achievements.Find(a => a.id == id);
-        if(achievement.id == null)
-        {
-            print ("Achievement not found");
-            return;
-        }
-        print("Setting " + achievement.id + " to " + achieved);
-        achievement.achieved = achieved;
-        achievements[achievements.FindIndex(a => a.id == id)] = achievement;
-        UnlockAchievement(id);
-    }
-
-    public void SetAchievementByName(string idName, bool achieved)
-    {
-        Achievement achievement = achievements.Find(a => a.name == idName);
-        achievement.achieved = achieved;
-        achievements[achievements.FindIndex(a => a.name == idName)] = achievement;
-    }
-
-    public void UnlockAchievement(string id)
-    {
+        print("Achieved " + id);
         steamAchievements.UnlockAchievement(id);
     }
 

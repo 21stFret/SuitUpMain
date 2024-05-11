@@ -7,12 +7,8 @@ public class InitGame : MonoBehaviour
     public MechLoadOut mechLoadOut;
     public StatsUI statsUI;
     public ConnectWeaponHolderToManager weaponHolder;
+    public MainMenu mainMenu;
     public bool MainMenu;
-
-    private void OnEnable()
-    {
-        //Invoke("DelayedStart", 0.2f);
-    }
 
     private void Start()
     {
@@ -40,5 +36,11 @@ public class InitGame : MonoBehaviour
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
+        statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
+        if(SetupGame.instance.inGame)
+        {
+            mainMenu.OpenInLoadout();
+        }
+        SetupGame.instance.inGame = true;
     }
 }

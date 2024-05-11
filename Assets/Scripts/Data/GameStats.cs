@@ -16,5 +16,10 @@ public class GameStats
     //Total Kills
     public int totalKills;
     public int highestWave;
+    public int totalDeaths;
+    public int totalElites;
+    public int totalBosses;
+    public float totalPlayTime;
+    public int totalUpgrades;
 
 }

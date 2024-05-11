@@ -19,11 +19,16 @@ public class DroneController : MonoBehaviour
     public EventSystem eventSystem;
     public GameObject firstSelected;
     public F3DMissileLauncher missileLauncher;
+    public int missileAmount;
     private GameUI gameUI;
+    private int timesUsed;
+    private bool inputDelay;
+    public int airstikes;
 
     private void Start()
     {
         gameUI = GameUI.instance;
+        timesUsed =1;
     }
 
     public void OnOpenMenu(InputAction.CallbackContext context)
@@ -40,10 +45,12 @@ public class DroneController : MonoBehaviour
         {
             return;
         }
+        Time.timeScale = 0.3f;
         airdropMenu.SetActive(true);
         UpdatePrice();
         playerInput.SwitchCurrentActionMap("UI");
         eventSystem.SetSelectedGameObject(firstSelected);
+        CashCollector.Instance.ShowUI();
     }
 
     public void OnCloseMenu(InputAction.CallbackContext context)
@@ -59,15 +66,24 @@ public class DroneController : MonoBehaviour
         CloseMenu();
     }
 
-    private void CloseMenu()
+    public void CloseMenu()
     {
+        Time.timeScale = 1;
         airdropMenu.SetActive(false);
         playerInput.SwitchCurrentActionMap("Gameplay");
+        CashCollector.Instance.HideUI();
     }
 
     public void InitAirSupport(int type)
     {
-        if (PlayerSavedData.instance._Cash < airDropCost)
+        if(inputDelay)
+        {
+            return;
+        }
+
+        StartCoroutine(InputDelay());
+
+        if (GameManager.instance.crawlerParts < airDropCost)
         {
             fade.PlayTween();
             return;
@@ -87,12 +103,21 @@ public class DroneController : MonoBehaviour
                 MissileStrike();
                 break;
         }
-        CashCollector.Instance.AddCash(-airDropCost);
+        CashCollector.Instance.AddCrawlerPart(-airDropCost);
+        timesUsed++;
+        airDropCost = airDropCost * timesUsed;
         airDropTimer.ResetAirDrop();
         CloseMenu();
     }
 
-    public void InitDrone(int type)
+    private IEnumerator InputDelay()
+    {
+        inputDelay = true;
+        yield return new WaitForSeconds(1f);
+        inputDelay = false;
+    }
+
+    private void InitDrone(int type)
     {
         crate.crateType = (CrateType)type;
         drone.Init();
@@ -100,14 +125,23 @@ public class DroneController : MonoBehaviour
 
     public void MissileStrike()
     {
-        missileLauncher.LaunchMissiles(5);
+        missileLauncher.LaunchMissiles(missileAmount);
+        airstikes++;
+        if(airstikes == 2)
+        {
+            PlayerAchievements.instance.SetAchievement("AIRSTRIKE_2");
+        }
+        if (airstikes == 5)
+        {
+            PlayerAchievements.instance.SetAchievement("AIRSTRIKE_5");
+        }
     }
 
     private void UpdatePrice()
     {
         foreach(var text in texts)
         {
-            text.text = "$" + airDropCost.ToString();
+            text.text = airDropCost.ToString();
         }
     }
 }

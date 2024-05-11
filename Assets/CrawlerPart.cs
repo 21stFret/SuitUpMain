@@ -8,7 +8,7 @@ public class CrawlerPart : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            CashCollector.Instance.AddCrawlerPart();
+            CashCollector.Instance.AddCrawlerPart(1);
             Destroy(gameObject);
         }
     }

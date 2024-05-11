@@ -7,17 +7,13 @@ using Unity.VisualScripting;
 
 public class StatsUI : MonoBehaviour
 {
-    public TMP_Text _kills;
+    public TMP_Text Artifacts;
     public TMP_Text _waves;
     public TMP_Text _cash;
     private bool removingCash = false;
     private int cashedCash;
+    private int cashedArt;
     private float cashLerp = 0;
-    public void UpdateStats(int kills, int waves)
-    {
-        _kills.text = kills.ToString();
-        _waves.text = waves.ToString();
-    }
 
     public void RemoveCash(int cash)
     {
@@ -25,10 +21,20 @@ public class StatsUI : MonoBehaviour
         PlayerSavedData.instance.UpdatePlayerCash(-cash);
         removingCash = true;
     }
+    public void RemoveArtifact(int cash)
+    {
+        PlayerSavedData.instance.UpdatePlayerArtifact(-cash);
+        UpdateArtifact(PlayerSavedData.instance._Artifact);
+    }
 
     public void UpdateCash(int cash)
     {
         _cash.text = "$" + cash.ToString();
+    }
+    
+    public void UpdateArtifact(int cash)
+    {
+        Artifacts.text = cash.ToString();
     }
 
     public void Update()

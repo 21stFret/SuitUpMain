@@ -39010,6 +39010,7 @@ MonoBehaviour:
     mainWeapon: 0
     unlocked: 0
     level: 0
+  weaponSprite: {fileID: 21300000, guid: b83785ae746ff8f449d169cb4e80c348, type: 3}
   baseWeaponInfo:
     weaponName: shocker
     _damage:
@@ -39025,7 +39026,8 @@ MonoBehaviour:
     - 15
     - 18
     _cost: e8030000d0070000b80b0000
-    weaponSprite: {fileID: 0}
+    _unlockCost: 0
+    weaponDescription: 
   weaponEffects:
     weaponAudioSource: {fileID: 3573105458296607397}
     weaponClose: {fileID: 8300000, guid: 59ae4c7218192d443af48fa96d0883fe, type: 3}

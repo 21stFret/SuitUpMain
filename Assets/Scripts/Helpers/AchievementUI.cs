@@ -35,11 +35,6 @@ public class AchievementUI : MonoBehaviour
         UpdateInfoBox();
     }
 
-    public void TESTAcheivment()
-    {
-        playerAchievements.UnlockAchievement("KILL_100");
-    }
-
     public void UpdateInfoBox()
     {
         if(_selected == eventSystem.currentSelectedGameObject)
@@ -61,6 +56,9 @@ public class AchievementUI : MonoBehaviour
         {
             achievementPrefabs[i].gameObject.SetActive(false);
         }
+
+        playerAchievements.SetAcheivementFromSteam();
+
         for (int i = 0; i < playerAchievements.achievements.Count; i++)
         {
             achievementPrefabs[i].SetAchievement(playerAchievements.achievements[i]);
@@ -72,12 +70,20 @@ public class AchievementUI : MonoBehaviour
 
     public void UpdateStats()
     {
-        statPrefabs[0].statText.text = playerSavedData._gameStats.totalKills.ToString();
-        statPrefabs[2].statText.text = playerSavedData._gameStats.shotgunKills.ToString();
-        statPrefabs[3].statText.text = playerSavedData._gameStats.flamerKills.ToString();
-        statPrefabs[4].statText.text = playerSavedData._gameStats.lightningKills.ToString();
-        statPrefabs[5].statText.text = playerSavedData._gameStats.cryoKills.ToString();
-        statPrefabs[6].statText.text = playerSavedData._gameStats.grenadeKills.ToString();
-        statPrefabs[1].statText.text = playerSavedData._gameStats.minigunKills.ToString();
+        statPrefabs[0].statText.text = "Total Kills";
+        statPrefabs[2].statText.text = "Shotgun Kills";
+        statPrefabs[3].statText.text = "Flamer Kills";
+        statPrefabs[4].statText.text = "Lightning Kills";
+        statPrefabs[5].statText.text = "Cryo Kills";
+        statPrefabs[6].statText.text = "Grenade Kills";
+        statPrefabs[1].statText.text = "Minigun Kills";
+
+        statPrefabs[0].value.text = playerSavedData._gameStats.totalKills.ToString();
+        statPrefabs[2].value.text = playerSavedData._gameStats.shotgunKills.ToString();
+        statPrefabs[3].value.text = playerSavedData._gameStats.flamerKills.ToString();
+        statPrefabs[4].value.text = playerSavedData._gameStats.lightningKills.ToString();
+        statPrefabs[5].value.text = playerSavedData._gameStats.cryoKills.ToString();
+        statPrefabs[6].value.text = playerSavedData._gameStats.grenadeKills.ToString();
+        statPrefabs[1].value.text = playerSavedData._gameStats.minigunKills.ToString();
     }
 }

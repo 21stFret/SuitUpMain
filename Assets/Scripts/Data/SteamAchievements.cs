@@ -9,7 +9,7 @@ public class SteamAchievements : MonoBehaviour
     {
         if (SteamManager.Initialized)
         {
-            var ach = SteamUserStats.GetAchievement(id, out bool achieved);
+            SteamUserStats.GetAchievement(id, out bool achieved);
             return achieved;
         }
         return false;

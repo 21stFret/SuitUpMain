@@ -72,4 +72,22 @@ public class CrawlerAlbino : Crawler
         crawlerMovement.speed = cachedspeed;
         smashing = false;
     }
+
+    public override void Die(WeaponType weapon)
+    {
+        base.Die(weapon);
+        PlayerSavedData.instance._gameStats.totalBosses++;
+        if (PlayerSavedData.instance._gameStats.totalBosses == 1)
+        {
+            PlayerAchievements.instance.SetAchievement("BOSS_1");
+        }
+        if (PlayerSavedData.instance._gameStats.totalBosses == 5)
+        {
+            PlayerAchievements.instance.SetAchievement("BOSS_5");
+        }
+        if (PlayerSavedData.instance._gameStats.totalBosses == 10)
+        {
+            PlayerAchievements.instance.SetAchievement("BOSS_10");
+        }
+    }
 }

@@ -8,9 +8,7 @@ public class Minigun : MechWeapon
     public bool hasTarget;
     public GameObject gunturret;
     private Animator _animator;
-    public ProjectileWeapon projectileWeapon;
-
-    public GameObject target;
+    public ProjectileWeapon weaponController;
 
     private float _timer;
 
@@ -21,7 +19,7 @@ public class Minigun : MechWeapon
 
     void Update()
     {
-        target = sensor.GetNearestDetection("Enemy");
+        var target = sensor.GetNearestDetection("Enemy");
 
         if (target != null)
         {
@@ -42,9 +40,8 @@ public class Minigun : MechWeapon
             _timer += Time.deltaTime;
            if(_timer > fireRate)
             {
-                projectileWeapon.Minigun(damage);
+                weaponController.Minigun(damage);
                 _timer = 0.0f;
-                //print("Fired");
             }
         }
         

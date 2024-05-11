@@ -6,6 +6,7 @@ using DG.Tweening;
 public class CashCollector : MonoBehaviour
 {
     [SerializeField] public TMP_Text alienParts;
+
     public static CashCollector Instance;
     public GameObject panel;
     private bool UIshown;
@@ -13,6 +14,13 @@ public class CashCollector : MonoBehaviour
     private float _timeToHide = 2f;
     public float posX;
     public float savedPos;
+    public GameObject crawlerPartParent;
+
+    public TMP_Text artifactParts;
+    public GameObject Artpanel;
+    private bool ArtUIshown;
+    public float timeToHideA = 2f;
+    private float _timeToHideA = 2f;
 
     private void Awake()
     {
@@ -22,6 +30,7 @@ public class CashCollector : MonoBehaviour
     private void Start()
     {
         UpdateUI(0);
+        UpdateArtUI(0);
         savedPos = panel.transform.localPosition.x;
     }
 
@@ -35,6 +44,14 @@ public class CashCollector : MonoBehaviour
                 HideUI();
             }
         }
+        if(ArtUIshown)
+        {
+            _timeToHideA -= Time.deltaTime;
+            if(_timeToHideA <= 0)
+            {
+                HideArtUI();
+            }
+        }
     }
 
     public void AddCash(int amount)
@@ -42,14 +59,30 @@ public class CashCollector : MonoBehaviour
         GameManager.instance.cashCount += amount;
     }
 
-    public void AddCrawlerPart()
+    public void AddCrawlerPart(int amount)
     {
-        GameManager.instance.crawlerParts += 1;
+        GameManager.instance.crawlerParts += amount;
         ShowUI();
         UpdateUI(GameManager.instance.crawlerParts);
     }
 
-    private void ShowUI()
+    public void AddArtifact(int amount)
+    {
+        GameManager.instance.artifactCount+= amount;
+        ShowArtUI();
+        UpdateArtUI(GameManager.instance.artifactCount);
+    }
+
+    public void DestroyParts()
+    {
+        foreach (Transform child in crawlerPartParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+
+    public void ShowUI()
     {
         if (UIshown)
         {
@@ -61,7 +94,7 @@ public class CashCollector : MonoBehaviour
         panel.transform.DOLocalMoveX(posX, 0.5f);
     }
 
-    private void HideUI()
+    public void HideUI()
     {
         if (!UIshown)
         {
@@ -69,6 +102,28 @@ public class CashCollector : MonoBehaviour
         }
         UIshown = false;
         panel.transform.DOLocalMoveX(savedPos, 0.5f);
+    }
+
+    public void ShowArtUI()
+    {
+        if (ArtUIshown)
+        {
+            _timeToHideA = timeToHideA;
+            return;
+        }
+        _timeToHideA = timeToHideA;
+        ArtUIshown = true;
+        Artpanel.transform.DOLocalMoveX(posX, 0.5f);
+    }
+
+    public void HideArtUI()
+    {
+        if (!ArtUIshown)
+        {
+            return;
+        }
+        ArtUIshown = false;
+        Artpanel.transform.DOLocalMoveX(savedPos, 0.5f);
     }
 
     private void UpdateUI(int parts)
@@ -80,6 +135,11 @@ public class CashCollector : MonoBehaviour
         }
         alienParts.color = Color.green;
         alienParts.transform.DOPunchScale(new Vector3(1, 1, 1), 0.2f,5, 1).OnComplete(ResetScale);
+    }
+
+    private void UpdateArtUI(int parts)
+    {
+        artifactParts.text = parts.ToString();
     }
 
     private void ResetScale()

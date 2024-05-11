@@ -276,6 +276,7 @@ MonoBehaviour:
     mainWeapon: 0
     unlocked: 0
     level: 0
+  weaponSprite: {fileID: 21300000, guid: 7242b3ea12b0973479bc98496efcb692, type: 3}
   baseWeaponInfo:
     weaponName: minigun
     _damage:
@@ -291,7 +292,8 @@ MonoBehaviour:
     - 18
     - 22
     _cost: e8030000d0070000b80b0000
-    weaponSprite: {fileID: 0}
+    _unlockCost: 0
+    weaponDescription: 
   weaponEffects:
     weaponAudioSource: {fileID: 0}
     weaponClose: {fileID: 0}
@@ -313,8 +315,7 @@ MonoBehaviour:
   weaponFuelUseRate: 0
   hasTarget: 0
   gunturret: {fileID: 3403235594171588617}
-  projectileWeapon: {fileID: 8005139676509938886}
-  target: {fileID: 0}
+  weaponController: {fileID: 0}
 --- !u!114 &8005139676509938886
 MonoBehaviour:
   m_ObjectHideFlags: 0

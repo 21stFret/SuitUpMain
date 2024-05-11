@@ -291,9 +291,10 @@ public class Crawler : MonoBehaviour
             GameManager.instance.AddExp(expWorth);
         }
 
-        if (Random.Range(0, 100) < 30)
+        if (Random.Range(0, 100) < 15)
         {
-            Instantiate(partPrefab, transform.position +(transform.up *2), Quaternion.identity);
+            GameObject go = Instantiate(partPrefab, transform.position +(transform.up *2), Quaternion.identity);
+            go.transform.SetParent(CashCollector.Instance.crawlerPartParent.transform);
         }
     }
 

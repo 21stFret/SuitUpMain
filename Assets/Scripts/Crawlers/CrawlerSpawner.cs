@@ -41,12 +41,8 @@ public class CrawlerSpawner : MonoBehaviour
         InitCrawlers();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            TestSpawning();
-        }
         if (!isActive)
         {
             return;
@@ -62,6 +58,10 @@ public class CrawlerSpawner : MonoBehaviour
         {
             BeginSpawning();
             timeElapsed = 0f;
+        }
+        if (!isActive)
+        {
+            return;
         }
         timeText.text = ((roundTimer - timeElapsed)).ToString("00:00");
     }
@@ -138,7 +138,7 @@ public class CrawlerSpawner : MonoBehaviour
     public void TestSpawning()
     {
         currentWave = waveManager.battleWaves[spawnRound];
-        SpawnWave();
+        SpawnDelay();
     }
 
     private void SpawnWave()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class WeaponsUpgradeUI : MonoBehaviour
 {
@@ -11,27 +12,35 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public TMP_Text damage, speed, range, level, cost;
     public TMP_Text Udamage, Uspeed, Urange, Ulevel;
     public TMP_Text weaponName;
+    public TMP_Text weaponDescription;
     private int index = 0;
     public MechWeapon currentWeapon;
+    private int currentWeaponIndex;
     public bool isMainWeapon;
     public Transform weaponParent;
 
     public GameObject upgradeEffect;
     public AudioSource upgradeAudio;
 
-    public Button mainWeaponButton;
-    public Button altWeaponButton;
+    public TMP_Text mainWeaponButton;
+    public TMP_Text altWeaponButton;
     public StatsUI statsUI;
 
     private bool lockUpgradebutton; 
     public GameObject lockedPanel;
     public GameObject cantAffordPanel;
 
+    public TMP_Text UpgradeButtonText;
+    public TMP_Text UnlockAmount;
+
+    private int MaxLevel;
+
     private void OnEnable()
     {
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
-        LoadWeapon(0);
+        SetMainWeaponBool(true);
+        MaxLevel = weaponsManager._mainWeapons[0].baseWeaponInfo._damage.Length;
     }
 
     public void SetMainWeaponBool(bool value)
@@ -39,15 +48,34 @@ public class WeaponsUpgradeUI : MonoBehaviour
         isMainWeapon = value;
         index = 0;
         LoadWeapon(index);
-        if(value)
+        var color = mainWeaponButton.color;
+        color.a = 0.2f;
+        altWeaponButton.color = color;
+        color.a = 1f;
+        mainWeaponButton.color = color;
+    }
+
+    public void ToggleMainWeapon()
+    {
+        isMainWeapon = !isMainWeapon;
+        index = 0;
+        LoadWeapon(index);
+        
+        if(!isMainWeapon)
         {
-            mainWeaponButton.targetGraphic.color = mainWeaponButton.colors.pressedColor;
-            altWeaponButton.targetGraphic.color = altWeaponButton.colors.normalColor;
+            var color = mainWeaponButton.color;
+            color.a = 0.2f;
+            mainWeaponButton.color = color;
+            color.a = 1f;
+            altWeaponButton.color = color;
         }
         else
         {
-            mainWeaponButton.targetGraphic.color = mainWeaponButton.colors.normalColor;
-            altWeaponButton.targetGraphic.color = altWeaponButton.colors.pressedColor;
+            var color = mainWeaponButton.color;
+            color.a = 0.2f;
+            altWeaponButton.color = color;
+            color.a = 1f;
+            mainWeaponButton.color = color;
         }
     }
 
@@ -79,17 +107,22 @@ public class WeaponsUpgradeUI : MonoBehaviour
         currentWeapon.transform.rotation = weaponParent.rotation;
         currentWeapon.transform.SetParent(weaponParent);
         currentWeapon.transform.localScale = new Vector3(60, 60, 60);
-
-
-        if(currentWeapon.weaponData.unlocked)
-        {
-            ShowLockedPanel(true);
-        }
+        currentWeaponIndex = _index;
+        ShowLockedPanel(!currentWeapon.weaponData.unlocked);
     }
 
     public void ShowLockedPanel(bool value)
     {
-        //lockedPanel.SetActive(value);
+        UnlockAmount.text = currentWeapon.baseWeaponInfo._unlockCost.ToString();
+        lockedPanel.SetActive(value);
+        if(value)
+        {
+            UpgradeButtonText.text = "UNLOCK";
+        }
+        else
+        {
+            UpgradeButtonText.text = "UPGRADE";
+        }
     }
 
     public void NextWeapon()
@@ -115,7 +148,19 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public void UpgradeWeapon()
     {
-        if(currentWeapon.weaponData.level == 2)
+        StartCoroutine(pauseInput());
+        if (!currentWeapon.weaponData.unlocked)
+        {
+            if (CheckUnlockCost(currentWeapon.baseWeaponInfo._unlockCost))
+            {
+                statsUI.RemoveArtifact(currentWeapon.baseWeaponInfo._unlockCost);
+                weaponsManager.UnlockWeapon(currentWeaponIndex, isMainWeapon);
+                ShowLockedPanel(false);
+            }
+            return;
+        }
+
+        if(currentWeapon.weaponData.level == MaxLevel)
         {
             return;
         }
@@ -131,8 +176,44 @@ public class WeaponsUpgradeUI : MonoBehaviour
         lockUpgradebutton = true;
         statsUI.RemoveCash(currentWeapon.baseWeaponInfo._cost[currentWeapon.weaponData.level]);
         currentWeapon.weaponData.level++;
+        PlayerSavedData.instance._gameStats.totalUpgrades++;
+        if(PlayerSavedData.instance._gameStats.totalUpgrades == 1)
+        {
+            PlayerAchievements.instance.SetAchievement("UPGRADE_1");
+        }
+        if(currentWeapon.weaponData.level == MaxLevel)
+        {
+            PlayerAchievements.instance.SetAchievement("UPGRADE_MAX_1");
+            CheckAllMaxed();
+        }
         weaponsManager.UpdateWeaponData();
         StartCoroutine(PlayUpgradeEffect());
+    }
+
+    private void CheckAllMaxed()
+    {
+        int checkAmount = 0;
+        int doubleCheck = 0;
+        for (int i = 0; i < weaponsManager._mainWeapons.Length; i++)
+        {
+            doubleCheck++;
+            if (weaponsManager._mainWeapons[i].weaponData.level == MaxLevel)
+            {
+                checkAmount++;
+            }
+        }
+        for (int i = 0; i < weaponsManager._altWeapons.Length; i++)
+        {
+            doubleCheck++;
+            if (weaponsManager._altWeapons[i].weaponData.level == MaxLevel)
+            {
+                checkAmount++;
+            }
+        }
+        if (checkAmount == doubleCheck)
+        {
+            PlayerAchievements.instance.SetAchievement("UPGRADE_ALL_MAX_");
+        }
     }
 
     private IEnumerator PlayUpgradeEffect()
@@ -148,10 +229,21 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public bool CheckCost(BaseWeaponInfo info)
     {
-        if (info._cost[weaponsManager._altWeapons[index].weaponData.level] > PlayerSavedData.instance._Cash)
+        if (info._cost[currentWeapon.weaponData.level] > PlayerSavedData.instance._Cash)
         {
             cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
             print("Not enough cash");
+            return false;
+        }
+        return true;
+    }
+
+    public bool CheckUnlockCost(int cost)
+    {
+        if (cost > PlayerSavedData.instance._Artifact)
+        {
+            cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
+            print("Not enough tech");
             return false;
         }
         return true;
@@ -163,9 +255,10 @@ public class WeaponsUpgradeUI : MonoBehaviour
         speed.text = info._fireRate[weaponLevel].ToString();
         range.text = info._range[weaponLevel].ToString();
         weaponName.text = info.weaponName;
+        weaponDescription.text = info.weaponDescription;
         level.text = (weaponLevel + 1).ToString();
         cost.text = "$"+info._cost[weaponLevel].ToString();
-        if(weaponLevel == 2)
+        if(weaponLevel +1 == info._damage.Length)
         {
             Udamage.text = " Max";
             Uspeed.text = " Max";
@@ -183,5 +276,12 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public void ShowUpgradeStats()
     {
         damage.text += " + 1";
+    }
+
+    public IEnumerator pauseInput()
+    {
+        MainMenu.instance.PauseInput(true);
+        yield return new WaitForSeconds(1.5f);
+        MainMenu.instance.PauseInput(false);
     }
 }

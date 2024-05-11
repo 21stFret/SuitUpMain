@@ -8,20 +8,22 @@ public class WeaponFuelManager : MonoBehaviour
     private bool _enabled;
     public bool uiEnabled;
     public WeaponUI weaponUI;
-    public Sprite fuelSprite;
     public float weaponFuel;
     public float weaponFuelMax = 100;
     public float weaponRechargeRate;
-    public float weaponFuelUseRate;
+    public float weaponFuelRate;
+    public bool canRecharge = true;
+    public bool constantUse = false;
 
     public void Init(MechWeapon mechWeapon)
     {
+        constantUse = true;
         weapon = mechWeapon;
         weaponFuel = weaponFuelMax;
         _enabled = true;
-        weaponFuelUseRate = weapon.weaponFuelUseRate;
-        weaponRechargeRate = weapon.weaponRechargeRate;
-        weaponUI.SetFuelImage(weapon.baseWeaponInfo.weaponSprite);
+        weaponFuelRate = weapon.weaponFuelUseRate;
+        weaponRechargeRate = 15;
+        //todo: add rechage rate to weapon data
         uiEnabled = true;
     }
 
@@ -33,7 +35,44 @@ public class WeaponFuelManager : MonoBehaviour
         {
             return;
         }
+        if (!constantUse)
+        {
+            BurstFuel();
+            return;
+        }
         FuelManagement();
+    }
+
+    private void Recharge()
+    {
+        if (weaponFuel >= weaponFuelMax)
+        {
+            return;
+        }
+
+        weaponFuel += Time.deltaTime * weaponRechargeRate;
+
+        if (weaponUI == null || !uiEnabled)
+        {
+            return;
+        }
+    }
+
+    private void BurstFuel()
+    {
+        if (weapon.isFiring)
+        {
+            if (weaponFuel <= 0)
+            {
+                weapon.Stop();
+                return;
+            }
+        }
+        else
+        {
+            Recharge();
+        }
+        weaponUI.UpdateWeaponUI(weaponFuel);
     }
 
     private void FuelManagement()
@@ -45,22 +84,12 @@ public class WeaponFuelManager : MonoBehaviour
                 weapon.Stop();
                 return;
             }
-            weaponFuel -= Time.deltaTime * weaponFuelUseRate;
+            weaponFuel -= Time.deltaTime * weaponFuelRate;
         }
         else
         {
-            if (weaponFuel >= weaponFuelMax)
-            { return; }
-
-            weaponFuel += Time.deltaTime * weaponRechargeRate;
+            Recharge();
         }
-
-        if (weaponUI == null || !uiEnabled)
-        {
-            return;
-        }
-
         weaponUI.UpdateWeaponUI(weaponFuel);
-
     }
 }

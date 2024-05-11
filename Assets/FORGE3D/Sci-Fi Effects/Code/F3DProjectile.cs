@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace FORGE3D
 {
@@ -29,6 +30,8 @@ namespace FORGE3D
 
         public ProjectileWeapon _weaponController;
         public WeaponType weaponType;
+
+        public List<GameObject> hitObjects = new List<GameObject>();
 
         void Awake()
         {
@@ -107,17 +110,11 @@ namespace FORGE3D
                 // Execute once
                 if (!isFXSpawned)
                 {
-                    _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset);
+                    _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
                     ApplyForce(impactForce, stunTime);
                     isFXSpawned = true;
                 }
-                if(pierceCount > 0)
-                {
-                    pierceCount--;
-                    isHit = false;
-                    isFXSpawned = false;
-                    return;
-                }
+
                 // Despawn current projectile 
                 if (!DelayDespawn || (DelayDespawn && (timer >= despawnDelay)))
                     OnProjectileDestroy();
@@ -162,6 +159,18 @@ namespace FORGE3D
         {
             if (Physics.SphereCast(transform.position, radius, transform.forward, out hitPoint, RaycastAdvance, layerMask))
             {
+                if (pierceCount > 0)
+                {
+                    if (!hitObjects.Contains(hitPoint.collider.gameObject))
+                    {
+                        hitObjects.Add(hitPoint.collider.gameObject);
+                        _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
+                        ApplyForce(impactForce, stunTime);
+                        pierceCount--;
+                    }
+                    return;
+                }
+
                 isHit = true;
             }
         }

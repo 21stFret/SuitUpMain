@@ -61,7 +61,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj.weaponType = WeaponType.Shotgun;
         }
 
-        F3DAudioController.instance.VulcanShot(TurretSocket[curSocket].position);
+        F3DAudioController.instance.ShotGunShot(TurretSocket[curSocket].position);
 
         AdvanceSocket();
     }
@@ -83,7 +83,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj.weaponType = WeaponType.Cryo;
         }
 
-        F3DAudioController.instance.VulcanShot(TurretSocket[curSocket].position);
+        F3DAudioController.instance.SniperShot(TurretSocket[curSocket].position);
 
         AdvanceSocket();
     }
@@ -116,11 +116,55 @@ public class ProjectileWeapon : MonoBehaviour
         AdvanceSocket();
     }
 
-    public void Impact(Vector3 pos)
+    public void Laser(float dam, int pierceC)
+    {
+        // Spawn muzzle flash and projectile at current socket position
+        F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanMuzzle, TurretSocket[curSocket].position,
+            TurretSocket[curSocket].rotation, TurretSocket[curSocket]);
+        var newGO =
+            F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanProjectile,
+                TurretSocket[curSocket].position,
+                TurretSocket[curSocket].rotation, null).gameObject;
+
+        var proj = newGO.gameObject.GetComponent<F3DProjectile>();
+        if (proj)
+        {
+            proj.impactDamage = dam;
+            proj._weaponController = this;
+            proj.weaponType = WeaponType.Beam;
+            proj.pierceCount = pierceC;
+        }
+
+
+        // Emit one bullet shell
+        if (ShellParticles.Length > 0)
+            ShellParticles[curSocket].Emit(1);
+
+        F3DAudioController.instance.PlasmaGunShot(TurretSocket[curSocket].position);
+
+        AdvanceSocket();
+    }
+
+    public void Impact(Vector3 pos, WeaponType type)
     {
         Debug.DrawLine(TurretSocket[curSocket].position, pos, Color.red, 2f);
         // Spawn impact prefab at specified position
         F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanImpact, pos, Quaternion.identity, null);
-        F3DAudioController.instance.VulcanHit(pos);
+
+        switch (type)
+        {
+            case WeaponType.Minigun:
+                F3DAudioController.instance.VulcanHit(pos);
+                break;
+            case WeaponType.Shotgun:
+                F3DAudioController.instance.ShotGunHit(pos);
+                break;
+            case WeaponType.Cryo:
+                F3DAudioController.instance.SniperHit(pos);
+                break;
+            case WeaponType.Beam:
+                F3DAudioController.instance.PlasmaGunHit(pos);
+                break;
+        }
     }
 }

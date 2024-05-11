@@ -11,6 +11,7 @@ public class WeaponsManager : MonoBehaviour
     public int mainWeapon;
     public int altWeapon;
     private PlayerSavedData _playerSavedData;
+    private WeaponBaseDataReader weaponBaseDataReader;
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class WeaponsManager : MonoBehaviour
             // Destroy the duplicate instance
             Destroy(gameObject);
         }
-
+        weaponBaseDataReader = GetComponent<WeaponBaseDataReader>();
     }
 
     public void SetMainWeaponIndex(int index)
@@ -56,6 +57,19 @@ public class WeaponsManager : MonoBehaviour
 
         mainWeapon = (int)_playerSavedData._playerLoadout.x;
         altWeapon = (int)_playerSavedData._playerLoadout.y;
+        if(weaponBaseDataReader == null)
+        {             
+            weaponBaseDataReader = GetComponent<WeaponBaseDataReader>();   
+        }
+        if(weaponBaseDataReader !=null)
+        {
+            LoadBaseData();
+        }
+    }
+
+    private void LoadBaseData()
+    {
+        weaponBaseDataReader.LoadFromExcell(this);
     }
 
     public void UpdateWeaponData()

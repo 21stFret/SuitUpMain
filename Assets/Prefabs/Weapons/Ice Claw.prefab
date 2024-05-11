@@ -24740,6 +24740,7 @@ MonoBehaviour:
     mainWeapon: 0
     unlocked: 0
     level: 0
+  weaponSprite: {fileID: 21300000, guid: 671ab1252c8f6fc44989cbd36747d5f6, type: 3}
   baseWeaponInfo:
     weaponName: Cryo
     _damage:
@@ -24755,7 +24756,8 @@ MonoBehaviour:
     - 9
     - 11
     _cost: e8030000d0070000b80b0000
-    weaponSprite: {fileID: 0}
+    _unlockCost: 0
+    weaponDescription: 
   weaponEffects:
     weaponAudioSource: {fileID: 7389628148357165257}
     weaponClose: {fileID: 8300000, guid: 588527798e385854dbb66e9627a973ba, type: 3}

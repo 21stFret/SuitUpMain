@@ -278,6 +278,7 @@ MonoBehaviour:
     mainWeapon: 0
     unlocked: 0
     level: 0
+  weaponSprite: {fileID: 21300000, guid: 2b33a847d562875408cd37b5ab2957d3, type: 3}
   baseWeaponInfo:
     weaponName: shotgun
     _damage:
@@ -293,7 +294,8 @@ MonoBehaviour:
     - 15
     - 20
     _cost: e8030000d0070000b80b0000
-    weaponSprite: {fileID: 0}
+    _unlockCost: 0
+    weaponDescription: 
   weaponEffects:
     weaponAudioSource: {fileID: 5015531487984303210}
     weaponClose: {fileID: 8300000, guid: 9db28af8564ff3f44ba56f1523e6561b, type: 3}

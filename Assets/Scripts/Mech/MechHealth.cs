@@ -17,6 +17,7 @@ public class MechHealth : MonoBehaviour
     public DoTweenFade screenFlash;
     public Cinemachine.CinemachineImpulseSource impulseSource;
     public GameObject deathEffect;
+    public AudioClip deathClip;
     public GameObject mainObject;
     public TargetHealth targetHealth;
 
@@ -54,7 +55,14 @@ public class MechHealth : MonoBehaviour
             image.fillAmount = 0;
             MechBattleController.instance.OnDie();
             deathEffect.SetActive(true);
+            AudioManager.instance.PlaySFXFromClip(deathClip);
             mainObject.SetActive(false);
+            PlayerSavedData.instance._gameStats.totalDeaths++;
+            if(PlayerSavedData.instance._gameStats.totalDeaths == 100)
+            {
+                PlayerAchievements.instance.SetAchievement("DIE_100");
+            }
+
             return;
         }
         if(health>targetHealth.healthMax)

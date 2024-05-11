@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     public bool endlessMode;
     public bool gameActive;
 
+
+
     private void Awake()
     {
         // Create a singleton instance
@@ -35,7 +37,11 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        if(SetupGame.instance!=null)
+    }
+
+    private void Start()
+    {
+        if (SetupGame.instance != null)
         {
             SetupGame.instance.LinkGameManager(this);
         }
@@ -43,7 +49,6 @@ public class GameManager : MonoBehaviour
         {
             Invoke("DelayedStart", 0.1f);
         }
-
     }
 
     public void DelayedStart()
@@ -68,34 +73,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void CheckActiveEnemies()
+    public IEnumerator CheckActiveEnemies()
     {
         // do logic when all enemies are dead in final round
         if (crawlerSpawner.spawnRound >= crawlerSpawner.spawnRoundMax)
         {
             if (crawlerSpawner.activeCrawlerCount == 0)
             {
-                if(endlessMode)
-                {
-                    SpawnPortalToNextRoom();
-                    return;
-                }
-                if(currentRoomIndex==rooms.Count-1)
-                {
-                    // Mission Complete
-                    EndGame(true);
-                }
-                else
-                {
-                    SpawnPortalToNextRoom();
-                }
+                yield return new WaitForSeconds(1);
 
+                if (crawlerSpawner.activeCrawlerCount == 0)
+                {
+                    if (endlessMode)
+                    {
+                        SpawnPortalToNextRoom();
+                        yield break;
+                    }
+                    if (currentRoomIndex == rooms.Count - 1)
+                    {
+                        // Mission Complete
+                        EndGame(true);
+                    }
+                    else
+                    {
+                        SpawnPortalToNextRoom();
+                    }
+                }
             }
         }
     }
 
     public void SpawnPortalToNextRoom()
     {
+        //show sign to portal
+        crawlerSpawner.waveText.text = "Head through the Portal!";
         RoomPortal.portalEffect.StartEffect();
         RoomPortal._active = true;
         roomDrop.gameObject.SetActive(true);
@@ -105,9 +116,10 @@ public class GameManager : MonoBehaviour
     public void UpdateKillCount(int count, WeaponType weapon)
     {
         killCount += count;
+        playerSavedData._gameStats.totalKills += count;
         gameUI.UpdateKillCount(killCount);
         CheckPlayerAchievements(count, weapon);
-        CheckActiveEnemies();
+        StartCoroutine(CheckActiveEnemies());
     }
 
     public void AddExp(int count)
@@ -121,23 +133,43 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        int totalKills = playerSavedData._gameStats.totalKills + killCount;
-        if (totalKills > 100)
-        {
-            if (PlayerAchievements.instance.GetAchievement("KILL_100").id != null)
-            {
-                PlayerAchievements.instance.SetAchievement("KILL_100", true);
-            }
+
+        int totalKills = playerSavedData._gameStats.totalKills;
+        switch (totalKills)
+        { 
+            case 100:
+                PlayerAchievements.instance.SetAchievement("KILL_100");
+                break;
+            case 1000:
+                PlayerAchievements.instance.SetAchievement("KILL_1000");
+                break;
+            case 5000:
+                PlayerAchievements.instance.SetAchievement("KILL_5000");
+                break;
+            case 10000:
+                PlayerAchievements.instance.SetAchievement("KILL_10000");
+                break;
+
         }
         switch (weapon)
         {
             case WeaponType.Minigun:
                 playerSavedData._gameStats.minigunKills += count;
-                if (playerSavedData._gameStats.minigunKills >= 100)
+
+                if (playerSavedData._gameStats.minigunKills == 50)
                 {
-                    PlayerAchievements.instance.SetAchievement("MINIGUN_100", true);
+                    PlayerAchievements.instance.SetAchievement("MINIGUN_50");
+                }
+                if (playerSavedData._gameStats.minigunKills == 500)
+                {
+                    PlayerAchievements.instance.SetAchievement("MINIGUN_500");
+                }
+                if (playerSavedData._gameStats.minigunKills == 2000)
+                {
+                    PlayerAchievements.instance.SetAchievement("MINIGUN_2000");
                 }
                 break;
+                /*
             case WeaponType.Shotgun:
                 playerSavedData._gameStats.shotgunKills += count;
                 if (playerSavedData._gameStats.shotgunKills >= 100)
@@ -145,32 +177,55 @@ public class GameManager : MonoBehaviour
                     PlayerAchievements.instance.SetAchievement("SHOTGUN_100", true);
                 }
                 break;
+                */
             case WeaponType.Flame:
                 playerSavedData._gameStats.flamerKills += count;
-                if (playerSavedData._gameStats.flamerKills >= 100)
+                if (playerSavedData._gameStats.flamerKills == 100)
                 {
-                    PlayerAchievements.instance.SetAchievement("BURN_100", true);
+                    PlayerAchievements.instance.SetAchievement("BURN_100");
+                }
+                if (playerSavedData._gameStats.flamerKills == 500)
+                {
+                    PlayerAchievements.instance.SetAchievement("BURN_500");
+                }
+                if (playerSavedData._gameStats.flamerKills == 1000)
+                {
+                    PlayerAchievements.instance.SetAchievement("BURN_1000");
                 }
                 break;
             case WeaponType.Lightning:
                 playerSavedData._gameStats.lightningKills += count;
-                if (playerSavedData._gameStats.lightningKills >= 100)
+                if (playerSavedData._gameStats.lightningKills == 50)
                 {
-                    PlayerAchievements.instance.SetAchievement("SHOCK_100", true);
+                    PlayerAchievements.instance.SetAchievement("SHOCK_50");
+                }
+                if (playerSavedData._gameStats.lightningKills == 200)
+                {
+                    PlayerAchievements.instance.SetAchievement("SHOCK_200");
+                }
+                if (playerSavedData._gameStats.lightningKills == 500)
+                {
+                    PlayerAchievements.instance.SetAchievement("SHOCK_500");
                 }
                 break;
+                
             case WeaponType.Cryo:
                 playerSavedData._gameStats.cryoKills += count;
-                if (playerSavedData._gameStats.cryoKills >= 100)
-                {
-                    PlayerAchievements.instance.SetAchievement("FREEZE_100", true);
-                }
                 break;
+                
             case WeaponType.Grenade:
                 playerSavedData._gameStats.grenadeKills += count;
-                if (playerSavedData._gameStats.grenadeKills >= 100)
+                if (playerSavedData._gameStats.grenadeKills == 50)
                 {
-                    PlayerAchievements.instance.SetAchievement("GRENADE_100", true);
+                    PlayerAchievements.instance.SetAchievement("GRENADE_50");
+                }
+                if (playerSavedData._gameStats.grenadeKills == 250)
+                {
+                    PlayerAchievements.instance.SetAchievement("GRENADE_250");
+                }
+                if (playerSavedData._gameStats.grenadeKills == 500)
+                {
+                    PlayerAchievements.instance.SetAchievement("GRENADE_500");
                 }
                 break;
         }
@@ -216,6 +271,7 @@ public class GameManager : MonoBehaviour
     {
         gameUI.gameUIFade.FadeOut();
         yield return new WaitForSeconds(2);
+        CashCollector.Instance.DestroyParts();
         LoadRoom();
         UpdateCrawlerSpawner();
         RoomPortal.portalEffect.StopEffect();
@@ -237,6 +293,7 @@ public class GameManager : MonoBehaviour
 
     private void EndGame(bool won)
     {
+        AudioManager.instance.PlayMusic(3);
         gameActive = false;
         crawlerSpawner.isActive = false;
         gameUI.ShowEndGamePanel(won);
@@ -244,6 +301,19 @@ public class GameManager : MonoBehaviour
         playerSavedData.UpdatePlayerCash(cashCount);
         playerSavedData.UpdatePlayerExp(expCount);
         playerSavedData.UpdatePlayerArtifact(artifactCount);
+        playerSavedData._gameStats.totalPlayTime += Time.timeSinceLevelLoad;
+        if(playerSavedData._gameStats.totalPlayTime > 1800)
+        {
+            PlayerAchievements.instance.SetAchievement("PLAY_TIME_30");
+        }
+        if (playerSavedData._gameStats.totalPlayTime > 10800)
+        {
+            PlayerAchievements.instance.SetAchievement("PLAY_TIME_180");
+        }
+        if (playerSavedData._gameStats.totalPlayTime > 25200)
+        {
+            PlayerAchievements.instance.SetAchievement("PLAY_TIME_420");
+        }
         playerSavedData.SavePlayerData();
     }
 

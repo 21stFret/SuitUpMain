@@ -15,7 +15,7 @@ public class TestPlayerData : MonoBehaviour
         PlayerSavedData.instance.UpdatePlayerCash(cash);
         PlayerSavedData.instance.UpdateMainWeaponLoadout((int)playerLoadout.x);
         PlayerSavedData.instance.UpdateAltWeaponLoadout((int)playerLoadout.y);
-        PlayerSavedData.instance.UpdateMainWeaponData(mainWeaponData[0], 0);
-        PlayerSavedData.instance.UpdateAltWeaponData(altWeaponData[0], 0);
+        PlayerSavedData.instance.UpdateMainWeaponData(mainWeaponData[0], (int)playerLoadout.x);
+        PlayerSavedData.instance.UpdateAltWeaponData(altWeaponData[0], (int)playerLoadout.y);
     }
 }

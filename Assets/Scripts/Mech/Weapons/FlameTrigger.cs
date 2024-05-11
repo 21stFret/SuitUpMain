@@ -39,8 +39,6 @@ public class FlameTrigger : MonoBehaviour
         timer += Time.deltaTime;
         if(timer > shotSpeed)
         {
-
-
             foreach (GameObject hit in triggerSensor.GetDetections())
             {
                 TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
@@ -48,8 +46,6 @@ public class FlameTrigger : MonoBehaviour
                 {
                     targetHealth.TakeDamage(shotDamage, WeaponType.Flame);
                 }
-
-
             }
             timer = 0;
         }

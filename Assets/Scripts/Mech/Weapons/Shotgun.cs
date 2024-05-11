@@ -29,7 +29,6 @@ public class Shotgun : MechWeapon
         if (target != null)
         {
             hasTarget = true;
-            //gunturret.transform.LookAt(target.transform);
             gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, target.transform.position - gunturret.transform.position + aimOffest, Time.deltaTime * 2f);
         }
         else

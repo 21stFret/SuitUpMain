@@ -8,11 +8,11 @@ public class CryoController : MechWeapon
     private float shotTimer;
     public float stunTime;
     public ProjectileWeapon projectileWeapon;
-    private bool _isFiring;
 
     public override void Init()
     {
         base.Init();
+        weaponFuelManager.constantUse = false;
     }
 
     public void Update()
@@ -22,21 +22,13 @@ public class CryoController : MechWeapon
             return;
         }
 
-        weaponFuelManager.uiEnabled = false;
         shotTimer += Time.deltaTime;
         if (shotTimer >= fireRate)
         {
             shotTimer = 0;
             projectileWeapon.Cryo(damage, force, stunTime);
-            weaponFuelManager.uiEnabled = true;
+            weaponFuelManager.weaponFuel -= weaponFuelManager.weaponFuelRate;
         }
-    }
-
-    // Fire Weapon
-    public override void Fire()
-    {
-        base.Fire();
-
     }
 
     // Stop firing 
@@ -44,7 +36,6 @@ public class CryoController : MechWeapon
     {
         base.Stop();
         shotTimer = 0;
-        weaponFuelManager.uiEnabled = true;
     }
 
 }

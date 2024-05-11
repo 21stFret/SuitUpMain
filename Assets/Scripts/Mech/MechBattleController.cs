@@ -21,11 +21,8 @@ public class MechBattleController : MonoBehaviour
         {
             GameManager.instance.EndGameCall(false);
         }
-
         gameObject.layer = 1;
     }
-
-
 
     public void RepairArmour()
     {

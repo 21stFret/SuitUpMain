@@ -12,7 +12,6 @@ public class MechLoadOut : MonoBehaviour
     public ManualWeaponController altWeaponController;
     public Transform mainWeaponMount;
     public Transform altWeaponMount;
-    [HideInInspector]
     public WeaponsHanger weaponsHanger;
     public WeaponModManager weaponModManager;
     public bool loadMainWeapon;

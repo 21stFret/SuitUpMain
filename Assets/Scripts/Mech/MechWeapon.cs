@@ -22,8 +22,10 @@ public struct BaseWeaponInfo
     public float[] _damage;
     public float[] _fireRate;
     public float[] _range;
+    public float[] _weaponFuelUseRate;
     public int[] _cost;
-    public Sprite weaponSprite;
+    public int _unlockCost;
+    public string weaponDescription;
 }
 
 [Serializable]
@@ -41,13 +43,18 @@ public class MechWeapon : MonoBehaviour
 {
     public WeaponFuelManager weaponFuelManager;
     public WeaponData weaponData;
+    public Sprite weaponSprite;
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
     public float damage;
     public float force;
     public float fireRate;
     public float range;
+    public float weaponRechargeRate;
+    public float weaponFuelUseRate;
+    [HideInInspector]
     public bool isFiring;
+    [HideInInspector]
     public bool isFiringAlt;
     public RangeSensor rangeSensor;
     [Header("Main Weapon")]
@@ -56,8 +63,9 @@ public class MechWeapon : MonoBehaviour
     public LaserSight laserSight;
     [Header("Weapon Mods")]
     public WeaponMod weaponMod;
-    public float weaponRechargeRate;
-    public float weaponFuelUseRate;
+    public bool weaponOverride;
+
+
 
 
     public virtual void Init()
@@ -76,18 +84,6 @@ public class MechWeapon : MonoBehaviour
         {
             weaponFuelManager.Init(this);
         }
-        if(weaponMod != null)
-        {
-            InitMod(weaponMod);
-        }
-    }
-
-    public void InitMod(WeaponMod mod)
-    {
-        weaponMod = mod;
-        weaponMod.GetBaseWeapon(this);
-        // Add weapon modifers to stats
-        weaponMod.Init();
     }
 
     private void SetValues()
@@ -96,6 +92,7 @@ public class MechWeapon : MonoBehaviour
         damage = baseWeaponInfo._damage[weaponData.level];
         fireRate = baseWeaponInfo._fireRate[weaponData.level];
         range = baseWeaponInfo._range[weaponData.level];
+        weaponFuelUseRate = baseWeaponInfo._weaponFuelUseRate[weaponData.level];
     }
 
     public virtual void FireAlt()
@@ -142,6 +139,12 @@ public class MechWeapon : MonoBehaviour
             return;
         }
 
+
+        if (weaponMod != null && weaponOverride)
+        {
+            FireMod();
+            return;
+        }
         isFiring = true;
         //Debug.Log("Firing " + name);
         if (weaponEffects.weaponEffect != null)
@@ -161,6 +164,12 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Stop()
     {
+
+        if (weaponMod != null && weaponOverride)
+        {
+            StopMod();
+            return;
+        }
         isFiring = false;
         //Debug.Log("Stopping " + name);
         if (weaponEffects.weaponEffect != null)

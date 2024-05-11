@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 5503717518532008248}
   - component: {fileID: 4717244079772818357}
   - component: {fileID: 1767521763037912476}
-  - component: {fileID: 4253699648268970092}
+  - component: {fileID: 8499329930776983110}
   m_Layer: 0
   m_Name: PickUp
   m_TagString: Untagged
@@ -147,14 +147,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8383769903977144168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.29864782, y: -0.093298696, z: 0.2832197, w: 0.9065823}
+  m_LocalRotation: {x: -0.32261515, y: -0.88427037, z: 0.25558472, w: -0.22059448}
   m_LocalPosition: {x: 0, y: 1.108, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3720249636889567365}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 36.466, y: 0, z: 34.698}
+  m_LocalEulerAnglesHint: {x: 36.466, y: -196.263, z: 34.698}
 --- !u!33 &1743363944149692532
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -239,9 +239,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupColor: {r: 0, g: 0, b: 0, a: 0}
-  pickupType: 0
+  pickupType: 2
   pickupLight: {fileID: 6591071640101338266}
---- !u!114 &4253699648268970092
+--- !u!114 &8499329930776983110
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -250,11 +250,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8383769903977144168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc055f770e050f043887e339c6e71d6d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7131f0d05b91ab047861962fa0ac6df5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 2
-  ease: 1
-  endRoatation: {x: 36, y: 360, z: 34}
-  loopType: 0
-  loopCount: -1
+  speed: 10
+  axis: {x: 0, y: 1, z: 0}

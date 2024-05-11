@@ -50,4 +50,9 @@ public class TargetHealth : MonoBehaviour
             _prop.TakeDamage(damage);
         }
     }
+
+    public void RepairMech(float amount)
+    {
+        _mech.UpdateHealth(amount, true);
+    }
 }

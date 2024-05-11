@@ -29,7 +29,7 @@ namespace FORGE3D
         {
             F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(explosionPrefab, position, Quaternion.identity, null);
-            F3DAudioController.instance.SniperHit(position);
+            F3DAudioController.instance.RailGunHit(position);
         }
 
         public void LaunchMissiles(int amount)
