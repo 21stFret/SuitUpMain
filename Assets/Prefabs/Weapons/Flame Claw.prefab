@@ -10031,6 +10031,7 @@ MonoBehaviour:
     - 7
     - 9
     - 11
+    _weaponFuelUseRate: []
     _cost: e8030000d0070000b80b0000
     _unlockCost: 0
     weaponDescription: 
@@ -10044,6 +10045,8 @@ MonoBehaviour:
   force: 0
   fireRate: 0
   range: 0
+  weaponRechargeRate: 0.5
+  weaponFuelUseRate: 1.2
   isFiring: 0
   isFiringAlt: 0
   rangeSensor: {fileID: 0}
@@ -10051,8 +10054,7 @@ MonoBehaviour:
   aimOffest: {x: 0, y: 0, z: 0}
   laserSight: {fileID: 0}
   weaponMod: {fileID: 0}
-  weaponRechargeRate: 0.5
-  weaponFuelUseRate: 1.2
+  weaponOverride: 0
   flameTrigger: {fileID: 7967985738750339073}
 --- !u!1 &7266232509237295231
 GameObject:

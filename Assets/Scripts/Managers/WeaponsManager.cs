@@ -12,6 +12,8 @@ public class WeaponsManager : MonoBehaviour
     public int altWeapon;
     private PlayerSavedData _playerSavedData;
     private WeaponBaseDataReader weaponBaseDataReader;
+    public MechWeapon currentMainWeapon { get { return _mainWeapons[mainWeapon]; } }
+    public MechWeapon currentAltWeapon { get { return _altWeapons[altWeapon]; } }
 
     private void Awake()
     {

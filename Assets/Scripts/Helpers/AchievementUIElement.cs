@@ -10,10 +10,12 @@ public class AchievementUIElement : MonoBehaviour
     public GameObject achievedBG;
     public string description;
     public Image icon;
+    public Color achievedColor;
 
     public void SetAchievement(Achievement achievement)
     {
         nameText.text = achievement.name;
         achievedBG.SetActive(achievement.achieved);
+        icon.color = !achievement.achieved ? Color.white :achievedColor;
     }
 }

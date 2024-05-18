@@ -8,11 +8,26 @@ using UnityEngine.UI;
 
 public class InputTracker : MonoBehaviour
 {
+    public static InputTracker instance;
     public InputSystemUIInputModule inputSystemUIInputModule;
     public EventSystem eventSystem;
     public PlayerInput playerInput;
     public bool usingMouse = false;
     private string lastControlScheme;
+
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     public GameObject CurrentSelectedGameObject
     {
         get { return eventSystem.currentSelectedGameObject; }
@@ -63,6 +78,10 @@ public class InputTracker : MonoBehaviour
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
                 usingMouse = true;
+            }
+            if (GameUI.instance != null)
+            {
+                GameUI.instance.pauseMenu.SwapControlsMenu();
             }
             lastControlScheme = playerInput.currentControlScheme;
         }

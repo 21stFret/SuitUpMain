@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class MechHealth : MonoBehaviour
 {
@@ -20,12 +21,39 @@ public class MechHealth : MonoBehaviour
     public AudioClip deathClip;
     public GameObject mainObject;
     public TargetHealth targetHealth;
+    private float hitTime;
+    private bool hit;
 
     private void Start()
     {
         image.material.SetColor("_Color", Color.white);
         image.material.SetFloat("_HologramDistortionOffset", 0.2f);
         SetEmmisveHeatlh();
+    }
+
+    private void Update()
+    {
+        CheckAcheivement();
+    }
+
+    private void CheckAcheivement()
+    {
+        if (GameManager.instance == null)
+        {
+            return;
+        }
+        if (GameManager.instance.RoomPortal._active)
+        {
+            return;
+        }
+        hitTime += Time.deltaTime;
+        if (hitTime > 180f)
+        {
+            if (!hit)
+            {
+                PlayerAchievements.instance.SetAchievement("DODGE_1");
+            }
+        }
     }
 
     private void Awake()
@@ -35,6 +63,7 @@ public class MechHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        hit = true;
         targetHealth.health -= damage;
 
         UpdateHealth(targetHealth.health, damage<0);

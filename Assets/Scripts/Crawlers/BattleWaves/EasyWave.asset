@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d998f4b5d09a5354097ab8a07d1b6314, type: 3}
+  m_Script: {fileID: 11500000, guid: 9fc30a26835322549acc1d8024170826, type: 3}
   m_Name: EasyWave
   m_EditorClassIdentifier: 
   battleWaves:
   - crawlersInWave:
     - type: 0
       count: 10
-    roundTimer: 5
+    roundTimer: 10
   - crawlersInWave:
     - type: 0
-      count: 15
+      count: 10
     - type: 1
       count: 2
     roundTimer: 10
@@ -27,17 +27,5 @@ MonoBehaviour:
     - type: 0
       count: 15
     - type: 1
-      count: 3
-    roundTimer: 15
-  - crawlersInWave:
-    - type: 0
-      count: 20
-    - type: 1
       count: 2
-    roundTimer: 15
-  - crawlersInWave:
-    - type: 0
-      count: 20
-    - type: 1
-      count: 5
-    roundTimer: 15
+    roundTimer: 10

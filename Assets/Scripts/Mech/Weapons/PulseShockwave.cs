@@ -75,5 +75,9 @@ public class PulseShockwave : MonoBehaviour
                 crawler.rb.AddForce(forceDirection * forceMagnitude , ForceMode.Impulse);
             }
         }
+        if (colliders.Length > 8)
+        {
+            PlayerAchievements.instance.SetAchievement("SHOCKWAVE_1");
+        }
     }
 }

@@ -15,19 +15,28 @@ public class GameManager : MonoBehaviour
     public int cashCount;
     public int artifactCount;
     public int crawlerParts;
+    public float playTime;
     public PlayerInput playerInput;
     public MechLoadOut mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public ManualWeaponController altWeaponController;
     private PlayerSavedData playerSavedData;
     public List<GameObject> rooms = new List<GameObject>();
-    public List<RoomWaves> roomWaves = new List<RoomWaves>();
+    public List<WaveManager> roomWaves = new List<WaveManager>();
     public RoomPortal RoomPortal;
     public Pickup roomDrop;
     public int currentRoomIndex;
+    public int currentWaveIndex;
     public bool endlessMode;
     public bool gameActive;
+    private bool dayTime;
+    public GameObject dayLight;
+    public GameObject nightLight;
 
+    private int mutliShotKillCount;
+    private bool triggerShotMultiKill; 
+    private int mutliKillCount;
+    private bool triggerMultiKill;
 
 
     private void Awake()
@@ -54,15 +63,35 @@ public class GameManager : MonoBehaviour
     public void DelayedStart()
     {
         gameActive = true;
+        killCount = 0;
+        expCount = 0;
+        cashCount = 0;
+        dayTime = true;
+        currentRoomIndex = 0;
+        currentWaveIndex = 0;
         playerSavedData = PlayerSavedData.instance;
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
         mechLoadOut.Init();
         UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
-        killCount = 0;
-        expCount = 0;
-        cashCount = 0;
+
+        if (PlayerSavedData.instance._firstLoad)
+        {
+            StartCoroutine( ShowControls());
+        }
+
+    }
+
+    private IEnumerator ShowControls()
+    {
+        yield return new WaitForSeconds(1);
+        PlayerSavedData.instance.UpdateFirstLoad(false);
+        gameUI.pauseMenu.PauseGame();
+        gameUI.pauseMenu.menu.SetActive(false);
+        gameUI.pauseMenu.controlsMenu.SetActive(true);
+        gameUI.eventSystem.SetSelectedGameObject(gameUI.pauseMenu.controlsSelectedButton);
+        gameUI.pauseMenu.SwapControlsMenu();
     }
 
     public void ReachedWaveNumber(int waveNumber)
@@ -89,7 +118,7 @@ public class GameManager : MonoBehaviour
                         SpawnPortalToNextRoom();
                         yield break;
                     }
-                    if (currentRoomIndex == rooms.Count - 1)
+                    if (currentWaveIndex == roomWaves.Count-1)
                     {
                         // Mission Complete
                         EndGame(true);
@@ -116,7 +145,6 @@ public class GameManager : MonoBehaviour
     public void UpdateKillCount(int count, WeaponType weapon)
     {
         killCount += count;
-        playerSavedData._gameStats.totalKills += count;
         gameUI.UpdateKillCount(killCount);
         CheckPlayerAchievements(count, weapon);
         StartCoroutine(CheckActiveEnemies());
@@ -127,30 +155,82 @@ public class GameManager : MonoBehaviour
         expCount += count;
     }
 
+    private void CheckShotMultiKill()
+    {
+        mutliShotKillCount++;
+
+        if(!triggerShotMultiKill)
+        {
+            triggerMultiKill = true;
+            StartCoroutine(ResetShotMultiKill());
+        }
+
+        if(mutliShotKillCount == 3)
+        {
+            PlayerAchievements.instance.SetAchievement("SHOTGUN_HIT_3");
+            print("Killed 3 at once");
+        }
+        if (mutliShotKillCount == 5)
+        {
+            PlayerAchievements.instance.SetAchievement("SHOTGUN_HIT_5");
+            print("Killed 5 at once");
+        }
+        if (mutliShotKillCount == 10)
+        {
+            PlayerAchievements.instance.SetAchievement("SHOTGUN_HIT_10");
+            print("Killed 10 at once");
+        }
+    }
+
+    private IEnumerator ResetShotMultiKill()
+    {
+        yield return new WaitForSeconds(0.1f);
+        mutliShotKillCount = 0;
+        triggerShotMultiKill = false;
+    }
+
+    private void CheckMultiKill()
+    {
+        mutliKillCount++;
+
+        if (!triggerMultiKill)
+        {
+            triggerMultiKill = true;
+            StartCoroutine(ResetMultiKill());
+        }
+
+        if (mutliKillCount == 15)
+        {
+            PlayerAchievements.instance.SetAchievement("MULTIKILL_15");
+            print("Killed 3 at once");
+        }
+        if (mutliKillCount == 20)
+        {
+            PlayerAchievements.instance.SetAchievement("MULTIKILL_20");
+            print("Killed 5 at once");
+        }
+        if (mutliKillCount == 30)
+        {
+            PlayerAchievements.instance.SetAchievement("MULTIKILL_30");
+            print("Killed 10 at once");
+        }
+    }
+
+    private IEnumerator ResetMultiKill()
+    {
+        yield return new WaitForSeconds(0.1f);
+        mutliKillCount = 0;
+        triggerMultiKill = false;
+    }
+
     private void CheckPlayerAchievements(int count, WeaponType weapon)
     {
         if (PlayerAchievements.instance == null)
         {
+            print("No Achievements");
             return;
         }
 
-        int totalKills = playerSavedData._gameStats.totalKills;
-        switch (totalKills)
-        { 
-            case 100:
-                PlayerAchievements.instance.SetAchievement("KILL_100");
-                break;
-            case 1000:
-                PlayerAchievements.instance.SetAchievement("KILL_1000");
-                break;
-            case 5000:
-                PlayerAchievements.instance.SetAchievement("KILL_5000");
-                break;
-            case 10000:
-                PlayerAchievements.instance.SetAchievement("KILL_10000");
-                break;
-
-        }
         switch (weapon)
         {
             case WeaponType.Minigun:
@@ -169,15 +249,10 @@ public class GameManager : MonoBehaviour
                     PlayerAchievements.instance.SetAchievement("MINIGUN_2000");
                 }
                 break;
-                /*
             case WeaponType.Shotgun:
                 playerSavedData._gameStats.shotgunKills += count;
-                if (playerSavedData._gameStats.shotgunKills >= 100)
-                {
-                    PlayerAchievements.instance.SetAchievement("SHOTGUN_100", true);
-                }
+                CheckShotMultiKill();
                 break;
-                */
             case WeaponType.Flame:
                 playerSavedData._gameStats.flamerKills += count;
                 if (playerSavedData._gameStats.flamerKills == 100)
@@ -207,12 +282,22 @@ public class GameManager : MonoBehaviour
                 {
                     PlayerAchievements.instance.SetAchievement("SHOCK_500");
                 }
-                break;
-                
+                break; 
             case WeaponType.Cryo:
                 playerSavedData._gameStats.cryoKills += count;
-                break;
-                
+                if (playerSavedData._gameStats.cryoKills == 25)
+                {
+                    PlayerAchievements.instance.SetAchievement("FREEZE_25");
+                }
+                if (playerSavedData._gameStats.cryoKills == 50)
+                {
+                    PlayerAchievements.instance.SetAchievement("FREEZE_50");
+                }
+                if (playerSavedData._gameStats.cryoKills == 100)
+                {
+                    PlayerAchievements.instance.SetAchievement("FREEZE_100");
+                }
+                break;              
             case WeaponType.Grenade:
                 playerSavedData._gameStats.grenadeKills += count;
                 if (playerSavedData._gameStats.grenadeKills == 50)
@@ -227,6 +312,7 @@ public class GameManager : MonoBehaviour
                 {
                     PlayerAchievements.instance.SetAchievement("GRENADE_500");
                 }
+                CheckMultiKill();
                 break;
         }
     }
@@ -249,21 +335,13 @@ public class GameManager : MonoBehaviour
 
     private void LoadRoom()
     {
-        if (currentRoomIndex == rooms.Count)
-        {
-            if(endlessMode)
-            {
-                rooms[currentRoomIndex].SetActive(false);
-                currentRoomIndex = 0;
-                rooms[currentRoomIndex].SetActive(true);
-                return;
-            }
-            
-            print("End Game, no more rooms");
-            return;
-        }
         rooms[currentRoomIndex].SetActive(false);
         currentRoomIndex++;
+        currentWaveIndex++;
+        if (currentRoomIndex == rooms.Count)
+        {
+            currentRoomIndex = 0;
+        }
         rooms[currentRoomIndex].SetActive(true);
     }
 
@@ -274,6 +352,8 @@ public class GameManager : MonoBehaviour
         CashCollector.Instance.DestroyParts();
         LoadRoom();
         UpdateCrawlerSpawner();
+        DayNightCycle();
+        roomDrop.gameObject.SetActive(false);
         RoomPortal.portalEffect.StopEffect();
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
@@ -282,18 +362,36 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void DayNightCycle()
+    {
+        dayTime = !dayTime;
+        if (dayTime)
+        {
+            dayLight.SetActive(true);
+            nightLight.SetActive(false);
+        }
+        else
+        {
+            nightLight.SetActive(true);
+            dayLight.SetActive(false);
+        }
+    }
+
     public void UpdateCrawlerSpawner()
     {
         crawlerSpawner.spawnRound = 0;
         crawlerSpawner.roundTimer = 5;
         crawlerSpawner.waveText.text = "Here they come...";
-        crawlerSpawner.waveManager = roomWaves[currentRoomIndex];
+        crawlerSpawner.waveManager = roomWaves[currentWaveIndex];
+        crawlerSpawner.spawnRoundMax = roomWaves[currentWaveIndex].battleWaves.Count;
         crawlerSpawner.isActive = true;
+        crawlerSpawner.spawnPoints = rooms[currentRoomIndex].GetComponent<EnvironmentArea>().spawnPoints;
     }
 
     private void EndGame(bool won)
     {
         AudioManager.instance.PlayMusic(3);
+        playTime = Time.timeSinceLevelLoad;
         gameActive = false;
         crawlerSpawner.isActive = false;
         gameUI.ShowEndGamePanel(won);
@@ -301,10 +399,20 @@ public class GameManager : MonoBehaviour
         playerSavedData.UpdatePlayerCash(cashCount);
         playerSavedData.UpdatePlayerExp(expCount);
         playerSavedData.UpdatePlayerArtifact(artifactCount);
-        playerSavedData._gameStats.totalPlayTime += Time.timeSinceLevelLoad;
-        if(playerSavedData._gameStats.totalPlayTime > 1800)
+        playerSavedData._gameStats.totalKills += killCount;
+        playerSavedData._gameStats.totalPlayTime += playTime;
+        playerSavedData._gameStats.totalParts += crawlerParts;
+        playerSavedData._gameStats.totalDistance += mechLoadOut.GetComponent<MYCharacterController>().distanceTravelled;
+
+        EndGameAchievements();
+        playerSavedData.SavePlayerData();
+    }
+
+    private void EndGameAchievements()
+    {
+        if (playerSavedData._gameStats.totalPlayTime > 3600)
         {
-            PlayerAchievements.instance.SetAchievement("PLAY_TIME_30");
+            PlayerAchievements.instance.SetAchievement("PLAY_TIME_60");
         }
         if (playerSavedData._gameStats.totalPlayTime > 10800)
         {
@@ -314,7 +422,50 @@ public class GameManager : MonoBehaviour
         {
             PlayerAchievements.instance.SetAchievement("PLAY_TIME_420");
         }
-        playerSavedData.SavePlayerData();
+
+        if (playerSavedData._gameStats.totalParts > 100)
+        {
+            PlayerAchievements.instance.SetAchievement("ABLOOD_100");
+        }
+        if (playerSavedData._gameStats.totalParts > 500)
+        {
+            PlayerAchievements.instance.SetAchievement("ABLOOD_500");
+        }
+        if (playerSavedData._gameStats.totalParts > 1000)
+        {
+            PlayerAchievements.instance.SetAchievement("ABLOOD_1000");
+        }
+
+        if(playerSavedData._gameStats.totalDistance > 1000)
+        {
+            PlayerAchievements.instance.SetAchievement("DISTANCE_1000");
+        }
+        if (playerSavedData._gameStats.totalDistance > 10000)
+        {
+            PlayerAchievements.instance.SetAchievement("DISTANCE_10000");
+        }
+        if (playerSavedData._gameStats.totalDistance > 42195)
+        {
+            PlayerAchievements.instance.SetAchievement("DISTANCE_42195");
+        }
+
+        int totalKills = playerSavedData._gameStats.totalKills;
+        switch (totalKills)
+        {
+            case 100:
+                PlayerAchievements.instance.SetAchievement("KILL_100");
+                break;
+            case 1000:
+                PlayerAchievements.instance.SetAchievement("KILL_1000");
+                break;
+            case 5000:
+                PlayerAchievements.instance.SetAchievement("KILL_5000");
+                break;
+            case 10000:
+                PlayerAchievements.instance.SetAchievement("KILL_10000");
+                break;
+
+        }
     }
 
     private IEnumerator EndGameDelay(bool win)

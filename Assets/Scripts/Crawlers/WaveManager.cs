@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WaveManager", menuName = "WaveManager")]
-public class RoomWaves : ScriptableObject
+public class WaveManager : ScriptableObject
 {
     public List<BattleWave> battleWaves = new List<BattleWave>();
 }

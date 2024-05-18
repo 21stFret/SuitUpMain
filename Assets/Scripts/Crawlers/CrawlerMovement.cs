@@ -9,7 +9,7 @@ public class CrawlerMovement : MonoBehaviour
     private Transform target;
     [SerializeField]
     private Vector3 destination;
-    public float speed;
+    public float speedFinal;
     public float steerSpeed;
     public float lookSpeed;
     public float stoppingDistance;
@@ -73,7 +73,7 @@ public class CrawlerMovement : MonoBehaviour
         var dir = Vector3.Lerp(transform.forward, direction.normalized, Time.deltaTime * steerSpeed);
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
-        rb.MovePosition(transform.position + dir.normalized * speed * Time.deltaTime);
+        rb.MovePosition(transform.position + dir.normalized * speedFinal * Time.deltaTime);
 
     }
 

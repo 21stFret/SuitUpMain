@@ -46,7 +46,7 @@ public class CrawlerSpitter : Crawler
 
     public override void Attack()
     {
-        crawlerMovement.speed = 0;
+        crawlerMovement.speedFinal = 0;
         spitTimer += Time.deltaTime;
         if (spitTimer > spitSpeed)
         {
@@ -61,7 +61,7 @@ public class CrawlerSpitter : Crawler
         {
             animator.SetBool("InRange", false);
             crawlerMovement.tracking = false;
-            crawlerMovement.speed = speed;
+            crawlerMovement.speedFinal = _randomSpeed;
             crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
             return;
         }

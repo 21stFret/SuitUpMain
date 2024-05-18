@@ -146,6 +146,7 @@ public class MainMenu : MonoBehaviour
         header3dUI.SetActive(true);
         header.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.GetComponent<DoTweenFade>().canvasGroup.alpha = 0;
+        loadOut.Init();
         loadOutMenu.SetActive(true);
         loadOutMenu.GetComponent<DoTweenFade>().FadeIn();
         mainMenu.SetActive(false);
@@ -161,6 +162,7 @@ public class MainMenu : MonoBehaviour
         loadOutMenu.GetComponent<DoTweenFade>().FadeOut();
         header.GetComponent<DoTweenFade>().FadeOut();
         PauseInput(true);
+        loadOut.Init();
         yield return new WaitForSeconds(0.8f);
         header3dUI.SetActive(false);
         mainMenu.SetActive(true);
@@ -179,6 +181,7 @@ public class MainMenu : MonoBehaviour
         currentMenuIndex = 0;
         ToggleText(true);
         mainMenu.GetComponent<DoTweenFade>().FadeOut();
+        loadOut.Init();
         PauseInput(true);
         yield return new WaitForSeconds(0.8f);
         header.SetActive(true);
@@ -191,65 +194,6 @@ public class MainMenu : MonoBehaviour
         PauseInput(false);
         inMainMenu = false;
         EventSystem.current.SetSelectedGameObject(menuBUttons[0]);
-    }
-
-    public IEnumerator OpenRDMenu()
-    {
-        loadOutMenu.GetComponent<DoTweenFade>().FadeOut();
-        PauseInput(true);
-        RDMenu.GetComponent<DoTweenFade>().FadeIn();
-        RDMenu.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-        mainMenu.SetActive(false);
-        PauseInput(false);
-    }
-
-    public IEnumerator CloseRDMenu()
-    {
-        PauseInput(true);
-        mainMenu.SetActive(true);
-        loadOut.Init();
-        yield return new WaitForSeconds(1.8f);
-        RDMenu.SetActive(false);
-        PauseInput(false);
-    }
-
-    public IEnumerator OpenAchMenu()
-    {
-        PauseInput(true);
-        AchMenu.SetActive(true);
-        yield return new WaitForSeconds(1.8f);
-        mainMenu.SetActive(false);
-        PauseInput(false);
-    }
-
-    public IEnumerator CloseAchMenu()
-    {
-        PauseInput(true);
-        mainMenu.SetActive(true);
-        yield return new WaitForSeconds(1.8f);
-        AchMenu.SetActive(false);
-        PauseInput(false);
-    }
-
-    public void OpenRDMenuButton()
-    {
-        StartCoroutine(OpenRDMenu());
-    }
-
-    public void CloseRDMenuButton()
-    {
-        StartCoroutine(CloseRDMenu());
-    }
-
-    public void OpenAchMenuButton()
-    {
-        StartCoroutine(OpenAchMenu());
-    }
-
-    public void CloseAchMenuButton()
-    {
-        StartCoroutine(CloseAchMenu());
     }
 
     public void OpenLoadOutMenuButton()

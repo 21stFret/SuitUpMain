@@ -13,7 +13,8 @@ public enum CrawlerType
     Crawler,
     Daddy,
     Albino,
-    Spitter
+    Spitter,
+    Charger
 }
 
 public class Crawler : MonoBehaviour
@@ -35,6 +36,8 @@ public class Crawler : MonoBehaviour
     public int healthMax;
     public int attackDamage;
     public float speed;
+    public float _randomSpeed;
+    public float randomScale;
     public ParticleSystem DeathBlood;
     public ParticleSystem _spawnEffect;
     protected Animator animator;
@@ -55,6 +58,8 @@ public class Crawler : MonoBehaviour
 
     public GameObject partPrefab;
 
+    public bool forceSpawn;
+
     private void Awake()
     {
         Init();
@@ -74,6 +79,10 @@ public class Crawler : MonoBehaviour
     {
         hasTarget = false;
         dead = false;
+        if (forceSpawn)
+        {
+            Spawn();
+        }
     }
 
     public IEnumerator StunCralwer(float stunTime)
@@ -172,14 +181,14 @@ public class Crawler : MonoBehaviour
         {
             inRange = false;
             animator.SetBool("InRange", false);
-            crawlerMovement.speed = speed;
+            crawlerMovement.speedFinal = _randomSpeed;
         }
     }
 
     public virtual void Attack()
     {
         animator.SetTrigger("Attack");
-        crawlerMovement.speed = 0;
+        crawlerMovement.speedFinal = 0;
     }
 
     public void DoDamage()
@@ -268,14 +277,13 @@ public class Crawler : MonoBehaviour
         dead = true;
         PlayDeathNoise();
         tag = "Untagged";
-        GetComponent<Collider>().enabled = false;
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
         crawlerMovement.groundCollider.enabled= false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
-        crawlerMovement.speed = 0;
+        crawlerMovement.speedFinal = 0;
         animator.SetTrigger("Die");
         DeathBlood.Play();
         CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
@@ -319,6 +327,7 @@ public class Crawler : MonoBehaviour
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
         rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
+
     }
 
     private IEnumerator SpawnEffect()
@@ -332,8 +341,10 @@ public class Crawler : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";
         crawlerMovement.enabled = true;
-        crawlerMovement.speed = speed;
+        _randomSpeed = Random.Range(speed - randomScale, speed + randomScale);
+        crawlerMovement.speedFinal = _randomSpeed;
         dead = false;
+        animator.speed = 1;
     }
 }
 

@@ -19,10 +19,14 @@ public class MYCharacterController : MonoBehaviour
     private Quaternion lookRotation = Quaternion.identity;
     public GameObject aimDirection;
     public GameObject lookingDirection;
+    public float distanceTravelled;
+    private float distTimer;
+    private Vector3 lastPos;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        lastPos = transform.position;
     }
 
     private void PlayRunningFSX()
@@ -142,6 +146,18 @@ public class MYCharacterController : MonoBehaviour
         }
         RotateMech();
         PlayRunningFSX();
+        CheckDistance();
+    }
+
+    private void CheckDistance()
+    {
+        distTimer += Time.deltaTime;
+        if(distTimer>1)
+        {
+            distTimer = 0;
+            distanceTravelled += Vector3.Distance(transform.position, lastPos);
+            lastPos = transform.position;
+        }
     }
 
 }

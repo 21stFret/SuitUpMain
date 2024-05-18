@@ -12,7 +12,6 @@ public class IceWallMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        modType = WeaponType.Grenade;
     }
 
     public override void Fire()

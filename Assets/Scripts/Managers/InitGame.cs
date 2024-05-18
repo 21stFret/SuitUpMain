@@ -22,11 +22,6 @@ public class InitGame : MonoBehaviour
         if (!MainMenu)
         {
             Time.timeScale = 1;
-            if (PlayerSavedData.instance._firstLoad)
-            {
-                PlayerSavedData.instance.UpdateFirstLoad(false);
-                // show welcome pop up
-            }
             AudioManager.instance.Init();
             return;
         }

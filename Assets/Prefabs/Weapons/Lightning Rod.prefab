@@ -39025,6 +39025,8 @@ MonoBehaviour:
     - 12
     - 15
     - 18
+    _weaponFuelUseRate: []
+    _uniqueValue: []
     _cost: e8030000d0070000b80b0000
     _unlockCost: 0
     weaponDescription: 
@@ -39038,6 +39040,8 @@ MonoBehaviour:
   force: 0
   fireRate: 0
   range: 0
+  weaponRechargeRate: 0.6
+  weaponFuelUseRate: 1
   isFiring: 0
   isFiringAlt: 0
   rangeSensor: {fileID: 0}
@@ -39045,8 +39049,7 @@ MonoBehaviour:
   aimOffest: {x: 0, y: 0, z: 0}
   laserSight: {fileID: 0}
   weaponMod: {fileID: 0}
-  weaponRechargeRate: 0.6
-  weaponFuelUseRate: 1
+  weaponOverride: 0
   targets: []
   crawlerIndex: 0
   chainAmount: 5
@@ -39063,10 +39066,12 @@ MonoBehaviour:
   crawlerLayer:
     serializedVersion: 2
     m_Bits: 384
-  lightning: {fileID: 4312708514340103573}
+  lightningGO: {fileID: 0}
+  lightning: {fileID: 4312708514350305399}
   crawlerHit: {fileID: 0}
   hitOffset: {x: 0, y: 1.5, z: 0}
   raycastOffset: {x: 0, y: 0, z: 0}
+  arcOverride: 0
 --- !u!1 &8798862022505103536
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,6 +28,36 @@ public class WeaponMod : MonoBehaviour
         baseWeapon.weaponOverride = false;
         baseWeapon.weaponFuelManager.constantUse = true;
         // apply modifiers
+        ApplyMods();
+    }
+
+    private void ApplyMods()
+    {
+        if(modifiers.Count > 0)
+        {
+            foreach(Modifier mod in modifiers)
+            {
+                var value = mod.modValue / 100; 
+
+                switch(mod.modType)
+                {
+                    case ModifierType.Damage:     
+                        damage += value * damage;
+                        break;
+                    case ModifierType.Range:
+                        range += value * range;
+                        break;
+                    case ModifierType.FireRate:
+                        baseWeapon.fireRate -= value * baseWeapon.fireRate;
+                        break;
+                    case ModifierType.FuelRate:
+                        modFuelCost -= value * modFuelCost;
+                        break;
+                    case ModifierType.Unique:
+                        break;
+                }
+            }
+        }
     }
 
     public virtual void Fire()

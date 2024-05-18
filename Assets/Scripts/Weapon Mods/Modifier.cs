@@ -7,8 +7,8 @@ public enum ModifierType
     Damage,
     FireRate,
     Range,
-    Accuracy,
-    FuelRate
+    FuelRate,
+    Unique
 }
 
 [System.Serializable]

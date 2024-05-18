@@ -9,8 +9,11 @@ public class WeaponsUpgradeUI : MonoBehaviour
 {
     public WeaponsManager weaponsManager;
     public WeaponsHanger weaponsHanger;
-    public TMP_Text damage, speed, range, level, cost;
-    public TMP_Text Udamage, Uspeed, Urange, Ulevel;
+    public TMP_Text level, cost;
+    public TMP_Text  Ulevel;
+    public List<WeaponInfoUI> weaponInfoUIs;
+    public TMP_Text uniqueText;
+
     public TMP_Text weaponName;
     public TMP_Text weaponDescription;
     private int index = 0;
@@ -40,7 +43,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
         SetMainWeaponBool(true);
-        MaxLevel = weaponsManager._mainWeapons[0].baseWeaponInfo._damage.Length;
+        MaxLevel = weaponsManager._mainWeapons[0].baseWeaponInfo._damage.Length - 1;
     }
 
     public void SetMainWeaponBool(bool value)
@@ -251,31 +254,69 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public void UpdateUI(BaseWeaponInfo info, int weaponLevel)
     {
-        damage.text = info._damage[weaponLevel].ToString();
-        speed.text = info._fireRate[weaponLevel].ToString();
-        range.text = info._range[weaponLevel].ToString();
+
+        var itemlist = new List<float>
+        {
+            info._damage[weaponLevel],
+            info._fireRate[weaponLevel],
+            info._range[weaponLevel],
+            info._weaponFuelUseRate[weaponLevel],
+            info._uniqueValue[weaponLevel]
+        };
+
+        var itemlistPlus = new List<float>
+        {
+            info._damage[weaponLevel+1],
+            info._fireRate[weaponLevel+1],
+            info._range[weaponLevel+1],
+            info._weaponFuelUseRate[weaponLevel+1],
+            info._uniqueValue[weaponLevel+1]
+        };
+
+        for (int i = 0; i < weaponInfoUIs.Count; i++)
+        {
+            if (weaponLevel + 1 == info._damage.Length)
+            {
+                weaponInfoUIs[i].amount.text = itemlist[i].ToString();
+                weaponInfoUIs[i].boostedlevel.text = itemlistPlus[i].ToString();
+                Ulevel.text = " Max";
+                cost.text = "Max";
+                continue;
+            }
+
+            weaponInfoUIs[i].amount.text = itemlist[i].ToString();
+            weaponInfoUIs[i].boostedlevel.text = itemlistPlus[i].ToString();
+
+        }
+         
+        switch(info.weaponName)
+        {
+            case "Minigun":
+                uniqueText.text = "N/A";
+                break;
+            case "Shotgun":
+            uniqueText.text = "Knockback";
+                break;
+            case "Plasma":
+                uniqueText.text = "Pierce";
+                break;
+            case "Flamer":
+                uniqueText.text = "N/A";
+                break;
+            case "Shocker":
+                uniqueText.text = "Chain Amount";
+                break;
+            case "Cryo":
+                uniqueText.text = "Freeze Time";
+                break;
+        }
+
         weaponName.text = info.weaponName;
         weaponDescription.text = info.weaponDescription;
         level.text = (weaponLevel + 1).ToString();
         cost.text = "$"+info._cost[weaponLevel].ToString();
-        if(weaponLevel +1 == info._damage.Length)
-        {
-            Udamage.text = " Max";
-            Uspeed.text = " Max";
-            Urange.text = " Max";
-            Ulevel.text = " Max";
-            cost.text = "Max";
-            return;
-        }
-        Udamage.text = info._damage[weaponLevel + 1].ToString();
-        Uspeed.text = info._fireRate[weaponLevel + 1].ToString();
-        Urange.text = info._range[weaponLevel + 1].ToString();
-        Ulevel.text = (weaponLevel + 2).ToString();
-    }
 
-    public void ShowUpgradeStats()
-    {
-        damage.text += " + 1";
+        Ulevel.text = (weaponLevel + 2).ToString();
     }
 
     public IEnumerator pauseInput()

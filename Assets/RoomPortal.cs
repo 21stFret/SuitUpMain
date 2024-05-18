@@ -6,6 +6,8 @@ public class RoomPortal : MonoBehaviour
 {
     public PortalEffect portalEffect;
     public PortalEffect visualPortalEffect;
+    public AudioClip[] portalSounds;
+    public AudioSource audioSource;
     public bool _active;
 
     private void OnTriggerEnter(Collider other)
@@ -18,6 +20,8 @@ public class RoomPortal : MonoBehaviour
             visualPortalEffect.StartFirstPersonEffect();
             GameManager.instance.LoadNextRoom();
             _active = false;
+            audioSource.clip = portalSounds[Random.Range(0, portalSounds.Length)];
+            audioSource.Play();
         }
     }
 }

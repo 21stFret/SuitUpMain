@@ -24,6 +24,7 @@ public class WeaponBaseDataReader : MonoBehaviour
             BWD._range = new float[5];
             BWD._cost = new int[5];
             BWD._weaponFuelUseRate = new float[5];
+            BWD._uniqueValue = new float[5];
             BWD.weaponName = data[i]["Weapon Name"].ToString();
             BWD.weaponDescription = data[i]["weaponDescription"].ToString();
             for(int j = 0; j<5; j++)
@@ -45,6 +46,10 @@ public class WeaponBaseDataReader : MonoBehaviour
             for (int j = 0; j < 5; j++)
             {
                 BWD._weaponFuelUseRate[j] = (float)data[i]["weaponFuelUseRate " + (j + 1)];
+            }
+            for (int j = 0; j < 5; j++)
+            {
+                BWD._uniqueValue[j] = (float)data[i]["Unique " + (j + 1)];
             }
             BWD._unlockCost = (int)data[i]["Unlock Cost"];
 

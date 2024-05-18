@@ -17,6 +17,7 @@ public class AirDropCrate : MonoBehaviour
     private MeshRenderer _meshRenderer;
     private BoxCollider _collider;
     public Rigidbody rb;
+    public GameObject _object;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class AirDropCrate : MonoBehaviour
         _collider.enabled = !active;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+        _object.SetActive(true);
     }
 
     private void DeActive()
@@ -40,6 +42,8 @@ public class AirDropCrate : MonoBehaviour
         _meshRenderer.enabled = active;
         _collider.enabled = active;
         rb.useGravity = false;
+        rb.velocity = Vector3.zero;
+        _object.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -18,15 +18,20 @@ public class LightningRodController : MechWeapon
     public bool hitSwitch;
     public float timer;
     public LayerMask crawlerLayer;
-    public GameObject lightning;
+    public GameObject lightningGO;
+    public F3DLightning lightning;
     public GameObject crawlerHit;
     public Vector3 hitOffset;
     public Vector3 raycastOffset;
+    public bool arcOverride;
 
     public override void Init()
     {
         base.Init();
-        lightning.SetActive(false);
+        lightningGO.SetActive(false);
+        lightning = lightningGO.GetComponent<F3DLightning>();
+        arcOverride = false;
+        weaponType = WeaponType.Lightning;
         for (int i = 0; i < lightningChains.Count; i++)
         {
             lightningChains[i].transform.parent = null;
@@ -38,19 +43,31 @@ public class LightningRodController : MechWeapon
     public override void Fire()
     {
         base.Fire();
-        lightning.SetActive(true);
+        if(weaponOverride)
+        {
+            return;
+        }
+        lightningGO.SetActive(true);
     }
 
     // Stop firing 
     public override void Stop()
     {
         base.Stop();
-        lightning.SetActive(false);
+        if (weaponOverride)
+        {
+            return;
+        }
+        lightningGO.SetActive(false);
         UnlinkAllLightning();
     }
 
     private void Update()
     {
+        if (weaponOverride)
+        {
+            return;
+        }
         if (hitSwitch)
         {
             timer += Time.deltaTime;
@@ -97,6 +114,10 @@ public class LightningRodController : MechWeapon
             {
                 targets.Add(crawlerHit.GetComponent<TargetHealth>());
                 hitSwitch = true;
+            }
+            if(arcOverride)
+            {
+                return;
             }
             LightningArc(crawlerHit.transform);
         }

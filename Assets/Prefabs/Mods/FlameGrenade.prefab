@@ -50,9 +50,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0
   range: 0
-  explosionForce: 1000
-  explosionRadius: 10
+  explosionForce: 800
+  explosionRadius: 15
   explosionUpward: 2
+  fuseTime: 1.5
+  explodeOnImpact: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 256

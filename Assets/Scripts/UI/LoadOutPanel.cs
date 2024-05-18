@@ -35,7 +35,8 @@ public class LoadOutPanel : MonoBehaviour
         ChangeWeaponImage();
         mainWeaponName.text = weaponsManager._mainWeapons[currentMainIndex].baseWeaponInfo.weaponName;
         altWeaponName.text = weaponsManager._altWeapons[currentAltIndex].baseWeaponInfo.weaponName;
-        armorName.text = "Armor " + currentArmorIndex;
+        //armorName.text = "Armor " + currentArmorIndex;
+        armorName.text = "Coming soon!";
     }
 
     private void ChangeWeaponImage()

@@ -23,6 +23,7 @@ public struct BaseWeaponInfo
     public float[] _fireRate;
     public float[] _range;
     public float[] _weaponFuelUseRate;
+    public float[] _uniqueValue;
     public int[] _cost;
     public int _unlockCost;
     public string weaponDescription;
@@ -46,6 +47,7 @@ public class MechWeapon : MonoBehaviour
     public Sprite weaponSprite;
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
+    public WeaponType weaponType;
     public float damage;
     public float force;
     public float fireRate;

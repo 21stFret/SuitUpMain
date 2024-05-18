@@ -326,17 +326,20 @@ MonoBehaviour:
   healthMax: 3
   attackDamage: 1
   speed: 5
+  _randomSpeed: 1
+  randomScale: 0.5
   DeathBlood: {fileID: 7485218815324124808}
   _spawnEffect: {fileID: 7966955931502245795}
   deathNoise: {fileID: 418313318034436250}
   immune: 0
   randomLocationRadius: 3
   crawlerScale: 0.5
-  cashWorth: 10
+  cashWorth: 5
   expWorth: 3
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
+  forceSpawn: 0
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -424,7 +427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
-  speed: 0
+  speedFinal: 0
   steerSpeed: 7
   lookSpeed: 300
   stoppingDistance: 3

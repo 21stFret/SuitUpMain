@@ -107,6 +107,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void ResetAllData()
     {
+        SetupGame.instance.inGame = false;
         CreateData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }

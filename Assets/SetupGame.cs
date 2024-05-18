@@ -9,8 +9,9 @@ public class SetupGame : MonoBehaviour
     public bool endlessMode;
     public bool inGame;
     public int diffiulty;
-    public List<RoomWaves> roomwavesEasy = new List<RoomWaves>();
-    public List<RoomWaves> roomwavesHard = new List<RoomWaves>();
+    public List<WaveManager> roomwavesEasy = new List<WaveManager>();
+    public List<WaveManager> roomwavesMid = new List<WaveManager>();
+    public List<WaveManager> roomwavesHard = new List<WaveManager>();
 
     private void Awake()
     {
@@ -38,7 +39,7 @@ public class SetupGame : MonoBehaviour
                 gameManager.roomWaves = roomwavesEasy;
                 break;
             case 1:
-                gameManager.roomWaves = roomwavesHard;
+                gameManager.roomWaves = roomwavesMid;
                 break;
             case 2:
                 gameManager.roomWaves = roomwavesHard;

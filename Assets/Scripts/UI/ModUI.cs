@@ -12,6 +12,7 @@ public class ModUI : MonoBehaviour
     public WeaponModManager weaponModManager;
     public EventSystem eventSystem;
 
+
     public void OpenModUI(PickupType type)
     {
         GameManager.instance.SwapPlayerInput("UI");
@@ -46,32 +47,44 @@ public class ModUI : MonoBehaviour
 
     public void DisplayWeaponMods()
     {
-        for (int i = 0; i < weaponModManager.mods.Count; i++)
+        WeaponType weaponType = WeaponsManager.instance.currentAltWeapon.weaponType;
+        int buttonIndex = 0;
+        for(int i = 0; i < modButtons.Length; i++)
         {
-            var mod = weaponModManager.mods[i];
-            var button = modButtons[i];
-            button.gameObject.SetActive(true);
-            button.modName.text = mod.modName;
-            button.modImage.sprite = mod.sprite;
-            button.modDescription.text = mod.modDescription;
-            for (int j = 0; j < mod.modifiers.Count; j++)
+            modButtons[i].gameObject.SetActive(false);
+        }
+        weaponModManager.LoadCurrentWeaponMods(weaponType);
+        for (int i = 0; i < weaponModManager.currentMods.Count; i++)
+        {
+            DisplayWeaponMod(weaponModManager.currentMods[i], buttonIndex);
+            buttonIndex++;
+        }
+    }
+
+    private void DisplayWeaponMod(WeaponMod mod, int buttonIndex)
+    {
+        var button = modButtons[buttonIndex];
+        button.gameObject.SetActive(true);
+        button.modName.text = mod.modName;
+        button.modImage.sprite = mod.sprite;
+        button.modDescription.text = mod.modDescription;
+        for (int j = 0; j < mod.modifiers.Count; j++)
+        {
+            var modifier = mod.modifiers[j];
+            var stat = button.modStats[j];
+            stat.gameObject.SetActive(true);
+            stat.modStat.text = modifier.modType.ToString();
+            string modValue = modifier.modValue.ToString();
+            if (modifier.modValue < 0)
             {
-                var modifier = mod.modifiers[j];
-                var stat = button.modStats[j];
-                stat.gameObject.SetActive(true);
-                stat.modStat.text = modifier.modType.ToString();
-                string modValue = modifier.modValue.ToString();
-                if (modifier.modValue < 0)
-                {
-                    stat.modStatValue.color = Color.red;
-                }
-                else
-                {
-                    stat.modStatValue.color = Color.green;
-                    modValue = "+" + modValue;
-                }
-                stat.modStatValue.text = modValue + "%";
+                stat.modStatValue.color = Color.red;
             }
+            else
+            {
+                stat.modStatValue.color = Color.green;
+                modValue = "+" + modValue;
+            }
+            stat.modStatValue.text = modValue + "%";
         }
     }
 

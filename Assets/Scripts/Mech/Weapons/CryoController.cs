@@ -12,6 +12,7 @@ public class CryoController : MechWeapon
     public override void Init()
     {
         base.Init();
+        weaponType = WeaponType.Cryo;
         weaponFuelManager.constantUse = false;
     }
 

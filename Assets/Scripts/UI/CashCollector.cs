@@ -134,7 +134,7 @@ public class CashCollector : MonoBehaviour
             return;
         }
         alienParts.color = Color.green;
-        alienParts.transform.DOPunchScale(new Vector3(1, 1, 1), 0.2f,5, 1).OnComplete(ResetScale);
+        alienParts.transform.DOPunchScale(new Vector3(2, 2, 2), 0.2f,5, 1).OnComplete(ResetScale);
     }
 
     private void UpdateArtUI(int parts)
@@ -145,6 +145,6 @@ public class CashCollector : MonoBehaviour
     private void ResetScale()
     {
         alienParts.color = Color.white;
-        alienParts.transform.localScale = new Vector3(2,2,2);
+        alienParts.transform.localScale = new Vector3(1,1,1);
     }
 }

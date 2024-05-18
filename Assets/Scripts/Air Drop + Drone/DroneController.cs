@@ -59,7 +59,7 @@ public class DroneController : MonoBehaviour
         {
             return;
         }
-        if (GameUI.instance.pauseMenu.isPaused)
+        if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
         {
             return;
         }

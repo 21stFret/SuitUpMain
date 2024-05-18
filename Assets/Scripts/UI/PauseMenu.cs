@@ -10,11 +10,14 @@ public class PauseMenu : MonoBehaviour
     public GameObject menu;
     public GameObject cheatsMenu;
     public GameObject controlsMenu;
+    public GameObject controlsPC;
+    public GameObject controlsGamePad;
     public GameObject settingsMenu;
     public bool isPaused;
     public PlayerInput playerInput;
     public EventSystem eventSystem;
     public GameObject firstSelectedButton;
+    public GameObject controlsSelectedButton;
     public bool menuLocked;
 
     void Start()
@@ -55,7 +58,20 @@ public class PauseMenu : MonoBehaviour
         playerInput.SwitchCurrentActionMap("Gameplay");
     }
 
-
+    public void SwapControlsMenu()
+    {
+        bool PC = InputTracker.instance.usingMouse;
+        if (PC)
+        {
+            controlsGamePad.SetActive(false);
+            controlsPC.SetActive(true);
+        }
+        else
+        {
+            controlsGamePad.SetActive(true);
+            controlsPC.SetActive(false);
+        }
+    }
 
     public void QuitGame()
     {
