@@ -24,7 +24,7 @@ public class RewardMenu : MonoBehaviour
             {
                 playTime -= 60;
             }
-            runTime += mins.ToString("F0") + "m, ";
+            runTime += mins.ToString("F0") + "m ";
         }
         playTimer.text = runTime + playTime.ToString("F0")+"s";
     }

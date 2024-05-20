@@ -56,6 +56,7 @@ public class LightningStrikeMod : WeaponMod
         base.Stop();
         timer = 0;
         overideFire = false;
+        chargeEffect.transform.SetParent(null);
         chargeEffect.Stop();
     }
 }

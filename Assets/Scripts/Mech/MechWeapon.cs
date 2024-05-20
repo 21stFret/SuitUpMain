@@ -172,6 +172,10 @@ public class MechWeapon : MonoBehaviour
             StopMod();
             return;
         }
+        if(!isFiring)
+        {
+            return;
+        }
         isFiring = false;
         //Debug.Log("Stopping " + name);
         if (weaponEffects.weaponEffect != null)

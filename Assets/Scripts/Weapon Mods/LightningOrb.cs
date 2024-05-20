@@ -12,6 +12,7 @@ public class LightningOrb : Grenade
     public float fireRate; 
     public List<GameObject> lightningChains;
     private float timer;
+    public AudioClip liveShock;
 
     public override void Init(float _damage, float _range)
     {
@@ -33,6 +34,7 @@ public class LightningOrb : Grenade
     public override void Explode()
     {
         base.Explode();
+        explosionSound.loop = false;
         foreach (var item in targets)
         {
             item.TakeDamage(damage, WeaponType.Lightning, 1);
@@ -63,6 +65,22 @@ public class LightningOrb : Grenade
             timer = 0;
         }
         LightningArc();
+        PlayLiveAudio();
+    }
+
+    private void PlayLiveAudio()
+    {
+        if(targets.Count == 0 && explosionSound.clip == liveShock)
+        {
+            explosionSound.Stop();
+            return;
+        }
+        if (!explosionSound.isPlaying)
+        {
+            explosionSound.loop = true;
+            explosionSound.clip = liveShock;
+            explosionSound.Play();
+        }
     }
 
     public void LightningArc()

@@ -364,7 +364,16 @@ public class GameManager : MonoBehaviour
 
     private void DayNightCycle()
     {
-        dayTime = !dayTime;
+        float random = Random.Range(0, 100);
+        if (random < 50)
+        {
+            dayTime = true;
+        }
+        else
+        {
+            dayTime = false;
+        }
+
         if (dayTime)
         {
             dayLight.SetActive(true);
