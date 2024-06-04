@@ -4,9 +4,8 @@ using UnityEngine;
 
 public enum CrateType
 {
-    Gun,
-    Flamer,
-    Armour
+    Repair,
+    Weapon,
 }
 
 public class AirDropCrate : MonoBehaviour
@@ -14,14 +13,13 @@ public class AirDropCrate : MonoBehaviour
     public CrateType crateType;
     public ParticleSystem _particleSystem;
     public bool active;
-    private MeshRenderer _meshRenderer;
+    public MeshRenderer _meshRenderer;
     private BoxCollider _collider;
     public Rigidbody rb;
     public GameObject _object;
 
     private void Awake()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
         _collider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
     }
@@ -73,12 +71,11 @@ public class AirDropCrate : MonoBehaviour
     {
         switch (crateType)
         {
-            case CrateType.Gun:
-                break;
-            case CrateType.Flamer:
-                break;
-            case CrateType.Armour:
+            case CrateType.Repair:
                 MechBattleController.instance.RepairArmour();
+                break;
+            case CrateType.Weapon:
+                //swap weapon
                 break;
             default:
                 break;

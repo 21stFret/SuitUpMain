@@ -85,7 +85,7 @@ public class SpitProjectile : MonoBehaviour
         }
         explosionEffect.Play();
         trailEffect.SetActive(false);
-        _collider.enabled = false;
+        _collider.enabled = false;  
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
         

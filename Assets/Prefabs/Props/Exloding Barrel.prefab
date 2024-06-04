@@ -77,7 +77,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetHealth: {fileID: 8242909511848563130}
   explosionForce: 10
-  explosionRadius: 15
+  explosionRadius: 7.5
   upwardsModifier: 3
   damage: 20
   explosionEffect: {fileID: 5146125975144471149}
@@ -159,7 +159,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 2.62536
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -247,13 +247,13 @@ GameObject:
   - component: {fileID: 2398928127242345990}
   - component: {fileID: 7555043913392147846}
   - component: {fileID: 4947852934698918330}
-  m_Layer: 8
+  m_Layer: 1
   m_Name: RadiusWarning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9204460989742602107
 Transform:
   m_ObjectHideFlags: 0
@@ -263,7 +263,7 @@ Transform:
   m_GameObject: {fileID: 870014863568504201}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 15, y: 15, z: 15}
   m_ConstrainProportionsScale: 1
   m_Children: []

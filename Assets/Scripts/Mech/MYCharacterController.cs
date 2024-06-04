@@ -22,6 +22,14 @@ public class MYCharacterController : MonoBehaviour
     public float distanceTravelled;
     private float distTimer;
     private Vector3 lastPos;
+    public bool isDodging;
+    public float dashForce;
+    public float dashCooldown;
+    public ParticleSystem dashEffect, dashEffect2;
+    public MeshRenderer dashShoes, dashShoes2;
+    public ManualWeaponController manualWeaponController;
+    public ParticleSystem footStep, footStep2;
+    public bool candodge;
 
     private void Awake()
     {
@@ -46,6 +54,47 @@ public class MYCharacterController : MonoBehaviour
             runAudio.Stop();
         }
 
+    }
+
+    public void PlayFootStep()
+    {
+        footStep.Play();
+    }
+
+    public void PlayFootStep2()
+    {
+        footStep2.Play();
+    }
+
+    public void Dash(InputAction.CallbackContext context)
+    {
+        if (!candodge)
+        {
+            return;
+        }
+        if (!context.performed)
+        {
+            return;
+        }
+        if (isDodging || !isRunning)
+        {
+            return;
+        }
+        dashShoes.enabled = false;
+        dashShoes2.enabled = false;
+        dashEffect.Play();
+        dashEffect2.Play();
+        isDodging = true;
+        _rigidbody.AddForce(direction * dashForce, ForceMode.Impulse);
+        StartCoroutine(DashCooldown());
+    }
+
+    private IEnumerator DashCooldown()
+    {
+        yield return new WaitForSeconds(dashCooldown);
+        isDodging = false;
+        dashShoes.enabled = true;
+        dashShoes2.enabled = true;
     }
 
     public void Die()
@@ -133,6 +182,9 @@ public class MYCharacterController : MonoBehaviour
             //lookingDirection.SetActive(true);
             aimDirectionLoc = Vector3.zero;
             lookRotation = Quaternion.LookRotation(direction, Vector3.up);
+            Vector3 lookDirection = new Vector3(manualWeaponController.aimX, 0, manualWeaponController.aimZ);
+            //lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+
         }
 
         if (isRunning)

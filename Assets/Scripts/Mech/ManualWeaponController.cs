@@ -11,6 +11,9 @@ public class ManualWeaponController : MonoBehaviour
     public InputAction FireInputAction;
     public InputAction FireManualInputAction;
     public MechWeapon equipedWeapon;
+    public GameObject rotatingObject;
+
+    public float inputTimeOut = 1f;
 
     public float aimZ;
     public float aimX;
@@ -89,13 +92,22 @@ public class ManualWeaponController : MonoBehaviour
         equipedWeapon.StopAlt();
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         if (!initialized)
         {
             return;
         }
+        if (inputTimeOut <= 0)
+        {
+            float speed = rotationSpeed * Time.deltaTime;
+            rotatingObject.transform.rotation = Quaternion.RotateTowards(rotatingObject.transform.rotation, transform.rotation, speed);
+            isAiming = false;
+            return;
+            //ResetAim();
+        }
         Aiming();
+
     }
 
     public void OnAim(InputAction.CallbackContext context)
@@ -111,10 +123,11 @@ public class ManualWeaponController : MonoBehaviour
         //movementVector.Normalize();
         if (movementVector == Vector2.zero)
         {
-            ResetAim();
+            //ResetAim();
             return;
         }
         isAiming = true;
+        inputTimeOut = 1f;
         aimX = movementVector.x;
         aimZ = movementVector.y;
     }
@@ -126,15 +139,18 @@ public class ManualWeaponController : MonoBehaviour
             return;
         }
         Vector3 lookDirection = new Vector3(aimX, 0, aimZ);
-        Quaternion lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-        equipedWeapon.transform.rotation = Quaternion.RotateTowards(lookRotation, transform.rotation, rotationSpeed * Time.deltaTime);
+        Quaternion lookRotation = Quaternion.LookRotation(lookDirection, transform.up);
+        //equipedWeapon.transform.rotation = Quaternion.RotateTowards(lookRotation, transform.rotation, rotationSpeed * Time.deltaTime);
+        float speed = rotationSpeed * Time.deltaTime;
+        rotatingObject.transform.rotation = Quaternion.RotateTowards(rotatingObject.transform.rotation, lookRotation, speed);
+        inputTimeOut -= Time.deltaTime;
     }
 
     private void ResetAim()
     {
-        isAiming = false;
-        aimX = 1;
-        aimZ = 1;
+        //isAiming = false;
+        aimX = 0;
+        aimZ = 0;
     }
 
 

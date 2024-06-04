@@ -32,7 +32,7 @@ public class Crawler : MonoBehaviour
 
 
     [SerializeField]
-    private float health;
+    public float health;
     public int healthMax;
     public int attackDamage;
     public float speed;
@@ -73,6 +73,7 @@ public class Crawler : MonoBehaviour
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rb = GetComponent<Rigidbody>();
+        _randomSpeed = Random.Range(speed, speed + randomScale);
     }
 
     private void Start()
@@ -200,6 +201,11 @@ public class Crawler : MonoBehaviour
             return;
         }
 
+        if (crawlerMovement.distanceToTarget >= crawlerMovement.stoppingDistance)
+        {
+            return;
+        }
+
         var targethealth = target.GetComponent<TargetHealth>();
 
         if(targethealth.health<=0)
@@ -284,13 +290,22 @@ public class Crawler : MonoBehaviour
         meshRenderer.enabled = false;
         target = null;
         crawlerMovement.speedFinal = 0;
-        animator.SetTrigger("Die");
+        //animator.SetTrigger("Die");
         DeathBlood.Play();
-        CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
+
+        if (CrawlerSpawner.instance != null)
+        {
+            CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
+        }
 
         if (CashCollector.Instance != null)
         {
             CashCollector.Instance.AddCash(cashWorth);
+            if (Random.Range(0, 100) < 15)
+            {
+                GameObject go = Instantiate(partPrefab, transform.position + (transform.up * 2), Quaternion.identity);
+                go.transform.SetParent(CashCollector.Instance.crawlerPartParent.transform);
+            }
         }
 
         if(GameManager.instance != null)
@@ -299,11 +314,7 @@ public class Crawler : MonoBehaviour
             GameManager.instance.AddExp(expWorth);
         }
 
-        if (Random.Range(0, 100) < 15)
-        {
-            GameObject go = Instantiate(partPrefab, transform.position +(transform.up *2), Quaternion.identity);
-            go.transform.SetParent(CashCollector.Instance.crawlerPartParent.transform);
-        }
+
     }
 
     public void PlayDeathNoise()
@@ -341,7 +352,7 @@ public class Crawler : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";
         crawlerMovement.enabled = true;
-        _randomSpeed = Random.Range(speed - randomScale, speed + randomScale);
+        _randomSpeed = Random.Range(speed, speed + randomScale);
         crawlerMovement.speedFinal = _randomSpeed;
         dead = false;
         animator.speed = 1;

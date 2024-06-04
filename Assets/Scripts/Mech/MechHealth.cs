@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Unity.VisualScripting;
+using Micosmo.SensorToolkit.Example;
+using TMPro;
 
 public class MechHealth : MonoBehaviour
 {
     public Image image;
+    public TMP_Text value;
     public bool updatingUI;
     [ColorUsage(true, true)]
     public Color healthLightColor;
@@ -23,17 +26,35 @@ public class MechHealth : MonoBehaviour
     public TargetHealth targetHealth;
     private float hitTime;
     private bool hit;
+    public float regenRate =3f;
+    private float requestedHealth;
+    private float regenTime;
 
     private void Start()
     {
         image.material.SetColor("_Color", Color.white);
         image.material.SetFloat("_HologramDistortionOffset", 0.2f);
-        SetEmmisveHeatlh();
+        //SetEmmisveHeatlh();
+        //SetEmmisiveStrength(2);
     }
 
     private void Update()
     {
+        UpdateHealthBar();
         CheckAcheivement();
+    }
+
+    private void UpdateHealthBar()
+    {
+        if (requestedHealth == targetHealth.health)
+        {
+            return;
+        }
+        regenTime += Time.deltaTime;
+        requestedHealth = Mathf.Lerp(requestedHealth, targetHealth.health, regenTime/regenRate);
+        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (requestedHealth / targetHealth.healthMax));
+        image.fillAmount = requestedHealth / targetHealth.healthMax;
+        SetEmmisveHeatlh(image.fillAmount);
     }
 
     private void CheckAcheivement()
@@ -77,9 +98,12 @@ public class MechHealth : MonoBehaviour
 
     public void UpdateHealth(float health, bool healed = false)
     {
+        regenTime = 0;
 
         if (health <= 0)
         {
+            health = 0;
+            value.text = health.ToString() + "/" + targetHealth.healthMax;
             DOTween.Kill(image);
             image.fillAmount = 0;
             MechBattleController.instance.OnDie();
@@ -94,52 +118,33 @@ public class MechHealth : MonoBehaviour
 
             return;
         }
-        if(health>targetHealth.healthMax)
-        {
-            health = targetHealth.healthMax;
-        }
-
-
-        Color flashcolor = damagefalshColor;
-        if(healed)
-        {
-            flashcolor = healthLightColor;   
-        }
-        if (updatingUI)
-        {
-            image.fillAmount = (health / targetHealth.healthMax);
-            return;
-        }
-        updatingUI = true;
-
-        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (health / targetHealth.healthMax));
-        image.fillAmount = Mathf.Lerp(image.fillAmount, health / targetHealth.healthMax, 0.4f);
-        image.DOFillAmount(health / targetHealth.healthMax, 0.4f).OnComplete(()=>updatingUI = false);
-        image.DOColor(flashcolor, 0.18f).SetLoops(2, LoopType.Yoyo);
-        SetEmmisveHeatlh();
-
-        if(healed)
+        value.text = health.ToString() + "/" + targetHealth.healthMax;
+        if (healed)
         {
             return;              
         }
-        screenFlash.PlayTween();
-        SetShader();
+        StartCoroutine(DamageFlash());
 
     }
 
-    private void SetShader()
+    private IEnumerator DamageFlash()
     {
-        var material = image.material;
-        material.DOColor(damagefalshColor, 0.18f).SetLoops(2, LoopType.Yoyo);
-        Tween t = DOTween.To(() => material.GetFloat("_HologramDistortionOffset"), x => material.SetFloat("_HologramDistortionOffset", x), 1f, 0.1f).SetLoops(2, LoopType.Yoyo);
-        t.Play();
-        image.material = material;
+        screenFlash.FadeIn();
+        yield return new WaitForSeconds(0.2f);
+        screenFlash.FadeOut();
     }
 
-    private void SetEmmisveHeatlh()
+    public void SetEmmisveHeatlh(float amount)
     {
         var material = meshRenderer.sharedMaterial;
-        material.SetColor("_Emmission", Color.Lerp(healthLightColor, damageLightColor, 1 - (image.fillAmount-0.2f)));
+        material.SetColor("_Emmission", Color.Lerp(healthLightColor, damageLightColor, 1 - (amount-0.2f)));
+        meshRenderer.material = material;
+    }
+
+    public void SetEmmisiveStrength(float value)
+    {
+        var material = meshRenderer.sharedMaterial;
+        DOTween.To(() => material.GetFloat("_Emmssive_Strength"), x => material.SetFloat("_Emmssive_Strength", x), value, 2f);
         meshRenderer.material = material;
     }
 

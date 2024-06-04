@@ -16,6 +16,7 @@ public class PulseShockwave : MonoBehaviour
     public bool canUsePulseWave;
     public Image cover;
     public AudioClip pulseWaveSound;
+    public GameObject pulseBar;
 
     public void PlayPulseWave(InputAction.CallbackContext context)
     {
@@ -32,6 +33,7 @@ public class PulseShockwave : MonoBehaviour
     private void PulseWave()
     {
         canUsePulseWave = false;
+        pulseBar.SetActive(false);
         ActivateButton(false);
         pulsewave.Play();
         AudioManager.instance.PlaySFXFromClip(pulseWaveSound);
@@ -51,6 +53,7 @@ public class PulseShockwave : MonoBehaviour
 
         if (timeElapsed >= rechargeTime)
         {
+            pulseBar.SetActive(true);
             canUsePulseWave = true;
             timeElapsed = 0;
             ActivateButton(true);

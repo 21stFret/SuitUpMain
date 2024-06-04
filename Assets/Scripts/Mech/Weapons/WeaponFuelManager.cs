@@ -5,8 +5,7 @@ using UnityEngine;
 public class WeaponFuelManager : MonoBehaviour
 {
     public MechWeapon weapon;
-    private bool _enabled;
-    public bool uiEnabled;
+    public bool _enabled;
     public WeaponUI weaponUI;
     public float weaponFuel;
     public float weaponFuelMax = 100;
@@ -24,7 +23,6 @@ public class WeaponFuelManager : MonoBehaviour
         weaponFuelRate = weapon.weaponFuelUseRate;
         weaponRechargeRate = 15;
         //todo: add rechage rate to weapon data
-        uiEnabled = true;
     }
 
 
@@ -51,11 +49,6 @@ public class WeaponFuelManager : MonoBehaviour
         }
 
         weaponFuel += Time.deltaTime * weaponRechargeRate;
-
-        if (weaponUI == null || !uiEnabled)
-        {
-            return;
-        }
     }
 
     private void BurstFuel()

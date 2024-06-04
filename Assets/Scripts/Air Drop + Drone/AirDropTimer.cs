@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,12 @@ public class AirDropTimer : MonoBehaviour
     public float airDropTime;
     public Image cover;
     public bool activated;
+    public TMP_Text airDropText;
 
     // Start is called before the first frame update
     void Start()
     {
-        activated = false;
+        ActivateButton(false);
     }
 
     // Update is called once per frame
@@ -24,7 +26,7 @@ public class AirDropTimer : MonoBehaviour
             return;
         }
         timeElapsed += Time.deltaTime;
-        var percentage = 1 - (timeElapsed / airDropTime);
+        var percentage = (timeElapsed / airDropTime);
 
         cover.fillAmount = percentage;
         if (timeElapsed >= airDropTime)
@@ -36,6 +38,7 @@ public class AirDropTimer : MonoBehaviour
     private void ActivateButton(bool value)
     {
         activated = value;
+        airDropText.enabled = value;
     }
 
     public void ResetAirDrop()

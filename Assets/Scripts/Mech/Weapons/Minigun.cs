@@ -20,18 +20,20 @@ public class Minigun : MechWeapon
     void Update()
     {
         var target = sensor.GetNearestDetection("Enemy");
-
+        Vector3 location;
         if (target != null)
         {
             hasTarget = true;
-            gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, target.transform.position - gunturret.transform.position + aimOffest, Time.deltaTime * 10.0f);
+            location = target.transform.position - gunturret.transform.position + aimOffest;
         }
         else
         {
+            location = transform.forward;
             hasTarget = false;
             _timer = 0.0f;
         }
 
+        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);
         _animator.SetBool("HasTarget", hasTarget);
 
         

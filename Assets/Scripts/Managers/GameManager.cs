@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
         cashCount = 0;
         dayTime = true;
         currentRoomIndex = 0;
+        LoadRoomRandom();
         currentWaveIndex = 0;
         playerSavedData = PlayerSavedData.instance;
         weaponHolder.SetupWeaponsManager();
@@ -337,6 +338,18 @@ public class GameManager : MonoBehaviour
     {
         rooms[currentRoomIndex].SetActive(false);
         currentRoomIndex++;
+        currentWaveIndex++;
+        if (currentRoomIndex == rooms.Count)
+        {
+            currentRoomIndex = 0;
+        }
+        rooms[currentRoomIndex].SetActive(true);
+    }
+
+    private void LoadRoomRandom()
+    {
+        rooms[currentRoomIndex].SetActive(false);
+        currentRoomIndex = Random.Range(0, rooms.Count);
         currentWaveIndex++;
         if (currentRoomIndex == rooms.Count)
         {
