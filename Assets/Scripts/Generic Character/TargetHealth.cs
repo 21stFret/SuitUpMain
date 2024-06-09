@@ -7,6 +7,7 @@ public class TargetHealth : MonoBehaviour
     public float health;
     public float healthMax;
     public bool invincible;
+    public bool alive;
 
     private Crawler _crawler;
     private MechHealth _mech;
@@ -15,6 +16,7 @@ public class TargetHealth : MonoBehaviour
     private void Start()
     {
         health = healthMax;
+        alive = true;
         _crawler = GetComponent<Crawler>();
         _mech = GetComponent<MechHealth>();
         _prop = GetComponent<Prop>();

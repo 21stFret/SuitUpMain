@@ -31,6 +31,7 @@ public class TutorialManager : MonoBehaviour
         myCharacterController.enabled = false;
         playerInput.DeactivateInput();
         droneController.enabled = false;
+        sceneLoader = SceneLoader.instance;
     }
 
     // Update is called once per frame

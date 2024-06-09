@@ -25,9 +25,10 @@ public class LightningStrike : MonoBehaviour
                 rb.AddExplosionForce(explosionForce, strikeLoc.position, explosionRadius, explosionUpward);
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
-            if (hit.CompareTag("Enemy"))
+            TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
+            if (targetHealth != null)
             {
-                hit.GetComponent<Crawler>().DealyedDamage(damage, 0.2f, WeaponType.Lightning);
+                targetHealth.TakeDamage(damage, WeaponType.Lightning);
             }
         }
         strikeLoc.position = new Vector3(strikeLoc.position.x, strikeLoc.position.y + 10, strikeLoc.position.z);

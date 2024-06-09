@@ -16,7 +16,6 @@ namespace DamageNumbersPro.Internal
         public static Vector3 rightVector;
         public static bool vectorsNeedUpdate;
         public static Quaternion cameraRotation;
-        public static bool cameraNeedsUpdate;
 
         //Settings:
         public bool isUnscaled = false;
@@ -32,11 +31,6 @@ namespace DamageNumbersPro.Internal
         void Start()
         {
             StartCoroutine(UpdatePopups());
-        }
-
-        void Update()
-        {
-            cameraNeedsUpdate = true;
         }
 
         IEnumerator UpdatePopups()

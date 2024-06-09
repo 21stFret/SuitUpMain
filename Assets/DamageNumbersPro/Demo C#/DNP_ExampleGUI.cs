@@ -35,10 +35,13 @@ namespace DamageNumbersPro.Demo
 
         public void SpawnPopup(float number)
         {
-            DamageNumber newPopup = popupPrefab.Spawn(Vector3.zero, number); //Spawn DamageNumber     <-----     [REQUIRED]
-            newPopup.SetAnchoredPosition(rectTarget, anchoredPosition); //Set RectTransform Parent and AnchoredPosition     <-----     [REQUIRED]
+            DamageNumber newPopup = popupPrefab.SpawnGUI(rectTarget, anchoredPosition, number); //Spawn DamageNumber     <-----     [REQUIRED]
 
             //You can do any change you want on the DamageNumber returned by the Spawn(...) function.
+            if(Random.value < 0.5f)
+            {
+                newPopup.number *= 2;
+            }
         }
     }
 }

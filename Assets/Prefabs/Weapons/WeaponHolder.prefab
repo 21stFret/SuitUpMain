@@ -343,6 +343,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1890087278455400784}
     m_Modifications:
+    - target: {fileID: 205531201956997626, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.96852654
+      objectReference: {fileID: 0}
+    - target: {fileID: 205531201956997626, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.030914295
+      objectReference: {fileID: 0}
+    - target: {fileID: 205531201956997626, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.24687634
+      objectReference: {fileID: 0}
+    - target: {fileID: 205531201956997626, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0072583826
+      objectReference: {fileID: 0}
     - target: {fileID: 748719405579742603, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -416,7 +436,7 @@ PrefabInstance:
     - target: {fileID: 2020328232867911747, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
       propertyPath: MaxHorizAngle
-      value: 61.6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2020328232867911747, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
@@ -682,6 +702,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 2554992489879498107, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2760412817417953826, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -731,6 +756,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: MaxHorizAngle
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5835245423656740121, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
@@ -929,7 +959,7 @@ PrefabInstance:
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: MaxHorizAngle
-      value: 61.6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
@@ -1073,6 +1103,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946771559557481415, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: moveWithTransform
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3376525042641261081, guid: 9428193766c3b6f49b45995ae77a021e,
         type: 3}

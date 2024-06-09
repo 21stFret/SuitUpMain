@@ -936,7 +936,9 @@ MonoBehaviour:
   health: 0
   healthMax: 100
   attackDamage: 5
-  speed: 8
+  speed: 10
+  _randomSpeed: 0
+  randomScale: 0
   DeathBlood: {fileID: 2826704839551399695}
   _spawnEffect: {fileID: 997474832806693610}
   deathNoise: {fileID: 1684373086875704436}
@@ -947,6 +949,9 @@ MonoBehaviour:
   expWorth: 50
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
+    type: 3}
+  forceSpawn: 0
+  popupPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   smashEffect: {fileID: 0}
   smashRadius: 10
@@ -1018,7 +1023,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
-  speed: 0
+  speedFinal: 0
   steerSpeed: 3
   lookSpeed: 300
   stoppingDistance: 7
@@ -1047,6 +1052,7 @@ MonoBehaviour:
   health: 0
   healthMax: 0
   invincible: 0
+  alive: 0
 --- !u!1 &5013036389789904594
 GameObject:
   m_ObjectHideFlags: 0

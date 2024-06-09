@@ -38,6 +38,8 @@ public class CrawlerAlbino : Crawler
 
     public void Smash()
     {
+        smashEffect.transform.parent = null;
+        smashEffect.transform.localScale = Vector3.one;
         smashEffect.transform.position = smashLocation.position;
         smashEffect.Play();
         Collider[] colliders = Physics.OverlapSphere(smashLocation.position, smashRadius, smashLayerMask);

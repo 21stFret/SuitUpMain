@@ -14,9 +14,12 @@ public class CrawlerDaddy : Crawler
 
     public override void Die(WeaponType killedBy)
     {
-        CrawlerSpawner.instance.SpawnAtPoint(transform.position, spawnCount);
-        DeathEffect.SetActive(true);
-        ExplodeIfInRange();
+        if(killedBy != WeaponType.Default)
+        {
+            CrawlerSpawner.instance.SpawnAtPoint(transform.position, spawnCount);
+            DeathEffect.SetActive(true);
+            ExplodeIfInRange();
+        }
         base.Die(killedBy);
     }
 

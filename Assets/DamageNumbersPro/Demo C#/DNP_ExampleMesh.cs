@@ -49,11 +49,7 @@ namespace DamageNumbersPro.Demo
             if (number > 5)
             {
                 //Let's increase the popup's scale.
-                newPopup.SetScale(1.3f);
-
-                //Let's add some text to the right of the number.
-                newPopup.enableRightText = true;
-                newPopup.rightText = "!";
+                newPopup.SetScale(1.5f);
 
                 //Let's change the color of the popup.
                 newPopup.SetColor(new Color(1, 0.2f, 0.2f));
@@ -62,8 +58,7 @@ namespace DamageNumbersPro.Demo
             {
                 //The following lines reset the changes above.
                 //This would only be neccesary for pooled popups.
-                newPopup.SetScale(1);
-                newPopup.enableRightText = false;
+                newPopup.SetScale(5);
                 newPopup.SetColor(new Color(1, 0.7f, 0.5f));
             }
         }

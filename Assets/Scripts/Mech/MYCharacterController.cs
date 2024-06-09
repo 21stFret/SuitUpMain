@@ -76,7 +76,7 @@ public class MYCharacterController : MonoBehaviour
         {
             return;
         }
-        if (isDodging || !isRunning)
+        if (isDodging)
         {
             return;
         }

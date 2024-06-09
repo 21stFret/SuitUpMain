@@ -107,6 +107,7 @@ public class MechHealth : MonoBehaviour
             DOTween.Kill(image);
             image.fillAmount = 0;
             MechBattleController.instance.OnDie();
+            targetHealth.alive = false;
             deathEffect.SetActive(true);
             AudioManager.instance.PlaySFXFromClip(deathClip);
             mainObject.SetActive(false);

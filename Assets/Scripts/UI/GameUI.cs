@@ -20,6 +20,7 @@ public class GameUI : MonoBehaviour
     public RewardMenu rewardMenu;
     public EventSystem eventSystem;
     public DoTweenFade gameUIFade;
+    public ObjectiveUI objectiveUI;
 
     private void Awake()
     {

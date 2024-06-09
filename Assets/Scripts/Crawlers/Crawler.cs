@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 using DG.Tweening;
 using Unity.Mathematics;
 using Random = UnityEngine.Random;
+using UnityEditor;
+using DamageNumbersPro;
 
 public enum CrawlerType
 {
@@ -60,6 +62,10 @@ public class Crawler : MonoBehaviour
 
     public bool forceSpawn;
 
+    private float pulseCheckTime = 0.5f;
+
+    public DamageNumber popupPrefab;
+
     private void Awake()
     {
         Init();
@@ -74,6 +80,10 @@ public class Crawler : MonoBehaviour
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rb = GetComponent<Rigidbody>();
         _randomSpeed = Random.Range(speed, speed + randomScale);
+        _collider.enabled = false;
+        crawlerMovement.groundCollider.enabled = false;
+        crawlerMovement.enabled = false;
+        meshRenderer.enabled = false;
     }
 
     private void Start()
@@ -105,22 +115,37 @@ public class Crawler : MonoBehaviour
     {
         if(dead)
         {
+            if(CrawlerSpawner.instance != null)
+            {
+                CrawlerSpawner.instance.CheckActiveList(this);
+            }
             return;
         }
 
-        if (target == null)
+        pulseCheckTime -= Time.deltaTime;
+        if(pulseCheckTime <= 0)
         {
-            hasTarget = false;
+            pulseCheckTime = 1f;
             FindClosestTarget();
-            return; 
         }
 
-        if (target.GetComponent<TargetHealth>().health <= 0)
+        if(!target)
         {
-            hasTarget = false;
-            target = null;
             return;
         }
+
+        TargetHealth targetHealth = target.GetComponent<TargetHealth>();
+
+        if(targetHealth != null)
+        {
+            if (!targetHealth.alive)
+            {
+                hasTarget = false;
+                target = null;
+                return;
+            }
+        }
+
 
         //SetTargetDestination();
         crawlerMovement.SetTarget(target);
@@ -128,9 +153,6 @@ public class Crawler : MonoBehaviour
     }
     public void FindClosestTarget()
     {
-        if (hasTarget)
-        { return; }
-
         if (!rangeSensor.GetNearestDetection())
         {
             return;
@@ -225,11 +247,54 @@ public class Crawler : MonoBehaviour
         immune = false;
     }
 
+    public virtual void TakeDamageOveride()
+    {
+        
+    }
+
+    public void DamageNumbers(float dam, WeaponType weapon)
+    {
+        DamageNumber newPopup = popupPrefab.Spawn(transform.position, dam);
+        newPopup.SetFollowedTarget(transform);
+        newPopup.SetScale(5);
+        switch (weapon)
+        {
+            case WeaponType.Minigun:
+                newPopup.SetColor(Color.white);
+                break;
+            case WeaponType.Shotgun:
+                break;
+            case WeaponType.Flame:
+                newPopup.SetColor(Color.red);
+                break;
+            case WeaponType.Lightning:
+                newPopup.SetColor(Color.cyan);
+                break;
+            case WeaponType.Cryo:
+                newPopup.SetColor(Color.blue);
+                break;
+            case WeaponType.Grenade:
+                break;
+            case WeaponType.Beam:
+                newPopup.SetColor(Color.magenta);
+                break;
+            case WeaponType.AoE:
+                break;
+            case WeaponType.Cralwer:
+                break;
+            case WeaponType.Default:
+                break;
+            default:
+                break;
+        }
+    }
+
     
     public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
         FlashRed();
-
+        TakeDamageOveride();
+        DamageNumbers(damage, killedBy);
         if (stunTime > 0)
         {
             StartCoroutine(StunCralwer(stunTime));
@@ -281,6 +346,7 @@ public class Crawler : MonoBehaviour
     public virtual void Die(WeaponType weapon)
     {
         dead = true;
+        health = 0;
         PlayDeathNoise();
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -296,6 +362,11 @@ public class Crawler : MonoBehaviour
         if (CrawlerSpawner.instance != null)
         {
             CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
+        }
+
+        if (weapon == WeaponType.Default)
+        {
+            return;
         }
 
         if (CashCollector.Instance != null)
@@ -325,6 +396,10 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
+        gameObject.SetActive(true);
+        meshRenderer.enabled = true;
+        _collider.enabled = true;
+        crawlerMovement.groundCollider.enabled = true;
         rb.velocity = Vector3.zero;
         health = healthMax;
         if (transform.position.y< crawlerMovement.groundLevel)
@@ -333,21 +408,17 @@ public class Crawler : MonoBehaviour
             transform.position = new Vector3(transform.position.x, crawlerMovement.groundLevel + 1, transform.position.z);
         }
         transform.localScale = Vector3.zero;
-        gameObject.SetActive(true);
         animator.SetTrigger("Respawn");
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
         rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
-
+        pulseCheckTime = 0;
     }
 
     private IEnumerator SpawnEffect()
     {
         _spawnEffect.Play();
         transform.DOScale(Random.Range(crawlerScale-0.1f, crawlerScale+0.1f), 0.4f);
-        meshRenderer.enabled = true;
-        _collider.enabled = true;
-        crawlerMovement.groundCollider.enabled = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";

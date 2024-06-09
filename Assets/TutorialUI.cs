@@ -163,10 +163,12 @@ public class TutorialUI : MonoBehaviour
 
     public IEnumerator EndTutorial()
     {
+        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.SavePlayerData();
         loadUpPanel.SetActive(true);
         StartCoroutine(PrintText("Systems check complete. \n Ready for live combat!", loadUpText));
         yield return new WaitForSeconds(5f);
-        _tutorialManager.sceneLoader.LoadScene(1);
+        _tutorialManager.sceneLoader.LoadScene(2);
     }
 
     public void ShowControlPanel(int index)

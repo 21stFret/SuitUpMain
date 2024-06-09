@@ -13,6 +13,7 @@ public enum WeaponType
     Beam,
     AoE,
     Cralwer,
+    Default
 }
 
 [Serializable]
@@ -56,6 +57,7 @@ public class MechWeapon : MonoBehaviour
     public float weaponFuelUseRate;
     [HideInInspector]
     public bool isFiring;
+    public bool isFiringPrimary;
     [HideInInspector]
     public bool isFiringAlt;
     public RangeSensor rangeSensor;
@@ -79,8 +81,8 @@ public class MechWeapon : MonoBehaviour
             rangeSensor = GetComponent<RangeSensor>();
             rangeSensor.Sphere.Radius = range;
             sensor.enabled = true;
-            laserSight.gameObject.SetActive(true);
-            laserSight.SetLaserLength(range);
+            //laserSight.gameObject.SetActive(true);
+            //laserSight.SetLaserLength(range);
         }
         else
         {
@@ -153,10 +155,19 @@ public class MechWeapon : MonoBehaviour
         {
             weaponEffects.weaponEffect.Play();
         }
-        weaponEffects.weaponAudioSource.clip = weaponEffects.weaponLoop;
-        weaponEffects.weaponAudioSource.loop = true;
-        weaponEffects.weaponAudioSource.Play();
-        weaponEffects.weaponLights.SetActive(true);
+
+        if (weaponEffects.weaponAudioSource != null)
+        {
+            weaponEffects.weaponAudioSource.clip = weaponEffects.weaponLoop;
+            weaponEffects.weaponAudioSource.loop = true;
+            weaponEffects.weaponAudioSource.Play();
+        }
+
+        if (weaponEffects.weaponLights !=null)
+        {
+            weaponEffects.weaponLights.SetActive(true);
+        }
+
 
         if (weaponMod != null)
         {
@@ -182,11 +193,19 @@ public class MechWeapon : MonoBehaviour
         {
             weaponEffects.weaponEffect.Stop();
         }
-        weaponEffects.weaponAudioSource.Stop();
-        weaponEffects.weaponAudioSource.clip = weaponEffects.weaponClose;
-        weaponEffects.weaponAudioSource.loop = false;
-        weaponEffects.weaponAudioSource.Play();
-        weaponEffects.weaponLights.SetActive(false);
+
+        if (weaponEffects.weaponAudioSource != null)
+        {
+            weaponEffects.weaponAudioSource.Stop();
+            weaponEffects.weaponAudioSource.clip = weaponEffects.weaponClose;
+            weaponEffects.weaponAudioSource.loop = false;
+            weaponEffects.weaponAudioSource.Play();
+        }
+
+        if (weaponEffects.weaponLights != null)
+        {
+            weaponEffects.weaponLights.SetActive(false);
+        }
 
         if (weaponMod != null)
         {

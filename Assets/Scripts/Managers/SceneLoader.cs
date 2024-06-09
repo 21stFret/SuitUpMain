@@ -67,7 +67,7 @@ public class SceneLoader : MonoBehaviour
             yield return new WaitForSeconds(minloadTime);
         }
 
-        AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneID);
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneID);
 
         while (!operation.isDone)
         {

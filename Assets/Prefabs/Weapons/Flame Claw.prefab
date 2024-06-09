@@ -5026,7 +5026,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 1
+  moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -8480,7 +8480,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 0
@@ -8659,7 +8659,7 @@ ParticleSystem:
     radiusScale: 0.01
     collidesWith:
       serializedVersion: 2
-      m_Bits: 385
+      m_Bits: 4481
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -10032,6 +10032,7 @@ MonoBehaviour:
     - 9
     - 11
     _weaponFuelUseRate: []
+    _uniqueValue: []
     _cost: e8030000d0070000b80b0000
     _unlockCost: 0
     weaponDescription: 
@@ -10041,6 +10042,7 @@ MonoBehaviour:
     weaponLoop: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
     weaponEffect: {fileID: 1946771559557481415}
     weaponLights: {fileID: 876022053645517812}
+  weaponType: 0
   damage: 324207740
   force: 0
   fireRate: 0
@@ -14935,8 +14937,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Length: 11
-  NearDistance: 1
-  FOVAngle: 15
+  NearDistance: 0.1
+  FOVAngle: 20
   ElevationAngle: 25.6
   Resolution: 0
 --- !u!114 &673267167746708413

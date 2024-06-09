@@ -34,10 +34,10 @@ public class Shotgun : MechWeapon
         else
         {
             hasTarget = false;
-            _timer = 0.0f;
+            //_timer = 0.0f;
         }
 
-        if (hasTarget)
+        if (isFiring)
         {
             _timer += Time.deltaTime;
             if (_timer > fireRate)

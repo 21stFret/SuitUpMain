@@ -282,11 +282,14 @@ namespace DamageNumbersPro
 
         //Pooling:
         DamageNumber originalPrefab;
-        static Transform poolParent;
+        public static Transform poolParent;
         static Dictionary<int, HashSet<DamageNumber>> pools;
         int poolingID;
         bool performRestart;
         bool destroyAfterSpawning;
+
+        //Fallback font fix.
+        static Dictionary<TMP_FontAsset, GameObject> fallbackDictionary;
 
         //Custom Events:
         protected bool isFadingOut;
@@ -331,6 +334,16 @@ namespace DamageNumbersPro
         /// </summary>
         public void UpdateDamageNumber(float delta, float time)
         {
+            //Check activity.
+            if(gameObject.activeInHierarchy == false)
+            {
+                startTime += delta;
+                startLifeTime += delta;
+                absorbStartTime += delta;
+                destructionStartTime += delta;
+                return;
+            }
+
             //Vectors:
             if(DNPUpdater.vectorsNeedUpdate)
             {
@@ -395,7 +408,11 @@ namespace DamageNumbersPro
         }
 
         #region Spawn Functions
-        private DamageNumber Spawn()
+        /// <summary>
+        /// Spawns a new popup and handles pooling.
+        /// </summary>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber Spawn()
         {
             DamageNumber newDN = default;
             int instanceID = GetInstanceID();
@@ -436,10 +453,10 @@ namespace DamageNumbersPro
         }
 
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// There are several overrides you can also look into.
+        /// Spawns a new popup and handles pooling.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
         public DamageNumber Spawn(Vector3 newPosition)
         {
             DamageNumber newDN = Spawn();
@@ -451,106 +468,225 @@ namespace DamageNumbersPro
         }
 
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the number.
+        /// Spawns a new popup and handles pooling.
+        /// Also sets the popup's number.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <param name="newNumber">The displayed number of this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
         public DamageNumber Spawn(Vector3 newPosition, float newNumber)
         {
-            DamageNumber newDN = Spawn();
-
-            //Position:
-            newDN.SetPosition(newPosition);
+            DamageNumber newDN = Spawn(newPosition);
 
             //Number:
+            newDN.enableNumber = true;
             newDN.number = newNumber;
 
             return newDN;
         }
+
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the number and follows a transform.
+        /// Spawns a new popup and handles pooling.
+        /// Also sets the popup's number and makes it follow a transform.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <param name="newNumber">The displayed number of this popup.</param>
+        /// <param name="followedTransform">The transform, which this popup should follow.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
         public DamageNumber Spawn(Vector3 newPosition, float newNumber, Transform followedTransform)
         {
-            DamageNumber newDN = Spawn();
-
-            //Position:
-            newDN.SetPosition(newPosition);
-
-            //Number:
-            newDN.number = newNumber;
+            DamageNumber newDN = Spawn(newPosition, newNumber);
 
             //Following:
             newDN.SetFollowedTarget(followedTransform);
 
             return newDN;
         }
+
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also follows a transform.
+        /// Spawns a new popup and handles pooling.
+        /// Also makes the popup follow a transform.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <param name="followedTransform">The transform, which this popup should follow.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
         public DamageNumber Spawn(Vector3 newPosition, Transform followedTransform)
         {
-            DamageNumber newDN = Spawn();
-
-            //Position:
-            newDN.SetPosition(newPosition);
+            DamageNumber newDN = Spawn(newPosition);
 
             //Following:
             newDN.SetFollowedTarget(followedTransform);
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the left text (left text has to be enabled).
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
-        public DamageNumber Spawn(Vector3 newPosition, string newLeftText)
-        {
-            DamageNumber newDN = Spawn();
 
-            //Position:
-            newDN.SetPosition(newPosition);
+        /// <summary>
+        /// Spawns a new popup and handles pooling.
+        /// Also sets the popup's text and disables the number.
+        /// </summary>
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <param name="newText">The text displayed by this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber Spawn(Vector3 newPosition, string newText)
+        {
+            DamageNumber newDN = Spawn(newPosition);
+
+            //Disable Number:
+            newDN.enableNumber = false;
 
             //Text:
             newDN.enableLeftText = true;
-            newDN.leftText = newLeftText;
+            newDN.leftText = newText;
 
             return newDN;
         }
+
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the left text (left text has to be enabled) and follows a transform.
+        /// Spawns a new popup and handles pooling.
+        /// Also sets the popup's text and makes it follow a transform.
+        /// Disables the number.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
-        public DamageNumber Spawn(Vector3 newPosition, string newLeftText, Transform followedTransform)
+        /// <param name="newPosition">The worldspace position of this popup.</param>
+        /// <param name="newText">The text displayed by this popup.</param>
+        /// <param name="followedTransform">The transform, which this popup should follow.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber Spawn(Vector3 newPosition, string newText, Transform followedTransform)
         {
-            DamageNumber newDN = Spawn();
-
-            //Position:
-            newDN.SetPosition(newPosition);
-
-            //Text:
-            newDN.enableLeftText = true;
-            newDN.leftText = newLeftText;
+            DamageNumber newDN = Spawn(newPosition, newText);
 
             //Following:
             newDN.SetFollowedTarget(followedTransform);
 
             return newDN;
         }
+        #endregion
+
+        #region GUI Spawn Functions
         /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the number and sets the color.
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
         /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="anchoredPosition">The anchored position relative to rectParent.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, Vector2 anchoredPosition)
+        {
+            DamageNumber newDN = Spawn();
+
+            //Position:
+            newDN.SetAnchoredPosition(rectParent, anchoredPosition);
+
+            return newDN;
+        }
+
+        /// <summary>
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
+        /// </summary>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="rectPosition">The RectTransform, which this popup's anchored position is relative to.</param>
+        /// <param name="anchoredPosition">This popup's anchored position relative to rectPosition.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, RectTransform rectPosition, Vector2 anchoredPosition)
+        {
+            DamageNumber newDN = Spawn();
+
+            //Position:
+            newDN.SetAnchoredPosition(rectParent, rectPosition, anchoredPosition);
+
+            return newDN;
+        }
+
+        /// <summary>
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
+        /// </summary>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="anchoredPosition">The anchored position relative to rectParent.</param>
+        /// <param name="newNumber">The displayed number of this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, Vector2 anchoredPosition, float newNumber)
+        {
+            DamageNumber newDN = SpawnGUI(rectParent, anchoredPosition);
+
+            //Number:
+            newDN.enableNumber = true;
+            newDN.number = newNumber;
+
+            return newDN;
+        }
+
+        /// <summary>
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
+        /// </summary>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="rectPosition">The RectTransform, which this popup's anchored position is relative to.</param>
+        /// <param name="anchoredPosition">This popup's anchored position relative to rectPosition.</param>
+        /// <param name="newNumber">The displayed number of this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, RectTransform rectPosition, Vector2 anchoredPosition, float newNumber)
+        {
+            DamageNumber newDN = SpawnGUI(rectParent, rectPosition, anchoredPosition);
+
+            //Number:
+            newDN.enableNumber = true;
+            newDN.number = newNumber;
+
+            return newDN;
+        }
+
+        /// <summary>
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
+        /// </summary>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="anchoredPosition">The anchored position relative to rectParent.</param>
+        /// <param name="newText">The text displayed by this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, Vector2 anchoredPosition, string newText)
+        {
+            DamageNumber newDN = SpawnGUI(rectParent, anchoredPosition);
+
+            //Disable Number:
+            newDN.enableNumber = false;
+
+            //Text:
+            newDN.enableLeftText = true;
+            newDN.leftText = newText;
+
+            return newDN;
+        }
+
+        /// <summary>
+        /// Spawns a new GUI popup and handles pooling.
+        /// Use this function for DamageNumberGUI only.
+        /// </summary>
+        /// <param name="rectParent">The RectTransform, which this popup should be parented to. Spam Control features like Combination only work under the same parent.</param>
+        /// <param name="rectPosition">The RectTransform, which this popup's anchored position is relative to.</param>
+        /// <param name="anchoredPosition">This popup's anchored position relative to rectPosition.</param>
+        /// <param name="newText">The text displayed by this popup.</param>
+        /// <returns>The spawned popup, which can be modified at runtime.</returns>
+        public DamageNumber SpawnGUI(RectTransform rectParent, RectTransform rectPosition, Vector2 anchoredPosition, string newText)
+        {
+            DamageNumber newDN = SpawnGUI(rectParent, rectPosition, anchoredPosition);
+
+            //Disable Number:
+            newDN.enableNumber = false;
+
+            //Text:
+            newDN.enableLeftText = true;
+            newDN.leftText = newText;
+
+            return newDN;
+        }
+        #endregion
+
+        #region Removed Functions
+        /*
         public DamageNumber Spawn(Vector3 newPosition, float newNumber, Color newColor)
         {
-            DamageNumber newDN = Spawn();
+            DamageNumber newDN = Spawn(newPosition, newNumber);
 
             //Position:
             newDN.SetPosition(newPosition);
@@ -563,11 +699,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the left text (left text has to be enabled) and sets the color.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Vector3 newPosition, string newLeftText, Color newColor)
         {
             DamageNumber newDN = Spawn();
@@ -584,11 +716,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the number, follows a transform and sets the color.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Vector3 newPosition, float newNumber, Transform followedTransform, Color newColor)
         {
             DamageNumber newDN = Spawn();
@@ -607,11 +735,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new damage number.
-        /// Also sets the left text (left text has to be enabled), follows a transform and sets the color.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Vector3 newPosition, string newLeftText, Transform followedTransform, Color newColor)
         {
             DamageNumber newDN = Spawn();
@@ -632,11 +756,6 @@ namespace DamageNumbersPro
             return newDN;
         }
 
-        /// <summary>
-        /// Use this function to spawn a new GUI damage number.
-        /// There are several overrides you can also look into.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
         public DamageNumber Spawn(Transform rectParent, Vector2 anchoredPosition)
         {
             DamageNumber newDN = Spawn();
@@ -646,11 +765,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new GUI damage number.
-        /// Also sets the number of the popup.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Transform rectParent, Vector2 anchoredPosition, float number)
         {
             DamageNumber newDN = Spawn();
@@ -663,11 +778,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new GUI damage number.
-        /// Sets the anchored position relative to a rect transform other than the parent.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Transform rectParent, Transform rectPosition, Vector2 anchoredPosition, float number)
         {
             DamageNumber newDN = Spawn();
@@ -680,11 +791,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
-        /// <summary>
-        /// Use this function to spawn a new GUI damage number.
-        /// Sets the anchored position relative to a rect transform other than the parent.
-        /// </summary>
-        /// <returns>The spawned damage number. A clone of the original which can be modified at runtime.</returns>
+
         public DamageNumber Spawn(Transform rectParent, Transform rectPosition, Vector2 anchoredPosition)
         {
             DamageNumber newDN = Spawn();
@@ -694,6 +801,7 @@ namespace DamageNumbersPro
 
             return newDN;
         }
+        */
         #endregion
 
         #region Public Functions
@@ -980,6 +1088,7 @@ namespace DamageNumbersPro
             //GameObject:
             GameObject newTM = new GameObject();
             newTM.name = tmName;
+            newTM.layer = parent.gameObject.layer;
 
             //Mesh:
             MeshRenderer mr = newTM.AddComponent<MeshRenderer>();
@@ -1030,7 +1139,7 @@ namespace DamageNumbersPro
                 {
                     for (int n = 0; n < amount; n++)
                     {
-                        DamageNumber dn = Spawn(new Vector3(-9999, -9999, -9999));
+                        DamageNumber dn = Spawn(new Vector3(-9999, -9999, 0));
                         dn.destroyAfterSpawning = true;
                     }
                 }
@@ -1053,6 +1162,99 @@ namespace DamageNumbersPro
 
             //Custom Event:
             OnStart();
+
+            #region Fallback Fix
+            if (IsMesh())
+            {
+                //Create fallback dictionary.
+                if (fallbackDictionary == null)
+                {
+                    fallbackDictionary = new Dictionary<TMP_FontAsset, GameObject>();
+                }
+
+                //Get font material.
+                TMP_FontAsset fontAsset = GetFontMaterial();
+
+                //Check if in dictionary.
+                if (!fallbackDictionary.ContainsKey(fontAsset) && fontAsset != null)
+                {
+                    bool usesFallbackFonts = fontAsset.fallbackFontAssetTable != null && fontAsset.fallbackFontAssetTable.Count > 0;
+                    if (fontAsset.isMultiAtlasTexturesEnabled || usesFallbackFonts)
+                    { 
+                        //New tmp for fallback assets.
+                        GameObject fallbackAsset = Instantiate<GameObject>(textMeshPro.gameObject);
+                        fallbackAsset.transform.localScale = Vector3.zero;
+                        fallbackAsset.SetActive(true);
+                        fallbackAsset.hideFlags = HideFlags.HideAndDontSave;
+                        DontDestroyOnLoad(fallbackAsset);
+
+                        //Create base string containing a single character of the base font.
+                        string textString = "" + (char)fontAsset.characterTable[0].unicode;
+
+                        //Add all characters to support multi-atlas fonts.
+                        if (fontAsset.isMultiAtlasTexturesEnabled)
+                        {
+                            foreach (TMP_Character character in fontAsset.characterTable)
+                            {
+                                textString += (char)character.unicode;
+                            }
+                        }
+
+                        //Create a new string containing various unicode characters of the fallback fonts.
+                        if (usesFallbackFonts)
+                        {
+                            for (int f = 0; f < fontAsset.fallbackFontAssetTable.Count; f++)
+                            {
+                                TMP_FontAsset fallbackFont = fontAsset.fallbackFontAssetTable[f];
+
+                                if (fallbackFont != null && fallbackFont.characterTable != null)
+                                {
+                                    foreach (TMP_Character fallbackCharacter in fallbackFont.characterTable)
+                                    {
+                                        if (fallbackCharacter != null)
+                                        {
+                                            if (fontAsset.characterLookupTable.ContainsKey(fallbackCharacter.unicode))
+                                            {
+                                                //Character already in main font.
+                                            }
+                                            else
+                                            {
+                                                bool addCharacter = true;
+
+                                                for (int pF = 0; pF < f; pF++)
+                                                {
+                                                    TMP_FontAsset previousFallbackFont = fontAsset.fallbackFontAssetTable[pF];
+                                                    if (previousFallbackFont != null && previousFallbackFont.characterLookupTable.ContainsKey(fallbackCharacter.unicode))
+                                                    {
+                                                        //Character already in a higher priority fallback font.
+                                                        addCharacter = false;
+                                                        break;
+                                                    }
+                                                }
+
+                                                if (addCharacter)
+                                                {
+                                                    textString += (char)fallbackCharacter.unicode;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //Assign text and add to dictionary.
+                        fallbackAsset.GetComponent<TextMeshPro>().text = textString;
+                        fallbackDictionary.Add(fontAsset, fallbackAsset);
+                    }
+                    else
+                    {
+                        fallbackDictionary.Add(fontAsset, null);
+                    }
+                }
+            }
+            #endregion
 
             //Called right after spawn:
             float time = unscaledTime ? Time.unscaledTime : Time.time;
@@ -1079,7 +1281,7 @@ namespace DamageNumbersPro
         {
             numberScale = destructionScale = combinationScale = currentFollowSpeed = 1f;
             baseAlpha = 1f;
-            position = GetPosition();
+            finalPosition = position = GetPosition();
             startLifeTime = startTime = time;
             currentLifetime = lifetime;
             isFadingOut = false;
@@ -2334,12 +2536,7 @@ namespace DamageNumbersPro
                     }
                     else
                     {
-                        if (DNPUpdater.cameraNeedsUpdate)
-                        {
-                            DNPUpdater.cameraRotation = targetCamera.rotation;
-                            DNPUpdater.cameraNeedsUpdate = false;
-                        }
-                        transform.rotation = DNPUpdater.cameraRotation;
+                        transform.rotation = targetCamera.rotation;
                     }
                 }
 

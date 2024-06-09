@@ -797,6 +797,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lightning Orb (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5113837036236196716, guid: bf38df2cbab72e54581a59a06eec9c12,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -877,6 +882,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lightning Orb (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5113837036236196716, guid: bf38df2cbab72e54581a59a06eec9c12,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -956,6 +966,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Lightning Orb
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113837036236196716, guid: bf38df2cbab72e54581a59a06eec9c12,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1158,6 +1173,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lightning Orb (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5113837036236196716, guid: bf38df2cbab72e54581a59a06eec9c12,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1233,6 +1253,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 413439974927770350, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: explosionForce
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 413439974927770350, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: explosionUpward
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 684717794688868040, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
         type: 3}
       propertyPath: m_Name
@@ -1247,6 +1277,26 @@ PrefabInstance:
         type: 3}
       propertyPath: modDescription
       value: Electric no longer chains but call down a stike every 1s
+      objectReference: {fileID: 0}
+    - target: {fileID: 5718977537202842372, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5718977537202842372, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5718977537202842372, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7910728113246478468, guid: 9f0a8b9f15f60924fb5f1065143e39b6,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

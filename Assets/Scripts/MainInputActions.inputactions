@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "FireP",
+                    "type": "Button",
+                    "id": "3227da8a-61dc-4a83-8b20-1836f31e46d0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "FireAlt",
                     "type": "Button",
                     "id": "456e110a-1c4a-4c78-83a8-b0397f368d91",
@@ -327,6 +336,28 @@
                     "processors": "",
                     "groups": "Default",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68336fe7-2504-42ad-974e-ac7357b12c53",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Default",
+                    "action": "FireP",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97f0b319-825c-4666-b2a1-7b916030f909",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "FireP",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

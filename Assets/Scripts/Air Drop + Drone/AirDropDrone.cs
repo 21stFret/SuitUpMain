@@ -67,6 +67,7 @@ public class AirDropDrone : MonoBehaviour
             if (lifeSpan > 5f)
             {
                 ToggleActive();
+                lifeSpan = 0;
             }
             return; 
         }

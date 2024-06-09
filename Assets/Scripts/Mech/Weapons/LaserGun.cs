@@ -28,13 +28,13 @@ public class LaserGun : MechWeapon
         else
         {
             hasTarget = false;
-            _timer = 0.0f;
+            //_timer = 0.0f;
         }
 
         //_animator.SetBool("HasTarget", hasTarget);
 
 
-        if (hasTarget)
+        if (isFiring)
         {
             _timer += Time.deltaTime;
             if (_timer > fireRate)

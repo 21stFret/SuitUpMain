@@ -42,6 +42,8 @@ public class MechLoadOut : MonoBehaviour
 
         if(battleLoadout)
         {
+            altWeaponController.enabled = true;
+            altWeaponController.Init(mainWeapon);
             mainWeapon.Init();
         }
 

@@ -9,9 +9,9 @@ public class SetupGame : MonoBehaviour
     public bool endlessMode;
     public bool inGame;
     public int diffiulty;
-    public List<WaveManager> roomwavesEasy = new List<WaveManager>();
-    public List<WaveManager> roomwavesMid = new List<WaveManager>();
-    public List<WaveManager> roomwavesHard = new List<WaveManager>();
+    public List<Battle> roomwavesEasy = new List<Battle>();
+    public List<Battle> roomwavesMid = new List<Battle>();
+    public List<Battle> roomwavesHard = new List<Battle>();
 
     private void Awake()
     {
@@ -20,6 +20,14 @@ public class SetupGame : MonoBehaviour
             instance = this;
         }
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    public void LoadBattles()
+    {
+        roomwavesEasy.Clear();
+        roomwavesMid.Clear();
+        roomwavesHard.Clear();
+        roomwavesEasy = BattleDataReader.instance.battles;
     }
 
     public void ToggleEndlessMode()
@@ -32,17 +40,19 @@ public class SetupGame : MonoBehaviour
         gameManager = _gameManager;
         gameManager.endlessMode = endlessMode;
 
-        gameManager.roomWaves.Clear();
+        LoadBattles();
+
+        gameManager.Battles.Clear();
         switch (diffiulty)
         {
             case 0:
-                gameManager.roomWaves = roomwavesEasy;
+                gameManager.Battles = roomwavesEasy;
                 break;
             case 1:
-                gameManager.roomWaves = roomwavesMid;
+                gameManager.Battles = roomwavesMid;
                 break;
             case 2:
-                gameManager.roomWaves = roomwavesHard;
+                gameManager.Battles = roomwavesHard;
                 break;
 
         }

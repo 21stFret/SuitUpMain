@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Prop : MonoBehaviour
 {
-    public TargetHealth targetHealth;
+    public float health;
+    public float healthMax;
     private bool isDead;
+
+    public virtual void Init()
+    {
+        health = healthMax;
+    }
 
     public void TakeDamage(float damage)
     {
@@ -14,8 +20,8 @@ public class Prop : MonoBehaviour
         {
             return;
         }
-        targetHealth.health -= damage;
-        if (targetHealth.health <= 0)
+        health -= damage;
+        if (health  <= 0)
         {
             Die();
         }
@@ -24,6 +30,6 @@ public class Prop : MonoBehaviour
     public virtual void Die()
     {
         isDead = true;
-        print(targetHealth.gameObject.name + " has died");
+        print(gameObject.name + " has died");
     }
 }

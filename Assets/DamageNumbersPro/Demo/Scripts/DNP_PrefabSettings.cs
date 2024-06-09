@@ -24,6 +24,11 @@ namespace DamageNumbersPro.Demo
                 {
                     target.SetFontMaterial(fonts[randomIndex]);
                 }
+
+                if(texts.Count > 1)
+                {
+                    target.enableNumber = false;
+                }
             }
 
             if (randomColor)

@@ -8,7 +8,7 @@ public class KillsoneTirgger : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-
+            other.GetComponent<Crawler>().Die(WeaponType.Default);
         }
     }
 }

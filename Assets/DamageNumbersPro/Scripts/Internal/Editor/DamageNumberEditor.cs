@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +6,14 @@ using UnityEditor;
 using TMPro;
 using UnityEngine.Rendering;
 using DamageNumbersPro.Internal;
+using UnityEditor.SceneManagement;
 
 namespace DamageNumbersPro
 {
     [CustomEditor(typeof(DamageNumber), true), CanEditMultipleObjects]
     public class DamageNumberEditor : Editor
     {
-        public static string version = "4.27";
+        public static string version = "4.34";
 
         void OnEnable()
         {
@@ -128,14 +128,14 @@ namespace DamageNumbersPro
             }
 
             //External Editors:
-            DNPEditorInternal.Externalnspectors(isMesh);
+            DNPEditorInternal.Externalnspectors(isMesh, target);
             DNPEditorInternal.FinalInformation();
 
             DNPEditorInternal.EndInspector();
         }
 
         #region Editor Menus
-        [MenuItem("GameObject/Damage Numbers Pro/Damage Number Mesh", priority = -2)]
+        [MenuItem("GameObject/Damage Numbers Pro/Damage Number (Mesh)", priority = 1)]
         public static void CreateDamageNumberMesh(MenuCommand menuCommand)
         {
             //Create GameObject:
@@ -166,7 +166,7 @@ namespace DamageNumbersPro
             }
         }
 
-        [MenuItem("GameObject/Damage Numbers Pro/Damage Number GUI", priority = -1)]
+        [MenuItem("GameObject/Damage Numbers Pro/Damage Number (GUI)", priority = 2)]
         public static void CreateDamageNumberGUI(MenuCommand menuCommand)
         {
             //Create GameObject:
@@ -1212,28 +1212,28 @@ namespace DamageNumbersPro
                         EditorGUILayout.EndHorizontal();
                         break;
                     case ("Left Text"):
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("leftText"));
+                        HandleTextProperty(serializedObject.FindProperty("leftText"));
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("", GUILayout.Width(9));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("leftTextSettings"));
                         EditorGUILayout.EndHorizontal();
                         break;
                     case ("Right Text"):
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("rightText"));
+                        HandleTextProperty(serializedObject.FindProperty("rightText"));
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("", GUILayout.Width(9));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("rightTextSettings"));
                         EditorGUILayout.EndHorizontal();
                         break;
                     case ("Top Text"):
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("topText"));
+                        HandleTextProperty(serializedObject.FindProperty("topText"));
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("", GUILayout.Width(9));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("topTextSettings"));
                         EditorGUILayout.EndHorizontal();
                         break;
                     case ("Bottom Text"):
-                        EditorGUILayout.PropertyField(serializedObject.FindProperty("bottomText"));
+                        HandleTextProperty(serializedObject.FindProperty("bottomText"));
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField("", GUILayout.Width(9));
                         EditorGUILayout.PropertyField(serializedObject.FindProperty("bottomTextSettings"));
@@ -1368,6 +1368,85 @@ namespace DamageNumbersPro
             DNPEditorInternal.CloseBox(showProperties);
         }
 
+        void HandleTextProperty(SerializedProperty textField)
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PropertyField(textField);
+
+            if (textField.stringValue.Length > 5)
+            {
+                char[] chars = textField.stringValue.ToCharArray();
+                bool unicodeCheck = false;
+                int unicodeIndex = 0;
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    char c = chars[i];
+
+                    if (c == '\\')
+                    {
+                        //Check if there is a unicode sequence.
+                        unicodeCheck = true;
+                        unicodeIndex = i;
+                    }
+                    else
+                    {
+                        if (unicodeCheck)
+                        {
+                            if (i == unicodeIndex + 1)
+                            {
+                                if (char.ToLower(c) != 'u')
+                                {
+                                    unicodeCheck = false;
+                                }
+                            }
+                            else if (i < unicodeIndex + 6)
+                            {
+                                int cInt = (int)c;
+                                if (!char.IsNumber(c) && !(cInt > 96 && cInt < 103))
+                                {
+                                    unicodeCheck = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(unicodeCheck && unicodeIndex < chars.Length - 5)
+                {
+                    if(GUILayout.Button("Unicode", GUILayout.Width(60)))
+                    {
+                        //Get hex code.
+                        string unicodeHex = "";
+                        for (int i = unicodeIndex + 2; i < unicodeIndex + 6; i++)
+                        {
+                            unicodeHex += chars[i];
+                        }
+                        int hexCode = int.Parse(unicodeHex, System.Globalization.NumberStyles.HexNumber);
+
+                        //Get unicode.
+                        string unicode = char.ConvertFromUtf32(hexCode);
+
+                        //Combine.
+                        string newString = "";
+                        for(int i = 0; i < unicodeIndex; i++)
+                        {
+                            newString += chars[i];
+                        }
+                        newString += unicode;
+                        for (int i = unicodeIndex + 6; i < chars.Length; i++)
+                        {
+                            newString += chars[i];
+                        }
+
+                        //Assign.
+                        textField.stringValue = newString;
+                    }
+                }
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+
         public static void ChangeShaderToOverlay(DamageNumber damageNumber)
         {
             damageNumber.GetReferencesIfNecessary();
@@ -1470,6 +1549,12 @@ namespace DamageNumbersPro
             EditorGUILayout.Space(2);
             DNPEditorInternal.StartBox();
 
+            bool editingPrefabPreview = DNPEditorInternal.EditingPrefabPreview(target);
+            if (editingPrefabPreview)
+            {
+                GUI.enabled = false;
+            }
+
             //Font:
             bool mixedFontAssets = false;
             TMP_FontAsset fontAsset = null;
@@ -1548,6 +1633,7 @@ namespace DamageNumbersPro
                     }
                 }
             }
+
             EditorGUI.showMixedValue = mixedColor;
             EditorGUI.BeginChangeCheck();
             Color newColor = EditorGUILayout.ColorField(new GUIContent("Color", "The vertex color used by text mesh pro."), vertexColor);
@@ -1564,11 +1650,21 @@ namespace DamageNumbersPro
                 }
             }
 
+            GUI.enabled = true;
+
             //Info:
             DNPEditorInternal.Lines();
             GUI.color = new Color(1, 1, 1, 0.7f);
-            DNPEditorInternal.ScalingLabel("Check out the <b>TextMeshPro</b> component for more settings.",355);
-            GUI.color = Color.white;
+            if (editingPrefabPreview)
+            {
+                DNPEditorInternal.ScalingLabel("You need to <b>open</b> the <b>prefab</b> to access these settings.", 355);
+                DNPEditorInternal.OpenPrefabButton(target);
+            }
+            else
+            {
+                DNPEditorInternal.ScalingLabel("Check out the <b>TextMeshPro</b> component for more settings.", 355);
+                GUI.color = Color.white;
+            }
 
             DNPEditorInternal.CloseBox();
         }

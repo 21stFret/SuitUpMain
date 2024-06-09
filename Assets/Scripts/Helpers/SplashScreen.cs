@@ -27,7 +27,7 @@ public class SplashScreen : MonoBehaviour
         blackout.PlayTween();
         yield return new WaitForSeconds(1);
         doTweenFade.FadeOut();
-        sceneLoader.LoadScene(3);
+        sceneLoader.LoadScene(1);
 
     }
 
@@ -42,6 +42,5 @@ public class SplashScreen : MonoBehaviour
         doTweenFade.FadeOut();
         sceneLoader.LoadScene(1);
         skipped = true;
-        print("Skipped");
     }
 }

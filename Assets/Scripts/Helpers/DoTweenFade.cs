@@ -34,6 +34,25 @@ public class DoTweenFade : MonoBehaviour
         }
     }
 
+    public void KillTween()
+    {
+        if (canvasGroup != null)
+        {
+            canvasGroup.DOKill();
+            canvasGroup.alpha = 0;
+        }
+        if (image != null)
+        {
+            image.DOKill();
+            image.color = new Color(image.color.r, image.color.g, image.color.b, 0);
+        }
+        if (material != null)
+        {
+            material.DOKill();
+            material.color = new Color(material.color.r, material.color.g, material.color.b, 0);
+        }
+    }
+
     public void FadeIn()
     {
         if (canvasGroup != null)

@@ -71,6 +71,7 @@ public class CrawlerMovement : MonoBehaviour
         RayCastSteering();
         Debug.DrawRay(transform.position, direction * 5, Color.blue);
         var dir = Vector3.Lerp(transform.forward, direction.normalized, Time.deltaTime * steerSpeed);
+        dir.y = 0;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
         rb.MovePosition(transform.position + dir.normalized * speedFinal * Time.deltaTime);

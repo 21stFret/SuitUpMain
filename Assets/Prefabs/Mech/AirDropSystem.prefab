@@ -544,7 +544,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1189956619533138431}
-  - {fileID: 4339435289037225682}
+  - {fileID: 6153687058131771301}
   - {fileID: 133514770759834993}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drone: {fileID: 1982323238730509442}
-  crate: {fileID: 4339435289037225687}
+  crate: {fileID: 7793693726054260916}
   airDropCost: 5
   airDropTimer: {fileID: 0}
   airdropMenu: {fileID: 0}
@@ -574,7 +574,9 @@ MonoBehaviour:
   firstSelected: {fileID: 0}
   missileLauncher: {fileID: 0}
   missileAmount: 5
+  timesUsed: 0
   airstikes: 0
+  tutorial: 1
 --- !u!1 &5311525923415399229
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,10 +722,10 @@ MonoBehaviour:
   startPos: {fileID: 1189956619533138431}
   targetPos: {fileID: 0}
   endPos: {x: 0, y: 0, z: 0}
-  DroneSpeed: 8
+  DroneSpeed: 15
   CratePivot: {fileID: 1423349740432472942}
   droneMesh: {fileID: 2459114292501663201}
-  airDropCrate: {fileID: 4339435289037225687}
+  airDropCrate: {fileID: 7793693726054260916}
 --- !u!1001 &3715832281677447926
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -736,12 +738,12 @@ PrefabInstance:
         type: 3}
       propertyPath: rb
       value: 
-      objectReference: {fileID: 4339435289037225686}
+      objectReference: {fileID: 0}
     - target: {fileID: 1128587811906911265, guid: 0528cd669996ab842b36a24bf3733613,
         type: 3}
       propertyPath: _particleSystem
       value: 
-      objectReference: {fileID: 4339435287867486155}
+      objectReference: {fileID: 0}
     - target: {fileID: 1128587811906911266, guid: 0528cd669996ab842b36a24bf3733613,
         type: 3}
       propertyPath: m_Name
@@ -807,27 +809,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0528cd669996ab842b36a24bf3733613, type: 3}
---- !u!198 &4339435287867486155 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 1128587813096435005, guid: 0528cd669996ab842b36a24bf3733613,
-    type: 3}
-  m_PrefabInstance: {fileID: 3715832281677447926}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4339435289037225682 stripped
+--- !u!4 &6153687058131771301 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1128587811906911268, guid: 0528cd669996ab842b36a24bf3733613,
+  m_CorrespondingSourceObject: {fileID: 7419398925285367123, guid: 0528cd669996ab842b36a24bf3733613,
     type: 3}
   m_PrefabInstance: {fileID: 3715832281677447926}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &4339435289037225686 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1128587811906911264, guid: 0528cd669996ab842b36a24bf3733613,
-    type: 3}
-  m_PrefabInstance: {fileID: 3715832281677447926}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4339435289037225687 stripped
+--- !u!114 &7793693726054260916 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1128587811906911265, guid: 0528cd669996ab842b36a24bf3733613,
+  m_CorrespondingSourceObject: {fileID: 6897697013869568578, guid: 0528cd669996ab842b36a24bf3733613,
     type: 3}
   m_PrefabInstance: {fileID: 3715832281677447926}
   m_PrefabAsset: {fileID: 0}

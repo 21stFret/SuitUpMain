@@ -274,7 +274,7 @@ Transform:
   m_GameObject: {fileID: 3941810313144788156}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.98185134, z: 0, w: -0.18965223}
-  m_LocalPosition: {x: -4.73, y: 0.61, z: 40.36}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5500001, y: 0.55, z: 0.5500001}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -323,7 +323,7 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   health: 0
-  healthMax: 3
+  healthMax: 2
   attackDamage: 1
   speed: 10
   _randomSpeed: 2
@@ -340,6 +340,8 @@ MonoBehaviour:
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
   forceSpawn: 0
+  popupPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
+    type: 3}
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -461,7 +463,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.4
-  m_Height: 5
+  m_Height: 10.32
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &8835100205756127941
@@ -479,6 +481,7 @@ MonoBehaviour:
   health: 0
   healthMax: 0
   invincible: 0
+  alive: 0
 --- !u!1 &3941811552011450084
 GameObject:
   m_ObjectHideFlags: 0

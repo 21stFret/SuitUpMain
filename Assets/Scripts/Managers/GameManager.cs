@@ -4,6 +4,15 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Text.RegularExpressions;
+
+public enum BattleType
+{
+    Kill,
+    Defend,
+    Capture,
+    Survive
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -22,21 +31,25 @@ public class GameManager : MonoBehaviour
     public ManualWeaponController altWeaponController;
     private PlayerSavedData playerSavedData;
     public List<GameObject> rooms = new List<GameObject>();
-    public List<WaveManager> roomWaves = new List<WaveManager>();
+    public List<Battle> Battles = new List<Battle>();
     public RoomPortal RoomPortal;
     public Pickup roomDrop;
     public int currentRoomIndex;
-    public int currentWaveIndex;
+    public int currentBattleIndex;
     public bool endlessMode;
     public bool gameActive;
     private bool dayTime;
     public GameObject dayLight;
     public GameObject nightLight;
+    public CapturePoint capturePoint;
+    public DefendObjective defendBase;
 
     private int mutliShotKillCount;
     private bool triggerShotMultiKill; 
     private int mutliKillCount;
     private bool triggerMultiKill;
+
+
 
 
     private void Awake()
@@ -69,25 +82,19 @@ public class GameManager : MonoBehaviour
         dayTime = true;
         currentRoomIndex = 0;
         LoadRoomRandom();
-        currentWaveIndex = 0;
+        SetBattleType();
+        currentBattleIndex = 0;
         playerSavedData = PlayerSavedData.instance;
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
         mechLoadOut.Init();
         UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
-
-        if (PlayerSavedData.instance._firstLoad)
-        {
-            StartCoroutine( ShowControls());
-        }
-
     }
 
     private IEnumerator ShowControls()
     {
         yield return new WaitForSeconds(1);
-        PlayerSavedData.instance.UpdateFirstLoad(false);
         gameUI.pauseMenu.PauseGame();
         gameUI.pauseMenu.menu.SetActive(false);
         gameUI.pauseMenu.controlsMenu.SetActive(true);
@@ -106,7 +113,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator CheckActiveEnemies()
     {
         // do logic when all enemies are dead in final round
-        if (crawlerSpawner.spawnRound >= crawlerSpawner.spawnRoundMax)
+        if (crawlerSpawner.battleRound >= crawlerSpawner.battleRoundMax)
         {
             if (crawlerSpawner.activeCrawlerCount == 0)
             {
@@ -114,20 +121,15 @@ public class GameManager : MonoBehaviour
 
                 if (crawlerSpawner.activeCrawlerCount == 0)
                 {
+                    /*
                     if (endlessMode)
                     {
                         SpawnPortalToNextRoom();
                         yield break;
                     }
-                    if (currentWaveIndex == roomWaves.Count-1)
-                    {
-                        // Mission Complete
-                        EndGame(true);
-                    }
-                    else
-                    {
-                        SpawnPortalToNextRoom();
-                    }
+                    */
+
+                    ObjectiveComplete();
                 }
             }
         }
@@ -148,7 +150,12 @@ public class GameManager : MonoBehaviour
         killCount += count;
         gameUI.UpdateKillCount(killCount);
         CheckPlayerAchievements(count, weapon);
-        StartCoroutine(CheckActiveEnemies());
+
+        if(Battles[currentBattleIndex].battleType == BattleType.Survive)
+        {
+            StartCoroutine(CheckActiveEnemies());
+        }
+
     }
 
     public void AddExp(int count)
@@ -338,7 +345,24 @@ public class GameManager : MonoBehaviour
     {
         rooms[currentRoomIndex].SetActive(false);
         currentRoomIndex++;
-        currentWaveIndex++;
+        currentBattleIndex++;
+        if (currentRoomIndex == rooms.Count)
+        {
+            currentRoomIndex = 0;
+        }
+        rooms[currentRoomIndex].SetActive(true);
+
+        ProceduralLevelGeneration levelGen = rooms[currentRoomIndex].GetComponent<ProceduralLevelGeneration>();
+        if (levelGen != null)
+        {
+            levelGen.GenerateLevel();
+        }
+    }
+
+    private void LoadRoomRandom()
+    {
+        rooms[currentRoomIndex].SetActive(false);
+        currentRoomIndex = Random.Range(0, rooms.Count);
         if (currentRoomIndex == rooms.Count)
         {
             currentRoomIndex = 0;
@@ -346,16 +370,75 @@ public class GameManager : MonoBehaviour
         rooms[currentRoomIndex].SetActive(true);
     }
 
-    private void LoadRoomRandom()
+    private void SetBattleType()
     {
-        rooms[currentRoomIndex].SetActive(false);
-        currentRoomIndex = Random.Range(0, rooms.Count);
-        currentWaveIndex++;
-        if (currentRoomIndex == rooms.Count)
+        var type = Battles[currentBattleIndex].battleType;
+        gameUI.objectiveUI.ResetObjective();
+        switch (type)
         {
-            currentRoomIndex = 0;
+            case BattleType.Kill:
+                crawlerSpawner.endless = true;
+                gameUI.objectiveUI.UpdateObjective("Hunt down and kill the target");
+                gameUI.objectiveUI.objectiveBar.color = Color.red;
+                gameUI.objectiveUI.objectiveBar.fillAmount = 1;
+                SpawnRunner();
+                break;
+            case BattleType.Defend:
+                crawlerSpawner.endless = true;
+                gameUI.objectiveUI.UpdateObjective("Defend the base for 1 minute");
+                gameUI.objectiveUI.objectiveBar.color = Color.yellow;
+                gameUI.objectiveUI.objectiveBar.fillAmount = 0;
+                SpawnDefendBase();
+                break;
+            case BattleType.Capture:
+                crawlerSpawner.endless = true;
+                gameUI.objectiveUI.UpdateObjective("Locate the drop and upload the data");
+                gameUI.objectiveUI.objectiveBar.color = Color.blue;
+                gameUI.objectiveUI.objectiveBar.fillAmount = 0;
+                SpawnCapturePoint();
+                break;
+            case BattleType.Survive:
+                crawlerSpawner.endless = false;
+                gameUI.objectiveUI.UpdateObjective("Survive all waves!");
+                gameUI.objectiveUI.objectiveBar.color = Color.green;
+                gameUI.objectiveUI.objectiveBar.fillAmount = 0;
+                break;
         }
-        rooms[currentRoomIndex].SetActive(true);
+    }
+
+    private void SpawnDefendBase()
+    {
+        defendBase.gameObject.SetActive(true);
+        defendBase.Init();
+    }
+
+    private void SpawnRunner()
+    {
+        crawlerSpawner.runner.Init();
+        crawlerSpawner.runner.Spawn();
+    }
+
+    private void SpawnCapturePoint()
+    {
+        Vector3 pos = Random.insideUnitSphere * 50;
+        pos.y = 1;
+        capturePoint.transform.position = pos;
+        capturePoint.gameObject.SetActive(true);
+        capturePoint.Init();
+    }
+
+    public void ObjectiveComplete()
+    {
+        StartCoroutine(gameUI.objectiveUI.ObjectiveComplete());
+        crawlerSpawner.EndBattle();
+
+        if (currentBattleIndex == Battles.Count - 1)
+        {
+            EndGame(true);
+            return;
+        }
+
+        SpawnPortalToNextRoom();
     }
 
     public IEnumerator DelayedLoadNextRoom()
@@ -364,6 +447,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         CashCollector.Instance.DestroyParts();
         LoadRoom();
+        SetBattleType();
         UpdateCrawlerSpawner();
         DayNightCycle();
         roomDrop.gameObject.SetActive(false);
@@ -401,11 +485,11 @@ public class GameManager : MonoBehaviour
 
     public void UpdateCrawlerSpawner()
     {
-        crawlerSpawner.spawnRound = 0;
+        crawlerSpawner.battleRound = 0;
         crawlerSpawner.roundTimer = 5;
         crawlerSpawner.waveText.text = "Here they come...";
-        crawlerSpawner.waveManager = roomWaves[currentWaveIndex];
-        crawlerSpawner.spawnRoundMax = roomWaves[currentWaveIndex].battleWaves.Count;
+        crawlerSpawner.battleManager = Battles[currentBattleIndex];
+        crawlerSpawner.battleRoundMax = Battles[currentBattleIndex].battleWaves.Count;
         crawlerSpawner.isActive = true;
         crawlerSpawner.spawnPoints = rooms[currentRoomIndex].GetComponent<EnvironmentArea>().spawnPoints;
     }
@@ -426,7 +510,11 @@ public class GameManager : MonoBehaviour
         playerSavedData._gameStats.totalParts += crawlerParts;
         playerSavedData._gameStats.totalDistance += mechLoadOut.GetComponent<MYCharacterController>().distanceTravelled;
 
-        EndGameAchievements();
+        if(PlayerAchievements.instance != null)
+        {
+            EndGameAchievements();
+        }
+
         playerSavedData.SavePlayerData();
     }
 
