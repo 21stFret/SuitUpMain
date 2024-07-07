@@ -23,6 +23,10 @@ public class FlameTrigger : MonoBehaviour
     {
         fovCollider.enabled = value;
         isOn = value;
+        if(!value)
+        {
+            triggerSensor.Clear();
+        }
     }
 
     private void Update()

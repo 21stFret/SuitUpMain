@@ -18,6 +18,15 @@ public class PulseShockwave : MonoBehaviour
     public AudioClip pulseWaveSound;
     public GameObject pulseBar;
 
+    public bool canDamage;
+    public float damage;
+    public bool canStun;
+    public bool canRegenFuel;
+    public float regenTime;
+    private WeaponFuelManager weaponFuelManager;
+    public bool canHeal;
+    public float healAmount;
+
     public void PlayPulseWave(InputAction.CallbackContext context)
     {
         if(context.performed)
@@ -30,14 +39,48 @@ public class PulseShockwave : MonoBehaviour
         }
     }
 
+    public void ApplyMod(ModType type, float value)
+    {
+        ResetMods();
+        switch (type)
+        {
+            case ModType.Health:
+                canHeal = true;
+                healAmount =  value;
+                break;
+            case ModType.Damage:
+                canDamage = true;
+                damage = value;
+                break;
+            case ModType.FuelRate:
+                canRegenFuel = true;
+                regenTime = value;
+                break;
+        }
+    }
+
+    public void ResetMods()
+    {
+        canHeal = false;
+        canDamage = false;
+        canRegenFuel = false;
+    }
+
     private void PulseWave()
     {
         canUsePulseWave = false;
         pulseBar.SetActive(false);
-        ActivateButton(false);
         pulsewave.Play();
         AudioManager.instance.PlaySFXFromClip(pulseWaveSound);
         ApplyForceToCrawlers();
+        if(canRegenFuel)
+        {
+            if(weaponFuelManager==null)
+            {
+                weaponFuelManager = GetComponent<WeaponFuelManager>();
+            }
+            StartCoroutine(weaponFuelManager.BoostRecharge(regenTime));
+        }
     }
 
     private void Update()
@@ -56,13 +99,7 @@ public class PulseShockwave : MonoBehaviour
             pulseBar.SetActive(true);
             canUsePulseWave = true;
             timeElapsed = 0;
-            ActivateButton(true);
         }
-    }
-
-    private void ActivateButton(bool value)
-    {
-
     }
 
     private void ApplyForceToCrawlers()
@@ -74,9 +111,22 @@ public class PulseShockwave : MonoBehaviour
             if (crawler != null)
             {
                 crawler.StartCoroutine(crawler.StunCralwer(0.2f));
-                Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
-                crawler.rb.AddForce(forceDirection * forceMagnitude , ForceMode.Impulse);
             }
+            Vector3 forceDirection = (collider.transform.position - transform.position).normalized;
+            Mathf.Clamp(forceDirection.y, 0.1f, 1);
+            if(collider.attachedRigidbody != null)
+            {
+                collider.attachedRigidbody.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+            }
+            if (canDamage)
+            {
+                TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
+                if (targetHealth != null)
+                {
+                    targetHealth.TakeDamage(damage, WeaponType.AoE);
+                }
+            }
+
         }
         if (colliders.Length > 8)
         {

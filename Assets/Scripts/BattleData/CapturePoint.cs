@@ -58,7 +58,7 @@ public class CapturePoint : MonoBehaviour
         }
         var fillAmount = captureProgress / captureTime;
         GameUI.instance.objectiveUI.UpdateBar(fillAmount);
-        GameUI.instance.objectiveUI.UpdateObjective("Capture Progress " + (fillAmount*100).ToString("0")+"%");
+        GameUI.instance.objectiveUI.UpdateObjective("Upload Progress " + (fillAmount*100).ToString("0")+"%");
     }
 
     public void OnTriggerEnter(Collider other)

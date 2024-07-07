@@ -105,22 +105,15 @@ public class MYCharacterController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if(!enabled)
+        {             return;
+        }
+
         _moveInputVector = context.ReadValue<Vector2>();
         float inputedY = _moveInputVector.y;
         CharacterAnimator.SetFloat("InputMag", _moveInputVector.magnitude);
         CharacterAnimator.SetFloat("Forward", _moveInputVector.magnitude);
         CharacterAnimator.SetFloat("Turn", _moveInputVector.x);
-
-        if (isAimLocked)
-        {
-            if (Vector3.Dot(transform.forward, new Vector3(_moveInputVector.x, 0, _moveInputVector.y)) < 0)
-            {
-                CharacterAnimator.SetFloat("Forward", _moveInputVector.y);
-
-            }
-        }
-
-
 
         if (_moveInputVector.magnitude > 0)
         {
@@ -170,15 +163,15 @@ public class MYCharacterController : MonoBehaviour
             {
                 aimDirectionLoc = transform.position + transform.forward *10;
             }
-            aimDirection.transform.position = aimDirectionLoc;
-            aimDirection.SetActive(true);
+            //aimDirection.transform.position = aimDirectionLoc;
+            //aimDirection.SetActive(true);
             //lookingDirection.SetActive(false);
             Vector3 lookDirection = aimDirectionLoc - transform.position;
             lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
         }
         else
         {
-            aimDirection.SetActive(false);
+            //aimDirection.SetActive(false);
             //lookingDirection.SetActive(true);
             aimDirectionLoc = Vector3.zero;
             lookRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -193,6 +186,7 @@ public class MYCharacterController : MonoBehaviour
             direction.Normalize();
 
             float inputedSpeed = _moveInputVector.magnitude * Speed;
+            inputedSpeed = inputedSpeed * MechStats.instance.speedMultiplier;
             _rigidbody.AddForce(direction * inputedSpeed);
 
         }

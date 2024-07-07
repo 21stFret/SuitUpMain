@@ -15317,6 +15317,171 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1223994432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &629485203
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FOVColliderPoints
+  serializedVersion: 11
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 36
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 5.3298573}
+      m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 020001000000030002000000070005000400060007000400020003000400050002000400000001000600010007000600030000000400000006000400010002000500070001000500
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 96
+    _typelessdata: afb78abc177eb53c32adc43dafb78abc177eb5bc32adc43dafb78a3c177eb5bc32adc43dafb78a3c177eb53c32adc43db56beebf5cf81b40d7042941b56bee3f5cf81b40d7042941b56beebf5cf81bc0d7042941b56bee3f5cf81bc0d7042941
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 5.3298573}
+    m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!114 &631748976 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2422370568342802834, guid: ac8d8b8f617ecbd4299feabc73ffa1ae,
@@ -30823,24 +30988,23 @@ MonoBehaviour:
   inGame: 0
   diffiulty: 0
   roomwavesEasy:
-  - {fileID: 11400000, guid: f66975ae2f867ad48842e1817f2dfcc7, type: 2}
-  - {fileID: 11400000, guid: 98b05bb30d54b5b41b786c1458eac1fb, type: 2}
-  - {fileID: 11400000, guid: a1673655c98d73a41986467e3fe74254, type: 2}
+  - {fileID: 11400000, guid: 40e3bc05483e9a247a46ce6c6f0aeef8, type: 2}
+  - {fileID: 11400000, guid: 517e5cd2455bdae4e903083f6e7f912b, type: 2}
+  - {fileID: 11400000, guid: 6fd24c55a8fec72439308e6af296da8d, type: 2}
+  - {fileID: 11400000, guid: c4df6d7c7aee49942ab5cadf85539ae1, type: 2}
   roomwavesMid:
-  - {fileID: 11400000, guid: 98b05bb30d54b5b41b786c1458eac1fb, type: 2}
-  - {fileID: 11400000, guid: a1673655c98d73a41986467e3fe74254, type: 2}
-  - {fileID: 11400000, guid: 20a0e1dc5a4830748938b949a168ed4f, type: 2}
-  - {fileID: 11400000, guid: 09b75636f75ae7b4e866591ecd979d3d, type: 2}
-  - {fileID: 11400000, guid: 2e9a2b57b89591f4488dc5738b1ff87e, type: 2}
+  - {fileID: 11400000, guid: e493fd822dac8b646a38778e57a8d6f5, type: 2}
+  - {fileID: 11400000, guid: abbde3c21507fba41a3b18c513652aa2, type: 2}
+  - {fileID: 11400000, guid: fa7be24b515619047a86ba2e33301f73, type: 2}
+  - {fileID: 11400000, guid: d79279841b387d14fa83bc07290645bc, type: 2}
+  - {fileID: 11400000, guid: 9ee7515135fa1394b81efc601bcfbe10, type: 2}
+  - {fileID: 11400000, guid: 7d7ed5fe47300d84d83d7830abbb1f9e, type: 2}
   roomwavesHard:
-  - {fileID: 11400000, guid: a1673655c98d73a41986467e3fe74254, type: 2}
-  - {fileID: 11400000, guid: 20a0e1dc5a4830748938b949a168ed4f, type: 2}
-  - {fileID: 11400000, guid: 2e9a2b57b89591f4488dc5738b1ff87e, type: 2}
-  - {fileID: 11400000, guid: 09b75636f75ae7b4e866591ecd979d3d, type: 2}
-  - {fileID: 11400000, guid: 59ce9b81e0f1fbc4988d1a4896e067e4, type: 2}
-  - {fileID: 11400000, guid: 11986df891eacf34e842f26bbc2ff773, type: 2}
-  - {fileID: 11400000, guid: da15f33b95b79e04caeb85cf5c2d0431, type: 2}
-  - {fileID: 11400000, guid: 0b426cd1e68b5834ca7eea310dcbc0f8, type: 2}
+  - {fileID: 11400000, guid: d6507ed194dc91f4eb44c44024236285, type: 2}
+  - {fileID: 11400000, guid: b4985eeba98e6fd4e8b0e7e80876e4de, type: 2}
+  - {fileID: 11400000, guid: e2c1e8650f043d34a859b445299bdaad, type: 2}
+  - {fileID: 11400000, guid: a4c40c295794cad41b9afeed57c73111, type: 2}
+  - {fileID: 11400000, guid: dc0d6cadb7e9f3c48a39ecbcb2494b82, type: 2}
 --- !u!4 &1311842333
 Transform:
   m_ObjectHideFlags: 0

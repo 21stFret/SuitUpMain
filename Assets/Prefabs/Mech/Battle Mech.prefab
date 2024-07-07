@@ -37105,6 +37105,7 @@ GameObject:
   - component: {fileID: 2360268570500086563}
   - component: {fileID: 1554726410975775876}
   - component: {fileID: 5986488049557473867}
+  - component: {fileID: 1923429341177095731}
   m_Layer: 6
   m_Name: Battle Mech
   m_TagString: Player
@@ -37287,6 +37288,7 @@ MonoBehaviour:
   deathEffect: {fileID: 6092388055686581626}
   deathClip: {fileID: 8300000, guid: 0e06c997f66813242af742395e3e0dc3, type: 3}
   mainObject: {fileID: 4834883123767186782}
+  topHlafObject: {fileID: 7564854925590220414}
   targetHealth: {fileID: 5979783455418939766}
   regenRate: 20
 --- !u!54 &364384307396218630
@@ -37359,7 +37361,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.51
-  m_Height: 3.45
+  m_Height: 4.79
   m_Direction: 1
   m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!114 &2649297064278903299
@@ -37711,7 +37713,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pulsewave: {fileID: 2081187983803785084}
   range: 7
-  forceMagnitude: 40
+  forceMagnitude: 20
   crawlerLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -37720,6 +37722,13 @@ MonoBehaviour:
   cover: {fileID: 0}
   pulseWaveSound: {fileID: 8300000, guid: 229371a8b5dcf9e47b05ecf92c9dc678, type: 3}
   pulseBar: {fileID: 7628530176308091411}
+  canDamage: 0
+  damage: 0
+  canStun: 0
+  canRegenFuel: 0
+  regenTime: 0
+  canHeal: 0
+  healAmount: 0
 --- !u!114 &2360268570500086563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37743,6 +37752,9 @@ MonoBehaviour:
   weaponModManager: {fileID: 0}
   loadMainWeapon: 1
   loadAltWeapon: 1
+  mechStats: {fileID: 1923429341177095731}
+  targetHealth: {fileID: 5979783455418939766}
+  characterController: {fileID: 547715015366089029}
 --- !u!114 &1554726410975775876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37806,6 +37818,18 @@ MonoBehaviour:
   weaponFuelRate: 0
   canRecharge: 1
   constantUse: 0
+--- !u!114 &1923429341177095731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800413595774208468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31148285a0d6f564b9ee2a89ab4b7015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8883268363649656803
 GameObject:
   m_ObjectHideFlags: 0

@@ -19,15 +19,12 @@ public class SetupGame : MonoBehaviour
         {
             instance = this;
         }
+        else
+        {
+            Destroy(this.gameObject);
+            return;
+        }
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    public void LoadBattles()
-    {
-        roomwavesEasy.Clear();
-        roomwavesMid.Clear();
-        roomwavesHard.Clear();
-        roomwavesEasy = BattleDataReader.instance.battles;
     }
 
     public void ToggleEndlessMode()
@@ -39,8 +36,6 @@ public class SetupGame : MonoBehaviour
     {
         gameManager = _gameManager;
         gameManager.endlessMode = endlessMode;
-
-        LoadBattles();
 
         gameManager.Battles.Clear();
         switch (diffiulty)

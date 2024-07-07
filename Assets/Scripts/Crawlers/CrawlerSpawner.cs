@@ -9,6 +9,7 @@ public class CrawlerSpawner : MonoBehaviour
     [Header("Object Pools")]
     [SerializeField] private List<Crawler> crawlers = new List<Crawler>();
     [SerializeField] private List<Crawler> crawlerDaddy =  new List<Crawler>();
+    [SerializeField] private List<Crawler> Daddycrawlers =  new List<Crawler>();
     [SerializeField] private List<Crawler> albinos =  new List<Crawler>();
     [SerializeField] private List<Crawler> spitters =  new List<Crawler>();
     [SerializeField] private List<Crawler> chargers =  new List<Crawler>();
@@ -56,13 +57,6 @@ public class CrawlerSpawner : MonoBehaviour
         {
             return;
         }
-
-        if(Input.GetKeyDown(KeyCode.K))
-        {
-            KillAllCrawlers();
-        }
-
-
         RoundTimer();
     }
 
@@ -99,22 +93,39 @@ public class CrawlerSpawner : MonoBehaviour
         foreach (Crawler crawler in crawlers)
         {
             crawler.Init();
+            crawler.crawlerSpawner = this;
+            crawler.crawlerType = CrawlerType.Crawler;
         }
         foreach (CrawlerDaddy daddy in crawlerDaddy)
         {
             daddy.Init();
+            daddy.crawlerSpawner = this;
+            daddy.crawlerType = CrawlerType.Daddy;
+        }
+        foreach (Crawler daddyCrawler in Daddycrawlers)
+        {
+            daddyCrawler.Init();
+            daddyCrawler.crawlerSpawner = this;
+            daddyCrawler.crawlerType = CrawlerType.DaddyCrawler;
+
         }
         foreach (Crawler albino in albinos)
         {
             albino.Init();
+            albino.crawlerSpawner = this;
+            albino.crawlerType = CrawlerType.Albino;
         }
         foreach (Crawler spitter in spitters)
         {
             spitter.Init();
+            spitter.crawlerSpawner = this;
+            spitter.crawlerType = CrawlerType.Spitter;
         }
         foreach (Crawler charger in chargers)
         {
             charger.Init();
+            charger.crawlerSpawner = this;
+            charger.crawlerType = CrawlerType.Charger;
         }
     }
 
@@ -175,7 +186,11 @@ public class CrawlerSpawner : MonoBehaviour
     {
         PlaySpawnEffect(0);
         yield return new WaitForSeconds(1f);
-        SpawnWave();
+
+        if(isActive)
+        {
+            SpawnWave();
+        }
     }
 
     private void SpawnWave()
@@ -238,13 +253,13 @@ public class CrawlerSpawner : MonoBehaviour
             spawnList[i].transform.position = randomPoint;
             spawnList[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
             StartCoroutine(SpawnRandomizer(spawnList[i], i * 0.2f));
-            AddToActiveList(spawnList[i]);
             potalAllowed++;
         }
     }
 
     private IEnumerator SpawnRandomizer(Crawler bug, float delay)
     {
+        AddToActiveList(bug);
         yield return new WaitForSeconds(delay);
         bug.Spawn();
     }
@@ -273,10 +288,9 @@ public class CrawlerSpawner : MonoBehaviour
             Vector3 randomCircle = Random.insideUnitSphere;
             randomCircle.y = 1;
             var point1 = point + randomCircle;
-            crawlers[0].transform.position = point1;
-            crawlers[0].transform.rotation = Quaternion.identity;
-            AddToActiveList(crawlers[0]);
-            crawlers[0].Spawn();
+            Daddycrawlers[0].transform.position = point1;
+            Daddycrawlers[0].transform.rotation = Quaternion.identity;
+            StartCoroutine(SpawnRandomizer(Daddycrawlers[0], i * 0.1f));
         }
     }
 
@@ -297,7 +311,6 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void AddtoRespawnList(Crawler crawler, CrawlerType type)
     {
-        crawler.gameObject.SetActive(false);
         activeCrawlers.Remove(crawler);
         switch (type)
         {
@@ -306,6 +319,9 @@ public class CrawlerSpawner : MonoBehaviour
                 break;
             case CrawlerType.Daddy:
                 crawlerDaddy.Add(crawler);
+                break;
+            case CrawlerType.DaddyCrawler:
+                Daddycrawlers.Add(crawler);
                 break;
             case CrawlerType.Albino:
                 albinos.Add(crawler);
@@ -322,7 +338,6 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void AddToActiveList(Crawler crawler)
     {
-        crawler.gameObject.SetActive(true);
         switch (crawler.crawlerType)
         {
             case CrawlerType.Crawler:
@@ -330,6 +345,9 @@ public class CrawlerSpawner : MonoBehaviour
                 break;
             case CrawlerType.Daddy:
                 crawlerDaddy.Remove(crawler);
+                break;
+            case CrawlerType.DaddyCrawler:
+                Daddycrawlers.Remove(crawler);
                 break;
             case CrawlerType.Albino:
                 albinos.Remove(crawler);
@@ -342,24 +360,5 @@ public class CrawlerSpawner : MonoBehaviour
                 break;
         }
         activeCrawlers.Add(crawler);
-
-    }
-
-    public void CheckActiveList(Crawler crawler)
-    {
-        if (activeCrawlers.Contains(crawler))
-        {
-            AddtoRespawnList(crawler, crawler.crawlerType);
-        }
-    }
-
-    public bool IsInActiveList(Crawler crawler)
-    {
-        if (activeCrawlers.Contains(crawler))
-        {
-            AddtoRespawnList(crawler, crawler.crawlerType);
-            return true;
-        }
-        return false;
     }
 }

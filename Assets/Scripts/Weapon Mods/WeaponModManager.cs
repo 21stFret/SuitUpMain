@@ -23,9 +23,20 @@ public class WeaponModManager : MonoBehaviour
         }
     }
 
-    public void EquipMod(int modIndex)
+    public WeaponMod FindModByName(string name)
     {
-        currentMod = currentMods[modIndex];
+        var mod = mods.Find(x => x.RunMod.modName == name);
+        return mod;
+    }
+
+    public void EquipWeaponMod(WeaponMod mod)
+    {
+        if(currentMod != null)
+        {
+            currentMod.RemoveMods();
+        }
+
+        currentMod = mod;
         weapon.weaponMod = currentMod;
         currentMod.baseWeapon = weapon;
         currentMod.transform.SetParent(weapon.transform);
@@ -33,5 +44,6 @@ public class WeaponModManager : MonoBehaviour
         currentMod.transform.localRotation = Quaternion.identity;
         currentMod.Init();
         //altWeapon.SetAltWeaponInputs();
+        GameUI.instance.CloseModUI();
     }
 }

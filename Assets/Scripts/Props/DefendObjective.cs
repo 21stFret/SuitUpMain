@@ -13,15 +13,18 @@ public class DefendObjective : Prop
 
     private void Update()
     {
-        if (!objectiveDestroyed)
+        if(objectiveDestroyed)
         {
-            timer += Time.deltaTime;
-            if(timer >= timerMax)
-            {
-                GameManager.instance.ObjectiveComplete();
-                gameObject.SetActive(false);
-            }
+            return;
         }
+
+        timer += Time.deltaTime;
+        if (timer >= timerMax)
+        {
+            GameManager.instance.ObjectiveComplete();
+            gameObject.SetActive(false);
+        }
+
         GameUI.instance.objectiveUI.UpdateBar(health / healthMax);
         if (health < healthMax/2)
         {
@@ -44,7 +47,7 @@ public class DefendObjective : Prop
 
     private void SetLocation()
     {
-        Vector3 pos = Random.insideUnitSphere * 50;
+        Vector3 pos = Random.insideUnitSphere * 30;
         pos.y = 1;
         transform.position = pos;
     }
@@ -58,5 +61,7 @@ public class DefendObjective : Prop
         objectiveDestroyed = true;
         destroyed.Play();
         _base.SetActive(false);
+        damaged.Stop();
+        GameManager.instance.ObjectiveComplete(false);
     }
 }

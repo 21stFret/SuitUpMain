@@ -51,7 +51,7 @@ MonoBehaviour:
   permanent: 0
   lifetime: 0.5
   unscaledTime: 0
-  enable3DGame: 0
+  enable3DGame: 1
   faceCameraView: 1
   lookAtCamera: 0
   renderThroughWalls: 0
@@ -80,9 +80,9 @@ MonoBehaviour:
     characterSpacing: 0
     size: 0
   digitSettings:
-    decimals: 0
+    decimals: 1
     decimalChar: .
-    hideZeros: 0
+    hideZeros: 1
     dotSeparation: 0
     dotDistance: 3
     dotChar: .
@@ -437,7 +437,7 @@ MonoBehaviour:
   enablePooling: 0
   poolSize: 50
   disableOnSceneLoad: 1
-  editorLastFont: DAGGERSQUARE SDF
+  editorLastFont: DAGGERSQUARE SDF3D
   position: {x: 0, y: 0, z: 0}
 --- !u!210 &1259023133563206874
 SortingGroup:
@@ -661,8 +661,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
-  m_fontSizeBase: 5
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

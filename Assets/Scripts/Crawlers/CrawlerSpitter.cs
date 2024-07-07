@@ -53,7 +53,7 @@ public class CrawlerSpitter : Crawler
             //return;
         }
         crawlerMovement.tracking = false;
-        Vector3 randomPos = Random.insideUnitSphere * 50;
+        Vector3 randomPos = Random.insideUnitSphere * 30;
         randomPos.y = 1;
         runnerTarget.position = randomPos;
         runnerIdle = false;

@@ -17,7 +17,7 @@ public class TutorialUI : MonoBehaviour
     public GameObject mechHealthObject;
     public GameObject mechFuelObject;
     public WeaponFuelManager weaponFuelManager;
-    public MechLoadOut mechLoadOut;
+    public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public GameObject mainWeapon;
     public GameObject mainWeaponImage;
@@ -42,6 +42,7 @@ public class TutorialUI : MonoBehaviour
 
     void Start()
     {
+        mechHealth.enabled = false;
         mechHealth.SetEmmisveHeatlh(0);
         mechHealth.SetEmmisiveStrength(0);
         Invoke("DelayedStart", 0.5f);
@@ -58,7 +59,7 @@ public class TutorialUI : MonoBehaviour
         StartCoroutine(PrintText("Initialzing Mech...", loadUpText));
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
-        mechLoadOut.Init();
+        mechLoadOut.targetHealth.Init();
         AudioManager.instance.PlayMusic(1);
         StartCoroutine(LoadUI());
         mechHealth.SetEmmisiveStrength(0.5f);
@@ -70,17 +71,15 @@ public class TutorialUI : MonoBehaviour
         loadUpPanel.SetActive(true);
         weaponFuelManager.constantUse = true;
         weaponFuelManager._enabled = false;
+        weaponFuelManager.weaponFuel = 0;
         yield return new WaitForSeconds(2f);
-        mechHealth.image.fillAmount = 0;
         mechHealthObject.SetActive(true);
         mechHealth.enabled = true;
         StartCoroutine(PrintText("Loading Mech Health...", loadUpText));
         mechHealth.SetEmmisiveStrength(2);
-        mechHealth.UpdateHealth(100, true);
         yield return new WaitForSeconds(3f);
         mechFuelObject.SetActive(true);
         StartCoroutine(PrintText("Loading Weapon Fuel...", loadUpText));
-        weaponFuelManager.weaponFuel = 0;
         weaponFuelManager._enabled = true;
         weaponFuelManager.weaponRechargeRate = 35;
         yield return new WaitForSeconds(3f);
@@ -99,11 +98,12 @@ public class TutorialUI : MonoBehaviour
         yield return new WaitForSeconds(5f);
         mainWeapon.SetActive(true);
         mainWeaponImage.SetActive(true);
-        StartCoroutine(PrintText("Primary weapon enabled. \nWill auto fire when in range.", loadUpWText));
+        StartCoroutine(PrintText("Primary weapon enabled. \n Eliminate all targets.", loadUpWText));
         yield return new WaitForSeconds(4f);
         loadUpWPanel.SetActive(false);
+        mechLoadOut.Init();
         ShowControlPanel(0);
-        _tutorialManager.runTest = true;
+        _tutorialManager.shootPTest = true;
     }
 
     public IEnumerator LoadWeaponsUI2()
@@ -119,7 +119,8 @@ public class TutorialUI : MonoBehaviour
         yield return new WaitForSeconds(5f);
         loadUpWPanel.SetActive(false);
         enemies2.SetActive(true);
-        ShowControlPanel(2);
+        ShowControlPanel(3);
+        _tutorialManager.manualWeaponController.enabled = true;
         _tutorialManager.shootTest = true;
         _tutorialManager.test2 = true;
     }
@@ -138,7 +139,7 @@ public class TutorialUI : MonoBehaviour
         dodgeBoots2.SetActive(true);
         yield return new WaitForSeconds(5f);
         loadUpWPanel.SetActive(false);
-        ShowControlPanel(3);
+        ShowControlPanel(4);
         _tutorialManager.dodgeTest = true;
         _tutorialManager.myCharacterController.candodge = true;
     }
@@ -153,12 +154,12 @@ public class TutorialUI : MonoBehaviour
         yield return new WaitForSeconds(4f);
         StartCoroutine(PrintText("Drone can be used for \npowerful attacks and assits.", loadUpWText));
         yield return new WaitForSeconds(5f);
-        StartCoroutine(PrintText("Mech taken damage! \nCall in a repair now!.", loadUpWText));
+        StartCoroutine(PrintText("Mech has taken damage! \nCall in a repair now!", loadUpWText));
         mechHealth.TakeDamage(50);
         yield return new WaitForSeconds(3f);
         loadUpWPanel.SetActive(false);
         _tutorialManager.droneTest = true;
-        ShowControlPanel(5);
+        ShowControlPanel(6);
     }
 
     public IEnumerator EndTutorial()
@@ -181,24 +182,27 @@ public class TutorialUI : MonoBehaviour
         switch (index)
         {
             case 0:
-                ControlText.text = "to move."; 
-                break;
-            case 1:
-                ControlText.text = "to aim.";
-                break;
-            case 2: 
                 ControlText.text = "to fire.";
                 break;
-            case 3:
-                ControlText.text = "to dodge.";
+            case 1:
+                ControlText.text = "to move."; 
+                break;
+            case 2:
+                ControlText.text = "to aim.";
+                break;
+            case 3: 
+                ControlText.text = "to fire.";
                 break;
             case 4:
-                ControlText.text = "to pulse.";
+                ControlText.text = "to dodge.";
                 break;
             case 5:
-                ControlText.text = "to open menu.";
+                ControlText.text = "to pulse.";
                 break;
             case 6:
+                ControlText.text = "to open menu.";
+                break;
+            case 7:
                 ControlText.text = "to select.";
                 break;
         }

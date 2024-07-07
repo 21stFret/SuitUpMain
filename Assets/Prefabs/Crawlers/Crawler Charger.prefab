@@ -14656,9 +14656,9 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   health: 0
-  healthMax: 60
+  healthMax: 40
   attackDamage: 10
-  speed: 6
+  speed: 7
   _randomSpeed: 1
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
@@ -14673,8 +14673,9 @@ MonoBehaviour:
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
   forceSpawn: 1
-  popupPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
+  damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
+  damageNumbersOn: 1
   chargeEffect: {fileID: 4823605491945663866}
   chargeDistance: 20
   chargeTime: 2

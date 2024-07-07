@@ -22,7 +22,13 @@ public class WeaponFuelManager : MonoBehaviour
         _enabled = true;
         weaponFuelRate = weapon.weaponFuelUseRate;
         weaponRechargeRate = 15;
-        //todo: add rechage rate to weapon data
+    }
+
+    public IEnumerator BoostRecharge(float time)
+    {
+        weaponRechargeRate = 30;
+        yield return new WaitForSeconds(time);
+        weaponRechargeRate = 15;
     }
 
 
@@ -45,6 +51,7 @@ public class WeaponFuelManager : MonoBehaviour
     {
         if (weaponFuel >= weaponFuelMax)
         {
+            weaponFuel = weaponFuelMax;
             return;
         }
 
@@ -70,6 +77,11 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void FuelManagement()
     {
+        if(weapon == null)
+        {
+            return;
+        }
+                
         if (weapon.isFiring)
         {
             if (weaponFuel <= 0)

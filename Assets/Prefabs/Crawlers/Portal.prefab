@@ -135,7 +135,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7358266920897204044}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
@@ -167,7 +167,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a6a70b72187f98f4eb7d5933370b6763, type: 2}
+  - {fileID: 2100000, guid: 93dd7567d394f58488bda40f93b55033, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2895,6 +2895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doTweenScale: {fileID: 5344546265503755263}
+  doTweenFade: {fileID: 0}
   _particleSystem: {fileID: 4586554715450090326}
   _particleSystem2: {fileID: 6269437975051292496}
   f3DWarpJumpTunnel:
@@ -2903,6 +2904,7 @@ MonoBehaviour:
   - {fileID: 825652371491975492}
   portalEffectDuration: 10
   infinite: 0
+  isActive: 0
 --- !u!1 &4510343162235685654
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ModifierType
+public enum ModType
 {
     Damage,
+    Health,
     FireRate,
     Range,
     FuelRate,
+    Speed,
     Unique
 }
 
 [System.Serializable]
-public struct Modifier
+public class Modifier
 { 
-    public ModifierType modType;
+    public ModType modType;
     public float modValue;
 }

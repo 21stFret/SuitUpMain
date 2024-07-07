@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InitTestScene : MonoBehaviour
 {
-    public MechLoadOut mechLoadOut;
+    public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public CrawlerSpawner crawlerSpawner;
     public bool spawnersActive = true;

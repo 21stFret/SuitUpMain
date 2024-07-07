@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1f4296ce4c606c469fc69f91f59dea0, type: 3}
+  m_Name: Battle 3
+  m_EditorClassIdentifier: 
+  ID: 3
+  battleType: 3
+  battleWaves:
+  - crawlersInWave:
+    - type: 0
+      count: 15
+    roundTimer: 10
+  - crawlersInWave:
+    - type: 0
+      count: 15
+    - type: 4
+      count: 2
+    roundTimer: 10
+  - crawlersInWave:
+    - type: 0
+      count: 10
+    - type: 5
+      count: 1
+    roundTimer: 10
+  battleDifficulty: 0

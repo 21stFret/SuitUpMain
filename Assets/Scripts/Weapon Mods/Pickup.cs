@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PickupType
-{
-    WeaponMod,
-    Health,
-    Bonus,
-}
 
 public class Pickup : MonoBehaviour
 {
@@ -16,20 +10,25 @@ public class Pickup : MonoBehaviour
 
     [ColorUsage(true, true)]
     public Color pickupColor;
-    public PickupType pickupType;
+    public ModBuildType pickupType;
     public Light pickupLight;
+
+    public RunUpgradeManager runUpgradeManager;
+
+    [InspectorButton("SetupPickup")]
+    public bool ResetPickup;
 
     private void Start()
     {
-        Init();
+        Init((ModBuildType)Random.Range(0,4));
     }
 
-    public void Init()
+    public void Init(ModBuildType type)
     {
         pickupRenderer = GetComponent<Renderer>();
         pickupCollider = GetComponent<Collider>();
         pickupLight = GetComponentInChildren<Light>(true);
-
+        pickupType = type;
         SetupPickup();
     }
 
@@ -46,14 +45,20 @@ public class Pickup : MonoBehaviour
     {
         switch (pickupType)
         {
-            case PickupType.WeaponMod:
+            case ModBuildType.ASSAULT:
                 pickupColor = Color.red;
                 break;
-            case PickupType.Health:
+            case ModBuildType.TANK:
                 pickupColor = Color.green;
                 break;
-            case PickupType.Bonus:
+            case ModBuildType.TECH:
                 pickupColor = Color.cyan;
+                break;
+            case ModBuildType.AGILITY:
+                pickupColor = Color.yellow;
+                break;
+            case ModBuildType.CURRENCY:
+                pickupColor = Color.white;
                 break;
         }
         pickupCollider.enabled = true;
@@ -65,12 +70,13 @@ public class Pickup : MonoBehaviour
 
     private void PickUp()
     {
-        GameUI.instance.OpenModUI(pickupType);
+        runUpgradeManager.GenerateListOfUpgrades(pickupType);
+        //GameUI.instance.OpenModUI(pickupType);
         if (GameManager.instance == null)
         {
             return;
         }
-        CashCollector.Instance.AddArtifact(1);
+        CashCollector.instance.AddArtifact(1);
     }
 
     private void RemovePickup()

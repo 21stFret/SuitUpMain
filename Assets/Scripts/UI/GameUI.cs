@@ -46,7 +46,7 @@ public class GameUI : MonoBehaviour
         droneController.airdropMenu.SetActive(false);
     }
 
-    public void OpenModUI(PickupType pickType)
+    public void OpenModUI(ModBuildType pickType)
     {
         modUI.OpenModUI(pickType);
         modOpen = true;
@@ -78,6 +78,6 @@ public class GameUI : MonoBehaviour
         completePanel.GetComponentInParent<DoTweenFade>().PlayTween();
         eventSystem.SetSelectedGameObject(completeButton);
         var GM = GameManager.instance;
-        rewardMenu.SetRewards(GM.cashCount, GM.expCount, GM.artifactCount, GM.playTime);
+        rewardMenu.SetRewards(GM.cashCount, GM.expCount, GM.artifactCount, GM.playTime, GM.rewardMultiplier);
     }
 }

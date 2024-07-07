@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InitGame : MonoBehaviour
 {
-    public MechLoadOut mechLoadOut;
+    public MechLoader mechLoadOut;
     public StatsUI statsUI;
     public ConnectWeaponHolderToManager weaponHolder;
     public MainMenu mainMenu;

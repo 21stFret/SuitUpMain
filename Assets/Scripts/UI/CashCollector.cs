@@ -7,7 +7,7 @@ public class CashCollector : MonoBehaviour
 {
     [SerializeField] public TMP_Text alienParts;
 
-    public static CashCollector Instance;
+    public static CashCollector instance;
     public GameObject panel;
     private bool UIshown;
     public float timeToHide = 2f;
@@ -24,7 +24,7 @@ public class CashCollector : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        instance = this;
     }
 
     private void Start()

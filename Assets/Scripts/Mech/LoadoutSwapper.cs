@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class LoadoutSwapper : MonoBehaviour
 {
-    public MechLoadOut loadOut;
+    public MechLoader loadOut;
     public WeaponsManager weaponsManager;
     public TMP_Dropdown altWeaponDropdown;
     public TMP_Dropdown modWeaponDropdown;
@@ -39,7 +39,7 @@ public class LoadoutSwapper : MonoBehaviour
 
     public void SwapMod(int index)
     {
-        loadOut.weaponModManager.EquipMod(index);
+        //loadOut.weaponModManager.EquipWeaponMod(index);
     }
 
     private void SetMods()
@@ -49,7 +49,7 @@ public class LoadoutSwapper : MonoBehaviour
         List<string> options = new List<string>();
         for (int i = 0; i < loadOut.weaponModManager.currentMods.Count; i++)
         {
-            options.Add(loadOut.weaponModManager.currentMods[i].modName);
+            //options.Add(loadOut.weaponModManager.currentMods[i].modName);
         }
         modWeaponDropdown.AddOptions(options);
     }

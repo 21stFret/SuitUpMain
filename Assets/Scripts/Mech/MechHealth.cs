@@ -23,19 +23,22 @@ public class MechHealth : MonoBehaviour
     public GameObject deathEffect;
     public AudioClip deathClip;
     public GameObject mainObject;
+    public GameObject topHlafObject;
     public TargetHealth targetHealth;
     private float hitTime;
     private bool hit;
     public float regenRate =3f;
     private float requestedHealth;
     private float regenTime;
+    private Rigidbody rb;
+    private MYCharacterController characterController;
 
     private void Start()
     {
         image.material.SetColor("_Color", Color.white);
         image.material.SetFloat("_HologramDistortionOffset", 0.2f);
-        //SetEmmisveHeatlh();
-        //SetEmmisiveStrength(2);
+        rb = GetComponent<Rigidbody>();
+        characterController = GetComponent<MYCharacterController>();
     }
 
     private void Update()
@@ -87,6 +90,11 @@ public class MechHealth : MonoBehaviour
         hit = true;
         targetHealth.health -= damage;
 
+        if (targetHealth.health > targetHealth.healthMax)
+        {
+            targetHealth.health = targetHealth.healthMax;
+        }
+
         UpdateHealth(targetHealth.health, damage<0);
 
         // shakes camera
@@ -94,6 +102,12 @@ public class MechHealth : MonoBehaviour
         impulseSource.GenerateImpulse(damagePercent);
 
         AudioManager.instance.PlayHurt();
+
+        if(characterController.isDodging)
+        {
+            return;
+        }
+        rb.velocity = Vector3.zero;
     }
 
     public void UpdateHealth(float health, bool healed = false)
@@ -111,6 +125,7 @@ public class MechHealth : MonoBehaviour
             deathEffect.SetActive(true);
             AudioManager.instance.PlaySFXFromClip(deathClip);
             mainObject.SetActive(false);
+            topHlafObject.SetActive(false);
             PlayerSavedData.instance._gameStats.totalDeaths++;
             if(PlayerSavedData.instance._gameStats.totalDeaths == 100)
             {

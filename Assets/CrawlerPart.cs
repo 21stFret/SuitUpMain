@@ -19,7 +19,7 @@ public class CrawlerPart : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            CashCollector.Instance.AddCrawlerPart(1);
+            CashCollector.instance.AddCrawlerPart(1);
             Destroy(gameObject);
         }
     }

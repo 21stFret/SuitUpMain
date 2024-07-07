@@ -6,7 +6,7 @@ namespace FORGE3D
     public class F3DWarpJumpTunnel : MonoBehaviour
     {
         private new Transform transform;
-        private MeshRenderer meshRenderer;
+        public MeshRenderer meshRenderer;
 
         public float StartDelay, FadeDelay;
         public Vector3 ScaleTo;

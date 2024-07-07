@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Battle : MonoBehaviour
+public enum BattleDifficulty
+{
+    Easy,
+    Medium,
+    Hard
+}
+
+[CreateAssetMenu(fileName = "Battle", menuName = "Battle")]
+public class Battle : ScriptableObject
 {
     public int ID;
     public BattleType battleType;
     public List<BattleWave> battleWaves = new List<BattleWave>();
+    public BattleDifficulty battleDifficulty;
 }
 
 [System.Serializable]

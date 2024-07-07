@@ -9,12 +9,14 @@ public class RewardMenu : MonoBehaviour
     public TMP_Text expReward;
     public TMP_Text artifactReward;
     public TMP_Text playTimer;
+    public TMP_Text _multiplier;
 
-    public void SetRewards(int cash, int exp, int artifact, float playTime)
+    public void SetRewards(int cash, int exp, int artifact, float playTime, float multiplier)
     {
         cashReward.text = cash.ToString();
         expReward.text = exp.ToString();
         artifactReward.text = artifact.ToString();
+        _multiplier.text = "Reward Multiplier : x" + multiplier.ToString("F1");
         int mins = Mathf.FloorToInt(playTime/60);
         string runTime = "Run Time ";
 

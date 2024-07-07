@@ -10,7 +10,7 @@ public enum WeaponType
     Lightning,
     Cryo,
     Grenade,
-    Beam,
+    Plasma,
     AoE,
     Cralwer,
     Default

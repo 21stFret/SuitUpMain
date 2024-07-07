@@ -14,6 +14,7 @@ public enum CrawlerType
 {
     Crawler,
     Daddy,
+    DaddyCrawler,
     Albino,
     Spitter,
     Charger
@@ -31,6 +32,8 @@ public class Crawler : MonoBehaviour
     [HideInInspector]
     public Transform target;
     private Collider _collider;
+    [HideInInspector]
+    public CrawlerSpawner crawlerSpawner;
 
 
     [SerializeField]
@@ -64,15 +67,16 @@ public class Crawler : MonoBehaviour
 
     private float pulseCheckTime = 0.5f;
 
-    public DamageNumber popupPrefab;
-
-    private void Awake()
-    {
-        Init();
-    }
+    public DamageNumber damageNumberPrefab;
+    public bool damageNumbersOn;
+    private TargetHealth _targetHealth;
 
     public void Init()
     {
+        hasTarget = false;
+        dead = false;
+        _targetHealth = GetComponent<TargetHealth>();
+        _targetHealth.Init();
         _collider = GetComponent<Collider>();
         animator = GetComponent<Animator>();
         crawlerMovement = GetComponent<CrawlerMovement>();
@@ -81,9 +85,15 @@ public class Crawler : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         _randomSpeed = Random.Range(speed, speed + randomScale);
         _collider.enabled = false;
-        crawlerMovement.groundCollider.enabled = false;
+        //crawlerMovement.groundCollider.enabled = false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
+        if (damageNumberPrefab == null)
+        {
+            damageNumbersOn = false;
+            return;
+        }
+        damageNumbersOn = true;
     }
 
     private void Start()
@@ -92,6 +102,7 @@ public class Crawler : MonoBehaviour
         dead = false;
         if (forceSpawn)
         {
+            Init();
             Spawn();
         }
     }
@@ -115,10 +126,6 @@ public class Crawler : MonoBehaviour
     {
         if(dead)
         {
-            if(CrawlerSpawner.instance != null)
-            {
-                CrawlerSpawner.instance.CheckActiveList(this);
-            }
             return;
         }
 
@@ -146,8 +153,6 @@ public class Crawler : MonoBehaviour
             }
         }
 
-
-        //SetTargetDestination();
         crawlerMovement.SetTarget(target);
         CheckDistance();
     }
@@ -160,36 +165,6 @@ public class Crawler : MonoBehaviour
         target = rangeSensor.GetNearestDetection().transform;
 
         hasTarget = true;
-    }
-
-    private void SetTargetDestination()
-    {
-        if (Physics.Raycast(transform.position, target.position - transform.position, out RaycastHit hit, 100f))
-        {
-            if (hit.transform == target)
-            {
-                canSeeTarget = true;
-            }
-            else
-            {
-                canSeeTarget = false;
-            }
-        }
-        else
-        {
-            canSeeTarget = false;
-        }
-
-        if (canSeeTarget)
-        {
-            crawlerMovement.SetTarget(target);
-        }
-        else
-        {
-            Vector3 randomPosition = Random.insideUnitSphere * randomLocationRadius;
-            randomPosition += target.position;
-            crawlerMovement.SetDestination(randomPosition);
-        }
     }
 
     public virtual void CheckDistance()
@@ -254,7 +229,7 @@ public class Crawler : MonoBehaviour
 
     public void DamageNumbers(float dam, WeaponType weapon)
     {
-        DamageNumber newPopup = popupPrefab.Spawn(transform.position, dam);
+        DamageNumber newPopup = damageNumberPrefab.Spawn(transform.position, dam);
         newPopup.SetFollowedTarget(transform);
         newPopup.SetScale(5);
         switch (weapon)
@@ -275,7 +250,7 @@ public class Crawler : MonoBehaviour
                 break;
             case WeaponType.Grenade:
                 break;
-            case WeaponType.Beam:
+            case WeaponType.Plasma:
                 newPopup.SetColor(Color.magenta);
                 break;
             case WeaponType.AoE:
@@ -292,20 +267,26 @@ public class Crawler : MonoBehaviour
     
     public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
-        FlashRed();
-        TakeDamageOveride();
-        DamageNumbers(damage, killedBy);
+
+
         if (stunTime > 0)
         {
             StartCoroutine(StunCralwer(stunTime));
         }
 
-        if (immune)
+        if(dead)
         {
             return;
         }
 
-        if(dead)
+        FlashRed();
+        TakeDamageOveride();
+        if (damageNumbersOn)
+        {
+            DamageNumbers(damage, killedBy);
+        }
+
+        if (immune)
         {
             return;
         }
@@ -351,7 +332,7 @@ public class Crawler : MonoBehaviour
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
-        crawlerMovement.groundCollider.enabled= false;
+        crawlerMovement.groundCollider.gameObject.layer = 2;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
@@ -359,23 +340,25 @@ public class Crawler : MonoBehaviour
         //animator.SetTrigger("Die");
         DeathBlood.Play();
 
-        if (CrawlerSpawner.instance != null)
+        if(crawlerSpawner != null)
         {
-            CrawlerSpawner.instance.AddtoRespawnList(this, crawlerType);
+            crawlerSpawner.AddtoRespawnList(this, crawlerType);
         }
+
+        
 
         if (weapon == WeaponType.Default)
         {
             return;
         }
 
-        if (CashCollector.Instance != null)
+        if (CashCollector.instance != null)
         {
-            CashCollector.Instance.AddCash(cashWorth);
+            CashCollector.instance.AddCash(cashWorth);
             if (Random.Range(0, 100) < 15)
             {
                 GameObject go = Instantiate(partPrefab, transform.position + (transform.up * 2), Quaternion.identity);
-                go.transform.SetParent(CashCollector.Instance.crawlerPartParent.transform);
+                go.transform.SetParent(CashCollector.instance.crawlerPartParent.transform);
             }
         }
 
@@ -397,9 +380,11 @@ public class Crawler : MonoBehaviour
     public virtual void Spawn()
     {
         gameObject.SetActive(true);
+        dead = false;
         meshRenderer.enabled = true;
         _collider.enabled = true;
         crawlerMovement.groundCollider.enabled = true;
+        crawlerMovement.groundCollider.gameObject.layer = 8;
         rb.velocity = Vector3.zero;
         health = healthMax;
         if (transform.position.y< crawlerMovement.groundLevel)
@@ -425,7 +410,6 @@ public class Crawler : MonoBehaviour
         crawlerMovement.enabled = true;
         _randomSpeed = Random.Range(speed, speed + randomScale);
         crawlerMovement.speedFinal = _randomSpeed;
-        dead = false;
         animator.speed = 1;
     }
 }

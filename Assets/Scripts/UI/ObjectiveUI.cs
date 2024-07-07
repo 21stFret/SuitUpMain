@@ -30,9 +30,15 @@ public class ObjectiveUI : MonoBehaviour
         objectiveText.text = objective;
     }
 
-    public IEnumerator ObjectiveComplete()
+    public IEnumerator ObjectiveComplete(bool complete = true)
     {
-        GameUI.instance.objectiveUI.UpdateObjective("Objective Complete");
+        string objective = "Objective Complete";
+        if (!complete)
+        {
+            objective = "Objective Failed";
+        }
+        objective += "\n Go through the portal to continue";
+        GameUI.instance.objectiveUI.UpdateObjective(objective);
         objectiveText.material.SetFloat("_GlowPower", 1);
         yield return new WaitForSeconds(2f);
         objectiveBar.enabled = false;

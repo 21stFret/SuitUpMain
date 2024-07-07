@@ -6,7 +6,8 @@ Shader "FORGE3D/WarpJumpTunnel"
 	{
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[ASEBegin]_TintColorA("Tint Color A", Color) = (0,0,0,0)
+		[ASEBegin]
+		_TintColorA("Tint Color A", Color) = (0,0,0,0)
 		_TintColorB("Tint Color B", Color) = (0,0,0,0)
 		_Mult("Mult", Float) = 1
 		_InvFade("InvFade", Float) = 0

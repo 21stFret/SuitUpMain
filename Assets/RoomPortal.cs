@@ -9,6 +9,9 @@ public class RoomPortal : MonoBehaviour
     public AudioClip[] portalSounds;
     public AudioSource audioSource;
     public bool _active;
+    public bool voidPortal;
+    public VoidPortalManager voidPortalManager;
+    public ModBuildType portalType;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -18,7 +21,16 @@ public class RoomPortal : MonoBehaviour
         {
             visualPortalEffect.gameObject.SetActive(true);
             visualPortalEffect.StartFirstPersonEffect();
-            GameManager.instance.LoadNextRoom();
+            if(voidPortal)
+            {
+                GameManager.instance.StartCoroutine("LoadVoidRoom");
+            }
+            else
+            {
+                GameManager.instance.LoadNextRoom();
+                GameManager.instance.nextBuildtoLoad = portalType;
+            }
+            voidPortalManager.StopEffect();
             _active = false;
             audioSource.clip = portalSounds[Random.Range(0, portalSounds.Length)];
             audioSource.Play();

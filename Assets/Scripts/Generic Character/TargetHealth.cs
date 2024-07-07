@@ -13,7 +13,7 @@ public class TargetHealth : MonoBehaviour
     private MechHealth _mech;
     private Prop _prop;
 
-    private void Start()
+    public void Init()
     {
         health = healthMax;
         alive = true;
@@ -26,7 +26,7 @@ public class TargetHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage, WeaponType weaponType, float stunTime = 0)
+    public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {
         if (invincible)
         {
@@ -35,6 +35,7 @@ public class TargetHealth : MonoBehaviour
 
         if (_crawler != null)
         {
+            damage = damage * MechStats.instance.damageMultiplier;
             if(weaponType == WeaponType.Cralwer)
             {
                 return;
@@ -49,7 +50,7 @@ public class TargetHealth : MonoBehaviour
 
         if (_prop != null)
         {
-            _prop.TakeDamage(damage);
+            _prop.TakeDamage(damage, weaponType);
         }
     }
 

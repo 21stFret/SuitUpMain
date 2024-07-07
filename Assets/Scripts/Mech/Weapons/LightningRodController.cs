@@ -2,6 +2,7 @@
 using FORGE3D;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 
 public class LightningRodController : MechWeapon
@@ -83,6 +84,11 @@ public class LightningRodController : MechWeapon
     {
         for (int i = 0; i < targets.Count; i++)
         {
+            if (targets[i] == null)
+            {
+                UnlinkAllLightning();
+                return;
+            }
             targets[i].TakeDamage(damage, WeaponType.Lightning, stunTime);
         }
     }
@@ -95,59 +101,63 @@ public class LightningRodController : MechWeapon
             return;
         }
 
-        if (hitt.collider.CompareTag("Enemy"))
+        hit = hitt;
+
+        if (crawlerHit == null)
         {
-            hit = hitt;
-            if (crawlerHit == null)
-            {
-                crawlerHit = hitt.collider.gameObject;
-            }
-
-            if(crawlerHit != hitt.collider.gameObject)
-            {
-                UnlinkAllLightning();
-                crawlerHit = hitt.collider.gameObject;
-                return;
-            }
-
-            if(!hitSwitch)
-            {
-                targets.Add(crawlerHit.GetComponent<TargetHealth>());
-                hitSwitch = true;
-            }
-            if(arcOverride)
-            {
-                return;
-            }
-            LightningArc(crawlerHit.transform);
+            crawlerHit = hitt.collider.gameObject;
         }
-        else
+
+        if(crawlerHit != hitt.collider.gameObject)
         {
             UnlinkAllLightning();
+            crawlerHit = hitt.collider.gameObject;
+            return;
         }
+
+        if(!hitSwitch)
+        {
+            targets.Add(crawlerHit.GetComponent<TargetHealth>());
+            hitSwitch = true;
+        }
+        if(arcOverride)
+        {
+            return;
+        }
+        LightningArc(crawlerHit.transform);
     }
 
     public void LightningArc(Transform nextHit)
     {
-        Collider[] colliders = Physics.OverlapSphere(nextHit.position, lightningRange, crawlerLayer);
-        Array.Sort(colliders, (x, y) => Vector3.Distance(nextHit.position, x.transform.position).CompareTo(Vector3.Distance(nextHit.position, y.transform.position)));
-        for(int i = 0; i< colliders.Length; i++)
+        if(targets.Count == 0)
         {
-            if (colliders[i].CompareTag("Enemy"))
+            return;
+        }
+        Collider[] colliders = Physics.OverlapSphere(nextHit.position, lightningRange, crawlerLayer);
+        List<Collider> list = new List<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.GetComponent<TargetHealth>() != null)
             {
-                if (targets.Find(x => x.transform == colliders[i].transform))
-                {
-                    continue;
-                }
-
-                crawlerIndex++;
-                if (crawlerIndex >= chainAmount)
-                {
-                    LightningLinkCrawlers();
-                    return;
-                }
-                targets.Add(colliders[i].gameObject.GetComponent<TargetHealth>());
+                list.Add(colliders[i]);
             }
+        }
+        list.Sort((x, y) => Vector3.Distance(nextHit.position, x.transform.position).CompareTo(Vector3.Distance(nextHit.position, y.transform.position)));
+        //Array.Sort(colliders, (x, y) => Vector3.Distance(nextHit.position, x.transform.position).CompareTo(Vector3.Distance(nextHit.position, y.transform.position)));
+        for(int i = 0; i< list.Count; i++)
+        {
+            if (targets.Find(x => x.transform == list[i].transform))
+            {
+                continue;
+            }
+
+            crawlerIndex++;
+            if (crawlerIndex >= chainAmount)
+            {
+                LightningLinkCrawlers();
+                return;
+            }
+            targets.Add(list[i].gameObject.GetComponent<TargetHealth>());
         }
         //print("Reached " + crawlerIndex + " / " + colliders.Length);
         LightningLinkCrawlers();

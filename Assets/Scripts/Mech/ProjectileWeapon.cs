@@ -131,7 +131,7 @@ public class ProjectileWeapon : MonoBehaviour
         {
             proj.impactDamage = dam;
             proj._weaponController = this;
-            proj.weaponType = WeaponType.Beam;
+            proj.weaponType = WeaponType.Plasma;
             proj.pierceCount = pierceC;
         }
 
@@ -162,7 +162,7 @@ public class ProjectileWeapon : MonoBehaviour
             case WeaponType.Cryo:
                 F3DAudioController.instance.SniperHit(pos);
                 break;
-            case WeaponType.Beam:
+            case WeaponType.Plasma:
                 F3DAudioController.instance.PlasmaGunHit(pos);
                 break;
         }

@@ -19,6 +19,7 @@ public class TutorialManager : MonoBehaviour
     public bool runTest;
     public bool aimTest;
     public bool shootTest;
+    public bool shootPTest;
     public bool dodgeTest;
     public bool pulseTest;
     public bool droneTest;
@@ -28,8 +29,9 @@ public class TutorialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        manualWeaponController.enabled = false;
         myCharacterController.enabled = false;
-        playerInput.DeactivateInput();
+        playerInput.SwitchCurrentActionMap("Gameplay");
         droneController.enabled = false;
         sceneLoader = SceneLoader.instance;
     }
@@ -47,8 +49,6 @@ public class TutorialManager : MonoBehaviour
         }
         if (runTest)
         {
-            playerInput.ActivateInput();
-            myCharacterController.enabled = true;
             RunTest();
         }
         if (aimTest)
@@ -58,6 +58,10 @@ public class TutorialManager : MonoBehaviour
         if (shootTest)
         {
             ShootTest();
+        }
+        if (shootPTest)
+        {
+            ShootPTest();
         }
         if (dodgeTest)
         {
@@ -79,6 +83,14 @@ public class TutorialManager : MonoBehaviour
         {
             RepairTest();
         }
+    }
+
+    public void SkipTutorial()
+    {
+        GameUI.instance.pauseMenu.ResumeGame();
+        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.SavePlayerData();
+        sceneLoader.LoadScene(2);
     }
 
     public void RepairTest()
@@ -155,6 +167,19 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    public void ShootPTest()
+    {
+        playerInput.ActivateInput();
+        myCharacterController.enabled = true;
+        if (manualWeaponController.equipedWeaponP.isFiring)
+        {
+            tutorialUI.SetControlGreen();
+            StartCoroutine(HidePanel());
+            shootPTest = false;
+            StartCoroutine(LoadRunPanel());
+        }
+    }
+
     private IEnumerator HidePanel()
     {
         yield return new WaitForSeconds(1f);
@@ -166,30 +191,37 @@ public class TutorialManager : MonoBehaviour
         if(myCharacterController._moveInputVector.magnitude > 0)
         {
             tutorialUI.SetControlGreen();
-            aimTest = true;
             test1 = true;
             runTest = false;
             StartCoroutine(LoadAimPanel());
         }
     }
 
+    private IEnumerator LoadRunPanel()
+    {
+        yield return new WaitForSeconds(2f);
+        tutorialUI.ShowControlPanel(1);
+        runTest = true;
+    }
+
     private IEnumerator LoadAimPanel()
     {
-        yield return new WaitForSeconds(1f);
-        tutorialUI.ShowControlPanel(1);
+        yield return new WaitForSeconds(2f);
+        tutorialUI.ShowControlPanel(2);
+        aimTest = true;
     }
 
     private IEnumerator LoadPulsePanel()
     {
-        yield return new WaitForSeconds(1f);
-        tutorialUI.ShowControlPanel(4);
+        yield return new WaitForSeconds(2f);
+        tutorialUI.ShowControlPanel(5);
         pulseTest = true;
     }
 
     private IEnumerator LoadDronePanel()
     {
         yield return new WaitForSeconds(0.5f);
-        tutorialUI.ShowControlPanel(6);
+        tutorialUI.ShowControlPanel(7);
         selectTest = true;
     }
 

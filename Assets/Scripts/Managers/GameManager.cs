@@ -26,11 +26,13 @@ public class GameManager : MonoBehaviour
     public int crawlerParts;
     public float playTime;
     public PlayerInput playerInput;
-    public MechLoadOut mechLoadOut;
+    public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public ManualWeaponController altWeaponController;
     private PlayerSavedData playerSavedData;
     public List<GameObject> rooms = new List<GameObject>();
+    public GameObject voidArea;
+    public VoidPortalManager voidPortalManager;
     public List<Battle> Battles = new List<Battle>();
     public RoomPortal RoomPortal;
     public Pickup roomDrop;
@@ -48,9 +50,14 @@ public class GameManager : MonoBehaviour
     private bool triggerShotMultiKill; 
     private int mutliKillCount;
     private bool triggerMultiKill;
+    public float rewardMultiplier;
 
+    public bool playOnAwake = false;
 
+    [InspectorButton("SpawnPortalsToNextRoom")]
+    public bool spawnPortal;
 
+    public ModBuildType nextBuildtoLoad;
 
     private void Awake()
     {
@@ -75,19 +82,26 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
+        currentRoomIndex = 0;
+        LoadRoomRandom();
+        playerSavedData = PlayerSavedData.instance;
+        weaponHolder.SetupWeaponsManager();
+        WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
+        mechLoadOut.Init();
+        nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
+
+        if (!playOnAwake)
+        {
+            return;
+        }
+
         gameActive = true;
         killCount = 0;
         expCount = 0;
         cashCount = 0;
         dayTime = true;
-        currentRoomIndex = 0;
-        LoadRoomRandom();
         SetBattleType();
         currentBattleIndex = 0;
-        playerSavedData = PlayerSavedData.instance;
-        weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(playerSavedData._mainWeaponData, playerSavedData._altWeaponData);
-        mechLoadOut.Init();
         UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
     }
@@ -135,14 +149,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SpawnPortalToNextRoom()
+    public void SpawnPortalsToNextRoom()
     {
         //show sign to portal
         crawlerSpawner.waveText.text = "Head through the Portal!";
-        RoomPortal.portalEffect.StartEffect();
-        RoomPortal._active = true;
-        roomDrop.gameObject.SetActive(true);
-        roomDrop.Init();
+        voidPortalManager.StartEffect();
+    }
+
+    public IEnumerator LoadVoidRoom()
+    {
+        RoomPortal.portalEffect.StopEffect();   
+        yield return new WaitForSeconds(2);
+        rooms[currentRoomIndex].SetActive(false);
+        voidArea.SetActive(true);
+        yield return new WaitForSeconds(1);
+        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        yield return new WaitForSeconds(1);
+        gameUI.gameUIFade.FadeIn();
     }
 
     public void UpdateKillCount(int count, WeaponType weapon)
@@ -336,27 +359,29 @@ public class GameManager : MonoBehaviour
         SceneLoader.instance.LoadScene(1);
     }
 
+    public IEnumerator DelayedLoadNextRoom()
+    {
+        gameUI.gameUIFade.FadeOut();
+        yield return new WaitForSeconds(2);
+        CashCollector.instance.DestroyParts();
+        currentBattleIndex++;
+        voidArea.SetActive(false);
+        LoadRoomRandom();
+        SetBattleType();
+        UpdateCrawlerSpawner();
+        DayNightCycle();
+        roomDrop.gameObject.SetActive(false);
+        //RoomPortal.portalEffect.StopEffect();
+        yield return new WaitForSeconds(1);
+        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        yield return new WaitForSeconds(1);
+        gameUI.gameUIFade.FadeIn();
+
+    }
+
     public void LoadNextRoom()
     {
         StartCoroutine(DelayedLoadNextRoom());
-    }
-
-    private void LoadRoom()
-    {
-        rooms[currentRoomIndex].SetActive(false);
-        currentRoomIndex++;
-        currentBattleIndex++;
-        if (currentRoomIndex == rooms.Count)
-        {
-            currentRoomIndex = 0;
-        }
-        rooms[currentRoomIndex].SetActive(true);
-
-        ProceduralLevelGeneration levelGen = rooms[currentRoomIndex].GetComponent<ProceduralLevelGeneration>();
-        if (levelGen != null)
-        {
-            levelGen.GenerateLevel();
-        }
     }
 
     private void LoadRoomRandom()
@@ -368,6 +393,12 @@ public class GameManager : MonoBehaviour
             currentRoomIndex = 0;
         }
         rooms[currentRoomIndex].SetActive(true);
+
+        ProceduralLevelGeneration levelGen = rooms[currentRoomIndex].GetComponent<ProceduralLevelGeneration>();
+        if (levelGen != null)
+        {
+            levelGen.GenerateLevel();
+        }
     }
 
     private void SetBattleType()
@@ -427,9 +458,9 @@ public class GameManager : MonoBehaviour
         capturePoint.Init();
     }
 
-    public void ObjectiveComplete()
+    public void ObjectiveComplete(bool complete = true)
     {
-        StartCoroutine(gameUI.objectiveUI.ObjectiveComplete());
+        StartCoroutine(gameUI.objectiveUI.ObjectiveComplete(complete));
         crawlerSpawner.EndBattle();
 
         if (currentBattleIndex == Battles.Count - 1)
@@ -438,26 +469,12 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        SpawnPortalToNextRoom();
+        crawlerSpawner.waveText.text = "Collect your reward!";
+        roomDrop.gameObject.SetActive(true);
+        roomDrop.Init(nextBuildtoLoad);
     }
 
-    public IEnumerator DelayedLoadNextRoom()
-    {
-        gameUI.gameUIFade.FadeOut();
-        yield return new WaitForSeconds(2);
-        CashCollector.Instance.DestroyParts();
-        LoadRoom();
-        SetBattleType();
-        UpdateCrawlerSpawner();
-        DayNightCycle();
-        roomDrop.gameObject.SetActive(false);
-        RoomPortal.portalEffect.StopEffect();
-        yield return new WaitForSeconds(1);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
-        yield return new WaitForSeconds(1);
-        gameUI.gameUIFade.FadeIn();
 
-    }
 
     private void DayNightCycle()
     {
@@ -500,6 +517,15 @@ public class GameManager : MonoBehaviour
         playTime = Time.timeSinceLevelLoad;
         gameActive = false;
         crawlerSpawner.isActive = false;
+        if (won)
+        {
+            rewardMultiplier = 1.5f;
+            cashCount = Mathf.CeilToInt(cashCount * rewardMultiplier);
+        }
+        else
+        { 
+            rewardMultiplier = 1; 
+        }
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
         playerSavedData.UpdatePlayerCash(cashCount);

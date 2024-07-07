@@ -13,6 +13,14 @@ public class PortalEffect : MonoBehaviour
     public bool infinite;
     public bool isActive;
 
+    [InspectorButton("StartEffect")]
+    public bool startEffect;
+
+    [InspectorButton("StopEffect")]
+    public bool stopEffect;
+
+
+
     public void StartEffect()
     {
         isActive = true;

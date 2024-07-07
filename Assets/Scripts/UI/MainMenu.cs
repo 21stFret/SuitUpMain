@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
     public GameObject RDMenu;
     public GameObject AchMenu;
     public PlayerInput playerInput;
-    public MechLoadOut loadOut;
+    public MechLoader loadOut;
     public SceneLoader sceneLoader;
     public GameObject[] menus;
     public GameObject[] menuBUttons;
@@ -175,6 +175,8 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         mainMenu.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.SetActive(false);
+        RDMenu.SetActive(false);
+        AchMenu.SetActive(false);
         header.SetActive(false);
         PauseInput(false);
         inMainMenu = true;
@@ -210,6 +212,10 @@ public class MainMenu : MonoBehaviour
 
     public void OpenMainMenuButton(InputAction.CallbackContext context)
     {
+        if(inMainMenu)
+        {
+            return;
+        }
         if (context.performed)
         {
             StartCoroutine(OpenMainMenu());

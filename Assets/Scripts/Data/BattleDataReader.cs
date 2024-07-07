@@ -1,30 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+
 
 public class BattleDataReader : MonoBehaviour
 {
     public static BattleDataReader instance;
     private int IDCatch;
-    public List<Battle> battles;
 
-    private void Awake()
+#if UNITY_EDITOR
+    public void LoadFromExcell()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        DontDestroyOnLoad(this.gameObject);
-    }
-
-    private void Start()
-    {
-        LoadFromExcell(battles);
-    }
-
-    public void LoadFromExcell(List<Battle> battles)
-    {
+        print("Loading Battles");
         List<Dictionary<string, object>> data = CSVReader.Read("WeaponBaseData - Battles");
         for (var i = 0; i < data.Count; i++)
         {
@@ -33,27 +22,32 @@ public class BattleDataReader : MonoBehaviour
                 continue;
             }
             IDCatch = (int)data[i]["ID"];
-            Battle battle = battles[IDCatch-1];
 
+            Battle battle = AssetDatabase.LoadAssetAtPath<Battle>("Assets/Battle " + IDCatch + ".asset");
+            if (battle == null)
+            {
+                // Create and save ScriptableObject because it doesn't exist yet
+                battle = ScriptableObject.CreateInstance<Battle>();
+                AssetDatabase.CreateAsset(battle, "Assets/Battle " + IDCatch + ".asset");
+            }
+            EditorUtility.SetDirty(battle);
             string type = data[i]["Type"].ToString();
             Enum.TryParse(type, out BattleType battleType);
             battle.battleType = battleType;
-
+            battle.battleDifficulty = (BattleDifficulty)Enum.Parse(typeof(BattleDifficulty), data[i]["Difficulty"].ToString());
             battle.ID = (int)data[i]["ID"];
 
             battle.battleWaves = new List<BattleWave>();
             var waveCount = (int)data[i]["Wave"];
 
-
-
             for (int j = 0; j < waveCount; j++)
             {
-                int cralwerTypeCount = (int)data[i+j]["Count"];
+                int cralwerTypeCount = (int)data[i + j]["Count"];
                 CrawlerWave[] crawlersTypesInWave = new CrawlerWave[cralwerTypeCount];
                 int k = 0;
                 for (int t = 0; t < 7; t++)
                 {
-                    if(k == cralwerTypeCount)
+                    if (k == cralwerTypeCount)
                     {
                         break;
                     }
@@ -109,11 +103,26 @@ public class BattleDataReader : MonoBehaviour
                         case 7:
                             break;
                     }
-
                 }
-                battle.battleWaves.Add(new BattleWave(crawlersTypesInWave, 10));
+                float roundTimer = (float)data[i + j]["RoundTimer"];
+                battle.battleWaves.Add(new BattleWave(crawlersTypesInWave, roundTimer));
             }
         }
+        AssetDatabase.SaveAssets();
     }
 
+    [MenuItem("Custom/Load Battles From Excel")]
+    public static void LoadBattlesFromExcel()
+    {
+        BattleDataReader instance = FindObjectOfType<BattleDataReader>();
+        if (instance != null)
+        {
+            instance.LoadFromExcell();
+        }
+        else
+        {
+            Debug.LogError("BattleDataReader instance not found in the scene.");
+        }
+    }
+    #endif
 }
