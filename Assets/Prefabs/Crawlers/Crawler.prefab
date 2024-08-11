@@ -445,6 +445,11 @@ MonoBehaviour:
   tracking: 1
   groundLevel: 0
   groundCollider: {fileID: 1512139350355409810}
+  separationWeight: 10
+  alignmentWeight: 1
+  cohesionWeight: 1
+  swarmRadius: 5
+  desiredSeparation: 10
 --- !u!136 &8265754060228884709
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -155,7 +155,18 @@ public class Crawler : MonoBehaviour
 
         crawlerMovement.SetTarget(target);
         CheckDistance();
+        CheckPosition();
     }
+
+    private void CheckPosition()
+    {
+        if (transform.position.y < -10)
+        {
+            TakeDamage(1000, WeaponType.Default);
+        }
+    }
+
+
     public void FindClosestTarget()
     {
         if (!rangeSensor.GetNearestDetection())

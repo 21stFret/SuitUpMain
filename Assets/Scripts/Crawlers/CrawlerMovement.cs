@@ -1,29 +1,32 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
 public class CrawlerMovement : MonoBehaviour
 {
     private Transform target;
-    [SerializeField]
-    private Vector3 destination;
-    public float speedFinal;
-    public float steerSpeed;
-    public float lookSpeed;
-    public float stoppingDistance;
-    [SerializeField]
-    private Vector3 direction;
+    [SerializeField] private Vector3 destination;
+    public float speedFinal = 5f;
+    public float steerSpeed = 2f;
+    public float lookSpeed = 5f;
+    public float stoppingDistance = 1f;
+    [SerializeField] private Vector3 direction;
     private Rigidbody rb;
-    public int rayAmount;
-    public float rayDistance;
+    public int rayAmount = 5;
+    public float rayDistance = 3f;
     public LayerMask layerMask;
     public float distanceToTarget;
     public bool tracking = true;
     public float groundLevel;
     public Collider groundCollider;
 
+    // Swarm behavior parameters
+    public float separationWeight = 1.5f;
+    public float alignmentWeight = 1.0f;
+    public float cohesionWeight = 1.0f;
+    public float swarmRadius = 5f;
+    public float desiredSeparation = 2f; // Desired distance between crawlers
+
+    private List<CrawlerMovement> nearbySwarmMembers = new List<CrawlerMovement>();
 
     private void Awake()
     {
@@ -43,7 +46,9 @@ public class CrawlerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(target != null)
+        UpdateNearbySwarmMembers();
+
+        if (target != null)
         {
             distanceToTarget = Vector3.Distance(target.position, transform.position);
         }
@@ -53,7 +58,6 @@ public class CrawlerMovement : MonoBehaviour
             if (target != null)
             {
                 direction = target.position - transform.position;
-
             }
             else
             {
@@ -62,45 +66,103 @@ public class CrawlerMovement : MonoBehaviour
         }
         else
         {
-            if(Vector3.Distance(destination, transform.position) > 1)
+            if (Vector3.Distance(destination, transform.position) > 1)
             {
                 direction = destination - transform.position;
             }
-
         }
+
+        Vector3 swarmForce = CalculateSwarmForce();
+        direction += swarmForce;
+
         RayCastSteering();
         Debug.DrawRay(transform.position, direction * 5, Color.blue);
+
         var dir = Vector3.Lerp(transform.forward, direction.normalized, Time.deltaTime * steerSpeed);
         dir.y = 0;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
         rb.MovePosition(transform.position + dir.normalized * speedFinal * Time.deltaTime);
+    }
 
+    private void UpdateNearbySwarmMembers()
+    {
+        nearbySwarmMembers.Clear();
+        Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, swarmRadius);
+        foreach (Collider col in nearbyColliders)
+        {
+            CrawlerMovement crawler = col.GetComponent<CrawlerMovement>();
+            if (crawler != null && crawler != this)
+            {
+                nearbySwarmMembers.Add(crawler);
+            }
+        }
+    }
+
+    private Vector3 CalculateSwarmForce()
+    {
+        Vector3 separation = Vector3.zero;
+        Vector3 alignment = Vector3.zero;
+        Vector3 cohesion = Vector3.zero;
+        int count = 0;
+
+        foreach (CrawlerMovement crawler in nearbySwarmMembers)
+        {
+            Vector3 diff = transform.position - crawler.transform.position;
+            float distance = diff.magnitude;
+
+            // Enhanced separation
+            if (distance < desiredSeparation)
+            {
+                separation += diff.normalized / distance; // Inverse proportional to distance
+            }
+
+            // Alignment and Cohesion
+            if (distance < swarmRadius)
+            {
+                alignment += crawler.rb.velocity;
+                cohesion += crawler.transform.position;
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            alignment /= count;
+            cohesion /= count;
+            cohesion = (cohesion - transform.position).normalized;
+        }
+
+        // Apply weights
+        separation *= separationWeight;
+        alignment *= alignmentWeight;
+        cohesion *= cohesionWeight;
+
+        return separation + alignment + cohesion;
     }
 
     private void RayCastSteering()
     {
         for (int i = 0; i < rayAmount; i++)
         {
-            var z = i - rayAmount/2;
+            var z = i - rayAmount / 2;
             Vector3 rayDirection = Quaternion.Euler(0, (90f / rayAmount) * z, 0) * transform.forward;
-            var raycastPos = new Vector3(transform.position.x, transform.position.y, transform.position.z +0.5f);
+            var raycastPos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f);
 
             RaycastHit hit;
             if (Physics.Raycast(raycastPos, rayDirection, out hit, rayDistance, layerMask))
             {
-                if(hit.collider == groundCollider)
-                {                     
+                if (hit.collider == groundCollider)
+                {
                     continue;
                 }
-                //print("hit " + hit.collider.name);
                 Vector3 steerDirection = -(hit.point - transform.position);
                 Debug.DrawRay(transform.position, steerDirection, Color.red);
                 direction = steerDirection;
             }
             else
             {
-                   Debug.DrawRay(transform.position, rayDirection * rayDistance, Color.green);
+                Debug.DrawRay(transform.position, rayDirection * rayDistance, Color.green);
             }
         }
     }
