@@ -14,6 +14,7 @@ public class Pickup : MonoBehaviour
     public Light pickupLight;
 
     public RunUpgradeManager runUpgradeManager;
+    public ParticleSystem pickupParticles;
 
     [InspectorButton("SetupPickup")]
     public bool ResetPickup;
@@ -29,7 +30,7 @@ public class Pickup : MonoBehaviour
         pickupCollider = GetComponent<Collider>();
         pickupLight = GetComponentInChildren<Light>(true);
         pickupType = type;
-        SetupPickup();
+        StartCoroutine(SetupPickup());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,7 +42,7 @@ public class Pickup : MonoBehaviour
         }
     }
 
-    private void SetupPickup()
+    private IEnumerator SetupPickup()
     {
         switch (pickupType)
         {
@@ -61,6 +62,8 @@ public class Pickup : MonoBehaviour
                 pickupColor = Color.white;
                 break;
         }
+        pickupParticles.Play();
+        yield return new WaitForSeconds(1f);
         pickupCollider.enabled = true;
         pickupRenderer.enabled = true;
         pickupLight.enabled = true;
@@ -84,5 +87,6 @@ public class Pickup : MonoBehaviour
         pickupRenderer.enabled = false;
         pickupCollider.enabled = false;
         pickupLight.enabled = false;
+        pickupParticles.Stop();
     }
 }

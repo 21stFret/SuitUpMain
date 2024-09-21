@@ -30,6 +30,7 @@ public class MYCharacterController : MonoBehaviour
     public ManualWeaponController manualWeaponController;
     public ParticleSystem footStep, footStep2;
     public bool candodge;
+    public FootprintSystem footprintSystem;
 
     private void Awake()
     {
@@ -100,7 +101,19 @@ public class MYCharacterController : MonoBehaviour
     public void Die()
     {
         isRunning = false;
+        footprintSystem.IsMoving = false;
         runAudio.Stop();
+    }
+
+    public void TriggerFootLeft()
+    {
+        footprintSystem.PlaceLeftFoot();
+        //print("TriggerFootLeft");
+    }
+
+    public void TriggerFootRight()
+    {
+        footprintSystem.PlaceRightFoot();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -119,11 +132,13 @@ public class MYCharacterController : MonoBehaviour
         {
             CharacterAnimator.speed = _moveInputVector.magnitude + 0.2f;
             isRunning = true;
+            footprintSystem.IsMoving = true;
         }
         else
         {
             CharacterAnimator.speed = 1;
             isRunning = false;
+            footprintSystem.IsMoving = false;
         }
     }
 

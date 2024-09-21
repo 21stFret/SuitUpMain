@@ -12,7 +12,7 @@ public class ModUI : MonoBehaviour
     public static ModUI instance;
     public GameObject modUI;
     public Image BG;
-    public Image buildImage;
+    public Image buildImage, buildImage2;
     public TMP_Text buildName;
     public Sprite[] buildImages;
     public ModButton[] modButtons;
@@ -45,6 +45,7 @@ public class ModUI : MonoBehaviour
     {
         BG.material.color = pickup.pickupColor;
         buildImage.sprite = buildImages[(int)type];
+        buildImage2.sprite = buildImages[(int)type];
         buildName.text = type.ToString();
     }
 

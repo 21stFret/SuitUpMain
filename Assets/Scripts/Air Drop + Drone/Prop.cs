@@ -20,7 +20,7 @@ public class Prop : MonoBehaviour
         {
             _targetHealth.Init();
         }
-        healthMax = _targetHealth.healthMax;
+        healthMax = _targetHealth.maxHealth;
         health = healthMax;
     }
 

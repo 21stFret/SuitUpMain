@@ -5,7 +5,7 @@ using UnityEngine;
 public class TargetHealth : MonoBehaviour
 {
     public float health;
-    public float healthMax;
+    public float maxHealth;
     public bool invincible;
     public bool alive;
 
@@ -15,7 +15,7 @@ public class TargetHealth : MonoBehaviour
 
     public void Init()
     {
-        health = healthMax;
+        health = maxHealth;
         alive = true;
         _crawler = GetComponent<Crawler>();
         _mech = GetComponent<MechHealth>();

@@ -1,7 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
+public class Battle
+{
+    public int ID;
+    public BattleType battleType;
+    public List<BattleWave> battleWaves;
+    public BattleDifficulty battleDifficulty;
+
+    public Battle(int id, BattleType type, BattleDifficulty difficulty)
+    {
+        ID = id;
+        battleType = type;
+        battleDifficulty = difficulty;
+        battleWaves = new List<BattleWave>();
+    }
+}
+
+// These can remain as they were
 public enum BattleDifficulty
 {
     Easy,
@@ -9,15 +24,16 @@ public enum BattleDifficulty
     Hard
 }
 
-[CreateAssetMenu(fileName = "Battle", menuName = "Battle")]
-public class Battle : ScriptableObject
+public enum BattleType
 {
-    public int ID;
-    public BattleType battleType;
-    public List<BattleWave> battleWaves = new List<BattleWave>();
-    public BattleDifficulty battleDifficulty;
+    Survive,
+    Defend,
+    Kill,
+    Capture,
+    Default
 }
 
+// These structs can remain as they were
 [System.Serializable]
 public struct CrawlerWave
 {
@@ -29,7 +45,6 @@ public struct CrawlerWave
         this.type = type;
         this.count = count;
     }
-
 }
 
 [System.Serializable]

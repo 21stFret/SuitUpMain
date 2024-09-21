@@ -46,8 +46,7 @@ public class Crawler : MonoBehaviour
     public ParticleSystem DeathBlood;
     public ParticleSystem _spawnEffect;
     protected Animator animator;
-    private bool hasTarget;
-    private bool dead;
+    public bool dead;
     public AudioSource deathNoise;
     private bool canSeeTarget;
     protected bool inRange;
@@ -73,7 +72,6 @@ public class Crawler : MonoBehaviour
 
     public void Init()
     {
-        hasTarget = false;
         dead = false;
         _targetHealth = GetComponent<TargetHealth>();
         _targetHealth.Init();
@@ -98,7 +96,6 @@ public class Crawler : MonoBehaviour
 
     private void Start()
     {
-        hasTarget = false;
         dead = false;
         if (forceSpawn)
         {
@@ -147,7 +144,6 @@ public class Crawler : MonoBehaviour
         {
             if (!targetHealth.alive)
             {
-                hasTarget = false;
                 target = null;
                 return;
             }
@@ -174,8 +170,6 @@ public class Crawler : MonoBehaviour
             return;
         }
         target = rangeSensor.GetNearestDetection().transform;
-
-        hasTarget = true;
     }
 
     public virtual void CheckDistance()
@@ -205,7 +199,6 @@ public class Crawler : MonoBehaviour
         //Called by animation event
         if (target == null)
         {
-            hasTarget = false;
             return;
         }
 
@@ -218,7 +211,6 @@ public class Crawler : MonoBehaviour
 
         if(targethealth.health<=0)
         {
-            hasTarget = false;
             target = null;
             return;
         }
@@ -278,8 +270,6 @@ public class Crawler : MonoBehaviour
     
     public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
-
-
         if (stunTime > 0)
         {
             StartCoroutine(StunCralwer(stunTime));
@@ -308,7 +298,6 @@ public class Crawler : MonoBehaviour
         {
             Die(killedBy);
         }
-
     }
     
     public void DealyedDamage(float damage, float delay, WeaponType weapon)
@@ -348,15 +337,12 @@ public class Crawler : MonoBehaviour
         meshRenderer.enabled = false;
         target = null;
         crawlerMovement.speedFinal = 0;
-        //animator.SetTrigger("Die");
         DeathBlood.Play();
 
         if(crawlerSpawner != null)
         {
             crawlerSpawner.AddtoRespawnList(this, crawlerType);
         }
-
-        
 
         if (weapon == WeaponType.Default)
         {
@@ -373,13 +359,11 @@ public class Crawler : MonoBehaviour
             }
         }
 
-        if(GameManager.instance != null)
+        if(PlayerProgressManager.instance != null)
         {
-            GameManager.instance.UpdateKillCount(1, weapon);
-            GameManager.instance.AddExp(expWorth);
+            PlayerProgressManager.instance.UpdateKillCount(1, weapon);
+            PlayerProgressManager.instance.AddExp(expWorth);
         }
-
-
     }
 
     public void PlayDeathNoise()

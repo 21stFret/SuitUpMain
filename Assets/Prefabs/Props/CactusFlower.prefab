@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6419435759872303168
+--- !u!1 &2406294971547874392
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,10 +8,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5935104819500989178}
-  - component: {fileID: 7346041651403404639}
-  - component: {fileID: 4762159407017443733}
-  - component: {fileID: 2117647829749606767}
+  - component: {fileID: 5338387075523037657}
+  - component: {fileID: 6408879847676386486}
+  - component: {fileID: 7786385911452403810}
+  - component: {fileID: 6865580312090106649}
   m_Layer: 0
   m_Name: CactusFlower
   m_TagString: Untagged
@@ -19,36 +19,36 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5935104819500989178
+--- !u!4 &5338387075523037657
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419435759872303168}
+  m_GameObject: {fileID: 2406294971547874392}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.66787046, y: -0.23226957, z: -0.23226947, w: 0.66787034}
-  m_LocalPosition: {x: -22.82, y: -0.13200378, z: 15.93}
-  m_LocalScale: {x: 3.6874952, y: 3.6874952, z: 3.6874952}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -38.353}
---- !u!33 &7346041651403404639
+  m_Father: {fileID: 5935104819500989178}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!33 &6408879847676386486
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419435759872303168}
+  m_GameObject: {fileID: 2406294971547874392}
   m_Mesh: {fileID: 7627130917182432, guid: 504545397c6d0b0409801447a656c53b, type: 3}
---- !u!23 &4762159407017443733
+--- !u!23 &7786385911452403810
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419435759872303168}
+  m_GameObject: {fileID: 2406294971547874392}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -86,13 +86,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2117647829749606767
+--- !u!136 &6865580312090106649
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6419435759872303168}
+  m_GameObject: {fileID: 2406294971547874392}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -109,3 +109,35 @@ CapsuleCollider:
   m_Height: 1.4
   m_Direction: 2
   m_Center: {x: -0.054892518, y: 0.000094634335, z: 0.7056592}
+--- !u!1 &6419435759872303168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5935104819500989178}
+  m_Layer: 0
+  m_Name: CactusFlower
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5935104819500989178
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6419435759872303168}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -22.82, y: -0.13200378, z: 15.93}
+  m_LocalScale: {x: 3.6874952, y: 3.6874952, z: 3.6874952}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 5338387075523037657}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}

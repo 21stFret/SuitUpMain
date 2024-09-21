@@ -8,14 +8,15 @@ public class CrawlerSpawner : MonoBehaviour
 {
     [Header("Object Pools")]
     [SerializeField] private List<Crawler> crawlers = new List<Crawler>();
-    [SerializeField] private List<Crawler> crawlerDaddy =  new List<Crawler>();
-    [SerializeField] private List<Crawler> Daddycrawlers =  new List<Crawler>();
-    [SerializeField] private List<Crawler> albinos =  new List<Crawler>();
-    [SerializeField] private List<Crawler> spitters =  new List<Crawler>();
-    [SerializeField] private List<Crawler> chargers =  new List<Crawler>();
+    [SerializeField] private List<Crawler> crawlerDaddy = new List<Crawler>();
+    [SerializeField] private List<Crawler> Daddycrawlers = new List<Crawler>();
+    [SerializeField] private List<Crawler> albinos = new List<Crawler>();
+    [SerializeField] private List<Crawler> spitters = new List<Crawler>();
+    [SerializeField] private List<Crawler> chargers = new List<Crawler>();
     [SerializeField] private List<Crawler> activeCrawlers = new List<Crawler>();
     public int activeCrawlerCount { get { return activeCrawlers.Count; } }
     public List<Transform> spawnPoints;
+
     [Header("Spawn Settings")]
     private Transform spawnPoint;
     private int currentSpawnPoint;
@@ -24,7 +25,6 @@ public class CrawlerSpawner : MonoBehaviour
     public int battleRound;
     public int battleRoundMax;
     public bool endless;
-    private bool maxRoundReached;
     public float timeElapsed = 0f;
     public TMP_Text timeText;
     public TMP_Text waveText;
@@ -41,23 +41,84 @@ public class CrawlerSpawner : MonoBehaviour
 
     public CrawlerSpitter runner;
 
+    [SerializeField] private List<WaveGenerator.EnemyTypeInfo> enemyTypes;
+    [SerializeField] private int minWaves = 3;
+    [SerializeField] private int maxWaves = 5;
+    [SerializeField] private float baseRoundTimer = 60f;
+    [SerializeField] private float timerVariation = 10f;
+
+    [SerializeField] private WaveGenerator waveGenerator;
+    [SerializeField] private int battleId;
+    [SerializeField] private BattleType battleType;
+    [SerializeField] private BattleDifficulty battleDifficulty;
+
+    private Battle currentBattle;
+
+    private void Start()
+    {
+        InitCrawlers();
+        GenerateNewBattle();
+    }
+
+    private void GenerateNewBattle()
+    {
+        if (waveGenerator == null)
+        {
+            Debug.LogError("WaveGenerator is not assigned to CrawlerSpawner!");
+            return;
+        }
+
+        currentBattle = waveGenerator.GenerateBattle(battleId, battleType, battleDifficulty);
+        battleRoundMax = currentBattle.battleWaves.Count;
+        endless = false; // Set to true if you want endless mode
+        ResetBattle();
+    }
+
+    private void ResetBattle()
+    {
+        battleRound = 0;
+        timeElapsed = 0f;
+        isActive = true;
+        IncrementSpawnRound();
+    }
+
+    private void IncrementSpawnRound()
+    {
+        battleRound++;
+
+        if (battleRound >= battleRoundMax)
+        {
+            if (endless)
+            {
+                battleRound = 0;
+            }
+            else
+            {
+                battleRound = battleRoundMax;
+                isActive = false;
+                timeText.text = "";
+                waveText.text = "Final Wave";
+                return;
+            }
+        }
+
+        currentWave = currentBattle.battleWaves[battleRound - 1];
+        waveText.text = $"Wave {battleRound}/{currentBattle.battleWaves.Count}";
+        roundTimer = currentWave.roundTimer;
+    }
+
     private void Awake()
     {
         instance = this;
     }
 
-    private void Start()
+    private void Update()
     {
-        InitCrawlers();
-    }
-
-    private void LateUpdate()
-    {
-        if (!isActive)
+        if (isActive)
         {
-            return;
+            RoundTimer();
+            ValidateActiveCrawlers();
         }
-        RoundTimer();
     }
 
     private void RoundTimer()
@@ -68,6 +129,11 @@ public class CrawlerSpawner : MonoBehaviour
             BeginSpawning();
             timeElapsed = 0f;
         }
+        UpdateTimerDisplay();
+    }
+
+    private void UpdateTimerDisplay()
+    {
         if (timeElapsed <= roundTimer - 10f)
         {
             timeText.enabled = false;
@@ -75,111 +141,51 @@ public class CrawlerSpawner : MonoBehaviour
         else
         {
             timeText.enabled = true;
+            timeText.color = timeElapsed >= roundTimer - 5f ? Color.red : Color.white;
         }
-        if(timeElapsed >= roundTimer - 5f)
-        {
-            timeText.color = Color.red;
-        }
-        else
-        {
-            timeText.color = Color.white;
-        }
-        timeText.text = ((roundTimer - timeElapsed)).ToString("0");
+        timeText.text = (roundTimer - timeElapsed).ToString("0");
     }
 
     private void InitCrawlers()
     {
-        spawnPoint = spawnPoints[0];
-        foreach (Crawler crawler in crawlers)
+        InitCrawlerList(crawlers, CrawlerType.Crawler);
+        InitCrawlerList(crawlerDaddy, CrawlerType.Daddy);
+        InitCrawlerList(Daddycrawlers, CrawlerType.DaddyCrawler);
+        InitCrawlerList(albinos, CrawlerType.Albino);
+        InitCrawlerList(spitters, CrawlerType.Spitter);
+        InitCrawlerList(chargers, CrawlerType.Charger);
+    }
+
+    private void InitCrawlerList(List<Crawler> crawlerList, CrawlerType type)
+    {
+        foreach (Crawler crawler in crawlerList)
         {
             crawler.Init();
             crawler.crawlerSpawner = this;
-            crawler.crawlerType = CrawlerType.Crawler;
-        }
-        foreach (CrawlerDaddy daddy in crawlerDaddy)
-        {
-            daddy.Init();
-            daddy.crawlerSpawner = this;
-            daddy.crawlerType = CrawlerType.Daddy;
-        }
-        foreach (Crawler daddyCrawler in Daddycrawlers)
-        {
-            daddyCrawler.Init();
-            daddyCrawler.crawlerSpawner = this;
-            daddyCrawler.crawlerType = CrawlerType.DaddyCrawler;
-
-        }
-        foreach (Crawler albino in albinos)
-        {
-            albino.Init();
-            albino.crawlerSpawner = this;
-            albino.crawlerType = CrawlerType.Albino;
-        }
-        foreach (Crawler spitter in spitters)
-        {
-            spitter.Init();
-            spitter.crawlerSpawner = this;
-            spitter.crawlerType = CrawlerType.Spitter;
-        }
-        foreach (Crawler charger in chargers)
-        {
-            charger.Init();
-            charger.crawlerSpawner = this;
-            charger.crawlerType = CrawlerType.Charger;
+            crawler.crawlerType = type;
+            crawler.gameObject.SetActive(false);
         }
     }
 
     private void BeginSpawning()
     {
-        if(!isActive)
-        {
-            return;
-        }
+        if (!isActive) return;
 
         SelectSpawnPoint();
         IncrementSpawnRound();
         StartCoroutine(SpawnDelay());
     }
 
-    private void IncrementSpawnRound()
-    {
-        battleRound++;
-
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.ReachedWaveNumber(battleRound);
-        }
-
-        currentWave = battleManager.battleWaves[battleRound-1];
-        waveText.text = "Wave " + (battleRound).ToString() + "/" + battleManager.battleWaves.Count.ToString();
-        roundTimer = currentWave.roundTimer;
-
-        if (battleRound >= battleRoundMax)
-        {
-            maxRoundReached = true;
-            if (endless)
-            {
-               battleRound = 0;
-            }
-            else
-            {
-                battleRound = battleRoundMax;
-                isActive = false;
-                timeText.text = "";
-                waveText.text = "Final Wave";
-            }
-        }
-    }
-
     private void SelectSpawnPoint()
     {
-        int randomSpawnPoint = Random.Range(0, spawnPoints.Count);
-        if (randomSpawnPoint == currentSpawnPoint)
+        int randomSpawnPoint;
+        do
         {
-            SelectSpawnPoint();
-            return;
-        }
-        spawnPoint = spawnPoints[randomSpawnPoint];
+            randomSpawnPoint = Random.Range(0, spawnPoints.Count);
+        } while (randomSpawnPoint == currentSpawnPoint);
+
+        currentSpawnPoint = randomSpawnPoint;
+        spawnPoint = spawnPoints[currentSpawnPoint];
     }
 
     private IEnumerator SpawnDelay()
@@ -187,7 +193,7 @@ public class CrawlerSpawner : MonoBehaviour
         PlaySpawnEffect(0);
         yield return new WaitForSeconds(1f);
 
-        if(isActive)
+        if (isActive)
         {
             SpawnWave();
         }
@@ -197,168 +203,158 @@ public class CrawlerSpawner : MonoBehaviour
     {
         var waveCrawlers = currentWave.crawlersInWave;
         spawnList.Clear();
-        for (int i = 0; i < waveCrawlers.Length; i++)
+
+        foreach (var waveInfo in waveCrawlers)
         {
-            //SpawnCrawler(waveCrawlers[i].type, waveCrawlers[i].count);
-            for (int j = 0; j < waveCrawlers[i].count; j++)
+            var list = GetCrawlerList(waveInfo.type);
+            for (int j = 0; j < waveInfo.count && j < list.Count; j++)
             {
-                var list = new List<Crawler>();
-                switch (waveCrawlers[i].type)
-                {
-                    case CrawlerType.Crawler:
-                        list = crawlers;
-                        break;
-                    case CrawlerType.Daddy:
-                        list = crawlerDaddy;
-                        break;
-                    case CrawlerType.Albino:
-                        list = albinos;
-                        break;
-                    case CrawlerType.Spitter:
-                        list = spitters;
-                        break;
-                    case CrawlerType.Charger:
-                        list = chargers;
-                        break;
-                }
                 spawnList.Add(list[j]);
             }
         }
+
         spawnList.Shuffle();
-        SpawnCrawlerFromList();
+        spawnPoint = spawnPoints[currentSpawnPoint];
+        SpawnCrawlerFromList(spawnList);
     }
 
-    private void SpawnCrawlerFromList()
+    private List<Crawler> GetCrawlerList(CrawlerType type)
     {
-        if (spawnList.Count <= 0)
+        switch (type)
         {
-            print("No Crawlers to Spawn");
+            case CrawlerType.Crawler: return crawlers;
+            case CrawlerType.Daddy: return crawlerDaddy;
+            case CrawlerType.DaddyCrawler: return Daddycrawlers;
+            case CrawlerType.Albino: return albinos;
+            case CrawlerType.Spitter: return spitters;
+            case CrawlerType.Charger: return chargers;
+            default: return new List<Crawler>();
+        }
+    }
+
+    private void SpawnCrawlerFromList(List<Crawler> bugs)
+    {
+        if (bugs.Count == 0)
+        {
+            Debug.LogWarning("No Crawlers to Spawn");
             return;
         }
+
         int portalIndex = 0;
-        int potalAllowed = 0;
-        for (int i = 0; i < spawnList.Count; i++)
+        int portalAllowed = 0;
+
+        for (int i = 0; i < bugs.Count; i++)
         {
-            if (potalAllowed >= portalMaxAllowed)
+            if (portalAllowed >= portalMaxAllowed)
             {
                 portalIndex++;
                 SelectSpawnPoint();
                 PlaySpawnEffect(portalIndex);
-                potalAllowed = 0;
-
+                portalAllowed = 0;
             }
+
             Vector3 randomCircle = Random.insideUnitSphere;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + spawnPoint.position;
-            spawnList[i].transform.position = randomPoint;
-            spawnList[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
-            StartCoroutine(SpawnRandomizer(spawnList[i], i * 0.2f));
-            potalAllowed++;
+            bugs[i].transform.position = randomPoint;
+            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+
+            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            portalAllowed++;
         }
     }
 
     private IEnumerator SpawnRandomizer(Crawler bug, float delay)
     {
-        AddToActiveList(bug);
+        if (!isActive) yield break;
+
         yield return new WaitForSeconds(delay);
+
+        bug.gameObject.SetActive(true);
         bug.Spawn();
+        AddToActiveList(bug);
+
+        Debug.Log($"Spawned and activated: {bug.name}");
     }
 
     private void PlaySpawnEffect(int index)
     {
+        index = index % portalEffects.Count;
+
         if (portalEffects[index].isActive)
         {
-            index++;
-            if (index >= portalEffects.Count)
-            {
-                index = 0;
-            }
-            PlaySpawnEffect(index);
+            PlaySpawnEffect(index + 1);
             return;
         }
+
         portalEffects[index].transform.position = spawnPoint.position;
         portalEffects[index].transform.rotation = spawnPoint.rotation;
         portalEffects[index].StartEffect();
     }
 
-    public void SpawnAtPoint(Vector3 point, int spawnAmount)
+    public void SpawnAtPoint(Transform point, int spawnAmount)
     {
-        for (int i = 0; i < spawnAmount; i++)
+        List<Crawler> spawnList = new List<Crawler>();
+        for (int i = 0; i < spawnAmount && i < crawlers.Count; i++)
         {
-            Vector3 randomCircle = Random.insideUnitSphere;
-            randomCircle.y = 1;
-            var point1 = point + randomCircle;
-            Daddycrawlers[0].transform.position = point1;
-            Daddycrawlers[0].transform.rotation = Quaternion.identity;
-            StartCoroutine(SpawnRandomizer(Daddycrawlers[0], i * 0.1f));
+            spawnList.Add(crawlers[i]);
         }
+        spawnPoint = point;
+        SpawnCrawlerFromList(spawnList);
     }
 
     public void EndBattle()
-    { 
+    {
         isActive = false;
         KillAllCrawlers();
     }
 
     public void KillAllCrawlers()
     {
-        for (int i = 0; i < activeCrawlers.Count; i++)
+        foreach (var crawler in activeCrawlers.ToList())
         {
-            activeCrawlers[i].DealyedDamage(1000, 0.2f, WeaponType.Default);
+            crawler.DealyedDamage(1000, 0.2f, WeaponType.Default);
         }
     }
 
-
     public void AddtoRespawnList(Crawler crawler, CrawlerType type)
     {
-        activeCrawlers.Remove(crawler);
-        switch (type)
+        if (activeCrawlers.Remove(crawler))
         {
-            case CrawlerType.Crawler:
-                crawlers.Add(crawler);
-                break;
-            case CrawlerType.Daddy:
-                crawlerDaddy.Add(crawler);
-                break;
-            case CrawlerType.DaddyCrawler:
-                Daddycrawlers.Add(crawler);
-                break;
-            case CrawlerType.Albino:
-                albinos.Add(crawler);
-                break;
-            case CrawlerType.Spitter:
-                spitters.Add(crawler);
-                break;
-            case CrawlerType.Charger:
-                chargers.Add(crawler);
-                break;
+            GetCrawlerList(type).Add(crawler);
+            crawler.gameObject.SetActive(false);
+            Debug.Log($"Crawler {crawler.name} returned to pool and deactivated.");
         }
-
     }
 
     public void AddToActiveList(Crawler crawler)
     {
-        switch (crawler.crawlerType)
+        if (GetCrawlerList(crawler.crawlerType).Remove(crawler))
         {
-            case CrawlerType.Crawler:
-                crawlers.Remove(crawler);
-                break;
-            case CrawlerType.Daddy:
-                crawlerDaddy.Remove(crawler);
-                break;
-            case CrawlerType.DaddyCrawler:
-                Daddycrawlers.Remove(crawler);
-                break;
-            case CrawlerType.Albino:
-                albinos.Remove(crawler);
-                break;
-            case CrawlerType.Spitter:
-                spitters.Remove(crawler);
-                break;
-            case CrawlerType.Charger:
-                chargers.Remove(crawler);
-                break;
+            if (!activeCrawlers.Contains(crawler))
+            {
+                activeCrawlers.Add(crawler);
+                crawler.gameObject.SetActive(true);
+                Debug.Log($"Crawler {crawler.name} added to active list and activated.");
+            }
         }
-        activeCrawlers.Add(crawler);
+    }
+
+    private void ValidateActiveCrawlers()
+    {
+        for (int i = activeCrawlers.Count - 1; i >= 0; i--)
+        {
+            Crawler crawler = activeCrawlers[i];
+            if (crawler == null)
+            {
+                activeCrawlers.RemoveAt(i);
+                Debug.LogWarning($"Removed null crawler at index {i}");
+            }
+            else if (!crawler.gameObject.activeSelf)
+            {
+                crawler.gameObject.SetActive(true);
+                Debug.LogWarning($"Reactivated inactive crawler {crawler.name} at index {i}");
+            }
+        }
     }
 }

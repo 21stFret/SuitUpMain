@@ -88,7 +88,7 @@ public class DroneController : MonoBehaviour
         StartCoroutine(InputDelay());
         if(!tutorial)
         {
-            if (GameManager.instance.crawlerParts < airDropCost)
+            if (PlayerProgressManager.instance.crawlerParts < airDropCost)
             {
                 fade.PlayTween();
                 return;

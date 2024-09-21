@@ -12,7 +12,6 @@ public class Minigun : MechWeapon
     public ProjectileWeapon weaponController;
 
     private float _timer;
-    private bool _firing;
 
     private void Awake()
     {
@@ -65,13 +64,5 @@ public class Minigun : MechWeapon
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            _firing = true;
-        }
-        else if (context.canceled)
-        {
-            _firing = false;
-        }
     }
 }

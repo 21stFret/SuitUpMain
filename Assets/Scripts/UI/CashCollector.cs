@@ -22,6 +22,8 @@ public class CashCollector : MonoBehaviour
     public float timeToHideA = 2f;
     private float _timeToHideA = 2f;
 
+    private PlayerProgressManager playerProgressManager;
+
     private void Awake()
     {
         instance = this;
@@ -32,6 +34,7 @@ public class CashCollector : MonoBehaviour
         UpdateUI(0);
         UpdateArtUI(0);
         savedPos = panel.transform.localPosition.x;
+        playerProgressManager = PlayerProgressManager.instance;
     }
 
     private void Update()
@@ -56,21 +59,21 @@ public class CashCollector : MonoBehaviour
 
     public void AddCash(int amount)
     {
-        GameManager.instance.cashCount += amount;
+        playerProgressManager.cashCount += amount;
     }
 
     public void AddCrawlerPart(int amount)
     {
-        GameManager.instance.crawlerParts += amount;
+        playerProgressManager.crawlerParts += amount;
         ShowUI();
-        UpdateUI(GameManager.instance.crawlerParts);
+        UpdateUI(PlayerProgressManager.instance.crawlerParts);
     }
 
     public void AddArtifact(int amount)
     {
-        GameManager.instance.artifactCount+= amount;
+        playerProgressManager.artifactCount += amount;
         ShowArtUI();
-        UpdateArtUI(GameManager.instance.artifactCount);
+        UpdateArtUI(playerProgressManager.artifactCount);
     }
 
     public void DestroyParts()

@@ -342,7 +342,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3997630665816809322}
   - component: {fileID: 8256564223392180778}
-  - component: {fileID: 2088043604032739056}
   m_Layer: 0
   m_Name: Desert
   m_TagString: Untagged
@@ -399,33 +398,6 @@ MonoBehaviour:
   - {fileID: 5574036146373741534}
   - {fileID: 4851820258470594270}
   - {fileID: 8094732267909002558}
---- !u!114 &2088043604032739056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3614277866327409497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 009b07c7705901e4086300406119a1f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentHolders:
-  - {fileID: 7528496085405428061}
-  - {fileID: 7357474762652029442}
-  - {fileID: 7329997409282498160}
-  - {fileID: 7498488141499779044}
-  scales: []
-  amount: 100
-  scaleMin: 0.5
-  scaleMax: 1.5
-  rotationY: 0
-  spacing: 3
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  areaSize: {x: 150, y: 150}
 --- !u!1 &4916399750772895129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,7 +1018,7 @@ Transform:
   m_GameObject: {fileID: 7392991156229500391}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1066,6 +1038,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1305504486550966668}
+  - component: {fileID: 4000435628685174368}
   m_Layer: 0
   m_Name: RandomItems
   m_TagString: Untagged
@@ -1090,6 +1063,37 @@ Transform:
   - {fileID: 6316968165006705616}
   m_Father: {fileID: 3997630665816809322}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4000435628685174368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7498488141499779044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8134f48d1b0dbf5449abd4b8bfe15dde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  treePrefabs:
+  - {fileID: 1924654786812670, guid: 638f3ee8cd9ba274cbac88add4dd75f3, type: 3}
+  grassPrefab: {fileID: 6419435759872303168, guid: 64550b53f858cf749aa532f42b79a675,
+    type: 3}
+  totalTrees: 50
+  treesPerCluster: 10
+  clusterRadius: 10
+  minTreeScale: 0.8
+  maxTreeScale: 1.2
+  centerTreeScaleMultiplier: 1.5
+  treeSpacing: 1
+  grassSpacing: 0.5
+  grassScale: 0.5
+  grassPerTree: 2
+  areaSize: {x: 100, y: 100}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  generateTreeClusters: 0
 --- !u!1 &7528496085405428061
 GameObject:
   m_ObjectHideFlags: 0
@@ -34856,7 +34860,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab608d24abab6e47b468701fdb8ad95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetHealth: {fileID: 4709995757921094866}
+  health: 0
+  healthMax: 0
+  damageNumberPrefab: {fileID: 0}
+  damageNumbersOn: 0
   onFire: 0
   fire: {fileID: 2871166650704847304}
   fireDamage: {fileID: 6515880297687945637}
@@ -34867,18 +34874,6 @@ ParticleSystem:
     type: 3}
   m_PrefabInstance: {fileID: 9147999357532984906}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4709995757921094866 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4587334985747962520, guid: c7284e684d609da4e937e03b98b0b679,
-    type: 3}
-  m_PrefabInstance: {fileID: 9147999357532984906}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2351729942260325759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 828434b4ca129924187efe14870ad81c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6515880297687945637 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2637198881970538479, guid: c7284e684d609da4e937e03b98b0b679,

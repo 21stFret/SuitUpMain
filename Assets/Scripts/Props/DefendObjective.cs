@@ -21,7 +21,7 @@ public class DefendObjective : Prop
         timer += Time.deltaTime;
         if (timer >= timerMax)
         {
-            GameManager.instance.ObjectiveComplete();
+            BattleManager.instance.ObjectiveComplete();
             gameObject.SetActive(false);
         }
 
@@ -62,6 +62,6 @@ public class DefendObjective : Prop
         destroyed.Play();
         _base.SetActive(false);
         damaged.Stop();
-        GameManager.instance.ObjectiveComplete(false);
+        BattleManager.instance.ObjectiveFailed();
     }
 }

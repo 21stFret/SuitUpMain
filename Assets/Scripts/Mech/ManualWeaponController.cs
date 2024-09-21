@@ -23,18 +23,21 @@ public class ManualWeaponController : MonoBehaviour
 
     public bool isAiming;
     private bool initialized;
-    public void Init(MechWeapon mechWeapon)
+    public void Init(MechWeapon mechWeapon = null)
     {
         rotatingObject.transform.SetParent(null);
-        if (mechWeapon.weaponData.mainWeapon)
+        if (mechWeapon != null)
         {
-            equipedWeaponP = mechWeapon;
-            SetPrimaryWeaponInputs();
-        }
-        else
-        {
-            SetManualWeaponInputs();
-            equipedWeapon = mechWeapon;
+            if (mechWeapon.weaponData.mainWeapon)
+            {
+                equipedWeaponP = mechWeapon;
+                SetPrimaryWeaponInputs();
+            }
+            else
+            {
+                SetManualWeaponInputs();
+                equipedWeapon = mechWeapon;
+            }
         }
 
         ResetAim();

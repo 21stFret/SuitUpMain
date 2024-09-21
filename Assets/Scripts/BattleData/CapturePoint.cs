@@ -83,7 +83,7 @@ public class CapturePoint : MonoBehaviour
         isCaptured = true;
         _enabled = false;
         ball.SetActive(false);
-        GameManager.instance.ObjectiveComplete();
+        BattleManager.instance.ObjectiveComplete();
 
         StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
         online.Stop();

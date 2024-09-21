@@ -10,6 +10,7 @@ public class ObjectiveUI : MonoBehaviour
     public Image objectiveBar;
     public Image objectiveBG;
     public TMP_Text objectiveText;
+    public Animator objectiveAnimator;
 
     public void Init()
     {
@@ -28,23 +29,22 @@ public class ObjectiveUI : MonoBehaviour
     {
         // Update the objective text
         objectiveText.text = objective;
+        ShowIntro();
     }
 
-    public IEnumerator ObjectiveComplete(bool complete = true)
+    public void ShowIntro()
+    {
+        objectiveAnimator.SetTrigger("Show");
+    }
+
+    public IEnumerator ObjectiveComplete()
     {
         string objective = "Objective Complete";
-        if (!complete)
-        {
-            objective = "Objective Failed";
-        }
         objective += "\n Go through the portal to continue";
         GameUI.instance.objectiveUI.UpdateObjective(objective);
-        objectiveText.material.SetFloat("_GlowPower", 1);
         yield return new WaitForSeconds(2f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
-        objectiveText.material.SetFloat("_GlowPower", 0);
-        objectiveText.transform.DOMoveY(objectiveText.transform.position.y + 25, 0.5f);
 
     }
 

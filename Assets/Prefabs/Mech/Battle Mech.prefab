@@ -37262,7 +37262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 100
+  maxHealth: 100
   invincible: 0
   alive: 0
 --- !u!114 &6329598924691163358
@@ -37299,7 +37299,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8800413595774208468}
   serializedVersion: 4
-  m_Mass: 8
+  m_Mass: 7
   m_Drag: 3
   m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -37628,7 +37628,7 @@ MonoBehaviour:
   _moveInputVector: {x: 0, y: 0}
   runAudio: {fileID: 5618686854592692052}
   CharacterAnimator: {fileID: 1428538622160451209}
-  Speed: 300
+  Speed: 350
   rotateSpeed: 3
   isAimLocked: 0
   aimDirectionLoc: {x: 0, y: 0, z: 0}

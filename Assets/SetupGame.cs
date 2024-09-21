@@ -37,17 +37,17 @@ public class SetupGame : MonoBehaviour
         gameManager = _gameManager;
         gameManager.endlessMode = endlessMode;
 
-        gameManager.Battles.Clear();
+        BattleManager.instance.Battles.Clear();
         switch (diffiulty)
         {
             case 0:
-                gameManager.Battles = roomwavesEasy;
+                BattleManager.instance.Battles = roomwavesEasy;
                 break;
             case 1:
-                gameManager.Battles = roomwavesMid;
+                BattleManager.instance.Battles = roomwavesMid;
                 break;
             case 2:
-                gameManager.Battles = roomwavesHard;
+                BattleManager.instance.Battles = roomwavesHard;
                 break;
 
         }

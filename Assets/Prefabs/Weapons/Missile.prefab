@@ -9538,8 +9538,8 @@ MonoBehaviour:
   detonationDistance: 5
   lifeTime: 5
   despawnDelay: 1
-  velocity: 30
-  alignSpeed: 2
+  velocity: 50
+  alignSpeed: 4
   RaycastAdvance: 1
   DelayDespawn: 1
   delayedParticles:
@@ -9547,7 +9547,7 @@ MonoBehaviour:
   - {fileID: 8633114395340821836}
   launcher: {fileID: 0}
   upLaunchTimer: 0
-  upLaunchTime: 0.5
+  upLaunchTime: 0.1
   range: 10
   crawlerLayer:
     serializedVersion: 2

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class AirDropTimer : MonoBehaviour
 {
-    private float timeElapsed;
+    public float timeElapsed;
     public float airDropTime;
     public Image cover;
     public bool activated;

@@ -55,8 +55,8 @@ public class MechHealth : MonoBehaviour
         }
         regenTime += Time.deltaTime;
         requestedHealth = Mathf.Lerp(requestedHealth, targetHealth.health, regenTime/regenRate);
-        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (requestedHealth / targetHealth.healthMax));
-        image.fillAmount = requestedHealth / targetHealth.healthMax;
+        image.color = Color.Lerp(healthLightColor, damageLightColor, 1 - (requestedHealth / targetHealth.maxHealth));
+        image.fillAmount = requestedHealth / targetHealth.maxHealth;
         SetEmmisveHeatlh(image.fillAmount);
     }
 
@@ -90,9 +90,9 @@ public class MechHealth : MonoBehaviour
         hit = true;
         targetHealth.health -= damage;
 
-        if (targetHealth.health > targetHealth.healthMax)
+        if (targetHealth.health > targetHealth.maxHealth)
         {
-            targetHealth.health = targetHealth.healthMax;
+            targetHealth.health = targetHealth.maxHealth;
         }
 
         UpdateHealth(targetHealth.health, damage<0);
@@ -117,7 +117,7 @@ public class MechHealth : MonoBehaviour
         if (health <= 0)
         {
             health = 0;
-            value.text = health.ToString() + "/" + targetHealth.healthMax;
+            value.text = health.ToString() + "/" + targetHealth.maxHealth;
             DOTween.Kill(image);
             image.fillAmount = 0;
             MechBattleController.instance.OnDie();
@@ -134,7 +134,7 @@ public class MechHealth : MonoBehaviour
 
             return;
         }
-        value.text = health.ToString() + "/" + targetHealth.healthMax;
+        value.text = health.ToString() + "/" + targetHealth.maxHealth;
         if (healed)
         {
             return;              

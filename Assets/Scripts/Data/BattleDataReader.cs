@@ -9,7 +9,7 @@ public class BattleDataReader : MonoBehaviour
 {
     public static BattleDataReader instance;
     private int IDCatch;
-
+    /*
 #if UNITY_EDITOR
     public void LoadFromExcell()
     {
@@ -125,4 +125,5 @@ public class BattleDataReader : MonoBehaviour
         }
     }
     #endif
+    */
 }

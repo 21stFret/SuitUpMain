@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+using System.Collections;
+using FORGE3D;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -11,78 +10,320 @@ public class TutorialManager : MonoBehaviour
     public ManualWeaponController manualWeaponController;
     public DroneController droneController;
     public TutorialUI tutorialUI;
-    public Crawler[] testCrawlers;
-    public Crawler[] testCrawlers2;
     public PlayerInput playerInput;
-    public bool test1;
-    public bool test2;
-    public bool runTest;
-    public bool aimTest;
-    public bool shootTest;
-    public bool shootPTest;
-    public bool dodgeTest;
-    public bool pulseTest;
-    public bool droneTest;
-    public bool selectTest;
-    public bool repairTest;
+    public MechLoader mechLoader;
+    public ConnectWeaponHolderToManager weaponHolder;
+    public GameObject crawlers1;
+    public GameObject crawlers2;
+    public GameObject DroneRepair;
+    public GameObject DroneAirStrike;
 
-    // Start is called before the first frame update
+    private enum TutorialStage
+    {
+        BasicMovement,
+        Combat,
+        OffensiveSystems,
+        SupportSystems,
+        Complete
+    }
+
+    private TutorialStage currentStage = TutorialStage.BasicMovement;
+
+    private bool hasMoved;
+    private bool hasAimed;
+    private bool hasDashed;
+    private bool hasFiredPrimary;
+    private bool hasFiredSecondary;
+    private bool hasUsedPulse;
+    private bool hasKilledAll1;
+    private bool hasKilledAll2;
+    private bool hasOpenedDroneMenu;
+    private bool hasOpenedDroneMenu2;
+    private bool hasUsedRepair;
+    private bool hasUsedAttack;
+    private bool hasselected1;
+    private bool hasselected2;
+
+    private bool canCheckProgress = false;
+
+    private Crawler[] crawlersArray1;
+    private Crawler[] crawlersArray2;
+
     void Start()
+    {
+        Invoke("InitScene", 0.1f);
+        InitializeComponents();
+        StartCoroutine(RunTutorial());
+    }
+
+    private void InitScene()
+    {
+        weaponHolder.SetupWeaponsManager();
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+    }
+
+    void Update()
+    {
+        CheckTutorialProgress();
+    }
+
+    private void InitializeComponents()
     {
         manualWeaponController.enabled = false;
         myCharacterController.enabled = false;
         playerInput.SwitchCurrentActionMap("Gameplay");
         droneController.enabled = false;
         sceneLoader = SceneLoader.instance;
+        crawlersArray1 = crawlers1.GetComponentsInChildren<Crawler>();
+        crawlersArray2 = crawlers2.GetComponentsInChildren<Crawler>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator RunTutorial()
     {
-        if (test1)
+        EnableMovement();
+        yield return StartCoroutine(tutorialUI.InitializeMech());
+
+        while (currentStage != TutorialStage.Complete)
         {
-            CheckTest1();
+            switch (currentStage)
+            {
+                case TutorialStage.BasicMovement:
+                    yield return StartCoroutine(RunBasicMovement());
+                    break;
+                case TutorialStage.Combat:
+                    yield return tutorialUI.StartCoroutine(tutorialUI.StartCombatTraining());
+                    yield return StartCoroutine(RunAdvancedCombat());
+                    break;
+                case TutorialStage.OffensiveSystems:
+                    yield return StartCoroutine(RunOffensiveSystems());
+                    break;
+                case TutorialStage.SupportSystems:
+                    yield return StartCoroutine(RunSupportSystems());
+                    break;
+            }
+            yield return null;
         }
-        if (test2)
+
+        yield return StartCoroutine(tutorialUI.EndTutorial());
+    }
+
+    private IEnumerator RunBasicMovement()
+    {
+        tutorialUI.ShowInstructions("Master basic movement.");
+        tutorialUI.UpdateInputInstructions(
+            new string[] { "move", "aim", "dash" },
+            new string[] { "To Move", "To Aim", "To Dash"}
+        );
+        canCheckProgress = true;
+
+        while (!hasMoved || !hasAimed || !hasDashed)
         {
-            CheckTest2();
+            yield return null;
         }
-        if (runTest)
+        canCheckProgress = false;
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Basic Movement Complete."));
+        tutorialUI.HideAllInputUIs();
+        yield return new WaitForSeconds(1f);
+        currentStage = TutorialStage.Combat;
+    }
+
+    private IEnumerator RunAdvancedCombat()
+    {
+        tutorialUI.ShowInstructions("Use basic combat techniques.");
+        tutorialUI.UpdateInputInstructions(
+            new string[] { "firePrimary", "fireSecondary", "pulse" },
+            new string[] { "To Fire Primary", "To Fire Secondary", "To Pulse" }
+        );
+        EnableSecondaryWeaponAndPulse();
+        canCheckProgress = true;
+        crawlers1.SetActive(true);
+        while (!hasFiredPrimary || !hasFiredSecondary || !hasUsedPulse || !hasKilledAll1)
         {
-            RunTest();
+            yield return null;
         }
-        if (aimTest)
+        canCheckProgress = false;
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Basic Combat Complete."));
+        tutorialUI.HideAllInputUIs();
+        yield return new WaitForSeconds(1f);
+        currentStage = TutorialStage.OffensiveSystems;
+    }
+
+    private IEnumerator RunSupportSystems()
+    {
+        tutorialUI.ShowInstructions("Utilize support systems.");
+        tutorialUI.UpdateInputInstructions(
+            new string[] { "openDrone2", "select2" ,"repair" },
+            new string[] { "To Open Drone Menu", "To Select Ability", "Collect box To Repair" }
+        );
+        EnableDroneAndRepair();
+        canCheckProgress = true;
+        while (!hasOpenedDroneMenu2 || !hasselected2 || !hasUsedRepair)
         {
-            AimTest();
+            yield return null;
         }
-        if (shootTest)
+        canCheckProgress = false;
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Support Systems Complete."));
+        tutorialUI.HideAllInputUIs();
+        currentStage = TutorialStage.Complete;
+    }
+
+    private IEnumerator RunOffensiveSystems()
+    {
+        tutorialUI.ShowInstructions("Utilize offensive systems.");
+        tutorialUI.UpdateInputInstructions(
+            new string[] { "openDrone", "select", "bomb" },
+            new string[] { "To Open Drone Menu", "To Select Ability", "To Repair" }
+        );
+        EnableAirStrike();
+        canCheckProgress = true;
+        while (!hasUsedAttack || !hasselected1 || !hasOpenedDroneMenu || !hasKilledAll2)
         {
-            ShootTest();
+            yield return null;
         }
-        if (shootPTest)
+        canCheckProgress = false;
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Offensive Systems Complete."));
+        tutorialUI.HideAllInputUIs();
+        currentStage = TutorialStage.SupportSystems;
+    }
+
+    private void CheckTutorialProgress()
+    {
+        if (currentStage == TutorialStage.Complete) return;
+        if(!canCheckProgress) return;
+        switch (currentStage)
         {
-            ShootPTest();
+            case TutorialStage.BasicMovement:
+                if (!hasMoved && myCharacterController._moveInputVector.magnitude > 0)
+                {
+                    hasMoved = true;
+                    tutorialUI.SetControlGreen(0);
+                }
+                if (!hasAimed && manualWeaponController.isAiming)
+                {
+                    hasAimed = true;
+                    tutorialUI.SetControlGreen(1);
+                }
+                if (!hasDashed && myCharacterController.isDodging)
+                {
+                    hasDashed = true;
+                    tutorialUI.SetControlGreen(2);
+                }
+                break;
+            case TutorialStage.Combat:
+                if (!hasFiredPrimary && manualWeaponController.equipedWeaponP.isFiring)
+                {
+                    hasFiredPrimary = true;
+                    tutorialUI.SetControlGreen(0);
+                }
+                if (!hasFiredSecondary && manualWeaponController.equipedWeapon.isFiring)
+                {
+                    hasFiredSecondary = true;
+                    tutorialUI.SetControlGreen(1);
+                }
+                if (!hasUsedPulse && !tutorialUI.pulseShockwave.canUsePulseWave)
+                {
+                    hasUsedPulse = true;
+                    tutorialUI.SetControlGreen(2);
+                }
+                int killed = 0;
+                foreach (Crawler crawler in crawlersArray1)
+                {
+                    if (crawler.dead)
+                    {
+                        killed++;
+                    }
+                }
+                if (killed == crawlersArray1.Length)
+                {
+                    hasKilledAll1 = true;
+                }
+                break;
+            case TutorialStage.OffensiveSystems:
+                if (!hasOpenedDroneMenu && droneController.airdropMenu.activeInHierarchy)
+                {
+                    hasOpenedDroneMenu = true;
+                    tutorialUI.SetControlGreen(0);
+                }
+                if (!hasselected1 && droneController.timesUsed>0)
+                {
+                    hasselected1 = true;
+                    tutorialUI.SetControlGreen(1);
+                }
+                if (!hasUsedAttack && droneController.airstikes>0)
+                {
+                    hasUsedAttack = true;
+                    tutorialUI.SetControlGreen(2);
+                }
+                int killed2 = 0;
+                foreach (Crawler crawler in crawlersArray2)
+                {
+                    if (crawler.dead)
+                    {
+                        killed2++;
+                    }
+                }
+                if (killed2 == crawlersArray2.Length)
+                {
+                    hasKilledAll2 = true;
+                }
+                break;
+            case TutorialStage.SupportSystems:
+                if (!hasOpenedDroneMenu2 && droneController.airdropMenu.activeInHierarchy)
+                {
+                    hasOpenedDroneMenu2 = true;
+                    tutorialUI.SetControlGreen(0);
+                }
+                if (!hasselected2 && droneController.timesUsed > 1)
+                {
+                    hasselected2 = true;
+                    tutorialUI.SetControlGreen(1);
+                }
+                if (!hasUsedRepair && tutorialUI.mechHealth.targetHealth.health > 70)
+                {
+                    hasUsedRepair = true;
+                    tutorialUI.SetControlGreen(2);
+                }
+                break;
         }
-        if (dodgeTest)
-        {
-            DodgeTest();
-        }
-        if (pulseTest)
-        {
-            PulseTest();
-        }
-        if (droneTest)
-        {
-            DroneTest();
-        }
-        if (selectTest)
-        {
-            SelectTest();
-        }
-        if (repairTest)
-        {
-            RepairTest();
-        }
+    }
+
+    private void EnableMovement()
+    {
+        myCharacterController.enabled = true;
+        manualWeaponController.enabled = true;
+        manualWeaponController.Init();
+        playerInput.ActivateInput();
+    }
+
+    private void EnableSecondaryWeaponAndPulse()
+    {
+        mechLoader.loadMainWeapon = true;
+        mechLoader.loadAltWeapon = true;
+        mechLoader.Init();
+        tutorialUI.altWeapon.SetActive(true);
+        tutorialUI.altWeaponImage.SetActive(true);
+        tutorialUI.pulseShockwave.enabled = true;
+        tutorialUI.pulseBar.SetActive(true);
+    }
+
+    private void EnableAirStrike()
+    {
+        DroneRepair.SetActive(false);
+        DroneAirStrike.SetActive(true);
+        droneController.enabled = true;
+        droneController.airDropTimer.timeElapsed = 5;
+        tutorialUI.airDrop.SetActive(true);
+        crawlers2.SetActive(true);
+        crawlers2.transform.SetParent(null);
+    }
+
+    private void EnableDroneAndRepair()
+    {
+        DroneRepair.SetActive(true);
+        DroneAirStrike.SetActive(false);
+        droneController.enabled = true;
+        tutorialUI.airDrop.SetActive(true);
+        tutorialUI.mechHealth.TakeDamage(50);
     }
 
     public void SkipTutorial()
@@ -91,163 +332,5 @@ public class TutorialManager : MonoBehaviour
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
         sceneLoader.LoadScene(2);
-    }
-
-    public void RepairTest()
-    {
-        if (tutorialUI.mechHealth.targetHealth.health >70)
-        {
-            tutorialUI.SetControlGreen();
-            repairTest = false;
-            StartCoroutine(HidePanel());
-            StartCoroutine(tutorialUI.EndTutorial());
-        }
-    }
-
-    public void SelectTest()
-    {
-        if (droneController.timesUsed>0)
-        {
-            tutorialUI.SetControlGreen();
-            repairTest = true;
-            selectTest = false;
-            StartCoroutine(HidePanel());
-        }
-    }
-
-    public void DroneTest()
-    {
-        if (droneController.airdropMenu.activeInHierarchy)
-        {
-            tutorialUI.SetControlGreen();
-            droneTest = false;
-            StartCoroutine(LoadDronePanel());
-        }
-    }
-
-    public void PulseTest()
-    {
-        if (!tutorialUI.pulseShockwave.canUsePulseWave)
-        {
-            tutorialUI.SetControlGreen();
-            StartCoroutine(HidePanel());
-            pulseTest = false;
-            StartCoroutine(tutorialUI.DroneControls());
-        }
-    }
-
-
-    public void DodgeTest()
-    {
-        if (myCharacterController.isDodging)
-        {
-            tutorialUI.SetControlGreen();
-            dodgeTest = false;
-            StartCoroutine(LoadPulsePanel());
-        }
-    }
-
-    public void ShootTest()
-    {
-        if (manualWeaponController.equipedWeapon.isFiring)
-        {
-            tutorialUI.SetControlGreen();
-            StartCoroutine(HidePanel());
-            shootTest = false;
-        }
-    }
-
-    public void AimTest()
-    {
-        if (manualWeaponController.isAiming)
-        {
-            tutorialUI.SetControlGreen();
-            aimTest = false;
-            StartCoroutine(HidePanel());
-        }
-    }
-
-    public void ShootPTest()
-    {
-        playerInput.ActivateInput();
-        myCharacterController.enabled = true;
-        if (manualWeaponController.equipedWeaponP.isFiring)
-        {
-            tutorialUI.SetControlGreen();
-            StartCoroutine(HidePanel());
-            shootPTest = false;
-            StartCoroutine(LoadRunPanel());
-        }
-    }
-
-    private IEnumerator HidePanel()
-    {
-        yield return new WaitForSeconds(1f);
-        tutorialUI.ControlPanel.SetActive(false);
-    }
-
-    public void RunTest()
-    {
-        if(myCharacterController._moveInputVector.magnitude > 0)
-        {
-            tutorialUI.SetControlGreen();
-            test1 = true;
-            runTest = false;
-            StartCoroutine(LoadAimPanel());
-        }
-    }
-
-    private IEnumerator LoadRunPanel()
-    {
-        yield return new WaitForSeconds(2f);
-        tutorialUI.ShowControlPanel(1);
-        runTest = true;
-    }
-
-    private IEnumerator LoadAimPanel()
-    {
-        yield return new WaitForSeconds(2f);
-        tutorialUI.ShowControlPanel(2);
-        aimTest = true;
-    }
-
-    private IEnumerator LoadPulsePanel()
-    {
-        yield return new WaitForSeconds(2f);
-        tutorialUI.ShowControlPanel(5);
-        pulseTest = true;
-    }
-
-    private IEnumerator LoadDronePanel()
-    {
-        yield return new WaitForSeconds(0.5f);
-        tutorialUI.ShowControlPanel(7);
-        selectTest = true;
-    }
-
-    void CheckTest1()
-    {
-        if (aimTest || runTest)
-        {
-            return;
-        }
-        if (testCrawlers[0].health <= 0 && testCrawlers[1].health <= 0 && testCrawlers[2].health <= 0)
-        {
-            test1 = false;
-            StartCoroutine( tutorialUI.LoadWeaponsUI2());
-        }
-    }
-
-    void CheckTest2()
-    {
-        if (shootTest)
-        {
-            return;
-        }
-        if (testCrawlers2[0].health <= 0 && testCrawlers2[1].health <= 0 && testCrawlers2[2].health <= 0)
-        {
-            test2 = false;
-            StartCoroutine(tutorialUI.AdvancedMovement());
-        }
     }
 }

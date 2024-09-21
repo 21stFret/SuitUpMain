@@ -1702,6 +1702,7 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
+  crawlerSpawner: {fileID: 0}
   health: 0
   healthMax: 5
   attackDamage: 7
@@ -1710,6 +1711,7 @@ MonoBehaviour:
   randomScale: 0
   DeathBlood: {fileID: 6372291188587022168}
   _spawnEffect: {fileID: 5054925395757251297}
+  dead: 0
   deathNoise: {fileID: 2977521352958846146}
   immune: 0
   randomLocationRadius: 0
@@ -1762,6 +1764,11 @@ MonoBehaviour:
   tracking: 1
   groundLevel: 0
   groundCollider: {fileID: 7732307822892334644}
+  separationWeight: 1.5
+  alignmentWeight: 1
+  cohesionWeight: 1
+  swarmRadius: 5
+  desiredSeparation: 2
 --- !u!95 &1088147171486223594
 Animator:
   serializedVersion: 5
@@ -1879,7 +1886,7 @@ CapsuleCollider:
   m_Radius: 1.4
   m_Height: 5
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 2.2, z: 0}
 --- !u!114 &1853808369309738232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1893,7 +1900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 0
+  maxHealth: 0
   invincible: 0
   alive: 0
 --- !u!1 &8815753800708797833

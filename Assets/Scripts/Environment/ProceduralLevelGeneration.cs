@@ -7,8 +7,6 @@ public class ProceduralLevelGeneration : MonoBehaviour
 {
     public List<GameObject> parentHolders; // List of items to place
     public List<GameObject> items = new List<GameObject>();
-    public List<GameObject> spawnedItems = new List<GameObject>();
-    private List<GameObject> spawnedItemsTotal = new List<GameObject>();
     private List<Vector3> scales = new List<Vector3>();
     public int amount; // Amount of items to place
     public float scaleMin, scaleMax; // Min and Max size of items
@@ -16,6 +14,10 @@ public class ProceduralLevelGeneration : MonoBehaviour
     public float spacing; // Spacing between items
     public LayerMask layerMask; // Layer mask to check for collisions
     public Vector2 areaSize; // Size of the area in which to place items
+
+    [InspectorButton("GenerateLevel")]
+    public bool generateLevel;
+
 
     private void Start()
     {
@@ -27,24 +29,15 @@ public class ProceduralLevelGeneration : MonoBehaviour
                 scales.Add(child.localScale);
             }
         }
-        foreach (GameObject item in spawnedItems)
-        {
-            for (int i = 0; i < amount; i++)
-            {
-                var go = Instantiate(item, Vector3.zero, Quaternion.identity);
-                spawnedItemsTotal.Add(go);
-            }
-        }
         GenerateLevel();
     }
 
     public void GenerateLevel()
     {
-        GenerateLevel(items, false);
-        GenerateLevel(spawnedItemsTotal, true);
+        GenerateLevelFromList(items, false);
     }
 
-    public void GenerateLevel(List<GameObject> items, bool instaniated)
+    public void GenerateLevelFromList(List<GameObject> items, bool instaniated)
     {
 
 

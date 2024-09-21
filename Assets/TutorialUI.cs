@@ -6,13 +6,8 @@ using UnityEngine.UI;
 
 public class TutorialUI : MonoBehaviour
 {
-    private TutorialManager _tutorialManager;
-    public TMP_Text loadUpText;
-    public GameObject loadUpPanel;
-    public TMP_Text loadUpWText;
-    public GameObject loadUpWPanel;
-    public TMP_Text ControlText;
-    public GameObject ControlPanel;
+    public TMP_Text instructionText;
+    public GameObject instructionPanel;
     public MechHealth mechHealth;
     public GameObject mechHealthObject;
     public GameObject mechFuelObject;
@@ -23,209 +18,135 @@ public class TutorialUI : MonoBehaviour
     public GameObject mainWeaponImage;
     public GameObject altWeapon;
     public GameObject altWeaponImage;
-    public float textSpeed;
-    public GameObject enemies;
-    public GameObject enemies2;
-    public Sprite[] Controls;
-    public Sprite[] ControlsPC;
-    public Image controlImage;
-    private int controlIndex = 0;
-    public GameObject dodgeBoots, dodgeBoots2;
     public GameObject pulseBar;
     public PulseShockwave pulseShockwave;
     public GameObject airDrop;
+    public float textSpeed = 0.05f;
 
-    private void Awake()
+    public TutorialInputUI[] inputUIs; // Array of TutorialInputUI components
+    public GameObject[] inputTicks;
+    public GameObject inputPanel; // Panel containing input UIs
+    public Sprite[] controlSprites; // Array of control sprites (keyboard, gamepad, etc.)
+
+    private Dictionary<string, int> controlIndexMap; // Map control names to sprite indices
+
+    void Awake()
     {
-        _tutorialManager = GetComponent<TutorialManager>();
+        InitializeControlMap();
     }
 
-    void Start()
+    private void InitializeControlMap()
     {
-        mechHealth.enabled = false;
-        mechHealth.SetEmmisveHeatlh(0);
-        mechHealth.SetEmmisiveStrength(0);
-        Invoke("DelayedStart", 0.5f);
+        controlIndexMap = new Dictionary<string, int>
+        {
+            {"move", 0},
+            {"aim", 1},
+            {"dash", 2},
+            {"firePrimary", 3},
+            {"fireSecondary", 4},
+            {"pulse", 5},
+            {"openDrone", 6},
+            {"select", 7},
+            {"bomb", 8},
+            {"openDrone2", 9},
+            {"select2", 10},
+            {"repair", 11},
+        };
     }
 
-    private void Update()
+    public IEnumerator InitializeMech()
     {
-        SwapControls();
-    }
-
-    public void DelayedStart()
-    {
-        altWeapon.SetActive(false);
-        StartCoroutine(PrintText("Initialzing Mech...", loadUpText));
-        weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
-        mechLoadOut.targetHealth.Init();
-        AudioManager.instance.PlayMusic(1);
-        StartCoroutine(LoadUI());
-        mechHealth.SetEmmisiveStrength(0.5f);
-        pulseShockwave.enabled = false;
-    }
-
-    IEnumerator LoadUI()
-    {
-        loadUpPanel.SetActive(true);
-        weaponFuelManager.constantUse = true;
-        weaponFuelManager._enabled = false;
-        weaponFuelManager.weaponFuel = 0;
-        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(PrintText("Initializing Mech..."));
         mechHealthObject.SetActive(true);
         mechHealth.enabled = true;
-        StartCoroutine(PrintText("Loading Mech Health...", loadUpText));
-        mechHealth.SetEmmisiveStrength(2);
-        yield return new WaitForSeconds(3f);
+        mechHealth.targetHealth.health = mechHealth.targetHealth.maxHealth;
         mechFuelObject.SetActive(true);
-        StartCoroutine(PrintText("Loading Weapon Fuel...", loadUpText));
         weaponFuelManager._enabled = true;
         weaponFuelManager.weaponRechargeRate = 35;
         yield return new WaitForSeconds(3f);
+        yield return StartCoroutine(PrintText("Loading Complete! Scanning environment..."));
+        yield return new WaitForSeconds(1f);
         weaponFuelManager.weaponRechargeRate = 15;
-        StartCoroutine(PrintText("Loading Complete! \nScanning environment...", loadUpText));
-        yield return new WaitForSeconds(4f);
-        loadUpPanel.SetActive(false);
-        StartCoroutine(LoadWeaponsUI());
+        instructionPanel.SetActive(false);
+        //yield return StartCoroutine(EnableMainWeapon());
     }
 
-    IEnumerator LoadWeaponsUI()
+    public IEnumerator StartCombatTraining()
     {
-        enemies.SetActive(true);
-        loadUpWPanel.SetActive(true);
-        StartCoroutine(PrintText("Enemies have been detected. \nRunning battle simulation.", loadUpWText));
-        yield return new WaitForSeconds(5f);
         mainWeapon.SetActive(true);
         mainWeaponImage.SetActive(true);
-        StartCoroutine(PrintText("Primary weapon enabled. \n Eliminate all targets.", loadUpWText));
-        yield return new WaitForSeconds(4f);
-        loadUpWPanel.SetActive(false);
-        mechLoadOut.Init();
-        ShowControlPanel(0);
-        _tutorialManager.shootPTest = true;
-    }
-
-    public IEnumerator LoadWeaponsUI2()
-    {
-        loadUpPanel.SetActive(true);
-        StartCoroutine(PrintText("Targets eliminated.", loadUpText));
-        yield return new WaitForSeconds(3f);
-        loadUpPanel.SetActive(false);
-        altWeapon.SetActive(true);
-        altWeaponImage.SetActive(true);
-        loadUpWPanel.SetActive(true);
-        StartCoroutine(PrintText("Secondary weapon enabled. \nWill consume fuel on use.", loadUpWText));
-        yield return new WaitForSeconds(5f);
-        loadUpWPanel.SetActive(false);
-        enemies2.SetActive(true);
-        ShowControlPanel(3);
-        _tutorialManager.manualWeaponController.enabled = true;
-        _tutorialManager.shootTest = true;
-        _tutorialManager.test2 = true;
-    }
-
-    public IEnumerator AdvancedMovement()
-    {
-        loadUpPanel.SetActive(true);
-        StartCoroutine(PrintText("Targets eliminated.", loadUpText));
-        yield return new WaitForSeconds(3f);
-        loadUpPanel.SetActive(false);
-        loadUpWPanel.SetActive(true);
-        StartCoroutine(PrintText("Dodge and Pulse enabled.", loadUpWText));
-        pulseShockwave.enabled = true;
-        pulseBar.SetActive(true);
-        dodgeBoots.SetActive(true);
-        dodgeBoots2.SetActive(true);
-        yield return new WaitForSeconds(5f);
-        loadUpWPanel.SetActive(false);
-        ShowControlPanel(4);
-        _tutorialManager.dodgeTest = true;
-        _tutorialManager.myCharacterController.candodge = true;
-    }
-
-    public IEnumerator DroneControls()
-    {
+        yield return StartCoroutine(PrintText("Weapons enabled. Prepare for combat training."));
         yield return new WaitForSeconds(1f);
-        loadUpWPanel.SetActive(true);
-        StartCoroutine(PrintText("Establishing Link to Drone", loadUpWText));
-        airDrop.SetActive(true);
-        _tutorialManager.droneController.enabled = true;
-        yield return new WaitForSeconds(4f);
-        StartCoroutine(PrintText("Drone can be used for \npowerful attacks and assits.", loadUpWText));
-        yield return new WaitForSeconds(5f);
-        StartCoroutine(PrintText("Mech has taken damage! \nCall in a repair now!", loadUpWText));
-        mechHealth.TakeDamage(50);
-        yield return new WaitForSeconds(3f);
-        loadUpWPanel.SetActive(false);
-        _tutorialManager.droneTest = true;
-        ShowControlPanel(6);
+        instructionPanel.SetActive(false);
+    }
+
+    public void ShowInstructions(string instructions)
+    {
+        StartCoroutine(PrintText(instructions));
+    }
+
+    public void UpdateInputInstructions(string[] controls, string[] instructions)
+    {
+        HideAllInputUIs();
+
+        for (int i = 0; i < controls.Length && i < inputUIs.Length; i++)
+        {
+            inputPanel.SetActive(true);
+            inputUIs[i].gameObject.SetActive(true);
+            inputUIs[i].inputImage.sprite = controlSprites[controlIndexMap[controls[i]]];
+            inputUIs[i].inputText.text = instructions[i];
+        }
+    }
+
+    public void HideAllInputUIs()
+    {
+        inputPanel.SetActive(false);
+        foreach (var inputTicks in inputTicks)
+        {
+            inputTicks.gameObject.SetActive(false);
+        }
+        foreach (var inputUI in inputUIs)
+        {
+            inputUI.gameObject.SetActive(false);
+        }
     }
 
     public IEnumerator EndTutorial()
     {
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
-        loadUpPanel.SetActive(true);
-        StartCoroutine(PrintText("Systems check complete. \n Ready for live combat!", loadUpText));
-        yield return new WaitForSeconds(5f);
-        _tutorialManager.sceneLoader.LoadScene(2);
+        yield return StartCoroutine(PrintText("Systems check complete. Ready for live combat!"));
+        yield return new WaitForSeconds(1f);
+        SceneLoader.instance.LoadScene(2);
     }
 
-    public void ShowControlPanel(int index)
+    public IEnumerator PrintText(string text)
     {
-        controlImage.color = Color.white;
-        ControlPanel.SetActive(true);
-        controlIndex = index;
-        controlImage.sprite = Controls[controlIndex];
-        controlImage.gameObject.SetActive(true);
-        switch (index)
-        {
-            case 0:
-                ControlText.text = "to fire.";
-                break;
-            case 1:
-                ControlText.text = "to move."; 
-                break;
-            case 2:
-                ControlText.text = "to aim.";
-                break;
-            case 3: 
-                ControlText.text = "to fire.";
-                break;
-            case 4:
-                ControlText.text = "to dodge.";
-                break;
-            case 5:
-                ControlText.text = "to pulse.";
-                break;
-            case 6:
-                ControlText.text = "to open menu.";
-                break;
-            case 7:
-                ControlText.text = "to select.";
-                break;
-        }
-    }
-
-    public void SetControlGreen()
-    {
-        controlImage.color = Color.green;
-    }
-
-    private IEnumerator PrintText(string text, TMP_Text tmp)
-    {
-        tmp.text = "";
+        instructionPanel.SetActive(true);
+        instructionText.text = "";
         for (int i = 0; i < text.Length; i++)
         {
-            tmp.text += text[i];
+            instructionText.text += text[i];
             yield return new WaitForSeconds(textSpeed);
         }
     }
 
-    public void SwapControls()
+    public void SetControlGreen(int control)
     {
-        bool PC = InputTracker.instance.usingMouse;
-        controlImage.sprite = !PC ? Controls[controlIndex] : ControlsPC[controlIndex];
+        for (int i = 0; i < inputUIs.Length; i++)
+        {
+            if (!inputTicks[i].gameObject.activeSelf && control == i)
+            {
+                inputTicks[i].SetActive(true);
+                break;
+            }
+        }
+    }
+
+    public void SwapControlsToPC(bool isPC)
+    {
+        // Implement logic to swap between PC and console sprites
+        // This might involve having separate sprite arrays for PC and console
+        // and updating the controlSprites reference based on isPC
     }
 }

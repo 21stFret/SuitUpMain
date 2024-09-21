@@ -21,6 +21,8 @@ public class GameUI : MonoBehaviour
     public EventSystem eventSystem;
     public DoTweenFade gameUIFade;
     public ObjectiveUI objectiveUI;
+    public GameObject blackout;
+    public GameObject gameplayUI;
 
     private void Awake()
     {
@@ -75,9 +77,11 @@ public class GameUI : MonoBehaviour
         }
         pauseMenu.menuLocked = true;
         completePanel.SetActive(true);
+        gameplayUI.SetActive(false);
+        blackout.SetActive(true);
         completePanel.GetComponentInParent<DoTweenFade>().PlayTween();
         eventSystem.SetSelectedGameObject(completeButton);
-        var GM = GameManager.instance;
+        var GM = PlayerProgressManager.instance;
         rewardMenu.SetRewards(GM.cashCount, GM.expCount, GM.artifactCount, GM.playTime, GM.rewardMultiplier);
     }
 }

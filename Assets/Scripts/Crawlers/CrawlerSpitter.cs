@@ -21,7 +21,7 @@ public class CrawlerSpitter : Crawler
         base.Die(killedBy);
         if(Runner)
         {
-            GameManager.instance.ObjectiveComplete();
+            BattleManager.instance.ObjectiveComplete();
         }
     }
 
