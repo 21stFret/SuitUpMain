@@ -331,12 +331,14 @@ MonoBehaviour:
   randomScale: 2
   DeathBlood: {fileID: 7485218815324124808}
   _spawnEffect: {fileID: 7966955931502245795}
+  dead: 0
   deathNoise: {fileID: 418313318034436250}
   immune: 0
   randomLocationRadius: 3
   crawlerScale: 0.65
   cashWorth: 5
   expWorth: 3
+  dropRate: 5
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
@@ -486,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 0
+  maxHealth: 0
   invincible: 0
   alive: 0
 --- !u!1 &3941811552011450084

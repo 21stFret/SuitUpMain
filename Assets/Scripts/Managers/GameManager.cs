@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
         gameUI.gameUIFade.FadeIn();
+        gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }
 
     private void DayNightCycle()

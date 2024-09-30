@@ -14655,6 +14655,7 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
+  crawlerSpawner: {fileID: 0}
   health: 0
   healthMax: 40
   attackDamage: 10
@@ -14663,12 +14664,14 @@ MonoBehaviour:
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
   _spawnEffect: {fileID: 9130449179126203357}
+  dead: 0
   deathNoise: {fileID: 4195929182837322614}
   immune: 1
   randomLocationRadius: 0
   crawlerScale: 1.1
   cashWorth: 40
   expWorth: 20
+  dropRate: 20
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
@@ -14789,6 +14792,11 @@ MonoBehaviour:
   tracking: 1
   groundLevel: 0
   groundCollider: {fileID: 8012012032271179581}
+  separationWeight: 1.5
+  alignmentWeight: 1
+  cohesionWeight: 1
+  swarmRadius: 5
+  desiredSeparation: 2
 --- !u!114 &6499886239188906295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14802,7 +14810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 0
+  maxHealth: 0
   invincible: 0
   alive: 0
 --- !u!1 &4244136424091634591

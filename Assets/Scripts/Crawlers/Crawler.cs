@@ -56,6 +56,7 @@ public class Crawler : MonoBehaviour
     public float crawlerScale;
     public int cashWorth;
     public int expWorth;
+    public int dropRate;
 
 
     public CrawlerType crawlerType;
@@ -352,7 +353,7 @@ public class Crawler : MonoBehaviour
         if (CashCollector.instance != null)
         {
             CashCollector.instance.AddCash(cashWorth);
-            if (Random.Range(0, 100) < 15)
+            if (Random.Range(0, 100) < dropRate)
             {
                 GameObject go = Instantiate(partPrefab, transform.position + (transform.up * 2), Quaternion.identity);
                 go.transform.SetParent(CashCollector.instance.crawlerPartParent.transform);

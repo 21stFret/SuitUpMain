@@ -82,6 +82,7 @@ public class CapturePoint : MonoBehaviour
         Debug.Log("Capture Point Captured");
         isCaptured = true;
         _enabled = false;
+        captureProgress = 0;
         ball.SetActive(false);
         BattleManager.instance.ObjectiveComplete();
 

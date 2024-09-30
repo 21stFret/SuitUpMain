@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     public DefendObjective defendBase;
     public Pickup roomDrop;
     public LayerMask dropLayer;
+    public string objectiveMessage;
 
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
@@ -25,36 +26,34 @@ public class BattleManager : MonoBehaviour
     {
         var type = Battles[currentBattleIndex].battleType;
         GameManager.instance.gameUI.objectiveUI.ResetObjective();
-        string objective = "";
         Color color = Color.white;
         float fillAmount = 0;
         switch (type)
         {
             case BattleType.Kill:
-                objective = "Hunt down and kill the target";
+                objectiveMessage = "Hunt down and kill the target";
                 color = Color.red;
                 fillAmount = 1;
                 SpawnRunner();
                 break;
             case BattleType.Defend:
-                objective = "Defend the base for 1 minute";
+                objectiveMessage = "Defend the base for 1 minute";
                 color = Color.yellow;
                 fillAmount = 0;
                 SpawnDefendBase();
                 break;
             case BattleType.Capture:
-                objective = "Locate the drop and upload the data";
+                objectiveMessage = "Locate the drop and upload the data";
                 color = Color.blue;
                 fillAmount = 0;
                 SpawnCapturePoint();
                 break;
             case BattleType.Survive:
-                objective = "Survive all waves!";
+                objectiveMessage = "Survive all waves!";
                 color = Color.green;
                 fillAmount = 0;
                 break;
         }
-        GameManager.instance.gameUI.objectiveUI.UpdateObjective(objective);
         GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
     }

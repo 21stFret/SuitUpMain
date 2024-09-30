@@ -44808,7 +44808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
-  speed: 0
+  speedFinal: 5
   steerSpeed: 4
   lookSpeed: 200
   stoppingDistance: 5
@@ -44822,6 +44822,11 @@ MonoBehaviour:
   tracking: 1
   groundLevel: 0
   groundCollider: {fileID: 5908647079581510130}
+  separationWeight: 1.5
+  alignmentWeight: 1
+  cohesionWeight: 1
+  swarmRadius: 5
+  desiredSeparation: 2
 --- !u!114 &2550985015025176912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44835,8 +44840,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 0
+  maxHealth: 0
   invincible: 0
+  alive: 0
 --- !u!114 &2130287821825659914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44853,14 +44859,18 @@ MonoBehaviour:
   crawlerMovement: {fileID: 0}
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
+  crawlerSpawner: {fileID: 0}
   health: 0
   healthMax: 20
   attackDamage: 3
   speed: 4
+  _randomSpeed: 0
+  randomScale: 0
   DeathBlood: {fileID: 7485218815324124808, guid: 01cc13fad379320419515d40b979a1d9,
     type: 3}
   _spawnEffect: {fileID: 7966955931502245795, guid: 01cc13fad379320419515d40b979a1d9,
     type: 3}
+  dead: 0
   deathNoise: {fileID: 418313318034436250, guid: 01cc13fad379320419515d40b979a1d9,
     type: 3}
   immune: 0
@@ -44868,9 +44878,13 @@ MonoBehaviour:
   crawlerScale: 0.5
   cashWorth: 10
   expWorth: 3
+  dropRate: 10
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
+  forceSpawn: 0
+  damageNumberPrefab: {fileID: 0}
+  damageNumbersOn: 0
 --- !u!1 &7907839350698568565
 GameObject:
   m_ObjectHideFlags: 0

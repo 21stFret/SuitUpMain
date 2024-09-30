@@ -39,8 +39,7 @@ public class ObjectiveUI : MonoBehaviour
 
     public IEnumerator ObjectiveComplete()
     {
-        string objective = "Objective Complete";
-        objective += "\n Go through the portal to continue";
+        string objective = "Objective Complete! \n Collect reward to comtinue";
         GameUI.instance.objectiveUI.UpdateObjective(objective);
         yield return new WaitForSeconds(2f);
         objectiveBar.enabled = false;

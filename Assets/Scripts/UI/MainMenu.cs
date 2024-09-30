@@ -26,7 +26,6 @@ public class MainMenu : MonoBehaviour
     public TMP_Text headerText;
     private bool inMainMenu;
     public GameObject header;
-    public GameObject header3dUI;
 
     private void Start()
     {
@@ -150,7 +149,6 @@ public class MainMenu : MonoBehaviour
         ToggleText(true);
         PauseInput(true);
         header.SetActive(true);
-        header3dUI.SetActive(true);
         header.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.GetComponent<DoTweenFade>().canvasGroup.alpha = 0;
         loadOut.Init();
@@ -171,7 +169,6 @@ public class MainMenu : MonoBehaviour
         PauseInput(true);
         loadOut.Init();
         yield return new WaitForSeconds(0.8f);
-        header3dUI.SetActive(false);
         mainMenu.SetActive(true);
         mainMenu.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.SetActive(false);
@@ -194,7 +191,6 @@ public class MainMenu : MonoBehaviour
         PauseInput(true);
         yield return new WaitForSeconds(0.8f);
         header.SetActive(true);
-        header3dUI.SetActive(true);
         header.GetComponent<DoTweenFade>().FadeIn();
         loadOutMenu.GetComponent<DoTweenFade>().canvasGroup.alpha = 0;
         loadOutMenu.SetActive(true);
