@@ -30,19 +30,13 @@ public class BattleManager : MonoBehaviour
         float fillAmount = 0;
         switch (type)
         {
-            case BattleType.Kill:
+            case BattleType.Hunt:
                 objectiveMessage = "Hunt down and kill the target";
                 color = Color.red;
                 fillAmount = 1;
                 SpawnRunner();
                 break;
-            case BattleType.Defend:
-                objectiveMessage = "Defend the base for 1 minute";
-                color = Color.yellow;
-                fillAmount = 0;
-                SpawnDefendBase();
-                break;
-            case BattleType.Capture:
+            case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
                 color = Color.blue;
                 fillAmount = 0;
@@ -53,15 +47,14 @@ public class BattleManager : MonoBehaviour
                 color = Color.green;
                 fillAmount = 0;
                 break;
+            case BattleType.Exterminate:
+                objectiveMessage = "Exterminate all enemies!";
+                color = Color.white;
+                fillAmount = 0;
+                break;
         }
         GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
-    }
-
-    private void SpawnDefendBase()
-    {
-        defendBase.gameObject.SetActive(true);
-        defendBase.Init();
     }
 
     private void SpawnRunner()
@@ -135,10 +128,10 @@ public class BattleManager : MonoBehaviour
     public void UpdateCrawlerSpawner()
     {
         crawlerSpawner.battleRound = 0;
-        crawlerSpawner.roundTimer = 5;
+        crawlerSpawner.burstTimer = 5;
         crawlerSpawner.waveText.text = "Here they come...";
         crawlerSpawner.battleManager = Battles[currentBattleIndex];
-        crawlerSpawner.battleRoundMax = Battles[currentBattleIndex].battleWaves.Count;
+        crawlerSpawner.battleRoundMax = Battles[currentBattleIndex].battleArmy.Count;
         crawlerSpawner.isActive = true;
         crawlerSpawner.spawnPoints = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>().spawnPoints;
     }

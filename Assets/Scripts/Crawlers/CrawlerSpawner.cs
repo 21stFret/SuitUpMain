@@ -21,7 +21,7 @@ public class CrawlerSpawner : MonoBehaviour
     private Transform spawnPoint;
     private int currentSpawnPoint;
     public List<PortalEffect> portalEffects;
-    [SerializeField] public float roundTimer;
+    public float burstTimer;
     public int battleRound;
     public int battleRoundMax;
     public bool endless;
@@ -31,7 +31,7 @@ public class CrawlerSpawner : MonoBehaviour
 
     public static CrawlerSpawner instance;
     public Battle battleManager;
-    public BattleWave currentWave;
+    public CrawlerSquad currentSquad;
 
     public bool isActive;
 
@@ -41,18 +41,8 @@ public class CrawlerSpawner : MonoBehaviour
 
     public CrawlerSpitter runner;
 
-    [SerializeField] private List<WaveGenerator.EnemyTypeInfo> enemyTypes;
-    [SerializeField] private int minWaves = 3;
-    [SerializeField] private int maxWaves = 5;
-    [SerializeField] private float baseRoundTimer = 60f;
-    [SerializeField] private float timerVariation = 10f;
-
-    [SerializeField] private WaveGenerator waveGenerator;
-    [SerializeField] private int battleId;
-    [SerializeField] private BattleType battleType;
-    [SerializeField] private BattleDifficulty battleDifficulty;
-
-    private Battle currentBattle;
+    [SerializeField] private ArmyGenerator ArmyGen;
+    public Battle currentBattle;
 
     private void Start()
     {
@@ -62,14 +52,14 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void GenerateNewBattle()
     {
-        if (waveGenerator == null)
+        if (ArmyGen == null)
         {
             Debug.LogError("WaveGenerator is not assigned to CrawlerSpawner!");
             return;
         }
-
-        currentBattle = waveGenerator.GenerateBattle(battleId, battleType, battleDifficulty);
-        battleRoundMax = currentBattle.battleWaves.Count;
+        currentBattle = new Battle(BattleType.Exterminate);
+        currentBattle.battleArmy = ArmyGen.BuildArmy();
+        battleRoundMax = currentBattle.battleArmy.Count;
         endless = false; // Set to true if you want endless mode
         ResetBattle();
     }
@@ -78,34 +68,11 @@ public class CrawlerSpawner : MonoBehaviour
     {
         battleRound = 0;
         timeElapsed = 0f;
+        burstTimer = currentBattle.burstTimer;
         isActive = true;
         IncrementSpawnRound();
     }
 
-    private void IncrementSpawnRound()
-    {
-        battleRound++;
-
-        if (battleRound >= battleRoundMax)
-        {
-            if (endless)
-            {
-                battleRound = 0;
-            }
-            else
-            {
-                battleRound = battleRoundMax;
-                isActive = false;
-                timeText.text = "";
-                waveText.text = "Final Wave";
-                return;
-            }
-        }
-
-        currentWave = currentBattle.battleWaves[battleRound - 1];
-        waveText.text = $"Wave {battleRound}/{currentBattle.battleWaves.Count}";
-        roundTimer = currentWave.roundTimer;
-    }
 
     private void Awake()
     {
@@ -116,15 +83,16 @@ public class CrawlerSpawner : MonoBehaviour
     {
         if (isActive)
         {
-            RoundTimer();
-            ValidateActiveCrawlers();
+            BurstTimer();
+
         }
+        ValidateActiveCrawlers();
     }
 
-    private void RoundTimer()
+    private void BurstTimer()
     {
         timeElapsed += Time.deltaTime;
-        if (timeElapsed >= roundTimer)
+        if (timeElapsed >= burstTimer)
         {
             BeginSpawning();
             timeElapsed = 0f;
@@ -134,16 +102,16 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void UpdateTimerDisplay()
     {
-        if (timeElapsed <= roundTimer - 10f)
+        if (timeElapsed <= burstTimer - 10f)
         {
             timeText.enabled = false;
         }
         else
         {
             timeText.enabled = true;
-            timeText.color = timeElapsed >= roundTimer - 5f ? Color.red : Color.white;
+            timeText.color = timeElapsed >= burstTimer - 5f ? Color.red : Color.white;
         }
-        timeText.text = (roundTimer - timeElapsed).ToString("0");
+        timeText.text = (burstTimer - timeElapsed).ToString("0");
     }
 
     private void InitCrawlers()
@@ -188,33 +156,68 @@ public class CrawlerSpawner : MonoBehaviour
         spawnPoint = spawnPoints[currentSpawnPoint];
     }
 
+    private void IncrementSpawnRound()
+    {
+        battleRound++;
+
+        if (battleRound >= battleRoundMax)
+        {
+            if (endless)
+            {
+                battleRound = 0;
+            }
+            else
+            {
+                battleRound = battleRoundMax;
+                isActive = false;
+                timeText.text = "";
+                waveText.text = "Final Wave";
+                return;
+            }
+        }
+
+        currentSquad = currentBattle.battleArmy[battleRound - 1];
+        waveText.text = $"Wave {battleRound}/{currentBattle.battleArmy.Count}";
+        burstTimer = currentBattle.burstTimer;
+    }
+
     private IEnumerator SpawnDelay()
     {
-        PlaySpawnEffect(0);
+        PlaySpawnEffect(currentSpawnPoint);
         yield return new WaitForSeconds(1f);
 
         if (isActive)
         {
-            SpawnWave();
+            SpawnSquad();
         }
     }
 
-    private void SpawnWave()
+    private void SpawnSquad()
     {
-        var waveCrawlers = currentWave.crawlersInWave;
+        spawnList.Clear();
+        var waveInfo = currentSquad.crawlerGroups[battleRound];
+        for (int j = 0; j < waveInfo.amount && j < GetCrawlerList(waveInfo.type).Count; j++)
+        {
+            spawnList.Add(GetCrawlerList(waveInfo.type)[j]);
+        }
+        spawnList.Shuffle();
+        SpawnCrawlerFromList(spawnList);
+    }    
+    
+    private void SpawnFromArmy()
+    {
         spawnList.Clear();
 
-        foreach (var waveInfo in waveCrawlers)
+        for(int i = 0; i < currentSquad.crawlerGroups.Length; i++)
         {
-            var list = GetCrawlerList(waveInfo.type);
-            for (int j = 0; j < waveInfo.count && j < list.Count; j++)
+            var waveInfo = currentSquad.crawlerGroups[i];
+            for (int j = 0; j < waveInfo.amount && j < GetCrawlerList(waveInfo.type).Count; j++)
             {
-                spawnList.Add(list[j]);
+                spawnList.Add(GetCrawlerList(waveInfo.type)[j]);
             }
         }
 
         spawnList.Shuffle();
-        spawnPoint = spawnPoints[currentSpawnPoint];
         SpawnCrawlerFromList(spawnList);
     }
 

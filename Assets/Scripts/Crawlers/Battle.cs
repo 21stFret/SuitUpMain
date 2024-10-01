@@ -1,22 +1,24 @@
 using System.Collections.Generic;
 
+[System.Serializable]
 public class Battle
 {
-    public int ID;
     public BattleType battleType;
-    public List<BattleWave> battleWaves;
-    public BattleDifficulty battleDifficulty;
+    public List<CrawlerSquad> battleArmy;
+    public float burstTimer;
+    public float burstMin;
+    public float burstMax;
 
-    public Battle(int id, BattleType type, BattleDifficulty difficulty)
+    public Battle(BattleType type)
     {
-        ID = id;
         battleType = type;
-        battleDifficulty = difficulty;
-        battleWaves = new List<BattleWave>();
+        battleArmy = new List<CrawlerSquad>();
+        burstTimer = 0;
+        burstMin = 5;
+        burstMax = 10;
     }
 }
 
-// These can remain as they were
 public enum BattleDifficulty
 {
     Easy,
@@ -26,36 +28,35 @@ public enum BattleDifficulty
 
 public enum BattleType
 {
+    Exterminate,
     Survive,
-    Defend,
-    Kill,
-    Capture,
+    Hunt,
+    Upload,
+    MiniBoss,
+    Boss,
     Default
 }
 
-// These structs can remain as they were
 [System.Serializable]
-public struct CrawlerWave
+public struct CrawlerGroup
 {
     public CrawlerType type;
-    public int count;
+    public int amount;
 
-    public CrawlerWave(CrawlerType type, int count)
+    public CrawlerGroup(CrawlerType type, int count)
     {
         this.type = type;
-        this.count = count;
+        this.amount = count;
     }
 }
 
 [System.Serializable]
-public struct BattleWave
+public struct CrawlerSquad
 {
-    public CrawlerWave[] crawlersInWave;
-    public float roundTimer;
+    public CrawlerGroup[] crawlerGroups;
 
-    public BattleWave(CrawlerWave[] crawlersInWave, float roundTimer)
+    public CrawlerSquad(CrawlerGroup[] crawlersInWave)
     {
-        this.crawlersInWave = crawlersInWave;
-        this.roundTimer = roundTimer;
+        this.crawlerGroups = crawlersInWave;
     }
 }
