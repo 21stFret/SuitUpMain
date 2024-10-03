@@ -37,11 +37,6 @@ public class PlayerProgressManager : MonoBehaviour
         killCount += count;
         GameManager.instance.gameUI.UpdateKillCount(killCount);
         CheckPlayerAchievements(count, weapon);
-
-        if (BattleManager.instance.Battles[BattleManager.instance.currentBattleIndex].battleType == BattleType.Survive)
-        {
-            StartCoroutine(BattleManager.instance.CheckActiveEnemies());
-        }
     }
 
     public void AddExp(int count)

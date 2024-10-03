@@ -34,7 +34,7 @@ public class VoidPortalManager : MonoBehaviour
         }
     }
 
-    public void SetPortalColor(PortalEffect portal, ModBuildType type)    
+    public static void SetPortalColor(PortalEffect portal, ModBuildType type)    
     {
         Color color = Color.red;
         switch(type)
@@ -62,6 +62,13 @@ public class VoidPortalManager : MonoBehaviour
             Color lighter = LightenColor(color, 30);
             mat.SetColor("_TintColorB", lighter);
 
+        }
+        var particleSytems = portal.GetComponentsInChildren<ParticleSystemRenderer>();
+        foreach (var ps in particleSytems)
+        {
+            ps.material.SetColor("_TintColorA", color);
+            Color lighter = LightenColor(color, 30);
+            ps.material.SetColor("_TintColorB", lighter);
         }
     }
 

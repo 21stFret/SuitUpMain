@@ -16,8 +16,9 @@ public class CapturePoint : MonoBehaviour
 
     public void Init()
     {
-        online.Play();
+        gameObject.SetActive(true);
         _enabled = true;
+        online.Play();
         ball.SetActive(true);
     }
 

@@ -31,7 +31,7 @@ public class DefendObjective : Prop
             if(!damaged.isPlaying)
             {
                 damaged.Play();
-                GameUI.instance.objectiveUI.UpdateObjective("Defend the base!");
+                //GameUI.instance.objectiveUI.UpdateObjective("Defend the base!");
             }
         }
     

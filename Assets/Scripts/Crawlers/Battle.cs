@@ -6,8 +6,8 @@ public class Battle
     public BattleType battleType;
     public List<CrawlerSquad> battleArmy;
     public float burstTimer;
-    public float burstMin;
-    public float burstMax;
+    public int burstMin;
+    public int burstMax;
 
     public Battle(BattleType type)
     {

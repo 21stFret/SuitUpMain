@@ -19,6 +19,7 @@ public class RoomPortal : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            VoidPortalManager.SetPortalColor(visualPortalEffect, portalType);
             visualPortalEffect.gameObject.SetActive(true);
             visualPortalEffect.StartFirstPersonEffect();
             if(voidPortal)

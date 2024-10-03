@@ -159,6 +159,10 @@ public class Crawler : MonoBehaviour
     {
         if (transform.position.y < -10)
         {
+            if(dead)
+            {
+                return;
+            }
             TakeDamage(1000, WeaponType.Default);
         }
     }
@@ -233,6 +237,10 @@ public class Crawler : MonoBehaviour
 
     public void DamageNumbers(float dam, WeaponType weapon)
     {
+        if(weapon == WeaponType.Default)
+        {
+            return;
+        }
         DamageNumber newPopup = damageNumberPrefab.Spawn(transform.position, dam);
         newPopup.SetFollowedTarget(transform);
         newPopup.SetScale(5);
@@ -343,6 +351,13 @@ public class Crawler : MonoBehaviour
         if(crawlerSpawner != null)
         {
             crawlerSpawner.AddtoRespawnList(this, crawlerType);
+        }
+
+        var BM = BattleManager.instance;
+
+        if (BM.Battles[BM.currentBattleIndex].battleType == BattleType.Exterminate)
+        {
+            BM.StartCoroutine(BM.CheckActiveEnemies());
         }
 
         if (weapon == WeaponType.Default)

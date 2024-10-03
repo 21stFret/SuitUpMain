@@ -7,6 +7,7 @@ public class BattleManager : MonoBehaviour
     public static BattleManager instance;
     public CrawlerSpawner crawlerSpawner;
     public List<Battle> Battles = new List<Battle>();
+    public Battle currentBattle;
     public int currentBattleIndex;
     public CapturePoint capturePoint;
     public DefendObjective defendBase;
@@ -24,10 +25,11 @@ public class BattleManager : MonoBehaviour
 
     public void SetBattleType()
     {
-        var type = Battles[currentBattleIndex].battleType;
+        GenerateNewBattle(Battles[currentBattleIndex].battleType);
         GameManager.instance.gameUI.objectiveUI.ResetObjective();
         Color color = Color.white;
         float fillAmount = 0;
+        var type = Battles[currentBattleIndex].battleType;
         switch (type)
         {
             case BattleType.Hunt:
@@ -68,7 +70,11 @@ public class BattleManager : MonoBehaviour
         Vector3 pos = Random.insideUnitSphere * 50;
         pos.y = 1;
         capturePoint.transform.position = pos;
-        capturePoint.gameObject.SetActive(true);
+        Invoke("InitCapturePoint", 3);
+    }
+
+    private void InitCapturePoint()
+    {
         capturePoint.Init();
     }
 
@@ -127,28 +133,44 @@ public class BattleManager : MonoBehaviour
 
     public void UpdateCrawlerSpawner()
     {
-        crawlerSpawner.battleRound = 0;
-        crawlerSpawner.burstTimer = 5;
+        crawlerSpawner.battleManager = this;
         crawlerSpawner.waveText.text = "Here they come...";
-        crawlerSpawner.battleManager = Battles[currentBattleIndex];
-        crawlerSpawner.battleRoundMax = Battles[currentBattleIndex].battleArmy.Count;
-        crawlerSpawner.isActive = true;
         crawlerSpawner.spawnPoints = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>().spawnPoints;
+        crawlerSpawner.LoadBattle();
+        if (currentBattle.battleType == BattleType.Exterminate)
+        {
+            crawlerSpawner.BeginSpawningSquads();
+        }
     }
 
     public IEnumerator CheckActiveEnemies()
     {
-        if (crawlerSpawner.battleRound >= crawlerSpawner.battleRoundMax)
+        if (crawlerSpawner.activeCrawlerCount == 0)
         {
+            yield return new WaitForSeconds(1);
             if (crawlerSpawner.activeCrawlerCount == 0)
             {
-                yield return new WaitForSeconds(1);
-
-                if (crawlerSpawner.activeCrawlerCount == 0)
+                if (crawlerSpawner.battleRound < crawlerSpawner.battleRoundMax)
+                {
+                    crawlerSpawner.BeginSpawningSquads();
+                }
+                else
                 {
                     ObjectiveComplete();
                 }
             }
+        }   
+    }
+
+    [SerializeField] private ArmyGenerator ArmyGen;
+    private void GenerateNewBattle(BattleType type)
+    {
+        if (ArmyGen == null)
+        {
+            Debug.LogError("WaveGenerator is not assigned!");
+            return;
         }
+        currentBattle = Battles[currentBattleIndex];
+        currentBattle.battleArmy = ArmyGen.BuildArmy();
     }
 }

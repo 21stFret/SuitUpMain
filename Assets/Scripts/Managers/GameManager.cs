@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.currentBattleIndex = 0;
         BattleManager.instance.UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
+        gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }
 
     private IEnumerator ShowControls()

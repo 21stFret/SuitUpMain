@@ -26,53 +26,45 @@ public class CrawlerSpawner : MonoBehaviour
     public int battleRoundMax;
     public bool endless;
     public float timeElapsed = 0f;
+    public float totalTimeElapsesd = 0f;
     public TMP_Text timeText;
     public TMP_Text waveText;
 
     public static CrawlerSpawner instance;
-    public Battle battleManager;
+    public BattleManager battleManager;
     public CrawlerSquad currentSquad;
 
     public bool isActive;
 
     public int portalMaxAllowed;
 
-    public List<Crawler> spawnList = new List<Crawler>();
+    public List<Crawler> spawnListArmy = new List<Crawler>();
 
     public CrawlerSpitter runner;
 
-    [SerializeField] private ArmyGenerator ArmyGen;
     public Battle currentBattle;
+    private bool standardBattle;
+    private int burstSpawnAmount;
 
     private void Start()
     {
         InitCrawlers();
-        GenerateNewBattle();
     }
 
-    private void GenerateNewBattle()
+    public void LoadBattle()
     {
-        if (ArmyGen == null)
-        {
-            Debug.LogError("WaveGenerator is not assigned to CrawlerSpawner!");
-            return;
-        }
-        currentBattle = new Battle(BattleType.Exterminate);
-        currentBattle.battleArmy = ArmyGen.BuildArmy();
-        battleRoundMax = currentBattle.battleArmy.Count;
-        endless = false; // Set to true if you want endless mode
-        ResetBattle();
-    }
-
-    private void ResetBattle()
-    {
+        currentBattle = battleManager.currentBattle;
         battleRound = 0;
-        timeElapsed = 0f;
+        battleRoundMax = currentBattle.battleArmy.Count;
+        timeElapsed = 0;
+        totalTimeElapsesd = 0;
         burstTimer = currentBattle.burstTimer;
+        standardBattle = currentBattle.battleType == BattleType.Exterminate;
+        endless = !standardBattle;
         isActive = true;
-        IncrementSpawnRound();
+        GenerateArmyList();
+        burstSpawnAmount = currentBattle.burstMin;
     }
-
 
     private void Awake()
     {
@@ -81,10 +73,9 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (isActive)
+        if (isActive && !standardBattle)
         {
             BurstTimer();
-
         }
         ValidateActiveCrawlers();
     }
@@ -94,8 +85,15 @@ public class CrawlerSpawner : MonoBehaviour
         timeElapsed += Time.deltaTime;
         if (timeElapsed >= burstTimer)
         {
-            BeginSpawning();
             timeElapsed = 0f;
+            
+            // slowly increase the amount of crawlers spawned per burst
+            totalTimeElapsesd += 0.1f;
+            int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
+            min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
+            burstSpawnAmount = Random.Range(min, currentBattle.burstMax);
+
+            SpawnFromArmy();
         }
         UpdateTimerDisplay();
     }
@@ -135,13 +133,10 @@ public class CrawlerSpawner : MonoBehaviour
         }
     }
 
-    private void BeginSpawning()
+    public void BeginSpawningSquads()
     {
-        if (!isActive) return;
-
-        SelectSpawnPoint();
         IncrementSpawnRound();
-        StartCoroutine(SpawnDelay());
+        SpawnCheck();
     }
 
     private void SelectSpawnPoint()
@@ -160,7 +155,7 @@ public class CrawlerSpawner : MonoBehaviour
     {
         battleRound++;
 
-        if (battleRound >= battleRoundMax)
+        if (battleRound > battleRoundMax)
         {
             if (endless)
             {
@@ -178,47 +173,57 @@ public class CrawlerSpawner : MonoBehaviour
 
         currentSquad = currentBattle.battleArmy[battleRound - 1];
         waveText.text = $"Wave {battleRound}/{currentBattle.battleArmy.Count}";
-        burstTimer = currentBattle.burstTimer;
     }
 
-    private IEnumerator SpawnDelay()
+    private void SpawnCheck()
     {
-        PlaySpawnEffect(currentSpawnPoint);
-        yield return new WaitForSeconds(1f);
-
         if (isActive)
         {
             SpawnSquad();
+        }
+        else
+        {
+            print("Crawler tried to spawn a squad but was inactive");
         }
     }
 
     private void SpawnSquad()
     {
-        spawnList.Clear();
-        var waveInfo = currentSquad.crawlerGroups[battleRound];
-        for (int j = 0; j < waveInfo.amount && j < GetCrawlerList(waveInfo.type).Count; j++)
+        var _spawnList = new List<Crawler>();
+        for (int j = 0; j < currentSquad.crawlerGroups.Length; j++)
         {
-            spawnList.Add(GetCrawlerList(waveInfo.type)[j]);
+            var list = GetCrawlerList(currentSquad.crawlerGroups[j].type);
+            for (int k = 0; k < currentSquad.crawlerGroups[j].amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
+            {
+                _spawnList.Add(list[k]);
+            }
         }
-        spawnList.Shuffle();
-        SpawnCrawlerFromList(spawnList);
-    }    
+        _spawnList.Shuffle();
+        StartCoroutine(SpawnCrawlerFromList(_spawnList));
+    }
     
     private void SpawnFromArmy()
     {
-        spawnList.Clear();
+        StartCoroutine(SpawnBurstCrawlerFromList());
+    }
 
-        for(int i = 0; i < currentSquad.crawlerGroups.Length; i++)
+    private void GenerateArmyList()
+    {
+        spawnListArmy.Clear();
+        foreach (CrawlerSquad squad in currentBattle.battleArmy)
         {
-            var waveInfo = currentSquad.crawlerGroups[i];
-            for (int j = 0; j < waveInfo.amount && j < GetCrawlerList(waveInfo.type).Count; j++)
+            for (int i = 0; i < squad.crawlerGroups.Length; i++)
             {
-                spawnList.Add(GetCrawlerList(waveInfo.type)[j]);
+                CrawlerType type = squad.crawlerGroups[i].type;
+                int amount = squad.crawlerGroups[i].amount;
+
+                for (int j = 0; j < amount && j < GetCrawlerList(type).Count; j++)
+                {
+                    spawnListArmy.Add(GetCrawlerList(type)[j]);
+                }
             }
         }
-
-        spawnList.Shuffle();
-        SpawnCrawlerFromList(spawnList);
+        spawnListArmy.Shuffle();
     }
 
     private List<Crawler> GetCrawlerList(CrawlerType type)
@@ -235,36 +240,60 @@ public class CrawlerSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnCrawlerFromList(List<Crawler> bugs)
+    private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs)
     {
-        if (bugs.Count == 0)
-        {
-            Debug.LogWarning("No Crawlers to Spawn");
-            return;
-        }
-
-        int portalIndex = 0;
         int portalAllowed = 0;
 
-        for (int i = 0; i < bugs.Count; i++)
+        SelectSpawnPoint();
+        PlaySpawnEffect();
+        yield return new WaitForSeconds(0.5f);
+            for (int i = 0; i < bugs.Count; i++)
+            {
+                if (portalAllowed >= portalMaxAllowed)
+                {
+                    SelectSpawnPoint();
+                    PlaySpawnEffect();
+                    portalAllowed = 0;
+                    yield return new WaitForSeconds(0.5f);
+                }
+
+                Vector3 randomCircle = Random.insideUnitSphere;
+                randomCircle.z = 0;
+                Vector3 randomPoint = randomCircle + spawnPoint.position;
+                bugs[i].transform.position = randomPoint;
+                bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+
+                StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+                portalAllowed++;
+            }
+    }
+
+    private IEnumerator SpawnBurstCrawlerFromList()
+    {
+        int portalAllowed = 0;
+        SelectSpawnPoint();
+        PlaySpawnEffect();
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < burstSpawnAmount; i++)
         {
             if (portalAllowed >= portalMaxAllowed)
             {
-                portalIndex++;
                 SelectSpawnPoint();
-                PlaySpawnEffect(portalIndex);
+                PlaySpawnEffect();
                 portalAllowed = 0;
+                yield return new WaitForSeconds(0.5f);
             }
 
             Vector3 randomCircle = Random.insideUnitSphere;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + spawnPoint.position;
-            bugs[i].transform.position = randomPoint;
-            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+            spawnListArmy[i].transform.position = randomPoint;
+            spawnListArmy[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
 
-            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            StartCoroutine(SpawnRandomizer(spawnListArmy[i], i * 0.2f));
             portalAllowed++;
         }
+        
     }
 
     private IEnumerator SpawnRandomizer(Crawler bug, float delay)
@@ -280,19 +309,11 @@ public class CrawlerSpawner : MonoBehaviour
         Debug.Log($"Spawned and activated: {bug.name}");
     }
 
-    private void PlaySpawnEffect(int index)
+    private void PlaySpawnEffect()
     {
-        index = index % portalEffects.Count;
-
-        if (portalEffects[index].isActive)
-        {
-            PlaySpawnEffect(index + 1);
-            return;
-        }
-
-        portalEffects[index].transform.position = spawnPoint.position;
-        portalEffects[index].transform.rotation = spawnPoint.rotation;
-        portalEffects[index].StartEffect();
+        portalEffects[currentSpawnPoint].transform.position = spawnPoint.position;
+        portalEffects[currentSpawnPoint].transform.rotation = spawnPoint.rotation;
+        portalEffects[currentSpawnPoint].StartEffect();
     }
 
     public void SpawnAtPoint(Transform point, int spawnAmount)
@@ -303,7 +324,7 @@ public class CrawlerSpawner : MonoBehaviour
             spawnList.Add(crawlers[i]);
         }
         spawnPoint = point;
-        SpawnCrawlerFromList(spawnList);
+        StartCoroutine(SpawnCrawlerFromList(spawnList));
     }
 
     public void EndBattle()

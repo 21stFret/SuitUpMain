@@ -14,7 +14,6 @@ public class PulseShockwave : MonoBehaviour
     private float timeElapsed;
     public float rechargeTime;
     public bool canUsePulseWave;
-    public Image cover;
     public AudioClip pulseWaveSound;
     public GameObject pulseBar;
 
@@ -91,8 +90,6 @@ public class PulseShockwave : MonoBehaviour
         }
 
         timeElapsed += Time.deltaTime;
-        var percentage = 1 - (timeElapsed / rechargeTime);
-        cover.fillAmount = percentage;
 
         if (timeElapsed >= rechargeTime)
         {

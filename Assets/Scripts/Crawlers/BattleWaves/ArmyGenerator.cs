@@ -14,8 +14,8 @@ public class ArmyGenerator : MonoBehaviour
         int spreader = 0;
         for (int i = 0; i < MaxSquads; i++)
         {
-            int value = 0;
-            if(spreader == 0)
+            int value;
+            if (spreader == 0)
             {
                 value = Random.Range(0, currentAreaSquads.Count /2);
             }
