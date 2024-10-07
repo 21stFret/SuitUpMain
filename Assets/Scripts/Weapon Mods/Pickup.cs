@@ -16,7 +16,7 @@ public class Pickup : MonoBehaviour
     public RunUpgradeManager runUpgradeManager;
     public ParticleSystem pickupParticles;
 
-    [InspectorButton("SetupPickup")]
+    [InspectorButton("SetupPickupT")]
     public bool canpickup;
 
     private void Start()
@@ -42,6 +42,11 @@ public class Pickup : MonoBehaviour
             PickUp();
             RemovePickup();
         }
+    }
+
+    private void SetupPickupT()
+    {
+        StartCoroutine(SetupPickup());
     }
 
     private IEnumerator SetupPickup()
@@ -74,7 +79,7 @@ public class Pickup : MonoBehaviour
     private void PickUp()
     {
         canpickup = false;
-        runUpgradeManager.GenerateListOfUpgrades(pickupType);
+        runUpgradeManager.GenerateListOfUpgradesFromAll(pickupType);
         if (GameManager.instance == null)
         {
             return;

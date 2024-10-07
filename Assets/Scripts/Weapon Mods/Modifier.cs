@@ -5,6 +5,7 @@ using UnityEngine;
 public enum ModType
 {
     Damage,
+    DamagePercent,
     Health,
     FireRate,
     Range,

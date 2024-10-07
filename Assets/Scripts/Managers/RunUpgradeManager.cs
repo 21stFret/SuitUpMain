@@ -93,7 +93,7 @@ public class RunUpgradeManager : MonoBehaviour
 
                 if (selectedCategory == ModCategory.ALT)
                 {
-                    selectedMod = FilterAltWeaponMods(selectedMod);
+                    //selectedMod = FilterAltWeaponMods(selectedMod);
                 }
 
                 if (selectedMod.Count > 0)
@@ -107,6 +107,71 @@ public class RunUpgradeManager : MonoBehaviour
                     usedCategories.Remove(rand); // Allow this category to be selected again
                 }
             }
+            maxAttempts--;
+        }
+
+        if (listMods.Count < 3)
+        {
+            Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
+        }
+
+        // Roll for rarity
+        foreach (var mod in listMods)
+        {
+            SetModRarity(mod);
+        }
+
+        ModUI.OpenModUI(build);
+    }    
+    public void GenerateListOfUpgradesFromAll(ModBuildType build)
+    {
+        listMods.Clear();
+        int maxAttempts = 10; // Prevent infinite loop
+
+        List<RunMod> selectedMods = new List<RunMod>();
+
+        switch (build)
+        {
+            case ModBuildType.ASSAULT:
+                selectedMods = new List<RunMod>(runModsAssault);
+                break;
+            case ModBuildType.TECH:
+                selectedMods = new List<RunMod>(runModsTech);
+                break;
+            case ModBuildType.TANK:
+                selectedMods = new List<RunMod>(runModsTank);
+                break;
+            case ModBuildType.AGILITY:
+                selectedMods = new List<RunMod>(runModsAgility);
+                break;
+            default:
+                break;
+        }
+
+        // Randomly select the Mods
+        for (int i = 0; i < 3 && maxAttempts > 0;)
+        {
+            if (selectedMods.Count > 0)
+            {
+                RunMod mod = selectedMods[Random.Range(0, selectedMods.Count)];
+
+                if(mod.modCategory == ModCategory.ALT)
+                {
+                    mod = FilterAltWeaponMods(selectedMods);
+                }
+                if (mod.modCategory == ModCategory.MAIN)
+                {
+                    mod = FilterMainWeaponMods(selectedMods);
+                }
+
+                listMods.Add(mod);
+                i++;
+            }
+            else
+            {
+                Debug.LogWarning($"No mod found for {build}");
+            }
+                
             maxAttempts--;
         }
 
@@ -142,9 +207,16 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
-    private List<RunMod> FilterAltWeaponMods(List<RunMod> mods)
+    private RunMod FilterAltWeaponMods(List<RunMod> mods)
     {
-        return mods.Where(mod => mod.weaponType == WeaponsManager.instance.currentAltWeapon.weaponType).ToList();
+        RunMod mod = mods.Find(mod => mod.weaponType == WeaponsManager.instance.currentAltWeapon.weaponType);
+        return mod;
+    }
+
+    private RunMod FilterMainWeaponMods(List<RunMod> mods)
+    {
+        RunMod mod = mods.Find(mod => mod.weaponType == WeaponsManager.instance.currentMainWeapon.weaponType);
+        return mod;
     }
 
     private void SetModRarity(RunMod mod)
