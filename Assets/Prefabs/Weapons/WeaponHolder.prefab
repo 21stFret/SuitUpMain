@@ -440,6 +440,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2020328232867911747, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
+      propertyPath: MinimumVisibility
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2020328232867911747, guid: 6008061508b7de748b5ee08b5e230271,
+        type: 3}
       propertyPath: PointSamplingMethod
       value: 1
       objectReference: {fileID: 0}
@@ -451,7 +456,7 @@ PrefabInstance:
     - target: {fileID: 2020328232867911747, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
       propertyPath: pulseRoutine.Interval.value
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2673801093487598846, guid: 6008061508b7de748b5ee08b5e230271,
         type: 3}
@@ -702,6 +707,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 2229872019701436046, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.17
+      objectReference: {fileID: 0}
     - target: {fileID: 2554992489879498107, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
       propertyPath: m_Enabled
@@ -761,6 +771,26 @@ PrefabInstance:
         type: 3}
       propertyPath: MaxHorizAngle
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: MinimumVisibility
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: pulseRoutine.Mode.value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: pulseRoutine.Interval.value
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5539866116353843305, guid: c6085c2b156acf941b1267c321d2114b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.81
       objectReference: {fileID: 0}
     - target: {fileID: 5835245423656740121, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
@@ -852,6 +882,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ice Claw
+      objectReference: {fileID: 0}
+    - target: {fileID: 7389628148357165257, guid: c300f375bc9ee044db7355a72de74c37,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7827820627120480748, guid: c300f375bc9ee044db7355a72de74c37,
         type: 3}
@@ -964,7 +999,7 @@ PrefabInstance:
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: MinimumVisibility
-      value: 0.3
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
@@ -979,7 +1014,7 @@ PrefabInstance:
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: pulseRoutine.Interval.value
-      value: 0.2
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1024637908590851815, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
@@ -1106,8 +1141,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946771559557481415, guid: 9428193766c3b6f49b45995ae77a021e,
         type: 3}
+      propertyPath: simulationSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946771559557481415, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
       propertyPath: moveWithTransform
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946771559557481415, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: CollisionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946771559557481415, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3376525042641261081, guid: 9428193766c3b6f49b45995ae77a021e,
         type: 3}

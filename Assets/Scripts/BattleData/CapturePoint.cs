@@ -59,7 +59,7 @@ public class CapturePoint : MonoBehaviour
         }
         var fillAmount = captureProgress / captureTime;
         GameUI.instance.objectiveUI.UpdateBar(fillAmount);
-        GameUI.instance.objectiveUI.UpdateObjective("Upload Progress " + (fillAmount*100).ToString("0")+"%");
+        GameUI.instance.objectiveUI.UpdateUpload("Upload Progress " + (fillAmount*100).ToString("0")+"%");
     }
 
     public void OnTriggerEnter(Collider other)
@@ -85,9 +85,20 @@ public class CapturePoint : MonoBehaviour
         _enabled = false;
         captureProgress = 0;
         ball.SetActive(false);
-        BattleManager.instance.ObjectiveComplete();
 
-        StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
+        if(CrawlerSpawner.instance.activeCrawlerCount==0)
+        {
+            BattleManager.instance.ObjectiveComplete();
+            GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
+        }
+        else 
+        {
+            GameUI.instance.objectiveUI.UpdateObjective("Finish them off!");
+            BattleManager.instance.currentBattle.battleType = BattleType.Exterminate;
+            CrawlerSpawner.instance.EndBattle();
+        }
+
+
         online.Stop();
         inProgress.Stop();
     }

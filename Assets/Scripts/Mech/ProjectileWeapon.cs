@@ -104,6 +104,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj.impactDamage = dam;
             proj._weaponController = this;
             proj.weaponType = WeaponType.Minigun;
+            proj.impactForce = 1;
         }
 
 

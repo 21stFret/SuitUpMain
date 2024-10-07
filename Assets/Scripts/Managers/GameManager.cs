@@ -40,15 +40,17 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
-        currentRoomIndex = -1;
-        areaManager.LoadRoom(currentAreaType);
+
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
-        nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
+
 
         if (!playOnAwake) return;
 
+        nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
+        currentRoomIndex = -1;
+        areaManager.LoadRoom(currentAreaType);
         gameActive = true;
         BattleManager.instance.SetBattleType();
         BattleManager.instance.currentBattleIndex = 0;
@@ -88,7 +90,6 @@ public class GameManager : MonoBehaviour
         gameUI.gameUIFade.FadeOut();
         yield return new WaitForSeconds(2);
         CashCollector.instance.DestroyParts();
-        BattleManager.instance.currentBattleIndex++;
         areaManager.LoadRoom(currentAreaType);
         BattleManager.instance.SetBattleType();
         BattleManager.instance.UpdateCrawlerSpawner();
@@ -102,18 +103,32 @@ public class GameManager : MonoBehaviour
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }
 
-    private void DayNightCycle()
+    private void DayNightCycle(bool night = false)
     {
         bool dayTime = Random.Range(0, 100) < 50;
         dayLight.SetActive(dayTime);
         nightLight.SetActive(!dayTime);
+        if (night)
+        {
+            dayLight.SetActive(false);
+            nightLight.SetActive(true);
+        }
     }
 
-    public void SpawnPortalsToNextRoom()
+    public void SpawnPortalsToNextRoom(bool voidRoom = false)
     {
+        voidPortalManager.transform.position = voidRoom ? voidPortalManager.voidPortalLocation.position : playerInput.transform.position;
+
+        if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 1)
+        {
+           voidPortalManager.StartVoidEffect();
+            BattleManager.instance.ResetOnNewArea();
+        }
+        else
+        {
+            voidPortalManager.StartEffect();
+        }
         BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
-        voidPortalManager.transform.position = playerInput.transform.position;
-        voidPortalManager.StartEffect();
     }
 
     public IEnumerator LoadVoidRoom()
@@ -121,17 +136,19 @@ public class GameManager : MonoBehaviour
         RoomPortal.portalEffect.StopEffect();
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
+        DayNightCycle(true);
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
         gameUI.gameUIFade.FadeIn();
+        currentAreaType++;
+        SpawnPortalsToNextRoom(true);
     }
 
     public void EndGame(bool won)
     {
         AudioManager.instance.PlayMusic(3);
-
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
         PlayerProgressManager.instance.EndGamePlayerProgress(won);

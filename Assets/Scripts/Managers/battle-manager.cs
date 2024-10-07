@@ -26,9 +26,10 @@ public class BattleManager : MonoBehaviour
     public void SetBattleType()
     {
         GenerateNewBattle(Battles[currentBattleIndex].battleType);
-        GameManager.instance.gameUI.objectiveUI.ResetObjective();
+
         Color color = Color.white;
         float fillAmount = 0;
+        bool showBar = false;
         var type = Battles[currentBattleIndex].battleType;
         switch (type)
         {
@@ -40,8 +41,9 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
-                color = Color.blue;
+                color = Color.cyan;
                 fillAmount = 0;
+                showBar = true;
                 SpawnCapturePoint();
                 break;
             case BattleType.Survive:
@@ -55,6 +57,7 @@ public class BattleManager : MonoBehaviour
                 fillAmount = 0;
                 break;
         }
+        GameManager.instance.gameUI.objectiveUI.Init(showBar);
         GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
     }
@@ -67,10 +70,16 @@ public class BattleManager : MonoBehaviour
 
     private void SpawnCapturePoint()
     {
-        Vector3 pos = Random.insideUnitSphere * 50;
+        Vector3 pos = Random.insideUnitSphere * 20;
         pos.y = 1;
+        pos += GameManager.instance.playerInput.transform.position;
         capturePoint.transform.position = pos;
-        Invoke("InitCapturePoint", 3);
+        Invoke("InitCapturePoint", 2);
+    }
+
+    public void ResetOnNewArea()
+    {
+        currentBattleIndex = 0;
     }
 
     private void InitCapturePoint()
@@ -82,8 +91,9 @@ public class BattleManager : MonoBehaviour
     {
         StartCoroutine(GameManager.instance.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
+        currentBattleIndex++;
 
-        if (currentBattleIndex == Battles.Count - 1)
+        if (currentBattleIndex >= Battles.Count - 1 && GameManager.instance.currentAreaType==AreaType.Jungle)
         {
             GameManager.instance.EndGame(true);
             return;
@@ -145,9 +155,17 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator CheckActiveEnemies()
     {
+        if (MechBattleController.instance.isDead)
+        {
+            yield break;
+        }
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
             yield return new WaitForSeconds(1);
+            if (MechBattleController.instance.isDead)
+            {
+                yield break;
+            }
             if (crawlerSpawner.activeCrawlerCount == 0)
             {
                 if (crawlerSpawner.battleRound < crawlerSpawner.battleRoundMax)
@@ -171,6 +189,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
         currentBattle = Battles[currentBattleIndex];
+        ArmyGen.LoadAllSquadsFromExcel();
         currentBattle.battleArmy = ArmyGen.BuildArmy();
     }
 }

@@ -9,8 +9,7 @@ public enum ModBuildType
     ASSAULT,
     TECH,
     TANK,
-    AGILITY,
-    CURRENCY
+    AGILITY
 }
 
 public enum ModCategory
@@ -33,7 +32,6 @@ public class RunUpgradeManager : MonoBehaviour
     public List<RunMod> runModsTech = new List<RunMod>();
     public List<RunMod> runModsTank = new List<RunMod>();
     public List<RunMod> runModsAgility = new List<RunMod>();
-    public List<RunMod> runModsCurrency = new List<RunMod>();
     public List<RunMod> listMods = new List<RunMod>();
     public List<ModCategory> modCategories = new List<ModCategory>();
     public RunModifierDataReader runModifierDataReader;
@@ -47,7 +45,7 @@ public class RunUpgradeManager : MonoBehaviour
         randomlySelectedBuilds.Clear();
         for (int i = 0; i < 3; i++)
         {
-            ModBuildType build = (ModBuildType)Random.Range(0, 5);
+            ModBuildType build = (ModBuildType)Random.Range(0, 4);
             if (randomlySelectedBuilds.Contains(build))
             {
                 i -= 1;
@@ -74,109 +72,95 @@ public class RunUpgradeManager : MonoBehaviour
         runModsTech.Clear();
         runModsTank.Clear();
         runModsAgility.Clear();
-        runModsCurrency.Clear();
     }
 
     public void GenerateListOfUpgrades(ModBuildType build)
     {
         listMods.Clear();
+        HashSet<int> usedCategories = new HashSet<int>();
+        int maxAttempts = 10; // Prevent infinite loop
 
-        int[] cashedCats = new int[3] {-1,-1,-1};
-        int cashcount = 0;
         // Select the categories
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3 && maxAttempts > 0;)
         {
             int rand = Random.Range(0, 6);
-            if(cashedCats.Contains(rand))
+            if (usedCategories.Add(rand)) // Returns true if the item was added (i.e., it wasn't already in the set)
             {
-                i -= 1;
-                continue;
-            }
-            modCategories[i] = (ModCategory)rand;
-            ModCategory selectedCategory = modCategories[i];
-            bool found = true;
-            List<RunMod> selectedMod = new List<RunMod>();
+                ModCategory selectedCategory = (ModCategory)rand;
+                modCategories[i] = selectedCategory;
 
-            switch (build)
-            {
-                case ModBuildType.ASSAULT:
+                List<RunMod> selectedMod = GetModsForBuild(build, selectedCategory);
 
-                    selectedMod = runModsAssault.FindAll(mod => mod.modCategory == selectedCategory);
-                    break;
-                case ModBuildType.TECH:
-
-                    selectedMod = runModsTech.FindAll(mod => mod.modCategory == selectedCategory);
-                    break;
-                case ModBuildType.TANK:
-                    selectedMod = runModsTank.FindAll(mod => mod.modCategory == selectedCategory);
-                    break;
-                case ModBuildType.AGILITY:
-                    selectedMod = runModsAgility.FindAll(mod => mod.modCategory == selectedCategory);
-                    break;
-                case ModBuildType.CURRENCY:
-                    selectedMod = runModsCurrency.FindAll(mod => mod.modCategory == selectedCategory);
-                    break;
-            }
-
-            if (selectedCategory == ModCategory.ALT)
-            {
-                var modlist = new List<RunMod>();
-                for (int k = 0; k < selectedMod.Count; k++)
+                if (selectedCategory == ModCategory.ALT)
                 {
-
-                    var mod = selectedMod[k];
-                    if (mod.weaponType == WeaponsManager.instance.currentAltWeapon.weaponType)
-                    {
-                        modlist.Add(mod);
-                    }
+                    selectedMod = FilterAltWeaponMods(selectedMod);
                 }
-                selectedMod = modlist;
-            }
 
-            if (selectedMod.Count == 1)
-            {
-                listMods.Add(selectedMod[0]);
+                if (selectedMod.Count > 0)
+                {
+                    listMods.Add(selectedMod[Random.Range(0, selectedMod.Count)]);
+                    i++;
+                }
+                else
+                {
+                    Debug.LogWarning($"No mod found for category: {selectedCategory} in {build}");
+                    usedCategories.Remove(rand); // Allow this category to be selected again
+                }
             }
-            else if (selectedMod.Count > 1)
-            {
-                listMods.Add(selectedMod[Random.Range(0, selectedMod.Count)]);
-            }
-            else
-            {
-                print("No mod found for category: " + selectedCategory + " in " + build);
-                i -= 1;
-                found = false;
-            }
-            if (!found)
-            {
-                continue;
-            }
-            cashedCats[cashcount] = rand;
-            cashcount += 1;
+            maxAttempts--;
         }
-        // Roll for rarity
-        for (int i = 0; i < listMods.Count; i++)
+
+        if (listMods.Count < 3)
         {
-            int rand = Random.Range(0, 100);
-            if (rand <= 50)
-            {
-                listMods[i].rarity = 0;
-            }
-            if (rand > 50)
-            {
-                listMods[i].rarity = 1;
-            }
-            if (rand > 80)
-            {
-                listMods[i].rarity = 2;
-            }
-            //cycle for when more than 1 modifier is present
-            for (int j = 0; j < listMods[i].modifiers.Count; j++)
-            {
-                listMods[i].modifiers[j].modValue = listMods[i].modValues[j].values[listMods[i].rarity];
-            }
+            Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
         }
+
+        // Roll for rarity
+        foreach (var mod in listMods)
+        {
+            SetModRarity(mod);
+        }
+
         ModUI.OpenModUI(build);
+    }
+
+    private List<RunMod> GetModsForBuild(ModBuildType build, ModCategory category)
+    {
+        switch (build)
+        {
+            case ModBuildType.ASSAULT:
+                return runModsAssault.FindAll(mod => mod.modCategory == category);
+            case ModBuildType.TECH:
+                return runModsTech.FindAll(mod => mod.modCategory == category);
+            case ModBuildType.TANK:
+                return runModsTank.FindAll(mod => mod.modCategory == category);
+            case ModBuildType.AGILITY:
+                return runModsAgility.FindAll(mod => mod.modCategory == category);
+            default:
+                Debug.LogError($"Unknown ModBuildType: {build}");
+                return new List<RunMod>();
+        }
+    }
+
+    private List<RunMod> FilterAltWeaponMods(List<RunMod> mods)
+    {
+        return mods.Where(mod => mod.weaponType == WeaponsManager.instance.currentAltWeapon.weaponType).ToList();
+    }
+
+    private void SetModRarity(RunMod mod)
+    {
+        int rand = Random.Range(0, 100);
+        if (rand <= 50)
+            mod.rarity = 0;
+        else if (rand <= 80)
+            mod.rarity = 1;
+        else
+            mod.rarity = 2;
+
+        for (int j = 0; j < mod.modifiers.Count; j++)
+        {
+            mod.modifiers[j].modValue = mod.modValues[j].values[mod.rarity];
+        }
     }
 
     public void SelectModButton(int index)
@@ -187,56 +171,36 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void EnableModSelection(RunMod mod)
     {
-        if (mod.modBuildType == ModBuildType.CURRENCY)
+        switch (mod.modCategory)
         {
-            var modifier = mod.modifiers;
-            switch (mod.modDescription)
-            {
-                case "Gold":
-                    CashCollector.instance.AddCash((int)modifier[0].modValue);
-                    break;
-                case "Artifact":
-                    CashCollector.instance.AddArtifact((int)modifier[0].modValue);
-                    break;
-                case "Hatchlings":
-                    CashCollector.instance.AddCrawlerPart((int)modifier[0].modValue);
-                    break;
-            }
-            CashCollector.instance.AddCash(100);
-        }
-        else
-        {
-            switch (mod.modCategory)
-            {
-                case ModCategory.MAIN:
-                    /*
-                    WeaponMod Wmod = WeaponModManager.FindModByName(mod.modName);
-                    WeaponModManager.EquipWeaponMod(Wmod);
-                    */
-                    break;
-                case ModCategory.ALT:
-                    WeaponMod Wmod = weaponModManager.FindModByName(mod.modName);
-                    weaponModManager.EquipWeaponMod(Wmod);
-                    break;
-                case ModCategory.DRONE:
-                    break;
-                case ModCategory.PULSE:
-                    for (int i = 0; i < mod.modifiers.Count; i++)
-                    {
-                        var modifier = mod.modifiers[i];
-                        pulseShockwave.ApplyMod(modifier.modType, modifier.modValue);
-                    }
-                    break;
-                case ModCategory.DASH:
-                    break;
-                case ModCategory.STATS:
-                    for (int i = 0; i < mod.modifiers.Count; i++)
-                    {
-                        var modifier = mod.modifiers[i];
-                        MechStats.instance.ApplyStats(modifier.modType, modifier.modValue);
-                    }
-                    break;
-            }
+            case ModCategory.MAIN:
+                /*
+                WeaponMod Wmod = WeaponModManager.FindModByName(mod.modName);
+                WeaponModManager.EquipWeaponMod(Wmod);
+                */
+                break;
+            case ModCategory.ALT:
+                WeaponMod Wmod = weaponModManager.FindModByName(mod.modName);
+                weaponModManager.EquipWeaponMod(Wmod);
+                break;
+            case ModCategory.DRONE:
+                break;
+            case ModCategory.PULSE:
+                for (int i = 0; i < mod.modifiers.Count; i++)
+                {
+                    var modifier = mod.modifiers[i];
+                    pulseShockwave.ApplyMod(modifier.modType, modifier.modValue);
+                }
+                break;
+            case ModCategory.DASH:
+                break;
+            case ModCategory.STATS:
+                for (int i = 0; i < mod.modifiers.Count; i++)
+                {
+                    var modifier = mod.modifiers[i];
+                    MechStats.instance.ApplyStats(modifier.modType, modifier.modValue);
+                }
+                break;
         }
 
         ModUI.CloseModUI();

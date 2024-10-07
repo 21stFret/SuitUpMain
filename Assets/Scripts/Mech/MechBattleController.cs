@@ -7,14 +7,17 @@ public class MechBattleController : MonoBehaviour
     public static MechBattleController instance;
     public TargetHealth mechHealth;
     public MYCharacterController characterController;
+    public bool isDead;
 
     private void Awake()
     {
         instance = this;
+        isDead = false;
     }
 
     public void OnDie()
     {
+        isDead = true;
         characterController.Die();
         characterController.enabled = false;
         if(GameManager.instance != null)

@@ -24,7 +24,7 @@ public class RoomPortal : MonoBehaviour
             visualPortalEffect.StartFirstPersonEffect();
             if(voidPortal)
             {
-                GameManager.instance.StartCoroutine("LoadVoidRoom");
+                GameManager.instance.StartCoroutine(GameManager.instance.LoadVoidRoom());
             }
             else
             {

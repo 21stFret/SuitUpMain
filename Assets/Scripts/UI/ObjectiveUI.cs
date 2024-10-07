@@ -10,14 +10,17 @@ public class ObjectiveUI : MonoBehaviour
     public Image objectiveBar;
     public Image objectiveBG;
     public TMP_Text objectiveText;
+    public TMP_Text progressText;
     public Animator objectiveAnimator;
+    public float ObjectiveFlashTime = 2f;
 
-    public void Init()
+    public void Init(bool showBar)
     {
-        objectiveBar.enabled = true;
-        objectiveBG.enabled = true;
+        objectiveBar.enabled = showBar;
+        objectiveBG.enabled = showBar;
         objectiveBar.fillAmount = 0;
         objectiveText.text = "";
+        progressText.text = showBar? "Upload Progress 0%" : "";
     }
 
     public void UpdateBar(float fillamount)
@@ -29,28 +32,38 @@ public class ObjectiveUI : MonoBehaviour
     {
         // Update the objective text
         objectiveText.text = objective;
-        ShowIntro();
+        StartCoroutine(ShowObjective());
     }
 
-    public void ShowIntro()
+    public IEnumerator ShowObjective()
     {
-        objectiveAnimator.SetTrigger("Show");
+        TogglePanel(true);
+        yield return new WaitForSeconds(ObjectiveFlashTime);
+        TogglePanel(false);
+    }
+
+    public void UpdateUpload(string objective)
+    {
+        // Update the objective text
+        objectiveBar.enabled = true;
+        objectiveBG.enabled = true;
+        progressText.text = objective;
+        //TogglePanel(true);
+    }
+
+    public void TogglePanel(bool open)
+    {
+        objectiveAnimator.SetBool("Open", open);
     }
 
     public IEnumerator ObjectiveComplete()
     {
-        string objective = "Objective Complete! \n Collect reward to comtinue";
-        GameUI.instance.objectiveUI.UpdateObjective(objective);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
-
-    }
-
-    public void ResetObjective()
-    {
-        objectiveBar.enabled = true;
-        objectiveBG.enabled = true;
-        objectiveText.transform.DOMoveY(objectiveText.transform.position.y - 25, 0.5f);
+        progressText.text = "";
+        yield return new WaitForSeconds(1f);
+        string objective = "Objective Complete! \n Collect reward to continue!";
+        UpdateObjective(objective);
     }
 }

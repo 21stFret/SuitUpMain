@@ -1,31 +1,51 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class ArmyGenerator : MonoBehaviour
 {
-    public List<CrawlerSquad> currentAreaSquads = new List<CrawlerSquad>();
-    public List<CrawlerSquad> batttleArmy = new List<CrawlerSquad>();
+    public Dictionary<AreaType, List<CrawlerSquad>> areaSquads = new Dictionary<AreaType, List<CrawlerSquad>>();
+    public List<CrawlerSquad> battleArmy = new List<CrawlerSquad>();
     public int MaxSquads = 3;
+    public BattleDataReader battleDataReader;
+    public AreaType currentAreaType;
+
+    public void LoadAllSquadsFromExcel()
+    {
+        if (battleDataReader == null)
+        {
+            Debug.LogError("BattleDataReader is not assigned to ArmyGenerator.");
+            return;
+        }
+
+        areaSquads = battleDataReader.LoadSquadsFromExcel();
+        Debug.Log($"Loaded squads for {areaSquads.Count} area types.");
+    }
 
     public List<CrawlerSquad> BuildArmy()
     {
-        batttleArmy.Clear();
-        int spreader = 0;
-        for (int i = 0; i < MaxSquads; i++)
+        battleArmy.Clear();
+        if (!areaSquads.ContainsKey(currentAreaType))
         {
-            int value;
-            if (spreader == 0)
-            {
-                value = Random.Range(0, currentAreaSquads.Count /2);
-            }
-            else
-            {
-                value = Random.Range(spreader, currentAreaSquads.Count);
-            }
-            batttleArmy.Add(currentAreaSquads[value]);
-            spreader = value;
+            Debug.LogWarning($"No squads found for area type: {currentAreaType}");
+            return battleArmy;
         }
-        return batttleArmy;
+
+        List<CrawlerSquad> currentAreaSquads = areaSquads[currentAreaType];
+        int squadCount = Mathf.Min(MaxSquads, currentAreaSquads.Count);
+
+        for (int i = 0; i < squadCount; i++)
+        {
+            int randomIndex = Random.Range(0, currentAreaSquads.Count);
+            battleArmy.Add(currentAreaSquads[randomIndex]);
+        }
+
+        Debug.Log($"Built an army with {battleArmy.Count} squads for area type: {currentAreaType}");
+        return battleArmy;
+    }
+
+    public void SetCurrentAreaType(AreaType areaType)
+    {
+        currentAreaType = areaType;
+        Debug.Log($"Current area type set to: {currentAreaType}");
     }
 }

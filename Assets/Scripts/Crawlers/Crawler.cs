@@ -14,10 +14,11 @@ public enum CrawlerType
 {
     Crawler,
     Daddy,
-    DaddyCrawler,
     Albino,
     Spitter,
-    Charger
+    Charger,
+    Leaper,
+    Hunter,
 }
 
 public class Crawler : MonoBehaviour
@@ -346,6 +347,7 @@ public class Crawler : MonoBehaviour
         meshRenderer.enabled = false;
         target = null;
         crawlerMovement.speedFinal = 0;
+        DeathBlood.transform.SetParent(null);
         DeathBlood.Play();
 
         if(crawlerSpawner != null)
@@ -409,6 +411,7 @@ public class Crawler : MonoBehaviour
         StartCoroutine(SpawnImmunity());
         rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
         pulseCheckTime = 0;
+        DeathBlood.transform.SetParent(transform);
     }
 
     private IEnumerator SpawnEffect()

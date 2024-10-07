@@ -26,9 +26,6 @@ public class RunModifierDataReader : MonoBehaviour
                 case "AGILITY":
                     runMods = runUpgradeManager.runModsAgility;
                     break;
-                case "CURRENCY":
-                    runMods = runUpgradeManager.runModsCurrency;
-                    break;
             }
             RunMod rMod = new RunMod();
             rMod.modBuildType = (ModBuildType)System.Enum.Parse(typeof(ModBuildType), (string)data[i]["Build"]);

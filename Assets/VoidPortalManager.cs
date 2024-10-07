@@ -6,8 +6,10 @@ using System;
 public class VoidPortalManager : MonoBehaviour
 {
     public PortalEffect[] portalEffects;
+    public PortalEffect voidPortalEffect;
     public int MaxPortalEffects = 3;
     public RunUpgradeManager runUpgradeManager;
+    public Transform voidPortalLocation;
 
     [InspectorButton("StartEffect")]
     public bool startEffect;
@@ -17,12 +19,21 @@ public class VoidPortalManager : MonoBehaviour
         runUpgradeManager.SelectNextBuilds();
         for (int i = 0; i < portalEffects.Length; i++)
         {
+            portalEffects[i].gameObject.SetActive(true);
             SetPortalColor(portalEffects[i], runUpgradeManager.randomlySelectedBuilds[i]);
             portalEffects[i].StartEffect();
             RoomPortal portal = portalEffects[i].GetComponent<RoomPortal>();
             portal.portalType = runUpgradeManager.randomlySelectedBuilds[i];
             portal._active = true;
         }
+    }
+
+    public void StartVoidEffect()
+    {
+        voidPortalEffect.StartEffect();
+        RoomPortal portal = voidPortalEffect.GetComponent<RoomPortal>();
+        portal.voidPortal = true;
+        portal._active = true;
     }
 
     public void StopEffect()
@@ -50,9 +61,6 @@ public class VoidPortalManager : MonoBehaviour
                 break;
             case ModBuildType.AGILITY:
                 color = Color.yellow;
-                break;
-            case ModBuildType.CURRENCY:
-                color = Color.white;
                 break;
         }
         for (int i = 0; i < portal.f3DWarpJumpTunnel.Length; i++)

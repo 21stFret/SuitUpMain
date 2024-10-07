@@ -80,10 +80,10 @@ public class PortalEffect : MonoBehaviour
     private IEnumerator DealyedStopEffect()
     {
         yield return new WaitForSeconds(portalEffectDuration);
-        doTweenScale.ReverseTween();
-        _particleSystem.Stop();
-        _particleSystem2.Stop();
-        isActive = false;
+        if(isActive)
+        {
+            StopEffect();
+        }
     }
 
 }

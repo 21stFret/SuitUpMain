@@ -52,7 +52,6 @@ public class WeaponBaseDataReader : MonoBehaviour
                 BWD._uniqueValue[j] = (float)data[i]["Unique " + (j + 1)];
             }
             BWD._unlockCost = (int)data[i]["Unlock Cost"];
-
             if (i < weaponsManager._mainWeapons.Length)
             {
                 weaponsManager._mainWeapons[i].baseWeaponInfo = BWD;

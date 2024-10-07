@@ -7,7 +7,7 @@ public enum AreaType
     Grass,
     Desert,
     Ice,
-    Mountain,
+    Jungle,
 }
 
 public class AreaManager : MonoBehaviour
@@ -15,7 +15,7 @@ public class AreaManager : MonoBehaviour
     public List<GameObject> GrassRoomPrefabs = new List<GameObject>();
     public List<GameObject> DesertRoomPrefabs = new List<GameObject>();
     public List<GameObject> IceRoomPrefabs = new List<GameObject>();
-    public List<GameObject> MountainRoomPrefabs = new List<GameObject>();
+    public List<GameObject> JungleRoomPrefabs = new List<GameObject>();
 
     public GameObject voidArea;
 
@@ -39,8 +39,8 @@ public class AreaManager : MonoBehaviour
             case AreaType.Ice:
                 roomPrefabs = IceRoomPrefabs;
                 break;
-            case AreaType.Mountain:
-                roomPrefabs = MountainRoomPrefabs;
+            case AreaType.Jungle:
+                roomPrefabs = JungleRoomPrefabs;
                 break;
         }
 
@@ -70,6 +70,7 @@ public class AreaManager : MonoBehaviour
             currentRoom.SetActive(false);
         }
         voidArea.SetActive(true);
+        currentRoom = voidArea;
     }
 
 }

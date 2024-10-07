@@ -17,7 +17,7 @@ public class Pickup : MonoBehaviour
     public ParticleSystem pickupParticles;
 
     [InspectorButton("SetupPickup")]
-    public bool ResetPickup;
+    public bool canpickup;
 
     private void Start()
     {
@@ -35,6 +35,8 @@ public class Pickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!canpickup) return;
+
         if (other.CompareTag("Player"))
         {
             PickUp();
@@ -58,9 +60,6 @@ public class Pickup : MonoBehaviour
             case ModBuildType.AGILITY:
                 pickupColor = Color.yellow;
                 break;
-            case ModBuildType.CURRENCY:
-                pickupColor = Color.white;
-                break;
         }
         pickupParticles.Play();
         yield return new WaitForSeconds(1f);
@@ -69,12 +68,13 @@ public class Pickup : MonoBehaviour
         pickupLight.enabled = true;
         pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
         pickupLight.color = pickupColor;
+        canpickup = true;
     }
 
     private void PickUp()
     {
+        canpickup = false;
         runUpgradeManager.GenerateListOfUpgrades(pickupType);
-        //GameUI.instance.OpenModUI(pickupType);
         if (GameManager.instance == null)
         {
             return;

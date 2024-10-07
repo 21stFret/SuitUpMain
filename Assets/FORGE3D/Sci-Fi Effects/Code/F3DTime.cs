@@ -128,6 +128,8 @@ namespace FORGE3D
         /// </summary>
         void Tick()
         {
+            if (timers == null) return;
+            if (timers.Count == 0) return;
             for (int i = 0; i < timers.Count; i++)
                 timers[i].Tick();
         }

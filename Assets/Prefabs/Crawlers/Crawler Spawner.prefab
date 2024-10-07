@@ -365,6 +365,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   portalEffects:
   - {fileID: 4270849139081246781}
   - {fileID: 1609287054956541187}
@@ -373,21 +375,27 @@ MonoBehaviour:
   - {fileID: 7790119164758497739}
   - {fileID: 205285898291468713}
   - {fileID: 8549035529920739005}
-  roundTimer: 5
+  burstTimer: 0
   battleRound: 0
-  battleRoundMax: 0
+  battleRoundMax: 3
   endless: 0
   timeElapsed: 0
+  totalTimeElapsesd: 0
   timeText: {fileID: 0}
   waveText: {fileID: 0}
   battleManager: {fileID: 0}
-  currentWave:
-    crawlersInWave: []
-    roundTimer: 0
+  currentSquad:
+    crawlerGroups: []
   isActive: 0
-  portalMaxAllowed: 6
-  spawnList: []
+  portalMaxAllowed: 4
+  spawnListArmy: []
   runner: {fileID: 2639363336843206991}
+  currentBattle:
+    battleType: 0
+    battleArmy: []
+    burstTimer: 0
+    burstMin: 0
+    burstMax: 0
 --- !u!1 &3657665029582113246
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,7 +641,7 @@ Transform:
   m_GameObject: {fileID: 5975117782017635135}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3699999, y: -6.34, z: -91.71999}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

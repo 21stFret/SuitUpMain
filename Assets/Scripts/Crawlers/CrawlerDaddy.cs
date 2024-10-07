@@ -17,6 +17,7 @@ public class CrawlerDaddy : Crawler
         if(killedBy != WeaponType.Default)
         {
             crawlerSpawner.SpawnAtPoint(transform, spawnCount);
+            DeathEffect.transform.SetParent(null);
             DeathEffect.SetActive(true);
             ExplodeIfInRange();
         }
@@ -44,6 +45,7 @@ public class CrawlerDaddy : Crawler
     public override void Spawn()
     {
         base.Spawn();
+        DeathEffect.transform.SetParent(transform);
         DeathEffect.SetActive(false);
     }
 }

@@ -55,12 +55,12 @@ public class CrawlerSpawner : MonoBehaviour
     {
         currentBattle = battleManager.currentBattle;
         battleRound = 0;
-        battleRoundMax = currentBattle.battleArmy.Count;
         timeElapsed = 0;
         totalTimeElapsesd = 0;
         burstTimer = currentBattle.burstTimer;
         standardBattle = currentBattle.battleType == BattleType.Exterminate;
         endless = !standardBattle;
+        battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
         GenerateArmyList();
         burstSpawnAmount = currentBattle.burstMin;
@@ -92,7 +92,7 @@ public class CrawlerSpawner : MonoBehaviour
             int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
             min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
             burstSpawnAmount = Random.Range(min, currentBattle.burstMax);
-
+            GenerateArmyList();
             SpawnFromArmy();
         }
         UpdateTimerDisplay();
@@ -116,7 +116,6 @@ public class CrawlerSpawner : MonoBehaviour
     {
         InitCrawlerList(crawlers, CrawlerType.Crawler);
         InitCrawlerList(crawlerDaddy, CrawlerType.Daddy);
-        InitCrawlerList(Daddycrawlers, CrawlerType.DaddyCrawler);
         InitCrawlerList(albinos, CrawlerType.Albino);
         InitCrawlerList(spitters, CrawlerType.Spitter);
         InitCrawlerList(chargers, CrawlerType.Charger);
@@ -204,7 +203,7 @@ public class CrawlerSpawner : MonoBehaviour
     
     private void SpawnFromArmy()
     {
-        StartCoroutine(SpawnBurstCrawlerFromList());
+        StartCoroutine(SpawnBurstCrawlerFromList(spawnListArmy));
     }
 
     private void GenerateArmyList()
@@ -232,7 +231,6 @@ public class CrawlerSpawner : MonoBehaviour
         {
             case CrawlerType.Crawler: return crawlers;
             case CrawlerType.Daddy: return crawlerDaddy;
-            case CrawlerType.DaddyCrawler: return Daddycrawlers;
             case CrawlerType.Albino: return albinos;
             case CrawlerType.Spitter: return spitters;
             case CrawlerType.Charger: return chargers;
@@ -240,12 +238,16 @@ public class CrawlerSpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs)
+    private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs, bool FromDaddy = false)
     {
         int portalAllowed = 0;
 
-        SelectSpawnPoint();
-        PlaySpawnEffect();
+        if (!FromDaddy)
+        {
+            SelectSpawnPoint();
+            PlaySpawnEffect();
+        }
+
         yield return new WaitForSeconds(0.5f);
             for (int i = 0; i < bugs.Count; i++)
             {
@@ -268,7 +270,7 @@ public class CrawlerSpawner : MonoBehaviour
             }
     }
 
-    private IEnumerator SpawnBurstCrawlerFromList()
+    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
     {
         int portalAllowed = 0;
         SelectSpawnPoint();
@@ -287,10 +289,10 @@ public class CrawlerSpawner : MonoBehaviour
             Vector3 randomCircle = Random.insideUnitSphere;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + spawnPoint.position;
-            spawnListArmy[i].transform.position = randomPoint;
-            spawnListArmy[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+            bugs[i].transform.position = randomPoint;
+            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
 
-            StartCoroutine(SpawnRandomizer(spawnListArmy[i], i * 0.2f));
+            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
             portalAllowed++;
         }
         
@@ -298,10 +300,9 @@ public class CrawlerSpawner : MonoBehaviour
 
     private IEnumerator SpawnRandomizer(Crawler bug, float delay)
     {
-        if (!isActive) yield break;
-
         yield return new WaitForSeconds(delay);
 
+        if (!isActive) yield break;
         bug.gameObject.SetActive(true);
         bug.Spawn();
         AddToActiveList(bug);
@@ -324,13 +325,13 @@ public class CrawlerSpawner : MonoBehaviour
             spawnList.Add(crawlers[i]);
         }
         spawnPoint = point;
-        StartCoroutine(SpawnCrawlerFromList(spawnList));
+        StartCoroutine(SpawnCrawlerFromList(spawnList, true));
     }
 
     public void EndBattle()
     {
         isActive = false;
-        KillAllCrawlers();
+        //KillAllCrawlers();
     }
 
     public void KillAllCrawlers()
