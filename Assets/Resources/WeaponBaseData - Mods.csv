@@ -1,47 +1,47 @@
 Build,Category,Weapon,Name,Description,Modifier0,Value00,Value01,Value02,Modifier1,Value10,Value11,Value12
-ASSAULT ,MAIN,Minigun,Overcharge,Deal more damage the longer you fire,Damage,10.00,15.00,25.00,,,,
-ASSAULT ,MAIN,Shotgun,Hunter,"Fire more rounds, less spread range",Unique,0.15,0.25,0.50,Unique,-0.30,-0.20,-0.10
-ASSAULT ,MAIN,Plasma,Blast,Bigger damage,Damage,0.05,0.10,0.15,,,,
-ASSAULT ,ALT,Flame,Splitter,"Flamethrower gets split into 3, deals 1/3 of the damage",Damage,5.00,10.00,15.00,FuelRate,-0.20,0.18,-0.15
-ASSAULT ,ALT,Lightning,Thunderstorm,current mechanic that after x seconds a thunder falls,,,,,,,,
-ASSAULT ,ALT,Cryo,Fracture,Each shot = 3 shots,,,,,,,,
-ASSAULT ,DASH,,TBD,"Dash damages enemies, reduced dash distance",Damage,0.05,0.10,0.20,Unique,-0.30,-0.20,-0.10
-ASSAULT ,DRONE,,TBD,Damage and Beam Size are increased.,,,,,,,,
-ASSAULT ,PULSE,,TBD,"Small damage when enemies are hit, smaller blast radius",Damage,0.10,0.20,0.30,Unique,-0.30,-0.20,-0.10
-ASSAULT ,STATS,,TBD,Base Attack Damage increase,Damage,0.10,0.20,0.30,,,,
-TECH,MAIN,Minigun,Burst,Short burst that deal more damage,Damage,0.10,0.15,0.20,,,,
-TECH,MAIN,Shotgun,Buckshot,"Fire less rounds, more spread range",Unique,-0.15,-0.25,-0.50,Unique,0.10,0.20,0.30
-TECH,MAIN,Plasma,EMP,Hits armored enemies harder,Unique,1.00,1.50,2.00,,,,
-TECH,ALT,Flame,Arc,"becomes an arc that consumes all fuel,.deal enhanced damage",,,,,,,,
-TECH,ALT,Lightning,Chained,more enemies chained,,,,,,,,
-TECH,ALT,Cryo,Zero,"less shooting, more damage and frozen time ",,,,,,,,
-TECH,DASH,,,"leave a trail of ""virus-infected"" dealing DoT, less dash distance ",,,,,,,,
-TECH,DRONE,,,I'd be very tempted that the drone leaves DoT traps here,,,,,,,,
-TECH,PULSE,,,"would be cool to shoot the pulse to the nearest enemy and drag them, but might be hard to implement ",,,,,,,,
-TECH,STATS,,,faster shooting speed,,,,,,,,
-TANK,MAIN,Minigun,Overcharge,Deal more damage the longer you fire,Damage,10.00,15.00,25.00,,,,
-TANK,MAIN,Shotgun,Hunter,"Fire more rounds, less spread range",Unique,0.15,0.25,0.50,Unique,-0.30,-0.20,-0.10
-TANK,MAIN,Plasma,Blast,Bigger damage,Damage,0.05,0.10,0.15,,,,
-TANK,ALT,Flame,Grenade,"Grenade that explodes after a few seconds, each rarity adds # of grenades",Unique,1.00,2.00,3.00,,,,
-TANK,ALT,Lightning,Orb,Shoot orbs that float and deal damage,,,,,,,,
-TANK,ALT,Cryo,Prison,"enemies get trapped in an ice prison, you can't shoot again until it dissolves ",,,,,,,,
-TANK,DASH,,,You can't dash but become invincible for the duration of the dash,Unique,0.50,1.00,2.00,,,,
-TANK,DRONE,,,Healing amount increase,Unique,0.25,0.50,1.00,,,,
-TANK,PULSE,,,"Enemies are pushed farther away, heal upon cast",Unique,0.10,0.20,0.30,Health,0.01,0.03,0.05
-TANK,STATS,,,Max Health is increased,Health,0.10,0.20,0.30,,,,
-TANK,STATS,,,"""Thorns"" - reflect damage taken",Unique,0.25,0.50,1.00,Damage,-0.15,-0.10,-0.05
-TANK,STATS,,,"Regen life based, pay the price in speed",Unique,1.00,2.50,5.00,Speed,-0.30,-0.20,-0.10
-AGILITY,MAIN,Minigun,Assassin,Deals less damage but penetrate targets ,Unique,1.00,2.00,3.00,Damage,-0.15,-0.10,-0.05
-AGILITY,MAIN,Shotgun,Predator,Hits 'slim' enemies harder,Unique,1.00,1.50,2.00,,,,
-AGILITY,MAIN,Plasma,Splitter,"Shoot more rounds, less damage",Unique,0.15,0.25,0.50,Damage,-0.15,-0.10,-0.05
-AGILITY,ALT,Flame,Grenade,"Grenade that explodes after a few seconds, each rarity adds # of grenades",Unique,1.00,2.00,3.00,,,,
-AGILITY,ALT,Lightning,Orb,Shoot orbs that float and deal damage,,,,,,,,
-AGILITY,ALT,Cryo,Prison,"enemies get trapped in an ice prison, you can't shoot again until it dissolves ",,,,,,,,
-AGILITY,DASH,,,after dashing gain a movement speed buff ,Speed,0.20,0.30,0.40,Unique,1.00,2.00,3.00
-AGILITY,DASH,,,You dash longer distance and faster but loose max HP,Unique,0.20,0.30,0.40,Health,-0.10,-0.05,-0.01
-AGILITY,DASH,,,you have an extra dash available (or dash cool down reduced ),Unique,1.00,2.00,3.00,Health,-0.10,-0.05,-0.01
-AGILITY,DRONE,,TBD,Shoots twice the amount of missiles (6 instead of 3),Unique,6.00,9.00,12.00,,,,
-AGILITY,PULSE,,,"You no longer pulse, instead enemies are confused",,,,,,,,
-AGILITY,PULSE,,,"Your pulse radius is smaller, but gain a movement & firing speed temp bonus ",Unique,0.05,0.10,0.15,Unique,-0.20,-0.10,-0.05
-AGILITY,PULSE,,,"your pulse distance is smaller, you replenish ammo faster",Unique,0.05,0.10,0.15,Unique,-0.20,-0.10,-0.05
-AGILITY,STATS,,,Increase move speed,Speed,0.10,0.20,0.30,,,,
+ASSAULT ,MAIN,Minigun,Overcharge,After X seconds Deal X% more damage.,Time,3.00,3.50,4.00,Damage,10.00,15.00,20.00
+ASSAULT ,MAIN,Shotgun,Fragment,X more shots X% more spread,Unique,1.00,2.00,3.00,Unique,10.00,20.00,30.00
+ASSAULT ,MAIN,Plasma,Erazer,Pierce is reduced by X but damage is increased by X,Unique,3.00,2.00,1.00,Damage,1.00,2.00,3.00
+ASSAULT ,ALT,Flame,Splitter,Flame is split into 3 with X% damage and X% worse Fuel Use,Damage,5.00,10.00,15.00,FuelRate,-0.20,0.18,-0.15
+ASSAULT ,ALT,Lightning,Static Warp,Teleport to enemy dealing X% of MWD within a range of X.,Damage,50.00,75.00,100.00,Unique,5.00,7.50,10.00
+ASSAULT ,ALT,Cryo,Fracture,Frozen enemies explode on death dealing X% AWD,Unique,,,,Damage,10.00,20.00,30.00
+ASSAULT ,DASH,,Charge,Dash deals X% of MWD.,Damage,5.00,10.00,20.00,,,,
+ASSAULT ,DRONE,,Orbital Strike,Swaps Drone to a beam that last for Xs doing X% Damage p/s,Unique,5.00,6.00,7.00,Damage,100.00,150.00,200.00
+ASSAULT ,PULSE,,Shockwave,"Pulse deals x% of MWD, pulse distance is decreased X%.",Damage,5.00,7.00,10.00,Unique,50.00,40.00,30.00
+ASSAULT ,STATS,,Power Up,MWD increaed by X%,Damage,10.00,15.00,20.00,,,,
+ASSAULT ,STATS,,Power Up,MWD increaed by X%,Damage,10.00,15.00,20.00,,,,
+ASSAULT ,STATS,,Power Up,MWD increaed by X%,Damage,10.00,15.00,20.00,,,,
+TECH,MAIN,Minigun,Burst,Fire in short bursts and MWD increase by X%,Damage,5.00,7.00,10.00,,,,
+TECH,MAIN,Shotgun,Taser,Shots stun for Xs,Stun,-0.15,-0.25,-0.50,,,,
+TECH,MAIN,Plasma,Energy Blast,Killed enemies leave burning areas for X seconds.,Time,1.00,2.00,3.00,,,,
+TECH,ALT,Flame,Napalm,Flame leaves burning areas dealing X% AWD for X seconds,Damage,30.00,50.00,80.00,Time,1.00,1.50,2.00
+TECH,ALT,Lightning,Arc Reactor,Shoots a lightnig orb chaing to upto 5 enemies dealing X% AWD for X seconds,Damage,50.00,90.00,120.00,Time,2.00,3.00,4.00
+TECH,ALT,Cryo,Zero Point,Frozen duration increased by X seconds and fuel use better by X%,Stun,1.00,1.50,2.00,FuelRate,10.00,15.00,20.00
+TECH,DASH,,Hologram,Leave a hologram that explodes after X seconds dealing X% AWD,Time,2.00,2.50,3.00,Damage,10.00,15.00,20.00
+TECH,DRONE,,Little Boy,Swaps Drone to a large bomb that deals X% of AWD with AW effect.,Damage,200.00,300.00,400.00,Unique,,,
+TECH,PULSE,,Absorb,Charge X% of Max fuel for every enemy hit,Unique,5.00,7.00,10.00,,,,
+TECH,STATS,,Optimization,Improved fuel consuption by X%.,FuelRate,20.00,30.00,40.00,,,,
+TANK,MAIN,Minigun,Dig In,MWD increaed by X% Speed reduced by X%,Damage,5.00,7.00,10.00,Speed,-15.00,-13.00,-10.00
+TANK,MAIN,Shotgun,Cannon,X less shots X% less spread,Unique,3.00,2.00,1.00,Unique,10.00,20.00,30.00
+TANK,MAIN,Plasma,Beam,"Fires a beam, pireceing all, for Xs dealing X% MWD, uses 50% of fuel.",Time,1.00,1.50,2.00,Damage,120.00,135.00,150.00
+TANK,ALT,Flame,Grenade,Becomes a grenade dealing X% AWD and fuel use is worsened by X%,Damage,150.00,175.00,200.00,Unique,-30.00,-25.00,-20.00
+TANK,ALT,Lightning,Moljinr,Rod doesn't chain but causes a lighting bolt dealing X% damage.,,,,,,,,
+TANK,ALT,Cryo,The Wall,Creates a wall of Ice for Xs and deals X% of AWD p/s to enemies in range,Time,3.00,4.00,5.00,Unique,5.00,7.00,10.00
+TANK,DASH,,Sturdy,You can't dash but become invincible for Xs,Unique,1.00,2.00,3.00,,,,
+TANK,DRONE,,Repair,Swaps Drone for a repair repairing X% Max Health over X seconds,Health,30.00,40.00,50.00,Time,4.00,3.50,3.00
+TANK,PULSE,,Force,Pluse pushes X% further and heals by X% of Max Health,Unique,10.00,15.00,20.00,Health,0.50,1.00,2.00
+TANK,STATS,,Reinforce,Max Health is increased by X,Health,10.00,20.00,30.00,,,,
+TANK,STATS,,Razor Armor,Melee attackers take X% of MWD,Unique,100.00,150.00,200.00,,,,
+TANK,STATS,,Nano Bots,"Regen X% Max Health p/s, speed reduced by X%",Unique,1.00,1.50,2.00,Speed,-70.00,65.00,60.00
+AGILITY,MAIN,Minigun,Blitz,Fire X% quicker but X% less powerful,FireRate,10.00,20.00,30.00,Damage,15.00,10.00,5.00
+AGILITY,MAIN,Shotgun,Double Barrel,Fires 2 times for 1 shot but for X% MWD,Unique,50.00,55.00,60.00,,,,
+AGILITY,MAIN,Plasma,Mirror Chamber,Shoot 2 shots for X% less MWD,Unique,20.00,15.00,10.00,,,,
+AGILITY,ALT,Flame,Heat Conversion,Fuel consuption is reduced by X% and speed increased by X%,FuelRate,10.00,15.00,20.00,Speed,5.00,10.00,15.00
+AGILITY,ALT,Lightning,Chainer,Increases chain amount by X,Unique,1.00,2.00,3.00,,,,
+AGILITY,ALT,Cryo,Dry Ice,Fire Rate increased by X% and Fuel Rate improved by X%,FireRate,5.00,10.00,15.00,FuelRate,5.00,10.00,15.00
+AGILITY,DASH,,Lubricant,Gain a movement boost for X seconds after a dash,Unique,,,,Time,1.00,2.00,3.00
+AGILITY,DASH,,Carbon Fiber,Dash is X% further but MaX Health is X% less,Unique,10.00,15.00,20.00,Health,15.00,12.50,10.00
+AGILITY,DASH,,Hydrolics,Dash Cool down reduced by X %,Unique,30.00,45.00,60.00,,,,
+AGILITY,DRONE,,Companion,Swaps Drone for a hovering minigun dealing X% of MWD for X seconds,Unique,50.00,75.00,100.00,Time,10.00,15.00,20.00
+AGILITY,PULSE,,Gravity Field,Pulse doesn't push but stuns for X seconds,Unique,,,,Stun,1.00,2.00,3.00
+AGILITY,STATS,,Aerodynamics,Increase move speed by X%,Speed,10.00,15.00,20.00,,,,
