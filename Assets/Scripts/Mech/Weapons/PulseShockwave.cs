@@ -47,7 +47,7 @@ public class PulseShockwave : MonoBehaviour
                 canHeal = true;
                 healAmount =  value;
                 break;
-            case ModType.Damage:
+            case ModType.BaseDamage:
                 canDamage = true;
                 damage = value;
                 break;

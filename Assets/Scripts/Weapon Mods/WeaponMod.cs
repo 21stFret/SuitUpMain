@@ -28,29 +28,23 @@ public class WeaponMod : MonoBehaviour
 
     private void ApplyMods()
     {
-        if(RunMod.modifiers.Count > 0)
+        foreach(Modifier mod in RunMod.modifiers)
         {
-            foreach(Modifier mod in RunMod.modifiers)
-            {
-                var value = mod.modValue / 100; 
+            var value = mod.modValue / 100; 
 
-                switch(mod.modType)
-                {
-                    case ModType.Damage:     
-                        damage += value * damage;
-                        break;
-                    case ModType.Range:
-                        range += value * range;
-                        break;
-                    case ModType.FireRate:
-                        baseWeapon.fireRate -= value * baseWeapon.fireRate;
-                        break;
-                    case ModType.FuelRate:
-                        modFuelCost -= value * modFuelCost;
-                        break;
-                    case ModType.Unique:
-                        break;
-                }
+            switch(mod.modType)
+            {
+                case ModType.BaseDamage:     
+                    damage += value * damage;
+                    break;
+                case ModType.FireRate:
+                    baseWeapon.fireRate -= value * baseWeapon.fireRate;
+                    break;
+                case ModType.FuelRate:
+                    modFuelCost -= value * modFuelCost;
+                    break;
+                case ModType.Unique:
+                    break;
             }
         }
     }

@@ -73,56 +73,7 @@ public class RunUpgradeManager : MonoBehaviour
         runModsTank.Clear();
         runModsAgility.Clear();
     }
-
-    public void GenerateListOfUpgrades(ModBuildType build)
-    {
-        listMods.Clear();
-        HashSet<int> usedCategories = new HashSet<int>();
-        int maxAttempts = 10; // Prevent infinite loop
-
-        // Select the categories
-        for (int i = 0; i < 3 && maxAttempts > 0;)
-        {
-            int rand = Random.Range(0, 6);
-            if (usedCategories.Add(rand)) // Returns true if the item was added (i.e., it wasn't already in the set)
-            {
-                ModCategory selectedCategory = (ModCategory)rand;
-                modCategories[i] = selectedCategory;
-
-                List<RunMod> selectedMod = GetModsForBuild(build, selectedCategory);
-
-                if (selectedCategory == ModCategory.ALT)
-                {
-                    //selectedMod = FilterAltWeaponMods(selectedMod);
-                }
-
-                if (selectedMod.Count > 0)
-                {
-                    listMods.Add(selectedMod[Random.Range(0, selectedMod.Count)]);
-                    i++;
-                }
-                else
-                {
-                    Debug.LogWarning($"No mod found for category: {selectedCategory} in {build}");
-                    usedCategories.Remove(rand); // Allow this category to be selected again
-                }
-            }
-            maxAttempts--;
-        }
-
-        if (listMods.Count < 3)
-        {
-            Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
-        }
-
-        // Roll for rarity
-        foreach (var mod in listMods)
-        {
-            SetModRarity(mod);
-        }
-
-        ModUI.OpenModUI(build);
-    }    
+   
     public void GenerateListOfUpgradesFromAll(ModBuildType build)
     {
         listMods.Clear();
@@ -155,13 +106,23 @@ public class RunUpgradeManager : MonoBehaviour
             {
                 RunMod mod = selectedMods[Random.Range(0, selectedMods.Count)];
 
-                if(mod.modCategory == ModCategory.ALT)
+                if (listMods.Contains(mod))
+                {
+                    continue;
+                }
+
+                if (mod.modCategory == ModCategory.ALT)
                 {
                     mod = FilterAltWeaponMods(selectedMods);
                 }
                 if (mod.modCategory == ModCategory.MAIN)
                 {
                     mod = FilterMainWeaponMods(selectedMods);
+                }
+
+                if (listMods.Contains(mod))
+                {
+                    continue;
                 }
 
                 listMods.Add(mod);
@@ -246,10 +207,8 @@ public class RunUpgradeManager : MonoBehaviour
         switch (mod.modCategory)
         {
             case ModCategory.MAIN:
-                /*
-                WeaponMod Wmod = WeaponModManager.FindModByName(mod.modName);
-                WeaponModManager.EquipWeaponMod(Wmod);
-                */
+                WeaponMod MWmod = weaponModManager.FindModByName(mod.modName);
+                weaponModManager.EquipWeaponMod(MWmod);
                 break;
             case ModCategory.ALT:
                 WeaponMod Wmod = weaponModManager.FindModByName(mod.modName);

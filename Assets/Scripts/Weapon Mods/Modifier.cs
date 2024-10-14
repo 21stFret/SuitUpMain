@@ -4,14 +4,19 @@ using UnityEngine;
 
 public enum ModType
 {
-    Damage,
-    DamagePercent,
+    BaseDamage,
+    BaseAltDamage,
+    Time,
     Health,
     FireRate,
-    Range,
     FuelRate,
     Speed,
-    Unique
+    Unique,
+    AWD,
+    MWD,
+    Healing,
+    Stun
+
 }
 
 [System.Serializable]
