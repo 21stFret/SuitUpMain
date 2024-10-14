@@ -31,6 +31,11 @@ public class WeaponModManager : MonoBehaviour
 
     public void EquipWeaponMod(WeaponMod mod)
     {
+        if(mod == null)
+        {
+            print("No mod found");
+            return;
+        }
         if(currentMod != null)
         {
             currentMod.RemoveMods();

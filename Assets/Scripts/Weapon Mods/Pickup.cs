@@ -21,7 +21,7 @@ public class Pickup : MonoBehaviour
 
     private void Start()
     {
-        Init((ModBuildType)Random.Range(0,4));
+        Init(pickupType);
     }
 
     public void Init(ModBuildType type)

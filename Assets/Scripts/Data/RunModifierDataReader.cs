@@ -43,9 +43,15 @@ public class RunModifierDataReader : MonoBehaviour
                 rMod.modDescription = (string)data[i]["Description"];
             }
 
+            Sprite sprite = Resources.Load<Sprite>("ModIcons/" + rMod.modName);
+            if (sprite != null)
+            {
+                rMod.sprite = sprite;
+            }
+
             for (int j = 0; j < 3; j++)
             {
-                if(!data[i].ContainsKey("Modifier" + j))
+                if (!data[i].ContainsKey("Modifier" + j))
                 {
                     break;
                 }
@@ -53,18 +59,24 @@ public class RunModifierDataReader : MonoBehaviour
                 if (mod != "")
                 {
                     rMod.modifiers.Add(new Modifier());
-                    rMod.modifiers[j].modType = (ModType)System.Enum.Parse(typeof(ModType), (string)data[i]["Modifier" + j]);
+                    rMod.modifiers[j].modType = (ModType)System.Enum.Parse(typeof(ModType), mod);
                     rMod.modValues.Add(new ModValues());
                     for (int k = 0; k < 3; k++)
                     {
-                        rMod.modValues[j].values[k] = (float)data[i]["Value" + j + k];
+                        string valueKey = "Value" + j + k;
+                        if (data[i].ContainsKey(valueKey) && float.TryParse(data[i][valueKey].ToString(), out float result))
+                        {
+                            rMod.modValues[j].values[k] = result;
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"Failed to parse float value for {valueKey} at index {i}");
+                            rMod.modValues[j].values[k] = 0f; // Set a default value
+                        }
                     }
- 
                 }
-
             }
             runMods.Add(rMod);
-
         }
     }
 }

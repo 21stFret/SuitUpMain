@@ -35,7 +35,7 @@ public class MechStats : MonoBehaviour
                 mechHealth.targetHealth.maxHealth = mechHealth.targetHealth.maxHealth * healthmultiplier;
                 mechHealth.targetHealth.TakeDamage(-mechHealth.targetHealth.maxHealth / 10);
                 break;
-            case ModType.Damage:
+            case ModType.BaseDamage:
                 damageMultiplier += value / 100;
                 break;
             case ModType.Speed:
