@@ -107,12 +107,19 @@ namespace FORGE3D
             // If something was hit
             if (isHit)
             {
+
                 // Execute once
                 if (!isFXSpawned)
                 {
                     _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
-                    ApplyForce(impactForce, stunTime);
                     isFXSpawned = true;
+
+                    if(hitPoint.collider.gameObject.layer == 0)
+                    {
+                        return;
+                    }
+                    ApplyForce(impactForce, stunTime);
+
                 }
 
                 // Despawn current projectile 

@@ -10,7 +10,6 @@ public class BattleManager : MonoBehaviour
     public Battle currentBattle;
     public int currentBattleIndex;
     public CapturePoint capturePoint;
-    public DefendObjective defendBase;
     public Pickup roomDrop;
     public LayerMask dropLayer;
     public string objectiveMessage;
