@@ -20,6 +20,26 @@ public class ExplodingBarrel : Prop
     public AudioClip[] audioClips;
     public AudioSource explosionSound;
     public AudioClip warningNoise;
+    public BreakableObject breakableObject;
+
+
+    private void Start()
+    {
+        this.Init();
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        isFuseActive = false;
+        warningLight.enabled = false;
+        explosionRadiusPrefab.SetActive(false);
+        explosionEffect.transform.parent = this.transform;
+        explosionEffect.Stop();
+        explosionSound.Stop();
+        breakableObject.transform.parent = this.transform;
+
+    }
 
     public override void Die()
     {
@@ -52,8 +72,11 @@ public class ExplodingBarrel : Prop
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, upwardsModifier, ForceMode.Impulse);
             }
         }
+        breakableObject.transform.parent = null;
+        breakableObject.Break();
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();
+        explosionEffect.transform.parent = null;
         explosionEffect.Play();
         prefab.SetActive(false);
         

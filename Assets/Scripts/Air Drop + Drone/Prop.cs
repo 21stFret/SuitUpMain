@@ -5,21 +5,22 @@ using UnityEngine;
 
 public class Prop : MonoBehaviour
 {
-    public float health;
-    public float healthMax;
+    private float health;
+    private float healthMax;
     private bool isDead;
-    private TargetHealth _targetHealth;
+    public TargetHealth _targetHealth;
 
     public DamageNumber damageNumberPrefab;
     public bool damageNumbersOn;
 
     public virtual void Init()
     {
-        _targetHealth = GetComponent<TargetHealth>();
-        if (_targetHealth != null)
+        if (_targetHealth == null)
         {
-            _targetHealth.Init();
+            print("No target health found on " + gameObject.name);
+            return;
         }
+        _targetHealth.Init();
         healthMax = _targetHealth.maxHealth;
         health = healthMax;
     }

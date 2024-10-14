@@ -9,10 +9,12 @@ public class Crate : Prop
     public ParticleSystem explosionEffect;
     public AudioClip[] audioClips;
     public AudioSource explosionSound;
+    public BreakableObject breakableObject;
 
     public void Start()
     {
         Init();
+        breakableObject.transform.parent = this.transform;
     }
 
     public override void Die()
@@ -22,6 +24,8 @@ public class Crate : Prop
             GameObject randomLoot = loot[Random.Range(0, loot.Length)];
             Instantiate(randomLoot, transform.position, Quaternion.identity);
         }
+        breakableObject.transform.parent = null;
+        breakableObject.Break();
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();
         explosionEffect.Play();
