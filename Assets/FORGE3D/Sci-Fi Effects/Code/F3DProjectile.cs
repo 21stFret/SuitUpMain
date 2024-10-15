@@ -87,18 +87,15 @@ namespace FORGE3D
         // Apply hit force on impact
         void ApplyForce(float force, float stunTime)
         {
-            if (hitPoint.rigidbody == null)
-            { return; }
-            
             TargetHealth targetHealth = hitPoint.collider.GetComponent<TargetHealth>();
+
             if(targetHealth != null)
             {
                 targetHealth.TakeDamage(impactDamage, weaponType, stunTime);
-                targetHealth.GetComponent<Rigidbody>().AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
-            }
-
-            if(hitPoint.collider.CompareTag("Enemy"))
-            {
+                if (hitPoint.rigidbody != null)
+                { 
+                    targetHealth.GetComponent<Rigidbody>().AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
+                }
             }
         }
 
