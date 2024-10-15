@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ExplodingBarrel : Prop
 {
+    public WeaponType weaponType;
     public float explosionForce;
     public float explosionRadius;
     public float upwardsModifier;
@@ -64,7 +65,7 @@ public class ExplodingBarrel : Prop
             TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
             if (targetHealth != null)
             {
-                targetHealth.TakeDamage(damage, WeaponType.AoE);
+                targetHealth.TakeDamage(damage, weaponType);
             }
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
