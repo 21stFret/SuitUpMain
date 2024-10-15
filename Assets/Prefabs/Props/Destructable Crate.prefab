@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2339389128266716112}
   - component: {fileID: 4065374063667555708}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Audio Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 8104214986961646350}
   - component: {fileID: 3626257442838290167}
   - component: {fileID: 3990908504965299522}
-  m_Layer: 16
+  m_Layer: 12
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,8 +245,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 1
+      scalar: 0.1
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1109,7 +1109,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 30
+        scalar: 10
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -5026,6 +5026,61 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &5452093832009188327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3612778701338999505}
+  - component: {fileID: 8040077153962667836}
+  m_Layer: 12
+  m_Name: BreakableBits
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3612778701338999505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452093832009188327}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.46, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1855006942680416225}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8040077153962667836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452093832009188327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7614843e1f7e56e48b0ed3d8a1b11293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brokenPartPrefabs:
+  - {fileID: 6296899399759599893, guid: 128c31f61912b664e9e538bc4548f8bd, type: 3}
+  - {fileID: 5695476102392798198, guid: 128a7205728c042498f9310f391b6baf, type: 3}
+  - {fileID: 6497966034188460754, guid: 075e9f5696701184ca0a4af95f8ed622, type: 3}
+  - {fileID: 6736140673423395377, guid: f15f9c90ea393074cb350ae52d1c35c8, type: 3}
+  - {fileID: 6736140673423395377, guid: f15f9c90ea393074cb350ae52d1c35c8, type: 3}
+  - {fileID: 6736140673423395377, guid: f15f9c90ea393074cb350ae52d1c35c8, type: 3}
+  - {fileID: 6736140673423395377, guid: f15f9c90ea393074cb350ae52d1c35c8, type: 3}
+  hideDelay: 5
+  explosionForce: 500
+  explosionRadius: 2
 --- !u!1 &6569910827466637269
 GameObject:
   m_ObjectHideFlags: 0
@@ -5041,7 +5096,7 @@ GameObject:
   - component: {fileID: 3775797509818405515}
   - component: {fileID: 4243004194361061650}
   - component: {fileID: 2277740699517821931}
-  m_Layer: 8
+  m_Layer: 12
   m_Name: Destructable Crate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5063,6 +5118,7 @@ Transform:
   m_Children:
   - {fileID: 8104214986961646350}
   - {fileID: 2339389128266716112}
+  - {fileID: 3612778701338999505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4710755382624105062
@@ -5127,8 +5183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3f49466389e1d4a9267d336ce39802, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  healthMax: 0
+  _targetHealth: {fileID: 2277740699517821931}
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
@@ -5139,6 +5194,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 64940a920327a3144ae897d6c0851778, type: 3}
   - {fileID: 8300000, guid: e3b3bcb0c1b72144289c7db4fdb0ce82, type: 3}
   explosionSound: {fileID: 4065374063667555708}
+  breakableObject: {fileID: 8040077153962667836}
 --- !u!54 &3775797509818405515
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5200,6 +5256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  healthMax: 10
+  maxHealth: 1
   invincible: 0
   alive: 0

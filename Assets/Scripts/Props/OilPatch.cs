@@ -8,7 +8,7 @@ public class OilPatch : Prop
     private float savedSpeed;
     public bool onFire;
     public ParticleSystem fire;
-    public DamageOverTIme fireDamage;
+    public DamageArea fireDamage;
     public float burnTime = 5f;
 
     public override void Die()

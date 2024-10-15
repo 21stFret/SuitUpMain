@@ -33,7 +33,6 @@ public class RunUpgradeManager : MonoBehaviour
     public List<RunMod> runModsTank = new List<RunMod>();
     public List<RunMod> runModsAgility = new List<RunMod>();
     public List<RunMod> listMods = new List<RunMod>();
-    public List<ModCategory> modCategories = new List<ModCategory>();
     public RunModifierDataReader runModifierDataReader;
     public List<ModBuildType> randomlySelectedBuilds = new List<ModBuildType>();
 
