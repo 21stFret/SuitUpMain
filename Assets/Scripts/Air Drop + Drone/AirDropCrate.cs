@@ -22,6 +22,7 @@ public class AirDropCrate : MonoBehaviour
     {
         _collider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
+        _collider.enabled = active;
     }
 
     public void Init()

@@ -186,6 +186,10 @@ public class ManualWeaponController : MonoBehaviour
             return;
         }
         Vector3 lookDirection = new Vector3(aimX, 0, aimZ);
+        if (lookDirection == Vector3.zero)
+        {
+            lookDirection = new Vector3(0, 0, 0.1f);
+        }
         Quaternion lookRotation = Quaternion.LookRotation(lookDirection, transform.up);
         //equipedWeapon.transform.rotation = Quaternion.RotateTowards(lookRotation, transform.rotation, rotationSpeed * Time.deltaTime);
         float speed = rotationSpeed * Time.deltaTime;

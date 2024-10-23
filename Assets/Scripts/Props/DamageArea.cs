@@ -5,13 +5,16 @@ using UnityEngine;
 public class DamageArea : MonoBehaviour
 {
     public float damageRadius = 2f;
-    public float damageInterval = 1f;
-    public float damageAmount = 10f;
+    public float damageInterval = 0.5f;
+    public float damageAmount = 1f;
+    public float damageDuration = 5f;
+    public float stunTime = 0f;
     public WeaponType damageType = WeaponType.Flame; // Default to Fire, but can be changed
     public bool damageActive = true; // Control whether damage is being dealt
 
     private List<TargetHealth> targetsInRange = new List<TargetHealth>();
     private SphereCollider triggerCollider;
+    public Color gizmoColor = Color.green;
 
     private void Start()
     {
@@ -36,6 +39,10 @@ public class DamageArea : MonoBehaviour
             {
                 targetsInRange.Add(targetHealth);
             }
+        }
+        if(damageDuration > 0)
+        {
+            StartCoroutine(DisableDamageArea());
         }
     }
 
@@ -67,7 +74,7 @@ public class DamageArea : MonoBehaviour
                 {
                     if (targetsInRange[i] != null)
                     {
-                        targetsInRange[i].TakeDamage(damageAmount, damageType);
+                        targetsInRange[i].TakeDamage(damageAmount, damageType,stunTime);
                     }
                     else
                     {
@@ -77,6 +84,12 @@ public class DamageArea : MonoBehaviour
             }
             yield return new WaitForSeconds(damageInterval);
         }
+    }
+
+    private IEnumerator DisableDamageArea()
+    {
+        yield return new WaitForSeconds(damageDuration);
+        damageActive = false;
     }
 
     // Public method to activate/deactivate damage
@@ -105,5 +118,24 @@ public class DamageArea : MonoBehaviour
         {
             triggerCollider.radius = damageRadius;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Store original gizmo color
+        Color originalColor = Gizmos.color;
+
+        // Set the color (you can adjust these values)
+        Gizmos.color = gizmoColor;
+
+        // Draw a wire sphere for the radius
+        Gizmos.DrawWireSphere(transform.position, damageRadius);
+
+        // Optional: Draw lines for cardinal directions
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * damageRadius);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * damageRadius);
+
+        // Restore original color
+        Gizmos.color = originalColor;
     }
 }

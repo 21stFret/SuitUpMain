@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum HealthType
+{
+    Mech,
+    Crawler,
+    Prop
+}
+
 public class TargetHealth : MonoBehaviour
 {
     public float health;
@@ -12,17 +19,36 @@ public class TargetHealth : MonoBehaviour
     private Crawler _crawler;
     private MechHealth _mech;
     private Prop _prop;
+    public HealthType healthType;
 
     public void Init()
     {
         health = maxHealth;
         alive = true;
+        SetType();
+        if(healthType == HealthType.Mech)
+        {
+            _mech.UpdateHealth(health, true);
+        }
+    }
+
+    private void SetType()
+    {
         _crawler = GetComponent<Crawler>();
         _mech = GetComponent<MechHealth>();
         _prop = GetComponent<Prop>();
-        if(_mech != null)
+
+        if(_crawler != null)
         {
-            _mech.UpdateHealth(health, true);
+            healthType = HealthType.Crawler;
+        }
+        else if(_mech != null)
+        {
+            healthType = HealthType.Mech;
+        }
+        else if(_prop != null)
+        {
+            healthType = HealthType.Prop;
         }
     }
 
@@ -33,7 +59,15 @@ public class TargetHealth : MonoBehaviour
             damage = 0;
         }
 
-        if (_crawler != null)
+        if(weaponType == WeaponType.Cryo)
+        {
+            if(healthType == HealthType.Mech)
+            {
+
+            }
+        }
+
+        if(_crawler != null)
         {
             damage = damage * MechStats.instance.damageMultiplier;
             if(weaponType == WeaponType.Cralwer)

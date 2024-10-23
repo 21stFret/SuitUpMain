@@ -6,7 +6,11 @@ public class KillsoneTirgger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        print("Killzone trigger enter");
-        other.GetComponent<Crawler>().Die(WeaponType.Default);
+        print(other.name + " has entered the Killzone trigger");
+        if (other.GetComponent<TargetHealth>() != null)
+        {
+            other.GetComponent<TargetHealth>().TakeDamage(1000);
+        }
+
     }
 }

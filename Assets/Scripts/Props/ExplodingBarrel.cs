@@ -22,7 +22,8 @@ public class ExplodingBarrel : Prop
     public AudioSource explosionSound;
     public AudioClip warningNoise;
     public BreakableObject breakableObject;
-
+    public DamageArea damageArea;
+    private Rigidbody rb;
 
     private void Start()
     {
@@ -39,7 +40,7 @@ public class ExplodingBarrel : Prop
         explosionEffect.Stop();
         explosionSound.Stop();
         breakableObject.transform.parent = this.transform;
-
+        rb = GetComponent<Rigidbody>();
     }
 
     public override void Die()
@@ -57,6 +58,7 @@ public class ExplodingBarrel : Prop
 
     private void Explode()
     {
+        rb.isKinematic = true;
         isFuseActive = false;
         GetComponent<Collider>().enabled = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
@@ -80,6 +82,10 @@ public class ExplodingBarrel : Prop
         explosionEffect.transform.parent = null;
         explosionEffect.Play();
         prefab.SetActive(false);
+        if(damageArea != null)
+        {
+            damageArea.EnableDamageArea();
+        }
         
     }
 
