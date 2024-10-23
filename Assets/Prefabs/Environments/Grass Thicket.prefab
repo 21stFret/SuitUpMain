@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4548011065310077501}
   - component: {fileID: 6849771450873759248}
   - component: {fileID: 6543697546441132215}
-  m_Layer: 8
+  m_Layer: 18
   m_Name: Grass Thicket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 328351612129832203}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -21.529999, y: -0.87, z: -7.9000006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -76,6 +76,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  immuneWeapons: 0000000001000000020000000700000005000000
 --- !u!136 &6543697546441132215
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -185,6 +186,7 @@ MonoBehaviour:
   damageRadius: 4
   damageInterval: 0.5
   damageAmount: 0.5
+  damageDuration: 5
   damageType: 2
   damageActive: 1
 --- !u!1 &3137336814839239430
