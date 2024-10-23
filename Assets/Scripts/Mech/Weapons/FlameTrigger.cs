@@ -9,7 +9,7 @@ public class FlameTrigger : MonoBehaviour
     public TriggerSensor triggerSensor;
     public float shotSpeed;
     public float shotDamage;
-    private bool isOn;
+    public bool isOn;
     private float timer;
 
     public void InitFlameTrigger(float damage, float speed, float range)
@@ -25,7 +25,7 @@ public class FlameTrigger : MonoBehaviour
         isOn = value;
         if(!value)
         {
-            triggerSensor.Clear();
+            //triggerSensor.Clear();
         }
     }
 

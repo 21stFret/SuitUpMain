@@ -9,6 +9,7 @@ public class WeaponFuelManager : MonoBehaviour
     public WeaponUI weaponUI;
     public float weaponFuel;
     public float weaponFuelMax = 100;
+    public float weaponFuelBonus = 0;
     public float weaponRechargeRate;
     public float weaponFuelRate;
     public bool canRecharge = true;
@@ -49,11 +50,30 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void Recharge()
     {
-        if (weaponFuel >= weaponFuelMax)
+        if(!canRecharge)
         {
-            weaponFuel = weaponFuelMax;
             return;
         }
+
+        weaponFuelBonus = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.FuelRate);
+        if (weaponFuelBonus !=0)
+        {
+            float total = weaponFuelBonus;
+            if(weaponFuel>= total)
+            {
+                weaponFuel = total;
+                return;
+            }
+        }
+        else
+        {
+            if (weaponFuel >= weaponFuelMax)
+            {
+                weaponFuel = weaponFuelMax;
+                return;
+            }
+        }
+
 
         weaponFuel += Time.deltaTime * weaponRechargeRate;
     }

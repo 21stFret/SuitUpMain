@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public PlayerInput playerInput;
     public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
-    public ManualWeaponController altWeaponController;
+    public WeaponController altWeaponController;
     public AreaManager areaManager;
     public VoidPortalManager voidPortalManager;
     public RoomPortal RoomPortal;
@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public GameObject nightLight;
     public ModBuildType nextBuildtoLoad;
     public AreaType currentAreaType;
+    public StatMultiplierManager statMultiplierManager;
 
     public bool playOnAwake = false;
 
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
-
+        InitializeStats();
 
         if (!playOnAwake) return;
 
@@ -57,6 +58,21 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.UpdateCrawlerSpawner();
         AudioManager.instance.PlayMusic(1);
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
+    }
+
+    public void InitializeStats()
+    {
+        Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>
+        {
+        { StatType.Health, BattleMech.instance.targetHealth.maxHealth },
+        { StatType.MWD_Increase_Percent, BattleMech.instance.weaponController.mainWeaponEquiped.damage},
+        { StatType.Speed, BattleMech.instance.myCharacterController.Speed },
+        { StatType.FireRate, BattleMech.instance.weaponController.mainWeaponEquiped.fireRate },
+        { StatType.AWD_Increase_Percent, BattleMech.instance.weaponController.altWeaponEquiped.damage},
+        { StatType.FuelRate, BattleMech.instance.weaponFuelManager.weaponFuelMax}
+        };
+
+        statMultiplierManager.LoadBaseValues(baseStats);
     }
 
     private IEnumerator ShowControls()

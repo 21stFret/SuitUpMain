@@ -62,7 +62,7 @@ public class BreakableObject : MonoBehaviour
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionForce/2);
+rb.AddExplosionForce(Random.Range(explosionForce * 0.8f, explosionForce * 1.2f), transform.position, explosionRadius, explosionForce / 2);
             }
         }
 

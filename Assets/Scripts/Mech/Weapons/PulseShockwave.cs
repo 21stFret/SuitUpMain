@@ -38,20 +38,20 @@ public class PulseShockwave : MonoBehaviour
         }
     }
 
-    public void ApplyMod(ModType type, float value)
+    public void ApplyMod(StatType type, float value)
     {
         ResetMods();
         switch (type)
         {
-            case ModType.Health:
+            case StatType.Health:
                 canHeal = true;
                 healAmount =  value;
                 break;
-            case ModType.BaseDamage:
+            case StatType.MWD_Increase_Percent:
                 canDamage = true;
                 damage = value;
                 break;
-            case ModType.FuelRate:
+            case StatType.FuelRate:
                 canRegenFuel = true;
                 regenTime = value;
                 break;

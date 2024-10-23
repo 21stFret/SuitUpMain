@@ -6,7 +6,7 @@ public class Cheats : MonoBehaviour
 {
     public TargetHealth targetHealth;
     public GameObject UI;
-    public ManualWeaponController altWeaponController;
+    public WeaponController altWeaponController;
     private float savedFuelUseRate;
 
     public void ToggleInvincible(bool toggle)
@@ -23,16 +23,16 @@ public class Cheats : MonoBehaviour
     {
         if(savedFuelUseRate == 0)
         {
-            savedFuelUseRate = altWeaponController.equipedWeapon.weaponFuelUseRate;
+            savedFuelUseRate = altWeaponController.altWeaponEquiped.weaponFuelUseRate;
         }
 
         if(toggle)
         {
-            altWeaponController.equipedWeapon.weaponFuelUseRate = 0;
+            altWeaponController.altWeaponEquiped.weaponFuelUseRate = 0;
         }
         else
         {
-            altWeaponController.equipedWeapon.weaponFuelUseRate = savedFuelUseRate;
+            altWeaponController.altWeaponEquiped.weaponFuelUseRate = savedFuelUseRate;
         }
 
     }

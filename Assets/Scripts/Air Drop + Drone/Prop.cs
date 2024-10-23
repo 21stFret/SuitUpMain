@@ -46,8 +46,6 @@ public class Prop : MonoBehaviour
             case WeaponType.Cryo:
                 newPopup.SetColor(Color.blue);
                 break;
-            case WeaponType.Grenade:
-                break;
             case WeaponType.Plasma:
                 newPopup.SetColor(Color.magenta);
                 break;

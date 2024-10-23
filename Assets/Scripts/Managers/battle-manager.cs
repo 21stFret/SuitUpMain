@@ -154,14 +154,14 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator CheckActiveEnemies()
     {
-        if (MechBattleController.instance.isDead)
+        if (BattleMech.instance.isDead)
         {
             yield break;
         }
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
             yield return new WaitForSeconds(1);
-            if (MechBattleController.instance.isDead)
+            if (BattleMech.instance.isDead)
             {
                 yield break;
             }

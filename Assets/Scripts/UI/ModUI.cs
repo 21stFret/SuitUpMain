@@ -75,6 +75,7 @@ public class ModUI : MonoBehaviour
         button.modName.text = mod.modName;
         button.modImage.sprite = mod.sprite;
         button.modDescription.text = mod.modDescription;
+        button.modType.text = mod.modCategory.ToString();
         string rarity = "";
         Color color = Color.white;
         switch(mod.rarity)
@@ -99,9 +100,9 @@ public class ModUI : MonoBehaviour
             var modifier = mod.modifiers[j];
             var stat = button.modStats[j];
             stat.gameObject.SetActive(true);
-            stat.modStat.text = modifier.modType.ToString();
-            string modValue = modifier.modValue.ToString();
-            if (modifier.modValue < 0)
+            stat.modStat.text = modifier.statType.ToString();
+            string modValue = modifier.statValue.ToString();
+            if (modifier.statValue < 0)
             {
                 stat.modStatValue.color = Color.red;
             }
@@ -113,7 +114,7 @@ public class ModUI : MonoBehaviour
 
             stat.modStatValue.text = modValue;
 
-            if (modifier.modType == ModType.Unique)
+            if (modifier.statType == StatType.Unique)
             {
                 return;
             }

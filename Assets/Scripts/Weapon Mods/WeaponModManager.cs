@@ -6,7 +6,7 @@ public class WeaponModManager : MonoBehaviour
 {
     public List<WeaponMod> mods;
     public MechWeapon weapon;
-    public ManualWeaponController altWeapon;
+    public WeaponController altWeapon;
     public WeaponMod currentMod;
     public List<WeaponMod> currentMods = new List<WeaponMod>();
 

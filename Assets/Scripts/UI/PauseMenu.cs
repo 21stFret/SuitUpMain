@@ -43,7 +43,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         playerInput.SwitchCurrentActionMap("PauseMenu");
         eventSystem.SetSelectedGameObject(firstSelectedButton);
-        MechBattleController.instance.characterController.runAudio.Stop();
+        BattleMech.instance.myCharacterController.runAudio.Stop();
     }
 
     public void ResumeGame()

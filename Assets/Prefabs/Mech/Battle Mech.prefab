@@ -37097,15 +37097,15 @@ GameObject:
   - component: {fileID: 364384307396218630}
   - component: {fileID: 4119666744576634704}
   - component: {fileID: 3920902903643086238}
-  - component: {fileID: 2649297064278903299}
   - component: {fileID: 5514233860546987800}
   - component: {fileID: 547715015366089029}
   - component: {fileID: 7926855109315850022}
   - component: {fileID: 715340335532054391}
   - component: {fileID: 2360268570500086563}
-  - component: {fileID: 1554726410975775876}
   - component: {fileID: 5986488049557473867}
-  - component: {fileID: 1923429341177095731}
+  - component: {fileID: 2064643677528919111}
+  - component: {fileID: 2587136083339096648}
+  - component: {fileID: 2681120492829793335}
   m_Layer: 6
   m_Name: Battle Mech
   m_TagString: Player
@@ -37364,20 +37364,6 @@ CapsuleCollider:
   m_Height: 4.79
   m_Direction: 1
   m_Center: {x: 0, y: 2.5, z: 0}
---- !u!114 &2649297064278903299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800413595774208468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6dd98a1e99dfee40b15a6d08b546630, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mechHealth: {fileID: 5979783455418939766}
-  characterController: {fileID: 547715015366089029}
 --- !u!114 &5514233860546987800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37406,8 +37392,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1554726410975775876}
-        m_TargetAssemblyTypeName: AltWeaponController, Assembly-CSharp
+      - m_Target: {fileID: 2587136083339096648}
+        m_TargetAssemblyTypeName: WeaponController, Assembly-CSharp
         m_MethodName: OnAim
         m_Mode: 0
         m_Arguments:
@@ -37642,7 +37628,7 @@ MonoBehaviour:
   dashEffect2: {fileID: 9052721921795810133}
   dashShoes: {fileID: 3423844266178021478}
   dashShoes2: {fileID: 8677017111506578234}
-  manualWeaponController: {fileID: 1554726410975775876}
+  manualWeaponController: {fileID: 2587136083339096648}
   footStep: {fileID: 978492852434238963}
   footStep2: {fileID: 6458035312969665616}
   candodge: 1
@@ -37745,58 +37731,15 @@ MonoBehaviour:
   weaponsManager: {fileID: 0}
   mainWeapon: {fileID: 0}
   altWeapon: {fileID: 0}
-  altWeaponController: {fileID: 1554726410975775876}
+  weaponController: {fileID: 2587136083339096648}
   mainWeaponMount: {fileID: 799169735326975723}
   altWeaponMount: {fileID: 4254472234100510675}
   weaponsHanger: {fileID: 0}
   weaponModManager: {fileID: 0}
   loadMainWeapon: 1
   loadAltWeapon: 1
-  mechStats: {fileID: 1923429341177095731}
   targetHealth: {fileID: 5979783455418939766}
   characterController: {fileID: 547715015366089029}
---- !u!114 &1554726410975775876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800413595774208468}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fc14c4e5539c2e4d92a20f8be268dcc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  primaryActions: {fileID: -944628639613478452, guid: f751f7846a93fff48b1cb9132203a203,
-    type: 3}
-  playerInput: {fileID: 5514233860546987800}
-  FireInputAction:
-    m_Name: Fire Input
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 2a95ced1-8cd1-44f8-88fb-29d6afcdd829
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  FireManualInputAction:
-    m_Name: Fire Manual Input
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 08cb3394-bd22-4fb5-b5c3-c6c8f109a6a4
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  equipedWeapon: {fileID: 0}
-  equipedWeaponP: {fileID: 0}
-  rotatingObject: {fileID: 7564854925590220414}
-  rotatingPivot: {fileID: 7417324669554353754}
-  inputTimeOut: 1
-  aimZ: 0
-  aimX: 0
-  rotationSpeed: 200
-  isAiming: 0
 --- !u!114 &5986488049557473867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37818,7 +37761,7 @@ MonoBehaviour:
   weaponFuelRate: 0
   canRecharge: 1
   constantUse: 0
---- !u!114 &1923429341177095731
+--- !u!114 &2064643677528919111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37827,9 +37770,70 @@ MonoBehaviour:
   m_GameObject: {fileID: 8800413595774208468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31148285a0d6f564b9ee2a89ab4b7015, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b34470d8e2607f498c4c32a0a277f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statMultiplierManager: {fileID: 0}
+  myCharacterController: {fileID: 0}
+  weaponController: {fileID: 0}
+  mechHealth: {fileID: 0}
+  targetHealth: {fileID: 0}
+  isDead: 0
+--- !u!114 &2587136083339096648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800413595774208468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec1ce2a81f5025844af886cae135369d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  primaryActions: {fileID: -944628639613478452, guid: f751f7846a93fff48b1cb9132203a203,
+    type: 3}
+  playerInput: {fileID: 5514233860546987800}
+  FireInputAction:
+    m_Name: Fire Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 6bc8182f-f5b3-4ea5-b4ca-43eedc2d1f4e
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  FireManualInputAction:
+    m_Name: Fire Manual Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 759b2bfe-06fe-4799-a558-432a9c2b8c3a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  altWeaponEquiped: {fileID: 0}
+  mainWeaponEquiped: {fileID: 0}
+  rotatingObject: {fileID: 7564854925590220414}
+  rotatingPivot: {fileID: 8122996381916016047}
+  inputTimeOut: 1
+  aimZ: 0
+  aimX: 0
+  rotationSpeed: 150
+  isAiming: 0
+--- !u!114 &2681120492829793335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800413595774208468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0731c004f275f40a5c310a774d352d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: []
 --- !u!1 &8883268363649656803
 GameObject:
   m_ObjectHideFlags: 0

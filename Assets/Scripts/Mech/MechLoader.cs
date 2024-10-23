@@ -9,14 +9,13 @@ public class MechLoader : MonoBehaviour
     public WeaponsManager weaponsManager;
     public MechWeapon mainWeapon;
     public MechWeapon altWeapon;
-    public ManualWeaponController altWeaponController;
+    public WeaponController weaponController;
     public Transform mainWeaponMount;
     public Transform altWeaponMount;
     public WeaponsHanger weaponsHanger;
     public WeaponModManager weaponModManager;
     public bool loadMainWeapon;
     public bool loadAltWeapon;
-    public MechStats mechStats;
     public TargetHealth targetHealth;
     public MYCharacterController characterController;
 
@@ -50,8 +49,8 @@ public class MechLoader : MonoBehaviour
 
         if(battleLoadout)
         {
-            altWeaponController.enabled = true;
-            altWeaponController.Init(mainWeapon);
+            weaponController.enabled = true;
+            weaponController.Init(mainWeapon);
             mainWeapon.Init();
         }
 
@@ -69,11 +68,11 @@ public class MechLoader : MonoBehaviour
 
         if(battleLoadout)
         {
-            altWeaponController.enabled = true;
-            altWeaponController.Init(altWeapon);
+            weaponController.enabled = true;
+            weaponController.Init(altWeapon);
             altWeapon.Init();
             weaponModManager.weapon = altWeapon;
-            weaponModManager.altWeapon = altWeaponController;
+            weaponModManager.altWeapon = weaponController;
         }
 
     }
