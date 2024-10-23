@@ -13,6 +13,8 @@ public class TargetHealth : MonoBehaviour
     private MechHealth _mech;
     private Prop _prop;
 
+    public List<WeaponType> immuneWeapons;
+
     public void Init()
     {
         health = maxHealth;
@@ -46,6 +48,14 @@ public class TargetHealth : MonoBehaviour
         if (invincible)
         {
             damage = 0;
+        }
+
+        foreach(WeaponType immuneWeapon in immuneWeapons)
+        {
+            if(immuneWeapon == weaponType)
+            {
+                damage = 0;
+            }
         }
 
         if (_mech != null)

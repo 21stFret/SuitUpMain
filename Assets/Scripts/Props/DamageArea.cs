@@ -7,6 +7,7 @@ public class DamageArea : MonoBehaviour
     public float damageRadius = 2f;
     public float damageInterval = 1f;
     public float damageAmount = 10f;
+    public float damageDuration = 5f;
     public WeaponType damageType = WeaponType.Flame; // Default to Fire, but can be changed
     public bool damageActive = true; // Control whether damage is being dealt
 
@@ -36,6 +37,10 @@ public class DamageArea : MonoBehaviour
             {
                 targetsInRange.Add(targetHealth);
             }
+        }
+        if (damageDuration > 0)
+        {
+            StartCoroutine(DisableDamageAreaRoutine());
         }
     }
 
@@ -79,6 +84,12 @@ public class DamageArea : MonoBehaviour
         }
     }
 
+    private IEnumerator DisableDamageAreaRoutine()
+    {
+        yield return new WaitForSeconds(damageDuration);
+        damageActive = false;
+    }
+
     // Public method to activate/deactivate damage
     public void SetDamageActive(bool active)
     {
@@ -105,5 +116,24 @@ public class DamageArea : MonoBehaviour
         {
             triggerCollider.radius = damageRadius;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Store original gizmo color
+        Color originalColor = Gizmos.color;
+
+        // Set the color (you can adjust these values)
+        Gizmos.color = Color.red;
+
+        // Draw a wire sphere for the radius
+        Gizmos.DrawWireSphere(transform.position, damageRadius);
+
+        // Optional: Draw lines for cardinal directions
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * damageRadius);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * damageRadius);
+
+        // Restore original color
+        Gizmos.color = originalColor;
     }
 }
