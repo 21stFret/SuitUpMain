@@ -72,7 +72,7 @@ public class AirDropCrate : MonoBehaviour
         switch (crateType)
         {
             case CrateType.Repair:
-                MechBattleController.instance.RepairArmour();
+                BattleMech.instance.RepairArmour();
                 break;
             case CrateType.Weapon:
                 //swap weapon

@@ -59,7 +59,7 @@ public class RunModifierDataReader : MonoBehaviour
                 if (mod != "")
                 {
                     rMod.modifiers.Add(new Modifier());
-                    rMod.modifiers[j].modType = (ModType)System.Enum.Parse(typeof(ModType), mod);
+                    rMod.modifiers[j].statType = (StatType)System.Enum.Parse(typeof(StatType), mod);
                     rMod.modValues.Add(new ModValues());
                     for (int k = 0; k < 3; k++)
                     {

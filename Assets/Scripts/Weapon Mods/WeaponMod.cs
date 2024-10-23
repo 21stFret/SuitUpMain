@@ -30,20 +30,20 @@ public class WeaponMod : MonoBehaviour
     {
         foreach(Modifier mod in RunMod.modifiers)
         {
-            var value = mod.modValue / 100; 
+            var value = mod.statValue / 100; 
 
-            switch(mod.modType)
+            switch(mod.statType)
             {
-                case ModType.BaseDamage:     
+                case StatType.MWD_Increase_Percent:     
                     damage += value * damage;
                     break;
-                case ModType.FireRate:
+                case StatType.FireRate:
                     baseWeapon.fireRate -= value * baseWeapon.fireRate;
                     break;
-                case ModType.FuelRate:
+                case StatType.FuelRate:
                     modFuelCost -= value * modFuelCost;
                     break;
-                case ModType.Unique:
+                case StatType.Unique:
                     break;
             }
         }

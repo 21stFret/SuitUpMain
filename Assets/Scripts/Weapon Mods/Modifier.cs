@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ModType
+public enum StatType
 {
-    BaseDamage,
-    BaseAltDamage,
+    MWD_Increase_Percent,
+    AWD_Increase_Percent,
     Time,
     Health,
     FireRate,
     FuelRate,
     Speed,
     Unique,
-    AWD,
-    MWD,
+    AWD_Percent,
+    MWD_Percent,
     Healing,
     Stun
 
@@ -22,6 +22,6 @@ public enum ModType
 [System.Serializable]
 public class Modifier
 { 
-    public ModType modType;
-    public float modValue;
+    public StatType statType;
+    public float statValue;
 }

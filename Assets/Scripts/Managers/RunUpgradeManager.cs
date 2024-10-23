@@ -19,7 +19,8 @@ public enum ModCategory
     DRONE,
     PULSE,
     DASH,
-    STATS
+    STATS,
+    Default
 }
 public class RunUpgradeManager : MonoBehaviour
 {
@@ -27,17 +28,26 @@ public class RunUpgradeManager : MonoBehaviour
     public ModUI ModUI;
     public WeaponModManager weaponModManager;
     public PulseShockwave pulseShockwave;
-    public MYCharacterController mYCharacterController;
+    public StatMultiplierManager statManager; // Reference to StatMultiplierManager
+    [HideInInspector]
     public List<RunMod> runModsAssault = new List<RunMod>();
+    [HideInInspector]
     public List<RunMod> runModsTech = new List<RunMod>();
+    [HideInInspector]
     public List<RunMod> runModsTank = new List<RunMod>();
+    [HideInInspector]
     public List<RunMod> runModsAgility = new List<RunMod>();
+    [HideInInspector]
     public List<RunMod> listMods = new List<RunMod>();
+    public List<RunMod> currentEquipedMods = new List<RunMod>();
     public RunModifierDataReader runModifierDataReader;
+    [HideInInspector]
     public List<ModBuildType> randomlySelectedBuilds = new List<ModBuildType>();
 
     [InspectorButton("OnButtonClicked")]
     public bool ReadData;
+
+    public ModCategory OverideCategory;
 
     public void SelectNextBuilds()
     {
@@ -72,7 +82,7 @@ public class RunUpgradeManager : MonoBehaviour
         runModsTank.Clear();
         runModsAgility.Clear();
     }
-   
+
     public void GenerateListOfUpgradesFromAll(ModBuildType build)
     {
         listMods.Clear();
@@ -110,6 +120,14 @@ public class RunUpgradeManager : MonoBehaviour
                     continue;
                 }
 
+                if (OverideCategory != ModCategory.Default)
+                {
+                    if (mod.modCategory != OverideCategory)
+                    {
+                        continue;
+                    }
+                }
+
                 if (mod.modCategory == ModCategory.ALT)
                 {
                     mod = FilterAltWeaponMods(selectedMods);
@@ -131,7 +149,7 @@ public class RunUpgradeManager : MonoBehaviour
             {
                 Debug.LogWarning($"No mod found for {build}");
             }
-                
+
             maxAttempts--;
         }
 
@@ -191,7 +209,7 @@ public class RunUpgradeManager : MonoBehaviour
 
         for (int j = 0; j < mod.modifiers.Count; j++)
         {
-            mod.modifiers[j].modValue = mod.modValues[j].values[mod.rarity];
+            mod.modifiers[j].statValue = mod.modValues[j].values[mod.rarity];
         }
     }
 
@@ -203,6 +221,23 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void EnableModSelection(RunMod mod)
     {
+        if(mod.modCategory != ModCategory.STATS)
+        {
+            if (currentEquipedMods.Contains(mod))
+            {
+                var _mod = currentEquipedMods.Find(m => m == mod);
+                if (_mod.rarity >= mod.rarity)
+                {
+                    Debug.Log($"Already equipped a better rarity. Current: {_mod.rarity}, New: {mod.rarity}");
+                    return;
+                }
+                // Remove the old mod if we're upgrading
+                RemoveMod(_mod);
+            }
+        }
+
+        currentEquipedMods.Add(mod);
+
         switch (mod.modCategory)
         {
             case ModCategory.MAIN:
@@ -214,27 +249,77 @@ public class RunUpgradeManager : MonoBehaviour
                 weaponModManager.EquipWeaponMod(Wmod);
                 break;
             case ModCategory.DRONE:
+                // Implement drone mod logic if needed
                 break;
             case ModCategory.PULSE:
                 for (int i = 0; i < mod.modifiers.Count; i++)
                 {
                     var modifier = mod.modifiers[i];
-                    pulseShockwave.ApplyMod(modifier.modType, modifier.modValue);
+                    pulseShockwave.ApplyMod(modifier.statType, modifier.statValue);
                 }
                 break;
             case ModCategory.DASH:
+                // Implement dash mod logic if needed
                 break;
             case ModCategory.STATS:
-                for (int i = 0; i < mod.modifiers.Count; i++)
-                {
-                    var modifier = mod.modifiers[i];
-                    MechStats.instance.ApplyStats(modifier.modType, modifier.modValue);
-                }
+                ApplyStatModifiers(mod);
                 break;
         }
 
         ModUI.CloseModUI();
         GameManager.instance.SpawnPortalsToNextRoom();
+    }
+
+    private void ApplyStatModifiers(RunMod mod)
+    {
+        foreach (var modifier in mod.modifiers)
+        {
+            statManager.AddMultiplier(modifier.statType, modifier.statValue);
+        }
+    }
+
+    private void RemoveMod(RunMod mod)
+    {
+        currentEquipedMods.Remove(mod);
+
+        if (mod.modCategory == ModCategory.STATS)
+        {
+            foreach (var modifier in mod.modifiers)
+            {
+                statManager.RemoveMultiplier(modifier.statType, modifier.statValue);
+            }
+        }
+
+        // Implement removal logic for other mod categories if needed
+    }
+
+    public void ResetAllMods()
+    {
+        foreach (var mod in currentEquipedMods)
+        {
+            RemoveMod(mod);
+        }
+        currentEquipedMods.Clear();
+
+        // Reset all stat multipliers
+        foreach (StatType statType in System.Enum.GetValues(typeof(StatType)))
+        {
+            statManager.ClearMultipliers(statType);
+        }
+    }
+
+    // This method can be called to recalculate all stats if needed
+    public void RecalculateAllStats()
+    {
+        ResetAllMods();
+        foreach (var mod in currentEquipedMods)
+        {
+            if (mod.modCategory == ModCategory.STATS)
+            {
+                ApplyStatModifiers(mod);
+            }
+            // Re-apply other mod types if necessary
+        }
     }
 
 }

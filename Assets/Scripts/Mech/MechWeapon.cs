@@ -6,11 +6,10 @@ public enum WeaponType
 {
     Minigun,
     Shotgun,
+    Plasma,
     Flame,
     Lightning,
     Cryo,
-    Grenade,
-    Plasma,
     AoE,
     Cralwer,
     Default

@@ -7,7 +7,7 @@ public class TutorialManager : MonoBehaviour
 {
     public SceneLoader sceneLoader;
     public MYCharacterController myCharacterController;
-    public ManualWeaponController manualWeaponController;
+    public WeaponController manualWeaponController;
     public DroneController droneController;
     public TutorialUI tutorialUI;
     public PlayerInput playerInput;
@@ -210,12 +210,12 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.Combat:
-                if (!hasFiredPrimary && manualWeaponController.equipedWeaponP.isFiring)
+                if (!hasFiredPrimary && manualWeaponController.mainWeaponEquiped.isFiring)
                 {
                     hasFiredPrimary = true;
                     tutorialUI.SetControlGreen(0);
                 }
-                if (!hasFiredSecondary && manualWeaponController.equipedWeapon.isFiring)
+                if (!hasFiredSecondary && manualWeaponController.altWeaponEquiped.isFiring)
                 {
                     hasFiredSecondary = true;
                     tutorialUI.SetControlGreen(1);

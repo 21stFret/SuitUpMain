@@ -120,7 +120,7 @@ public class MechHealth : MonoBehaviour
             value.text = health.ToString() + "/" + targetHealth.maxHealth;
             DOTween.Kill(image);
             image.fillAmount = 0;
-            MechBattleController.instance.OnDie();
+            BattleMech.instance.OnDie();
             targetHealth.alive = false;
             deathEffect.SetActive(true);
             AudioManager.instance.PlaySFXFromClip(deathClip);

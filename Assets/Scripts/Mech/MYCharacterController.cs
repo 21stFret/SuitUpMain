@@ -12,6 +12,7 @@ public class MYCharacterController : MonoBehaviour
     private Rigidbody _rigidbody;
     public Animator CharacterAnimator;
     public float Speed;
+    public float minSpeed;
     public float rotateSpeed;
     private Vector3 direction = Vector3.forward;
     public bool isAimLocked;
@@ -27,7 +28,7 @@ public class MYCharacterController : MonoBehaviour
     public float dashCooldown;
     public ParticleSystem dashEffect, dashEffect2;
     public MeshRenderer dashShoes, dashShoes2;
-    public ManualWeaponController manualWeaponController;
+    public WeaponController manualWeaponController;
     public ParticleSystem footStep, footStep2;
     public bool candodge;
     public FootprintSystem footprintSystem;
@@ -199,9 +200,17 @@ public class MYCharacterController : MonoBehaviour
         {
             direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
             direction.Normalize();
-
             float inputedSpeed = _moveInputVector.magnitude * Speed;
-            inputedSpeed = inputedSpeed * MechStats.instance.speedMultiplier;
+            float bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
+            if (bonusSpeed != 0)
+            {
+                print("Speed Bonus: " + bonusSpeed);
+                inputedSpeed = bonusSpeed;
+                if (inputedSpeed <= 0)
+                {
+                    inputedSpeed = minSpeed;
+                }
+            }
             _rigidbody.AddForce(direction * inputedSpeed);
 
         }

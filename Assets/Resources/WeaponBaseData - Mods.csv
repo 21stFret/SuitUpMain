@@ -1,52 +1,52 @@
 Build,Category,Weapon,Name,Description,Modifier0,Value00,Value01,Value02,Modifier1,Value10,Value11,Value12
-ASSAULT ,MAIN,Minigun,Overheat,MWD are increased by X% but needs to cool down after X seconds,BaseDamage,20.00,25.00,30.00,Time,3.00,4.00,5.00
+ASSAULT ,MAIN,Minigun,Overheat,MWD are increased by X% but needs to cool down after X seconds,MWD_Increase_Percent,20.00,25.00,30.00,Time,3.00,4.00,5.00
 ASSAULT ,MAIN,Shotgun,Fragment,X more shots X% more spread,Unique,1.00,2.00,3.00,Unique,10.00,20.00,30.00
-ASSAULT ,MAIN,Plasma,Erazer,Pierce is reduced by X and damage is increased by X%,Unique,3.00,2.00,1.00,BaseDamage,20.00,25.00,30.00
-ASSAULT ,ALT,Flame,Splitter,Adds 2 flames with X% of AWD and Fuel Rate is increased by X%,AWD,5.00,10.00,15.00,FuelRate,-50.00,-40.00,-30.00
-ASSAULT ,ALT,Lightning,Static Warp,Teleport to enemy dealing X% of AWD within a range of X,AWD,50.00,75.00,100.00,Unique,5.00,7.50,10.00
-ASSAULT ,ALT,Cryo,Fracture,Frozen enemies explode on death dealing X% of AWD,AWD,10.00,20.00,30.00,,,,
-ASSAULT ,DASH,,Charge,Dash deals X% of MWD,MWD,5.00,10.00,20.00,,,,
-ASSAULT ,DRONE,,Orbital Strike,Swaps Drone to a beam that lasts for X seconds doing X% Damage per second,Unique,5.00,6.00,7.00,MWD,100.00,150.00,200.00
-ASSAULT ,PULSE,,Shockwave,"Pulse deals X% of MWD, pulse distance is decreased X%",MWD,5.00,7.00,10.00,Unique,50.00,40.00,30.00
-ASSAULT ,STATS,,Power Up,MWD increased by X%,BaseDamage,5.00,7.00,10.00,,,,
-ASSAULT ,STATS,,Break Shot,"MWD increased by X%, Max Health reduced by X%",BaseDamage,10.00,15.00,20.00,Health,-25.00,-23.00,-20.00
-ASSAULT ,STATS,,Energy Conversion,"MWD increased by X%, AWD reduced by X%",BaseDamage,7.00,10.00,12.00,AWD,-12.00,-10.00,-7.00
-TECH,MAIN,Minigun,Burst,Fire in short bursts and MWD increase by X%,BaseDamage,5.00,7.00,10.00,,,,
+ASSAULT ,MAIN,Plasma,Erazer,Pierce is reduced by X and damage is increased by X%,Unique,3.00,2.00,1.00,MWD_Increase_Percent,20.00,25.00,30.00
+ASSAULT ,ALT,Flame,Splitter,Adds 2 flames with X% of AWD and Fuel Rate is increased by X%,AWD_Percent,5.00,10.00,15.00,FuelRate,-50.00,-40.00,-30.00
+ASSAULT ,ALT,Lightning,Static Warp,Teleport to enemy dealing X% of AWD within a range of X,AWD_Percent,50.00,75.00,100.00,Unique,5.00,7.50,10.00
+ASSAULT ,ALT,Cryo,Fracture,Frozen enemies explode on death dealing X% of AWD,AWD_Percent,10.00,20.00,30.00,,,,
+ASSAULT ,DASH,,Charge,Dash deals X% of MWD,MWD_Percent,5.00,10.00,20.00,,,,
+ASSAULT ,DRONE,,Orbital Strike,Swaps Drone to a beam that lasts for X seconds doing X% Damage per second,Unique,5.00,6.00,7.00,MWD_Percent,100.00,150.00,200.00
+ASSAULT ,PULSE,,Shockwave,"Pulse deals X% of MWD, pulse distance is decreased X%",MWD_Percent,5.00,7.00,10.00,Unique,50.00,40.00,30.00
+ASSAULT ,STATS,,Power Up,MWD increased by X%,MWD_Increase_Percent,5.00,7.00,10.00,,,,
+ASSAULT ,STATS,,Break Shot,"MWD increased by X%, Max Health reduced by X%",MWD_Increase_Percent,10.00,15.00,20.00,Health,-25.00,-23.00,-20.00
+ASSAULT ,STATS,,Energy Conversion,"MWD increased by X%, AWD reduced by X%",MWD_Increase_Percent,7.00,10.00,12.00,AWD_Increase_Percent,-12.00,-10.00,-7.00
+TECH,MAIN,Minigun,Burst,Fire in short bursts and MWD increase by X%,MWD_Increase_Percent,5.00,7.00,10.00,,,,
 TECH,MAIN,Shotgun,Taser,Shots stun for X seconds,Stun,-0.15,-0.25,-0.50,,,,
-TECH,MAIN,Plasma,Energy Blast,Killed enemies leave burning areas for X seconds dealing X% of AWD,Time,1.00,2.00,3.00,AWD,10.00,20.00,30.00
-TECH,ALT,Flame,Napalm,Flame leaves burning areas dealing X% AWD for X seconds,AWD,30.00,50.00,80.00,Time,1.00,1.50,2.00
-TECH,ALT,Lightning,Arc Reactor,Shoots a lightning orb chaining to up to 5 enemies dealing X% of AWD for X seconds,AWD,50.00,90.00,120.00,Time,2.00,3.00,4.00
+TECH,MAIN,Plasma,Energy Blast,Killed enemies leave burning areas for X seconds dealing X% of AWD,Time,1.00,2.00,3.00,AWD_Percent,10.00,20.00,30.00
+TECH,ALT,Flame,Napalm,Flame leaves burning areas dealing X% AWD for X seconds,AWD_Percent,30.00,50.00,80.00,Time,1.00,1.50,2.00
+TECH,ALT,Lightning,Arc Reactor,Shoots a lightning orb chaining to up to 5 enemies dealing X% of AWD for X seconds,AWD_Percent,50.00,90.00,120.00,Time,2.00,3.00,4.00
 TECH,ALT,Cryo,Zero Point,Frozen duration increased by X seconds and fuel rate is reduced X%,Stun,1.00,1.50,2.00,FuelRate,10.00,15.00,20.00
-TECH,DASH,,Hologram,Leave a hologram that explodes after X seconds dealing X% of AWD,Time,2.00,2.50,3.00,AWD,10.00,15.00,20.00
-TECH,DRONE,,Little Boy,Swaps Drone to a large bomb that deals X% of AWD with AW effect,AWD,200.00,300.00,400.00,,,,
+TECH,DASH,,Hologram,Leave a hologram that explodes after X seconds dealing X% of AWD,Time,2.00,2.50,3.00,AWD_Percent,10.00,15.00,20.00
+TECH,DRONE,,Little Boy,Swaps Drone to a large bomb that deals X% of AWD with AW effect,AWD_Percent,200.00,300.00,400.00,,,,
 TECH,PULSE,,Absorb,Charge X% of Max fuel for every enemy hit,Unique,5.00,7.00,10.00,,,,
-TECH,STATS,,Converter,Base AWD increased by X%,BaseAltDamage,5.00,7.00,10.00,,,,
-TECH,STATS,,Redistribution,"Base AWD increased by X%, reduced MWD by X%",BaseAltDamage,7.00,10.00,12.00,BaseDamage,-12.00,-10.00,-7.00
+TECH,STATS,,Converter,Base AWD increased by X%,AWD_Increase_Percent,5.00,7.00,10.00,,,,
+TECH,STATS,,Redistribution,"Base AWD increased by X%, reduced MWD by X%",AWD_Increase_Percent,7.00,10.00,12.00,MWD_Increase_Percent,-12.00,-10.00,-7.00
 TECH,STATS,,Optimization,Improved fuel consumption by X%,FuelRate,15.00,20.00,25.00,,,,
 TECH,STATS,,Auxiliary Circuit,"Improved fuel consumption by X%, reduce speed by X%",FuelRate,20.00,30.00,40.00,Speed,15.00,10.00,8.00
-TANK,MAIN,Minigun,Bulwark,"Max Health increased by X%, MWD increased by X%, cannot move while firing",Health,5.00,7.00,10.00,BaseDamage,-15.00,-13.00,-10.00
-TANK,MAIN,Shotgun,Cannon,"MWD increased by X%, Fire Rate decreased by X%",BaseDamage,3.00,2.00,1.00,FireRate,10.00,20.00,30.00
-TANK,MAIN,Plasma,Beam,"Fires a beam, piercing all enemies, dealing X% MWD, Fuel Rate increased by X%",MWD,120.00,135.00,150.00,FuelRate,-60.00,-50.00,-40.00
-TANK,ALT,Flame,Grenade,Becomes a grenade dealing X% AWD and fuel rate increased by X%,AWD,150.00,175.00,200.00,FuelRate,-30.00,-25.00,-20.00
-TANK,ALT,Lightning,Mjolnir,Rod doesn't chain but causes a lightning bolt dealing X% of AWD,AWD,200.00,250.00,300.00,,,,
-TANK,ALT,Cryo,The Wall,Creates a wall of Ice for X seconds and deals X% of AWD per second to nearby enemies,Time,3.00,4.00,5.00,AWD,50.00,60.00,70.00
+TANK,MAIN,Minigun,Bulwark,"Max Health increased by X%, MWD increased by X%, cannot move while firing",Health,5.00,7.00,10.00,MWD_Increase_Percent,-15.00,-13.00,-10.00
+TANK,MAIN,Shotgun,Cannon,"MWD increased by X%, Fire Rate decreased by X%",MWD_Increase_Percent,10.00,20.00,30.00,FireRate,-25.00,-20.00,-15.00
+TANK,MAIN,Plasma,Beam,"Fires a beam, piercing all enemies, dealing X% MWD, Fuel Rate increased by X%",MWD_Percent,120.00,135.00,150.00,FuelRate,-60.00,-50.00,-40.00
+TANK,ALT,Flame,Grenade,Becomes a grenade dealing X% AWD and fuel rate increased by X%,AWD_Percent,150.00,175.00,200.00,FuelRate,-30.00,-25.00,-20.00
+TANK,ALT,Lightning,Mjolnir,Rod doesn't chain but causes a lightning bolt dealing X% of AWD,AWD_Percent,200.00,250.00,300.00,,,,
+TANK,ALT,Cryo,The Wall,Creates a wall of Ice for X seconds and deals X% of AWD per second to nearby enemies,Time,3.00,4.00,5.00,AWD_Percent,50.00,60.00,70.00
 TANK,DASH,,Sturdy,You can't dash but become invincible for X seconds,Time,1.00,2.00,3.00,,,,
 TANK,DRONE,,Repair,Swaps Drone for a repair repairing X% Max Health over X seconds,Healing,20.00,25.00,30.00,Time,4.00,3.50,3.00
 TANK,PULSE,,Force,Pulse pushes X% further,Unique,20.00,30.00,40.00,,,,
-TANK,STATS,,Dig In,MWD increased by X% Speed reduced by X%,BaseDamage,5.00,7.00,10.00,Speed,-15.00,-13.00,-10.00
-TANK,STATS,,Technician,AWD increased by X% Speed reduced by X%,BaseAltDamage,5.00,7.00,10.00,Speed,-15.00,-13.00,-10.00
+TANK,STATS,,Dig In,MWD increased by X% Speed reduced by X%,MWD_Increase_Percent,5.00,7.00,10.00,Speed,-15.00,-13.00,-10.00
+TANK,STATS,,Technician,AWD increased by X% Speed reduced by X%,AWD_Increase_Percent,5.00,7.00,10.00,Speed,-15.00,-13.00,-10.00
 TANK,STATS,,Reinforce,Max Health is increased by X%,Health,10.00,20.00,30.00,,,,
 TANK,STATS,,Reinforce,"Max Health is increased by X%, Speed reduced by X%",Health,10.00,20.00,30.00,Speed,-15.00,-13.00,-10.00
-TANK,STATS,,Feedback,Melee attackers take X% of MWD,AWD,100.00,150.00,200.00,,,,
+TANK,STATS,,Feedback,Melee attackers take X% of AWD,AWD_Percent,100.00,150.00,200.00,,,,
 TANK,STATS,,Nano Bots,Heal X% of Max Health on kill,Healing,1.00,1.50,2.00,,,,
-AGILITY,MAIN,Minigun,Rubber Bullets,Shots bounce X times but X% less powerful,Unique,1.00,1.00,2.00,BaseDamage,-30.00,-25.00,-20.00
-AGILITY,MAIN,Shotgun,Compressor,Increases knockback and damage by X%,Unique,20.00,30.00,35.00,BaseDamage,5.00,10.00,15.00
-AGILITY,MAIN,Plasma,Mirror Chamber,Fire Rate increased by X% and damage decreased by X%,FireRate,20.00,15.00,10.00,BaseDamage,-30.00,-25.00,-20.00
+AGILITY,MAIN,Minigun,Rubber Bullets,Shots bounce X times but X% less powerful,Unique,1.00,1.00,2.00,MWD_Increase_Percent,-30.00,-25.00,-20.00
+AGILITY,MAIN,Shotgun,Compressor,Increases knockback and damage by X%,Unique,20.00,30.00,35.00,MWD_Increase_Percent,5.00,10.00,15.00
+AGILITY,MAIN,Plasma,Mirror Chamber,Fire Rate increased by X% and damage decreased by X%,FireRate,20.00,15.00,10.00,MWD_Increase_Percent,-30.00,-25.00,-20.00
 AGILITY,ALT,Flame,Heat Conversion,Fuel consumption is reduced by X% and speed increased by X%,FuelRate,10.00,15.00,20.00,Speed,5.00,10.00,15.00
 AGILITY,ALT,Lightning,Chainer,Increases chain amount by X,Unique,1.00,2.00,3.00,,,,
 AGILITY,ALT,Cryo,Dry Ice,Fire Rate increased by X% and Fuel Rate improved by X%,FireRate,5.00,10.00,15.00,FuelRate,5.00,10.00,15.00
 AGILITY,DASH,,Lubricant,Gain a movement boost for X seconds after a dash,Time,1.00,2.00,3.00,,,,
-AGILITY,DRONE,,Companion,Swaps Drone for a hovering minigun dealing X% of MWD for X seconds,MWD,50.00,75.00,100.00,Time,10.00,15.00,20.00
+AGILITY,DRONE,,Companion,Swaps Drone for a hovering minigun dealing X% of MWD for X seconds,MWD_Percent,50.00,75.00,100.00,Time,10.00,15.00,20.00
 AGILITY,PULSE,,Gravity Field,Pulse doesn't push but stuns for X seconds,Stun,1.00,2.00,3.00,,,,
 AGILITY,STATS,,Aerodynamics,Increase move speed by X%,Speed,10.00,15.00,20.00,,,,
 AGILITY,STATS,,Signal Booster,Drone Charge improved by X%,Unique,10.00,15.00,20.00,,,,

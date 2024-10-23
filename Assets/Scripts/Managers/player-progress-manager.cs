@@ -119,7 +119,7 @@ public class PlayerProgressManager : MonoBehaviour
             case WeaponType.Cryo:
                 UpdateCryoAchievements(count);
                 break;
-            case WeaponType.Grenade:
+            case WeaponType.AoE:
                 UpdateGrenadeAchievements(count);
                 break;
         }

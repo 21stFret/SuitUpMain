@@ -26,6 +26,21 @@ public class TargetHealth : MonoBehaviour
         }
     }
 
+    public void SetNewMaxHealth()
+    {
+        maxHealth = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Health);
+        if(maxHealth<=0)
+        {
+            maxHealth = 1;
+        }
+        if(health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        _mech.UpdateHealth(health, true);
+    }
+
+
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {
         if (invincible)
@@ -33,29 +48,75 @@ public class TargetHealth : MonoBehaviour
             damage = 0;
         }
 
+        if (_mech != null)
+        {
+            _mech.TakeDamage(damage);
+            return;
+        }
+
+        float newDam = ApplyDamageMultiplier(damage, weaponType);
+
+        //print("Base Damage: " + baseDamage);
+        if(newDam > 0)
+        {
+            damage = newDam;
+            //print("New Damage: " + damage);
+        }
+ 
+
+        if (_prop != null)
+        {
+            _prop.TakeDamage(damage, weaponType);
+            return;
+        }
+
         if (_crawler != null)
         {
-            damage = damage * MechStats.instance.damageMultiplier;
-            if(weaponType == WeaponType.Cralwer)
+            if (weaponType == WeaponType.Cralwer)
             {
                 return;
             }
             _crawler.TakeDamage(damage, weaponType, stunTime);
         }
-
-        if (_mech != null)
-        {
-            _mech.TakeDamage(damage);
-        }
-
-        if (_prop != null)
-        {
-            _prop.TakeDamage(damage, weaponType);
-        }
     }
 
-    public void RepairMech(float amount)
+    public float ApplyDamageMultiplier(float damage, WeaponType weaponType)
     {
-        _mech.UpdateHealth(amount, true);
+        float newDamage = damage;
+        int multiplierType = AscertainMultiplier(weaponType);
+
+        if (multiplierType == 1)
+        {
+            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.MWD_Increase_Percent);
+        }
+        else if (multiplierType == 2)
+        {
+            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.AWD_Increase_Percent);
+        }
+
+        return newDamage;
+    }
+
+    private int AscertainMultiplier(WeaponType weaponType)
+    {
+        switch(weaponType)
+            {
+            case WeaponType.Minigun:
+                return 1;
+            case WeaponType.Shotgun:
+                return 1;
+            case WeaponType.Plasma:
+                return 1;
+            case WeaponType.Cryo:
+                return 2;
+            case WeaponType.Lightning:
+                return 2;
+            case WeaponType.Flame:
+                return 2;
+            case WeaponType.Cralwer:
+                return 0;
+            default:
+                return 0;
+        }
     }
 }

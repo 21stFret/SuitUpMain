@@ -81,7 +81,7 @@ public class Grenade : MonoBehaviour
             }
             if (hit.CompareTag("Enemy"))
             {
-                hit.GetComponent<Crawler>().DealyedDamage(damage, 0.5f, WeaponType.Grenade);
+                hit.GetComponent<Crawler>().DealyedDamage(damage, 0.5f, WeaponType.AoE);
             }
         }
         live = false;
