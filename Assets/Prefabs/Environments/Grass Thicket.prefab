@@ -150,6 +150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2380276135538042222}
   - component: {fileID: 664476203961752481}
+  - component: {fileID: 2771071177534729500}
   m_Layer: 13
   m_Name: DamageTime
   m_TagString: Untagged
@@ -190,6 +191,27 @@ MonoBehaviour:
   damageDuration: 0
   damageType: 3
   damageActive: 1
+--- !u!135 &2771071177534729500
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2671549553296598927}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3137336814839239430
 GameObject:
   m_ObjectHideFlags: 0
