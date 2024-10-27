@@ -129,6 +129,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  immuneWeapons: 
 --- !u!54 &3423326606573249130
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -171,7 +172,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 7257537869699536365}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
-  weaponType: 0
+  weaponType: 3
   explosionForce: 10
   explosionRadius: 7.5
   upwardsModifier: 3
@@ -179,14 +180,14 @@ MonoBehaviour:
   explosionEffect: {fileID: 6132995402259027068}
   layerMask:
     serializedVersion: 2
-    m_Bits: 4416
+    m_Bits: 266560
   prefab: {fileID: 1640948532861070197}
-  fuseTime: 0
-  fuseCount: 0
+  fuseTime: 1
+  fuseCount: 2
   explosionRadiusPrefab: {fileID: 8271811927204544192}
   warningLight: {fileID: 6764963261665574034}
   isFuseActive: 0
-  flashTime: 0
+  flashTime: 0.5
   audioClips:
   - {fileID: 8300000, guid: e49a8a34f479db846af1106a5fe97951, type: 3}
   - {fileID: 8300000, guid: 75c2520332d47c543ab6ecbed510a94f, type: 3}
@@ -194,6 +195,7 @@ MonoBehaviour:
   explosionSound: {fileID: 5159529057637883068}
   warningNoise: {fileID: 8300000, guid: 1495060bbdc8fcd4a85206fba504169f, type: 3}
   breakableObject: {fileID: 2317038546311350862}
+  damageArea: {fileID: 0}
 --- !u!82 &5159529057637883068
 AudioSource:
   m_ObjectHideFlags: 0
@@ -391,7 +393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3119201365507565124
 Transform:
   m_ObjectHideFlags: 0
@@ -400,13 +402,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8271811927204544192}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.0145430425, y: 0.032050215, z: 0.63655454, w: 0.77042824}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 15, y: 15, z: 15}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1504662619259420839}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -3.624, y: 1.773, z: 79.073}
 --- !u!33 &3753661767601892481
 MeshFilter:
   m_ObjectHideFlags: 0

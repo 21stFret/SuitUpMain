@@ -60,6 +60,7 @@ MonoBehaviour:
   burnedGrassPrefab: {fileID: 5677360931112643754}
   fireEffect: {fileID: 7833055423483586294}
   fireDamage: {fileID: 664476203961752481}
+  fireLight: {fileID: 8263869950104068640}
 --- !u!114 &6849771450873759248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,10 +97,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 3
-  m_Height: 9.906586
+  m_Radius: 3.5
+  m_Height: 10
   m_Direction: 1
-  m_Center: {x: 1.04, y: 1.55, z: -1.02}
+  m_Center: {x: 0, y: 1.42, z: 0}
 --- !u!1 &1947671160555534447
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,8 +187,8 @@ MonoBehaviour:
   damageRadius: 4
   damageInterval: 0.5
   damageAmount: 0.5
-  damageDuration: 5
-  damageType: 2
+  damageDuration: 0
+  damageType: 3
   damageActive: 1
 --- !u!1 &3137336814839239430
 GameObject:
@@ -9837,7 +9838,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.9275862, b: 0.6911765, a: 1}
-  m_Intensity: 2.7
+  m_Intensity: 0
   m_Range: 250
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

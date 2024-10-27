@@ -32,6 +32,10 @@ public class MYCharacterController : MonoBehaviour
     public ParticleSystem footStep, footStep2;
     public bool candodge;
     public FootprintSystem footprintSystem;
+    public ParticleSystem icedEffect;
+    private bool isSlowed;
+    public float slowedDuration = 2f;
+    public float slowedAmount = 0.5f;
 
     private void Awake()
     {
@@ -173,6 +177,10 @@ public class MYCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 icedPos = transform.position;
+        icedPos.y += 2.6f;
+        icedEffect.transform.position = icedPos;
+
         if (isAimLocked)
         {
             if (aimDirectionLoc == Vector3.zero)
@@ -211,6 +219,10 @@ public class MYCharacterController : MonoBehaviour
                     inputedSpeed = minSpeed;
                 }
             }
+            if(isSlowed)
+            {
+                inputedSpeed *= slowedAmount;
+            }
             _rigidbody.AddForce(direction * inputedSpeed);
 
         }
@@ -228,6 +240,21 @@ public class MYCharacterController : MonoBehaviour
             distanceTravelled += Vector3.Distance(transform.position, lastPos);
             lastPos = transform.position;
         }
+    }
+
+    public void ApplySlow()
+    {
+        icedEffect.Play();
+        icedEffect.transform.parent = null;
+        isSlowed = true;
+        StartCoroutine(SlowEffect());
+    }
+
+    private IEnumerator SlowEffect()
+    {
+        yield return new WaitForSeconds(slowedDuration);
+        isSlowed = false;
+        icedEffect.Stop();
     }
 
 }

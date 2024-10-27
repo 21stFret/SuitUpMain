@@ -13,6 +13,7 @@ public class ExplodingBarrel : Prop
     public LayerMask layerMask;
     public GameObject prefab;
     public float fuseTime;
+    private float _fuseTimer;
     public int fuseCount;
     public GameObject explosionRadiusPrefab;
     public Light warningLight;
@@ -41,6 +42,7 @@ public class ExplodingBarrel : Prop
         explosionSound.Stop();
         breakableObject.transform.parent = this.transform;
         rb = GetComponent<Rigidbody>();
+        _fuseTimer = 0;
     }
 
     public override void Die()
@@ -58,12 +60,17 @@ public class ExplodingBarrel : Prop
 
     private void Explode()
     {
+        bool isPlayer = false;
         isFuseActive = false;
         rb.isKinematic = true;
         GetComponent<Collider>().enabled = false;
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
         foreach (Collider collider in colliders)
         {
+            if (isPlayer)
+            {
+                continue;
+            }
             TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
             if (targetHealth != null)
             {
@@ -73,6 +80,10 @@ public class ExplodingBarrel : Prop
             if (rb != null)
             {
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, upwardsModifier, ForceMode.Impulse);
+            }
+            if (collider.CompareTag("Player"))
+            {
+                isPlayer = true;
             }
         }
         breakableObject.transform.parent = null;
@@ -90,11 +101,9 @@ public class ExplodingBarrel : Prop
 
     public void TimerDelay()
     {
-        
-        fuseTime -= Time.deltaTime;
-        if(fuseCount>1)
+        if(fuseCount>0)
         {
-            if (fuseTime < flashTime)
+            if (_fuseTimer < flashTime)
             {
                 warningLight.enabled = true;
                 explosionRadiusPrefab.SetActive(true);
@@ -115,7 +124,7 @@ public class ExplodingBarrel : Prop
             warningLight.enabled = false;
             explosionRadiusPrefab.SetActive(false);
         }
-        if (fuseTime <= 0)
+        if (_fuseTimer >= fuseTime)
         {
             fuseCount--;
             if (fuseCount <= 0)
@@ -125,8 +134,29 @@ public class ExplodingBarrel : Prop
             }
             else
             {
-                fuseTime = 1;
+                _fuseTimer = 0;
             }
         }
+
+        _fuseTimer += Time.deltaTime;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Store original gizmo color
+        Color originalColor = Gizmos.color;
+
+        // Set the color (you can adjust these values)
+        Gizmos.color = Color.magenta;
+
+        // Draw a wire sphere for the radius
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
+
+        // Optional: Draw lines for cardinal directions
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * explosionRadius);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * explosionRadius);
+
+        // Restore original color
+        Gizmos.color = originalColor;
     }
 }

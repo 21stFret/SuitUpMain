@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class CrawlerMovement : MonoBehaviour
 {
@@ -27,6 +28,11 @@ public class CrawlerMovement : MonoBehaviour
     public float desiredSeparation = 2f; // Desired distance between crawlers
 
     private List<CrawlerMovement> nearbySwarmMembers = new List<CrawlerMovement>();
+
+    public ParticleSystem icedEffect;
+    private bool isSlowed;
+    public float slowedDuration = 2f;
+    public float slowedAmount = 0.5f;
 
     private void Awake()
     {
@@ -82,7 +88,12 @@ public class CrawlerMovement : MonoBehaviour
         dir.y = 0;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
-        rb.MovePosition(transform.position + dir.normalized * speedFinal * Time.deltaTime);
+        float speed = speedFinal;
+        if(isSlowed)
+        {
+            speed *= slowedAmount;
+        }
+        rb.MovePosition(transform.position + dir.normalized * speed * Time.deltaTime);
     }
 
     private void UpdateNearbySwarmMembers()
@@ -165,5 +176,17 @@ public class CrawlerMovement : MonoBehaviour
                 Debug.DrawRay(transform.position, rayDirection * rayDistance, Color.green);
             }
         }
+    }
+
+    public void ApplySlow()
+    {
+        isSlowed = true;
+        StartCoroutine(WaitForSlow());
+    }
+
+    private IEnumerator WaitForSlow()
+    {
+        yield return new WaitForSeconds(slowedDuration);
+        isSlowed = false;
     }
 }

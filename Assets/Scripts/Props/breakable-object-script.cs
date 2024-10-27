@@ -12,6 +12,8 @@ public class BreakableObject : MonoBehaviour
     private List<GameObject>[] brokenPartPools;
     private List<GameObject> activeparts = new List<GameObject>();
     private bool isBroken = false;
+    public float localScale;
+
 
     private void Awake()
     {
@@ -56,13 +58,14 @@ public class BreakableObject : MonoBehaviour
             part.transform.rotation = transform.rotation;
             part.SetActive(true);
             activeparts.Add(part);
+            part.transform.localScale = new Vector3(localScale, localScale, localScale);
 
             Rigidbody rb = part.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-rb.AddExplosionForce(Random.Range(explosionForce * 0.8f, explosionForce * 1.2f), transform.position, explosionRadius, explosionForce / 2);
+                rb.AddExplosionForce(Random.Range(explosionForce * 0.8f, explosionForce * 1.2f), transform.position, explosionRadius, explosionForce / 2);
             }
         }
 
