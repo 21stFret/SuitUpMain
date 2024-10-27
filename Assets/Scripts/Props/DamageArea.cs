@@ -7,7 +7,7 @@ public class DamageArea : MonoBehaviour
     public float damageRadius = 2f;
     public float damageInterval = 1f;
     public float damageAmount = 10f;
-    public float damageDuration = 5f;
+    public float damageDuration = 0f;
     public WeaponType damageType = WeaponType.Flame; // Default to Fire, but can be changed
     public bool damageActive = true; // Control whether damage is being dealt
 
@@ -38,6 +38,7 @@ public class DamageArea : MonoBehaviour
                 targetsInRange.Add(targetHealth);
             }
         }
+        StartCoroutine(DealDamageRoutine());
         if (damageDuration > 0)
         {
             StartCoroutine(DisableDamageAreaRoutine());
@@ -64,20 +65,17 @@ public class DamageArea : MonoBehaviour
 
     private IEnumerator DealDamageRoutine()
     {
-        while (true)
+        while (damageActive)
         {
-            if (damageActive)
+            for (int i = targetsInRange.Count - 1; i >= 0; i--)
             {
-                for (int i = targetsInRange.Count - 1; i >= 0; i--)
+                if (targetsInRange[i] != null)
                 {
-                    if (targetsInRange[i] != null)
-                    {
-                        targetsInRange[i].TakeDamage(damageAmount, damageType);
-                    }
-                    else
-                    {
-                        targetsInRange.RemoveAt(i);
-                    }
+                    targetsInRange[i].TakeDamage(damageAmount, damageType);
+                }
+                else
+                {
+                    targetsInRange.RemoveAt(i);
                 }
             }
             yield return new WaitForSeconds(damageInterval);

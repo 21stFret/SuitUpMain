@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class GrassBurning : Prop
 {
@@ -10,6 +11,7 @@ public class GrassBurning : Prop
     public GameObject burnedGrassPrefab;
     public ParticleSystem fireEffect;
     public DamageArea fireDamage;
+    public Light fireLight;
 
     private bool isIgnited = false;
     private bool isOnFire = false;
@@ -62,6 +64,7 @@ public class GrassBurning : Prop
         isOnFire = true;
         GetComponent<Collider>().enabled = false;
         fireEffect.gameObject.SetActive(true);
+        fireLight.DOIntensity(2.5f, 1f);
 
         SpreadFire();
         StartCoroutine(BurnOut());
@@ -82,6 +85,9 @@ public class GrassBurning : Prop
 
     private IEnumerator BurnOut()
     {
+        float duration = burnDuration/2;
+        yield return new WaitForSeconds(duration);
+        GrassPrefab.transform.DOScaleY(0.2f, burnDuration);
         yield return new WaitForSeconds(burnDuration);
         isOnFire = false;
         isBurned = true;

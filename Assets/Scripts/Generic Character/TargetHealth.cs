@@ -58,6 +58,11 @@ public class TargetHealth : MonoBehaviour
             }
         }
 
+        if(weaponType == WeaponType.Cryo)
+        {
+            ApplySlow();
+        }
+
         if (_mech != null)
         {
             _mech.TakeDamage(damage);
@@ -87,6 +92,18 @@ public class TargetHealth : MonoBehaviour
                 return;
             }
             _crawler.TakeDamage(damage, weaponType, stunTime);
+        }
+    }
+
+    public void ApplySlow()
+    {
+        if (_crawler != null)
+        {
+            _crawler.crawlerMovement.ApplySlow();
+        }
+        if (_mech != null)
+        {
+            BattleMech.instance.myCharacterController.ApplySlow();
         }
     }
 
