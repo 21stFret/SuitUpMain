@@ -75,7 +75,10 @@ public class MechHealth : MonoBehaviour
         {
             if (!hit)
             {
-                PlayerAchievements.instance.SetAchievement("DODGE_1");
+                if(PlayerAchievements.instance != null)
+                {
+                    PlayerAchievements.instance.SetAchievement("DODGE_1");
+                }
             }
         }
     }

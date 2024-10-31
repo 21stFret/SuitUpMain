@@ -71,6 +71,10 @@ public class FootprintSystem : MonoBehaviour
 
     public void PlaceLeftFoot()
     {
+        if(!gameObject.activeInHierarchy)
+        {
+            return;
+        }
         if (blockLeft)
         {
             return;
@@ -88,6 +92,10 @@ public class FootprintSystem : MonoBehaviour
 
     public void PlaceRightFoot()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
         if (blockRight)
         {
             return;

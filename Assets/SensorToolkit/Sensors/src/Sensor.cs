@@ -423,7 +423,14 @@ namespace Micosmo.SensorToolkit {
         List<GameObject> SignalsToObjects(List<Signal> signals, List<GameObject> storeIn) {
             storeIn.Clear();
             foreach (var signal in signals) {
-                storeIn.Add(signal.Object);
+                if (signal.Object != null && signal.Object.activeInHierarchy)
+                {
+                    storeIn.Add(signal.Object);
+                }
+                else
+                {
+                    signalPipeline.RemoveInput(signal.Object);
+                }
             }
             return storeIn;
         }

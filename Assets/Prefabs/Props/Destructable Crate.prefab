@@ -5081,6 +5081,7 @@ MonoBehaviour:
   hideDelay: 5
   explosionForce: 500
   explosionRadius: 2
+  localScale: 1
 --- !u!1 &6569910827466637269
 GameObject:
   m_ObjectHideFlags: 0
@@ -5137,7 +5138,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6569910827466637269}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -5203,7 +5204,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6569910827466637269}
   serializedVersion: 4
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 3
   m_AngularDrag: 3
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -5259,3 +5260,4 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  immuneWeapons: 

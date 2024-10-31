@@ -77,6 +77,7 @@ public class StatMultiplierManager : MonoBehaviour
                 Stat newStat = new Stat { type = kvp.Key, baseValue = kvp.Value };
                 stats.Add(newStat);
                 statDictionary[kvp.Key] = newStat;
+                newStat.SetBaseValue(kvp.Value);
             }
         }
     }

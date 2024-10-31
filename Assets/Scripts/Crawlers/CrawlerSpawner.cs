@@ -249,25 +249,26 @@ public class CrawlerSpawner : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-            for (int i = 0; i < bugs.Count; i++)
+        for (int i = 0; i < bugs.Count; i++)
+        {
+            if (portalAllowed >= portalMaxAllowed)
             {
-                if (portalAllowed >= portalMaxAllowed)
-                {
-                    SelectSpawnPoint();
-                    PlaySpawnEffect();
-                    portalAllowed = 0;
-                    yield return new WaitForSeconds(0.5f);
-                }
-
-                Vector3 randomCircle = Random.insideUnitSphere;
-                randomCircle.z = 0;
-                Vector3 randomPoint = randomCircle + spawnPoint.position;
-                bugs[i].transform.position = randomPoint;
-                bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
-
-                StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
-                portalAllowed++;
+                SelectSpawnPoint();
+                PlaySpawnEffect();
+                portalAllowed = 0;
+                yield return new WaitForSeconds(0.5f);
             }
+
+            Vector3 randomCircle = Random.insideUnitSphere;
+            randomCircle.z = 0;
+            Vector3 randomPoint = randomCircle + spawnPoint.position;
+            bugs[i].transform.position = randomPoint;
+            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+
+            float delay = FromDaddy? 0 : i * 0.2f;
+            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            portalAllowed++;
+        }
     }
 
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
@@ -291,6 +292,7 @@ public class CrawlerSpawner : MonoBehaviour
             Vector3 randomPoint = randomCircle + spawnPoint.position;
             bugs[i].transform.position = randomPoint;
             bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+
 
             StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
             portalAllowed++;

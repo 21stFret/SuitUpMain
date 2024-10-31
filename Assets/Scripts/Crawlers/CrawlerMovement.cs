@@ -6,10 +6,12 @@ public class CrawlerMovement : MonoBehaviour
 {
     private Transform target;
     [SerializeField] private Vector3 destination;
+    [HideInInspector]
     public float speedFinal = 5f;
     public float steerSpeed = 2f;
     public float lookSpeed = 5f;
     public float stoppingDistance = 1f;
+    public bool canMove = true;
     [SerializeField] private Vector3 direction;
     private Rigidbody rb;
     public int rayAmount = 5;
@@ -53,7 +55,16 @@ public class CrawlerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateNearbySwarmMembers();
+        if(!canMove)
+        {
+            return;
+        }
+        MoveCrawler();
 
+    }
+
+    private void MoveCrawler()
+    {
         if (target != null)
         {
             distanceToTarget = Vector3.Distance(target.position, transform.position);
@@ -89,7 +100,7 @@ public class CrawlerMovement : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
         float speed = speedFinal;
-        if(isSlowed)
+        if (isSlowed)
         {
             speed *= slowedAmount;
         }

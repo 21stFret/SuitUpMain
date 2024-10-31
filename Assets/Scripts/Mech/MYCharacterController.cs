@@ -210,7 +210,7 @@ public class MYCharacterController : MonoBehaviour
             direction.Normalize();
             float inputedSpeed = _moveInputVector.magnitude * Speed;
             float bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
-            if (bonusSpeed != 0)
+            if (bonusSpeed > Speed)
             {
                 print("Speed Bonus: " + bonusSpeed);
                 inputedSpeed = bonusSpeed;

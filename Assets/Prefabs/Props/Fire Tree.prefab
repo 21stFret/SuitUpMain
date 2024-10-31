@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3227121121450617755}
   - component: {fileID: 3227121121457060505}
   - component: {fileID: 5498189605739143143}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Point light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 3227121121450617759}
   - component: {fileID: 3227121121431219935}
   - component: {fileID: 3227121121431181183}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: flames_flame_red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,9 +145,9 @@ Transform:
   m_GameObject: {fileID: 3227121121450981311}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.073000014, y: 1.9339999, z: -0.30500025}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 1.9339999, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8635403844178807030}
   m_Father: {fileID: 5063269995654407170}
@@ -227,7 +227,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -4913,7 +4913,7 @@ GameObject:
   - component: {fileID: 8635403844178807030}
   - component: {fileID: 1842514499004157983}
   - component: {fileID: 851763904653534836}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: flames_flame_red (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4930,8 +4930,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1.4439999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3227121121450617759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5010,7 +5010,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9694,7 +9694,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5063269995654407170}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Fire Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}

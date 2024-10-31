@@ -15,13 +15,13 @@ public class TargetHealth : MonoBehaviour
 
     public List<WeaponType> immuneWeapons;
 
-    public void Init()
+    public void Init(Crawler C = null, MechHealth M =null, Prop P=null)
     {
         health = maxHealth;
         alive = true;
-        _crawler = GetComponent<Crawler>();
-        _mech = GetComponent<MechHealth>();
-        _prop = GetComponent<Prop>();
+        _crawler = C;
+        _mech = M;
+        _prop = P;
         if(_mech != null)
         {
             _mech.UpdateHealth(health, true);
@@ -109,6 +109,11 @@ public class TargetHealth : MonoBehaviour
 
     public float ApplyDamageMultiplier(float damage, WeaponType weaponType)
     {
+        if(damage <= 0)
+        {
+            return 0;
+        }
+
         float newDamage = damage;
         int multiplierType = AscertainMultiplier(weaponType);
 

@@ -20,7 +20,7 @@ public class Prop : MonoBehaviour
             print("No target health found on " + gameObject.name);
             return;
         }
-        _targetHealth.Init();
+        _targetHealth.Init(null, null, this);
         healthMax = _targetHealth.maxHealth;
         health = healthMax;
     }
