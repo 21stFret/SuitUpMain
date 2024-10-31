@@ -102,7 +102,7 @@ public class GrassBurning : Prop
 
         GrassPrefab.SetActive(false);
 
-        fireDamage.damageActive = false;
+        fireDamage.SetDamageActive(false);
 
         Die();
     }

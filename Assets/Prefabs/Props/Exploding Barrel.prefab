@@ -39,6 +39,7 @@ Transform:
   - {fileID: 8884448541635772169}
   - {fileID: 7192453394328934468}
   - {fileID: 1416200841380579892}
+  - {fileID: 3119201365507565124}
   m_Father: {fileID: 1504662619259420839}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &504987838936054293
@@ -322,7 +323,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 183748689933658107}
-  - {fileID: 3119201365507565124}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7351841836866601472
@@ -376,6 +376,7 @@ MonoBehaviour:
   hideDelay: 5
   explosionForce: 500
   explosionRadius: 2
+  localScale: 0
 --- !u!1 &8271811927204544192
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,10 +405,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.0145430425, y: 0.032050215, z: 0.63655454, w: 0.77042824}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 15, y: 15, z: 15}
+  m_LocalScale: {x: 7.5, y: 7.5, z: 7.5000005}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1504662619259420839}
+  m_Father: {fileID: 183748689933658107}
   m_LocalEulerAnglesHint: {x: -3.624, y: 1.773, z: 79.073}
 --- !u!33 &3753661767601892481
 MeshFilter:

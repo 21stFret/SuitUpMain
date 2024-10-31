@@ -16,6 +16,11 @@ public class DamageArea : MonoBehaviour
 
     private void Start()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         damageActive = false;
 
         triggerCollider = gameObject.GetComponent<SphereCollider>();

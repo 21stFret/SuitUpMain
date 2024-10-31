@@ -23,7 +23,7 @@ public class MechLoader : MonoBehaviour
     {
         if(battleLoadout)
         {
-            targetHealth.Init();
+            targetHealth.Init(null, GetComponent<MechHealth>());
         }
 
         weaponsManager = WeaponsManager.instance;

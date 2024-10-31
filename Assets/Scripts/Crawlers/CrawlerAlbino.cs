@@ -68,10 +68,9 @@ public class CrawlerAlbino : Crawler
     private IEnumerator SmashMovementDelay()
     {
         smashing = true;
-        var cachedspeed = crawlerMovement.speedFinal;
-        crawlerMovement.speedFinal = 0;
+        crawlerMovement.canMove = false;
         yield return new WaitForSeconds(smashmovementDelay);
-        crawlerMovement.speedFinal = cachedspeed;
+        crawlerMovement.canMove = true;
         smashing = false;
     }
 

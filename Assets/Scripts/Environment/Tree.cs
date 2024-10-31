@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Tree : Prop
 {
+    public GameObject normalRoot;
     public GameObject fireRoot;
     public GameObject deadRoot;
     private bool burnt;
     public float burnTime = 3f;
+    public DamageArea fireDamage;
 
     // Start is called before the first frame update
     void Start()
     {
         burnt = false;
+        Init();
+    }
+
+    public override void Init()
+    {
+        base.Init();
     }
 
     public override void Die()
@@ -37,10 +46,13 @@ public class Tree : Prop
     {
         burnt=true;
         fireRoot.SetActive(true);
+        fireDamage.EnableDamageArea();
         yield return new WaitForSeconds(burnTime);
-        GetComponent<MeshRenderer>().enabled = false;
+        normalRoot.transform.DOScale(0, 2);
+        GetComponent<Collider>().enabled = false;
         deadRoot.SetActive(true);
         yield return new WaitForSeconds(burnTime-1);
+        fireDamage.SetDamageActive(false);
         fireRoot.SetActive(false);
     }
 }

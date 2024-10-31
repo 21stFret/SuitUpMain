@@ -85,7 +85,7 @@ public class CrawlerSpitter : Crawler
 
     public override void Attack()
     {
-        crawlerMovement.speedFinal = 0;
+        crawlerMovement.canMove = false;
         spitTimer += Time.deltaTime;
         if (spitTimer > spitSpeed)
         {
@@ -105,14 +105,14 @@ public class CrawlerSpitter : Crawler
                 animator.SetBool("InRange", false);
                 animator.SetBool("Idle", false);
                 crawlerMovement.tracking = false;
-                crawlerMovement.speedFinal = _randomSpeed;
+                crawlerMovement.canMove = true;
                 crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
                 return;
             }
             if(Vector3.Distance(transform.position, runnerTarget.position) < 5)
             {
                 crawlerMovement.tracking = false;
-                crawlerMovement.speedFinal = 0;
+                crawlerMovement.canMove = false;
                 animator.SetBool("Idle", true);
                 runnerIdle = true;
                 return;
@@ -124,18 +124,19 @@ public class CrawlerSpitter : Crawler
             }
             else
             {
-                crawlerMovement.speedFinal = _randomSpeed;
+                crawlerMovement.canMove = true;
                 animator.SetBool("Idle", false);
                 crawlerMovement.SetDestination(runnerTarget.position);
             }
 
             return;
         }
+
         if(crawlerMovement.distanceToTarget < escapeDistance)
         {
             animator.SetBool("InRange", false);
             crawlerMovement.tracking = false;
-            crawlerMovement.speedFinal = _randomSpeed;
+            crawlerMovement.canMove = true;
             crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
             return;
         }
