@@ -74,7 +74,7 @@ public class Crawler : MonoBehaviour
 
     private bool triggeredAttack;
 
-    public void Init()
+    public virtual void Init()
     {
         dead = false;
         _targetHealth = GetComponent<TargetHealth>();
@@ -192,7 +192,7 @@ public class Crawler : MonoBehaviour
         {
             inRange = false;
             animator.SetBool("InRange", false);
-            
+            crawlerMovement.canMove = true;
         }
     }
 
@@ -291,7 +291,7 @@ public class Crawler : MonoBehaviour
     }
 
     
-    public void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
+    public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
         if (stunTime > 0)
         {

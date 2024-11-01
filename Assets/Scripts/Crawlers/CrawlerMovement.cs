@@ -16,7 +16,7 @@ public class CrawlerMovement : MonoBehaviour
     private Rigidbody rb;
     public int rayAmount = 5;
     public float rayDistance = 3f;
-    public LayerMask layerMask;
+    public LayerMask SteeringRaycast;
     public float distanceToTarget;
     public bool tracking = true;
     public float groundLevel;
@@ -55,7 +55,11 @@ public class CrawlerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateNearbySwarmMembers();
-        if(!canMove)
+        if (target != null)
+        {
+            distanceToTarget = Vector3.Distance(target.position, transform.position);
+        }
+        if (!canMove)
         {
             return;
         }
@@ -65,10 +69,7 @@ public class CrawlerMovement : MonoBehaviour
 
     private void MoveCrawler()
     {
-        if (target != null)
-        {
-            distanceToTarget = Vector3.Distance(target.position, transform.position);
-        }
+
 
         if (tracking)
         {
@@ -172,7 +173,7 @@ public class CrawlerMovement : MonoBehaviour
             var raycastPos = new Vector3(transform.position.x, transform.position.y, transform.position.z + 0.5f);
 
             RaycastHit hit;
-            if (Physics.Raycast(raycastPos, rayDirection, out hit, rayDistance, layerMask))
+            if (Physics.Raycast(raycastPos, rayDirection, out hit, rayDistance, SteeringRaycast))
             {
                 if (hit.collider == groundCollider)
                 {

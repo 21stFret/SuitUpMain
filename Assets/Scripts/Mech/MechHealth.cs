@@ -90,6 +90,12 @@ public class MechHealth : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+
+        if (characterController.isDodging)
+        {
+            return;
+        }
+
         hit = true;
         targetHealth.health -= damage;
 
@@ -106,10 +112,6 @@ public class MechHealth : MonoBehaviour
 
         AudioManager.instance.PlayHurt();
 
-        if(characterController.isDodging)
-        {
-            return;
-        }
         rb.velocity = Vector3.zero;
     }
 

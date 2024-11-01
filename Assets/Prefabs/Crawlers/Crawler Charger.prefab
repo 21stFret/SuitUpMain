@@ -14572,7 +14572,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8662104389732504624
 Transform:
   m_ObjectHideFlags: 0
@@ -14659,7 +14659,8 @@ MonoBehaviour:
   health: 0
   healthMax: 40
   attackDamage: 10
-  speed: 7
+  attackDistacne: 7
+  speed: 9
   _randomSpeed: 1
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
@@ -14690,7 +14691,7 @@ MonoBehaviour:
     m_Bits: 4416
   chargeCooldown: 3
   charging: 0
-  chargeSpeed: 16
+  chargeSpeed: 20
 --- !u!54 &6614920390643891118
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14782,12 +14783,13 @@ MonoBehaviour:
   steerSpeed: 6
   lookSpeed: 300
   stoppingDistance: 5
+  canMove: 1
   direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 4
-  layerMask:
+  SteeringRaycast:
     serializedVersion: 2
-    m_Bits: 4225
+    m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
   groundLevel: 0
@@ -14797,6 +14799,9 @@ MonoBehaviour:
   cohesionWeight: 1
   swarmRadius: 5
   desiredSeparation: 2
+  icedEffect: {fileID: 0}
+  slowedDuration: 2
+  slowedAmount: 0.5
 --- !u!114 &6499886239188906295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14813,6 +14818,7 @@ MonoBehaviour:
   maxHealth: 0
   invincible: 0
   alive: 0
+  immuneWeapons: 
 --- !u!1 &4244136424091634591
 GameObject:
   m_ObjectHideFlags: 0

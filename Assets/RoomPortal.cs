@@ -19,6 +19,7 @@ public class RoomPortal : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            BattleMech.instance.myCharacterController.enabled = false;
             VoidPortalManager.SetPortalColor(visualPortalEffect, portalType);
             visualPortalEffect.gameObject.SetActive(true);
             visualPortalEffect.StartFirstPersonEffect();
