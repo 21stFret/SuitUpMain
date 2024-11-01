@@ -119,6 +119,28 @@ public class GameManager : MonoBehaviour
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }
 
+    public IEnumerator LoadVoidRoom()
+    {
+        gameUI.gameUIFade.FadeOut();
+        RoomPortal.portalEffect.StopEffect();
+        yield return new WaitForSeconds(2);
+        areaManager.LoadVoidArea();
+        DayNightCycle(true);
+        playerInput.transform.position = Vector3.zero;
+        yield return new WaitForSeconds(1);
+        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        yield return new WaitForSeconds(1);
+        gameUI.gameUIFade.FadeIn();
+
+    }
+
+    private void CompleteVoidRoom()
+    {
+        //TODO: Add Void Room Completion interaction
+        currentAreaType++;
+        SpawnPortalsToNextRoom(true);
+    }
+
     private void DayNightCycle(bool night = false)
     {
         bool dayTime = Random.Range(0, 100) < 50;
@@ -147,20 +169,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
     }
 
-    public IEnumerator LoadVoidRoom()
-    {
-        RoomPortal.portalEffect.StopEffect();
-        yield return new WaitForSeconds(2);
-        areaManager.LoadVoidArea();
-        DayNightCycle(true);
-        playerInput.transform.position = Vector3.zero;
-        yield return new WaitForSeconds(1);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
-        yield return new WaitForSeconds(1);
-        gameUI.gameUIFade.FadeIn();
-        currentAreaType++;
-        SpawnPortalsToNextRoom(true);
-    }
+
 
     public void EndGame(bool won)
     {

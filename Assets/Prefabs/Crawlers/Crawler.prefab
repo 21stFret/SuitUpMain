@@ -264,7 +264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3944224738408491638
 Transform:
   m_ObjectHideFlags: 0
@@ -326,6 +326,7 @@ MonoBehaviour:
   health: 0
   healthMax: 1
   attackDamage: 1
+  attackDistacne: 5
   speed: 12
   _randomSpeed: 2
   randomScale: 2
@@ -342,7 +343,7 @@ MonoBehaviour:
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
-  forceSpawn: 0
+  forceSpawn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
@@ -437,12 +438,13 @@ MonoBehaviour:
   steerSpeed: 7
   lookSpeed: 300
   stoppingDistance: 4
+  canMove: 1
   direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 3
-  layerMask:
+  SteeringRaycast:
     serializedVersion: 2
-    m_Bits: 4225
+    m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
   groundLevel: 0
@@ -452,6 +454,9 @@ MonoBehaviour:
   cohesionWeight: 1
   swarmRadius: 5
   desiredSeparation: 10
+  icedEffect: {fileID: 0}
+  slowedDuration: 2
+  slowedAmount: 0.5
 --- !u!136 &8265754060228884709
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -491,6 +496,7 @@ MonoBehaviour:
   maxHealth: 0
   invincible: 0
   alive: 0
+  immuneWeapons: 
 --- !u!1 &3941811552011450084
 GameObject:
   m_ObjectHideFlags: 0

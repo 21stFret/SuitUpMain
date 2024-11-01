@@ -70,6 +70,7 @@ public class CrawlerSpitter : Crawler
 
     public IEnumerator Spit()
     {
+
         animator.SetTrigger("Spit");
         yield return new WaitForSeconds(0.3f);
         CycleProjectiles();
@@ -81,6 +82,7 @@ public class CrawlerSpitter : Crawler
             spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage, target);
         }
 
+        crawlerMovement.canMove = true;
     }
 
     public override void Attack()

@@ -26,6 +26,7 @@ public class MYCharacterController : MonoBehaviour
     public bool isDodging;
     public float dashForce;
     public float dashCooldown;
+    public float dashDuration;
     public ParticleSystem dashEffect, dashEffect2;
     public MeshRenderer dashShoes, dashShoes2;
     public WeaponController manualWeaponController;
@@ -86,6 +87,7 @@ public class MYCharacterController : MonoBehaviour
         {
             return;
         }
+        candodge = false;
         dashShoes.enabled = false;
         dashShoes2.enabled = false;
         dashEffect.Play();
@@ -97,8 +99,10 @@ public class MYCharacterController : MonoBehaviour
 
     private IEnumerator DashCooldown()
     {
-        yield return new WaitForSeconds(dashCooldown);
+        yield return new WaitForSeconds(dashDuration);
         isDodging = false;
+        yield return new WaitForSeconds(dashCooldown);
+        candodge = true;
         dashShoes.enabled = true;
         dashShoes2.enabled = true;
     }
