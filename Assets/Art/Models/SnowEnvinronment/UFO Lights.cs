@@ -9,7 +9,7 @@ public class MaterialFlicker : MonoBehaviour
     public float maxTime;
 
     private MeshRenderer meshRenderer;
-    private int targetSubMeshIndex = 1;
+    private int targetSubMeshIndex = 2;
 
     void Start()
     {
