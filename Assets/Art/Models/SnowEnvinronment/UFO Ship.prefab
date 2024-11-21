@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6150935336171335056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5634439671199247421}
+  m_Layer: 0
+  m_Name: UFO Ship
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5634439671199247421
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150935336171335056}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5797230203550898773}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &6339202794098818494
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5634439671199247421}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.05033461
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.17644973
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.16414821
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70251894
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7115971
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.004922184
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.008516475
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      propertyPath: m_Name
+      value: UFO Ship -Crashed
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4943167112700681627}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3613474710149403305}
+  m_SourcePrefab: {fileID: 100100000, guid: 32e5d1ff4d4e43845b703f0ea35bbde6, type: 3}
+--- !u!4 &5797230203550898773 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+    type: 3}
+  m_PrefabInstance: {fileID: 6339202794098818494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6573063627469832431 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 32e5d1ff4d4e43845b703f0ea35bbde6,
+    type: 3}
+  m_PrefabInstance: {fileID: 6339202794098818494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4943167112700681627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6573063627469832431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f00fddd259805a84db8862e993fbfd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightsOFF: {fileID: 2100000, guid: a6a70b72187f98f4eb7d5933370b6763, type: 2}
+  lightsON: {fileID: 2100000, guid: b183b90349de27c469b5982f0736f129, type: 2}
+  minTime: 0.025
+  maxTime: 0.5
+--- !u!64 &3613474710149403305
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6573063627469832431}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4711208715938537054, guid: 32e5d1ff4d4e43845b703f0ea35bbde6, type: 3}
