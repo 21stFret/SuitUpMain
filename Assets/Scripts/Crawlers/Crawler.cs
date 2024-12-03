@@ -43,11 +43,12 @@ public class Crawler : MonoBehaviour
     public int attackDamage;
     public float attackDistacne;
     public float speed;
-    public float _randomSpeed;
+    [SerializeField]
+    private float _finalSpeed;
     public float randomScale;
     public ParticleSystem DeathBlood;
     public ParticleSystem _spawnEffect;
-    protected Animator animator;
+    public Animator animator;
     public bool dead;
     public AudioSource deathNoise;
     protected bool inRange;
@@ -72,7 +73,7 @@ public class Crawler : MonoBehaviour
     public bool damageNumbersOn;
     private TargetHealth _targetHealth;
 
-    private bool triggeredAttack;
+    public bool triggeredAttack;
 
     public virtual void Init()
     {
@@ -82,10 +83,11 @@ public class Crawler : MonoBehaviour
         _collider = GetComponent<Collider>();
         animator = GetComponent<Animator>();
         crawlerMovement = GetComponent<CrawlerMovement>();
+        crawlerMovement.m_crawler = this;
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rb = GetComponent<Rigidbody>();
-        _randomSpeed = Random.Range(speed, speed + randomScale);
+        SetSpeed();
         _collider.enabled = false;
         //crawlerMovement.groundCollider.enabled = false;
         crawlerMovement.enabled = false;
@@ -123,6 +125,14 @@ public class Crawler : MonoBehaviour
         animator.speed = 1;
     }
 
+    private void SetSpeed()
+    {
+        float scaleFActor = speed * randomScale;
+        float min = speed - scaleFActor;
+        float max = speed + scaleFActor;
+        _finalSpeed = Random.Range(min, max);
+    }
+
     void Update()
     {
         if(dead)
@@ -154,7 +164,7 @@ public class Crawler : MonoBehaviour
         }
 
         crawlerMovement.SetTarget(target);
-        CheckDistance();
+        //CheckDistance();
         CheckPosition();
     }
 
@@ -173,6 +183,7 @@ public class Crawler : MonoBehaviour
 
     public void FindClosestTarget()
     {
+        rangeSensor.Pulse();
         if (!rangeSensor.GetNearestDetection())
         {
             return;
@@ -182,10 +193,17 @@ public class Crawler : MonoBehaviour
 
     public virtual void CheckDistance()
     {
+        var aggressionBehavior = GetComponent<CrawlerAggression>();
+        if (aggressionBehavior != null && aggressionBehavior.HandleAggressionBehavior())
+        {
+            return; // Aggression behavior handled the movement/attack
+        }
+        // Continue with normal behavior
+
         if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
         {
             inRange = true;
-            animator.SetBool("InRange", true);
+
             Attack();
         }
         else
@@ -203,6 +221,7 @@ public class Crawler : MonoBehaviour
             return;
         }
         triggeredAttack = true;
+        animator.SetBool("InRange", true);
         animator.SetTrigger("Attack");
         crawlerMovement.canMove = false;
     }
@@ -213,8 +232,6 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
-        triggeredAttack = false;
-        crawlerMovement.canMove = true;
 
         //Called by animation event
         if (target == null)
@@ -224,6 +241,7 @@ public class Crawler : MonoBehaviour
 
         if (crawlerMovement.distanceToTarget >= attackDistacne)
         {
+            animator.SetBool("InRange", false);
             print("Player out of range");
             return;
         }
@@ -237,6 +255,11 @@ public class Crawler : MonoBehaviour
         }
 
         targethealth.TakeDamage(attackDamage, WeaponType.Cralwer);
+    }
+
+    public void EndAttack()
+    {
+        triggeredAttack = false;
     }
 
     private IEnumerator SpawnImmunity()
@@ -303,6 +326,8 @@ public class Crawler : MonoBehaviour
             return;
         }
 
+        GetComponent<CrawlerBehavior>()?.OnDamageTaken();
+
         FlashRed();
         TakeDamageOveride();
         if (damageNumbersOn)
@@ -355,11 +380,9 @@ public class Crawler : MonoBehaviour
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
-        crawlerMovement.groundCollider.gameObject.layer = 2;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
-        crawlerMovement.canMove = false;
         DeathBlood.transform.SetParent(null);
         DeathBlood.Play();
 
@@ -409,12 +432,10 @@ public class Crawler : MonoBehaviour
         dead = false;
         meshRenderer.enabled = true;
         _collider.enabled = true;
-        crawlerMovement.groundCollider.enabled = true;
-        crawlerMovement.groundCollider.gameObject.layer = 8;
         rb.velocity = Vector3.zero;
         health = healthMax;
-        _randomSpeed = Random.Range(speed, speed + randomScale);
-        crawlerMovement.speedFinal = _randomSpeed;
+        SetSpeed();
+        crawlerMovement.speedFinal = _finalSpeed;
         if (transform.position.y< crawlerMovement.groundLevel)
         {
             print("Crawler spawned below ground");
@@ -432,13 +453,21 @@ public class Crawler : MonoBehaviour
     private IEnumerator SpawnEffect()
     {
         _spawnEffect.Play();
-        transform.DOScale(Random.Range(crawlerScale-0.1f, crawlerScale+0.1f), 0.4f);
+        SetCrawlerScale();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(0.4f);
         tag = "Enemy";
         crawlerMovement.enabled = true;
         crawlerMovement.canMove = true;
         animator.speed = 1;
+    }
+
+    private void SetCrawlerScale()
+    {
+        float scaleFActor = crawlerScale * randomScale;
+        float min = crawlerScale - scaleFActor;
+        float max = crawlerScale + scaleFActor;
+        transform.DOScale(Random.Range(min, max), 0.4f);
     }
 }
 

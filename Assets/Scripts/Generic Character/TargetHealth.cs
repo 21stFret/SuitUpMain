@@ -24,7 +24,8 @@ public class TargetHealth : MonoBehaviour
         _prop = P;
         if(_mech != null)
         {
-            _mech.UpdateHealth(health, true);
+            _mech.Init();
+            _mech.UpdateHealthUI(health);
         }
     }
 
@@ -39,7 +40,7 @@ public class TargetHealth : MonoBehaviour
         {
             health = maxHealth;
         }
-        _mech.UpdateHealth(health, true);
+        _mech.UpdateHealthUI(health);
     }
 
 

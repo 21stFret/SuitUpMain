@@ -98,42 +98,6 @@ public class CrawlerSpitter : Crawler
 
     public override void CheckDistance()
     {
-        if (Runner)
-        {
-            float fillAmount = health / healthMax;
-            GameUI.instance.objectiveUI.UpdateBar(fillAmount);
-            if(crawlerMovement.distanceToTarget < escapeDistance)
-            {
-                animator.SetBool("InRange", false);
-                animator.SetBool("Idle", false);
-                crawlerMovement.tracking = false;
-                crawlerMovement.canMove = true;
-                crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
-                return;
-            }
-            if(Vector3.Distance(transform.position, runnerTarget.position) < 5)
-            {
-                crawlerMovement.tracking = false;
-                crawlerMovement.canMove = false;
-                animator.SetBool("Idle", true);
-                runnerIdle = true;
-                return;
-            }
-            if(runnerIdle)
-            {
-                crawlerMovement.SetTarget(target);
-                base.CheckDistance();
-            }
-            else
-            {
-                crawlerMovement.canMove = true;
-                animator.SetBool("Idle", false);
-                crawlerMovement.SetDestination(runnerTarget.position);
-            }
-
-            return;
-        }
-
         if(crawlerMovement.distanceToTarget < escapeDistance)
         {
             animator.SetBool("InRange", false);

@@ -43426,7 +43426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7391302482856354956
 Transform:
   m_ObjectHideFlags: 0
@@ -43563,7 +43563,7 @@ MonoBehaviour:
   IgnoreTriggerColliders: 0
   pulseRoutine:
     Mode:
-      value: 1
+      value: 0
     UpdateFunction: 0
     Interval:
       value: 0.5
@@ -43593,6 +43593,7 @@ MonoBehaviour:
   randomScale: 1
   DeathBlood: {fileID: 4409523461364834247}
   _spawnEffect: {fileID: 8160456980422531980}
+  animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 437050901762565522}
   immune: 0
@@ -43606,13 +43607,13 @@ MonoBehaviour:
   forceSpawn: 1
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  triggeredAttack: 0
   leapDistance: 15
   leapForce: 80
   leapCooldown: 10
   leapDuration: 1
   damageCheckFrequency: 0.3
   leapEffect: {fileID: 6349856199175969759}
-  fangsRenderer: {fileID: 5227549342656041439}
   fangsMat: {fileID: 0}
 --- !u!114 &6757468408072520722
 MonoBehaviour:
@@ -43650,6 +43651,7 @@ MonoBehaviour:
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
+  m_crawler: {fileID: 0}
 --- !u!114 &3848343404799448960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48576,12 +48578,6 @@ PrefabInstance:
 --- !u!4 &1253234939020817701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2a39f7e6c30f7454ea10d0df3ad625ea,
-    type: 3}
-  m_PrefabInstance: {fileID: 1652499958584890062}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &5227549342656041439 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 6801886358082929425, guid: 2a39f7e6c30f7454ea10d0df3ad625ea,
     type: 3}
   m_PrefabInstance: {fileID: 1652499958584890062}
   m_PrefabAsset: {fileID: 0}
