@@ -46,6 +46,7 @@ public class MechHealth : MonoBehaviour
     private float cachedFillamount;
     private Image flash;
 
+    private bool healthlow;
     public void Init()
     {
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -102,7 +103,21 @@ public class MechHealth : MonoBehaviour
         // Accumulate pending damage for flash effect
         pendingDamage += damage;
         healthBar.fillAmount = Mathf.Clamp01(cachedFillamount -(pendingDamage / targetHealth.maxHealth));
-        healthBar.color = Color.Lerp(damageLightColor, healthLightColor, healthBar.fillAmount);
+
+        if (healthBar.fillAmount <= 0.21f)
+        {
+            if(healthlow)
+            {
+                return; 
+            }
+            healthlow = true;
+            StartCoroutine(HealthBarFlash());
+        }
+        else
+        {
+            healthlow = false;
+            healthBar.material.SetColor("_StrongTintTint", healthLightColor);
+        }
 
         // Visual effects
         float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
@@ -146,6 +161,18 @@ public class MechHealth : MonoBehaviour
 
         cachedFillamount = healthBar.fillAmount;
         pendingDamage = 0;
+    }
+
+    private IEnumerator HealthBarFlash()
+    {
+        while (healthlow)
+        {
+            healthBar.material.SetColor("_StrongTintTint", damageLightColor);
+            yield return new WaitForSeconds(0.5f);
+            healthBar.material.SetColor("_StrongTintTint", healthLightColor);
+            yield return new WaitForSeconds(0.5f);
+            yield return null;
+        }
     }
 
     private void Die()
