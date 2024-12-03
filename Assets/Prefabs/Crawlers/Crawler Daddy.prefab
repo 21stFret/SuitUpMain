@@ -43417,6 +43417,7 @@ GameObject:
   - component: {fileID: 8622847323071165262}
   - component: {fileID: 3227063600712833630}
   - component: {fileID: 2550985015025176912}
+  - component: {fileID: 8002981596269528788}
   m_Layer: 8
   m_Name: Crawler Daddy
   m_TagString: Enemy
@@ -43515,6 +43516,7 @@ MonoBehaviour:
   randomScale: 0
   DeathBlood: {fileID: 6652521355583307667}
   _spawnEffect: {fileID: 7649532295506273425}
+  animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 1945245659488322145}
   immune: 0
@@ -43530,6 +43532,7 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
+  triggeredAttack: 0
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 4
   explosionRadius: 10
@@ -43607,7 +43610,7 @@ MonoBehaviour:
   IgnoreTriggerColliders: 0
   pulseRoutine:
     Mode:
-      value: 1
+      value: 0
     UpdateFunction: 0
     Interval:
       value: 0.5
@@ -43632,9 +43635,9 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 4
-  layerMask:
+  SteeringRaycast:
     serializedVersion: 2
-    m_Bits: 4225
+    m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
   groundLevel: 0
@@ -43647,6 +43650,7 @@ MonoBehaviour:
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
+  m_crawler: {fileID: 0}
 --- !u!114 &2550985015025176912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43664,6 +43668,25 @@ MonoBehaviour:
   invincible: 0
   alive: 0
   immuneWeapons: 
+--- !u!114 &8002981596269528788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7598384467349045470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseAggression: 0.5
+  healthAggressionModifier: 0.3
+  preferredEngageDistance: 10
+  maxEngageDistance: 20
+  fleeDistance: 15
+  fleeHealthThreshold: 0.3
+  cautionHealthThreshold: 0.5
 --- !u!1001 &544145254012493883
 PrefabInstance:
   m_ObjectHideFlags: 0

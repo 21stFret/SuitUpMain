@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] musicClips;
     public AudioClip[] effectClips;
     public AudioClip[] hurtClips;
+    public AudioClip[] healClips;
     public AudioMixer audioMixer;
     public AudioSource backgroundMusic;
     public AudioSource soundEffect;
@@ -117,6 +118,12 @@ public class AudioManager : MonoBehaviour
     {
         soundEffect.pitch = Random.Range(0.8f, 1.2f);
         soundEffect.PlayOneShot(hurtClips[Random.Range(0, hurtClips.Length)]);
+    }
+
+    public void PlayHeal()
+    {
+        soundEffect.pitch = Random.Range(0.8f, 1.2f);
+        soundEffect.PlayOneShot(healClips[Random.Range(0, healClips.Length)]);
     }
 
     public void PlayButtonSFX(int clipID)

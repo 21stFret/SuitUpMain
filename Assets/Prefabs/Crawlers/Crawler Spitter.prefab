@@ -204,7 +204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6036483922864507147
 Transform:
   m_ObjectHideFlags: 0
@@ -254,6 +254,7 @@ MonoBehaviour:
   randomScale: 0
   DeathBlood: {fileID: 6372291188587022168}
   _spawnEffect: {fileID: 5054925395757251297}
+  animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 2977521352958846146}
   immune: 0
@@ -269,6 +270,7 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
+  triggeredAttack: 0
   DeathEffect: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -302,9 +304,9 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0}
   rayAmount: 5
   rayDistance: 3
-  layerMask:
+  SteeringRaycast:
     serializedVersion: 2
-    m_Bits: 4353
+    m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
   groundLevel: 0
@@ -317,6 +319,7 @@ MonoBehaviour:
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
+  m_crawler: {fileID: 0}
 --- !u!95 &1088147171486223594
 Animator:
   serializedVersion: 5
@@ -408,7 +411,7 @@ MonoBehaviour:
   IgnoreTriggerColliders: 0
   pulseRoutine:
     Mode:
-      value: 1
+      value: 0
     UpdateFunction: 0
     Interval:
       value: 0.5

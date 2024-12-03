@@ -9,32 +9,32 @@ public class CrawlerCharger : Crawler
     public float chargeTime;
     public float chargeRadius;
     public float chargeForce;
-    public Transform chargeTarget;
+    public float chargeDamage;
     public LayerMask chargeLayerMask;
-    private float chargeTimer;
+    public float chargeTimer;
     public float chargeCooldown;
     public bool charging;
     public float chargeSpeed;
     private List<GameObject> chargeTargets = new List<GameObject>();
+    private int hitCount;
 
     public override void CheckDistance()
     {
         if (charging)
         {
-            Charging();
+            //Charging();
             return;
         }
 
         if (crawlerMovement.distanceToTarget < chargeDistance)
         {
-
             chargeTimer += Time.deltaTime;
             if (chargeTimer > chargeCooldown)
             {
                 //animator.SetTrigger("charge Attack");
                 chargeTimer = 0;
-                chargeTarget = target;
-                StartCoroutine(Charge());
+                hitCount = 0;
+                GetComponent<CrawlerBehavior>().TransitionToState(typeof(ChargeState));
             }
         }
 
@@ -43,16 +43,24 @@ public class CrawlerCharger : Crawler
             return;
         }
 
-        base.CheckDistance();
+        //base.CheckDistance();
 
     }
 
-    private void Charging()
+    public void Charging()
     {
+        chargeTargets.Clear();
         var variForce = chargeForce;
         Collider[] colliders = Physics.OverlapSphere(transform.position, chargeRadius, chargeLayerMask);
         foreach (Collider collider in colliders)
         {
+            Rigidbody rb = collider.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                Vector3 direction = collider.transform.position - transform.position;
+                rb.AddForce(direction.normalized * variForce, ForceMode.Impulse);
+            }
+
             if (chargeTargets.Contains(collider.gameObject))
             {
                 continue;
@@ -62,21 +70,19 @@ public class CrawlerCharger : Crawler
             {
                 continue;
             }
-            float dam = attackDamage * 2;
+
+            if(hitCount>2) { return; }
+
             if (collider.gameObject.tag == "Player")
             {
-                targetHealth.TakeDamage(dam, WeaponType.Cralwer);
+                targetHealth.TakeDamage(chargeDamage, WeaponType.Cralwer);
+                hitCount++;
             }
             else
             {
                 variForce = chargeForce / 8;
             }
-            Rigidbody rb = collider.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 direction = collider.transform.position - transform.position;
-                rb.AddForce(direction.normalized * variForce, ForceMode.Impulse);
-            }
+
             chargeTargets.Add(collider.gameObject);
         }
     }

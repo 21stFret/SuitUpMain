@@ -7,7 +7,7 @@ public class CrawlerHunter : Crawler
     public float stealthRange = 10f;           
     public float stealthAttackRange = 3f;      
     public float stealthCooldown = 5f;         
-    public float fadeSpeed = 2f;               
+    public float fadeSpeed = 2f;             
     public ParticleSystem stealthEffect;       
     public ParticleSystem revealEffect;
     public float minAlpha = 0.1f;
@@ -57,29 +57,38 @@ public class CrawlerHunter : Crawler
                 EnterStealth();
                 return;
             }
+
+            if (isAttacking)
+            {
+                return;
+            }
+            // Use normal behavior if not handling stealth
+            base.CheckDistance();
         }
 
-        if(isAttacking)
-        {
-            return;
-        }
-        // Use normal behavior if not handling stealth
-        base.CheckDistance();
+
     }
 
     private void EnterStealth()
     {
+        if(isAttacking || isStealthed)
+        {
+            return;
+        }
+        isStealthed = true;
+        crawlerMovement.canMove = false;
         StartCoroutine(FadeOut());
         if (stealthEffect != null)
         {
             stealthEffect.Play();
+            animator.SetTrigger("Spit");
         }
     }
 
     private void RevealFromStealth()
     {
         if (!isStealthed) return;
-        
+        crawlerMovement.canMove = true;
         isStealthed = false;
         stealthTimer = stealthCooldown;
         StartCoroutine(FadeIn());
@@ -91,8 +100,10 @@ public class CrawlerHunter : Crawler
 
     private void StealthAttack()
     {
-        if (!isStealthed) return;
-
+        if (!isStealthed)
+        {
+            return;
+        }
         isAttacking = true;
         // Reveal before attacking
         RevealFromStealth();
@@ -104,29 +115,26 @@ public class CrawlerHunter : Crawler
 
     public void StealthAttackHit()
     {
-        StartCoroutine(StealthAttackHitCoroutine());
-        animator.ResetTrigger("Attack");
+        isAttacking = false;
+        crawlerMovement.canMove = true;
+        animator.ResetTrigger("StealthAttack");
         // Do enhanced damage
         if (target != null)
         {
-            if(crawlerMovement.distanceToTarget >= stealthAttackRange)
+            if (crawlerMovement.distanceToTarget >= stealthAttackRange)
             {
                 print("Stealth Attack Missed");
-                return;
             }
-            var targetHealth = target.GetComponent<TargetHealth>();
-            if (targetHealth != null)
+            else
             {
-                targetHealth.TakeDamage(stealthAttackDamage, WeaponType.Cralwer);
+                var targetHealth = target.GetComponent<TargetHealth>();
+                if (targetHealth != null)
+                {
+                    targetHealth.TakeDamage(stealthAttackDamage, WeaponType.Cralwer);
+                }
             }
-        }
-    }
 
-    private IEnumerator StealthAttackHitCoroutine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        isAttacking = false;
-        crawlerMovement.canMove = true;
+        }
     }
 
     private IEnumerator FadeOut()
@@ -147,9 +155,8 @@ public class CrawlerHunter : Crawler
             yield return null;
         }
 
-        isStealthed = true;
-
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        crawlerMovement.canMove = true;
     }
 
     private IEnumerator FadeIn()
@@ -180,8 +187,6 @@ public class CrawlerHunter : Crawler
         }
 
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
-
-        isStealthed = false;
     }
 
     public override void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)

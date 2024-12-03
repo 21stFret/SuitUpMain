@@ -14566,6 +14566,7 @@ GameObject:
   - component: {fileID: 2055804163204170291}
   - component: {fileID: 4009836193941654996}
   - component: {fileID: 6499886239188906295}
+  - component: {fileID: 102815767397415322}
   m_Layer: 8
   m_Name: Crawler Charger
   m_TagString: Enemy
@@ -14623,7 +14624,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898640269204868951}
-  m_Material: {fileID: 13400000, guid: f2e275dc3f584e289f307d12afa60d1e, type: 2}
+  m_Material: {fileID: 13400000, guid: 8e89e1f9ec3d18245a0a512aa08ce791, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -14660,11 +14661,12 @@ MonoBehaviour:
   healthMax: 40
   attackDamage: 10
   attackDistacne: 7
-  speed: 9
+  speed: 100
   _randomSpeed: 1
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
   _spawnEffect: {fileID: 9130449179126203357}
+  animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 4195929182837322614}
   immune: 1
@@ -14680,18 +14682,20 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
+  triggeredAttack: 0
   chargeEffect: {fileID: 4823605491945663866}
   chargeDistance: 18
-  chargeTime: 2
+  chargeTime: 4
   chargeRadius: 3
   chargeForce: 400
-  chargeTarget: {fileID: 0}
+  chargeDamage: 15
   chargeLayerMask:
     serializedVersion: 2
     m_Bits: 4416
+  chargeTimer: 0
   chargeCooldown: 3
   charging: 0
-  chargeSpeed: 20
+  chargeSpeed: 150
 --- !u!54 &6614920390643891118
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14701,7 +14705,7 @@ Rigidbody:
   m_GameObject: {fileID: 2898640269204868951}
   serializedVersion: 4
   m_Mass: 2
-  m_Drag: 1
+  m_Drag: 3
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -14762,7 +14766,7 @@ MonoBehaviour:
   IgnoreTriggerColliders: 0
   pulseRoutine:
     Mode:
-      value: 1
+      value: 0
     UpdateFunction: 0
     Interval:
       value: 0.5
@@ -14780,7 +14784,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
   speedFinal: 0
-  steerSpeed: 6
+  steerSpeed: 8
   lookSpeed: 300
   stoppingDistance: 5
   canMove: 1
@@ -14802,6 +14806,7 @@ MonoBehaviour:
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
+  m_crawler: {fileID: 0}
 --- !u!114 &6499886239188906295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14819,6 +14824,25 @@ MonoBehaviour:
   invincible: 0
   alive: 0
   immuneWeapons: 
+--- !u!114 &102815767397415322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2898640269204868951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseAggression: 0.898
+  healthAggressionModifier: 0.8
+  preferredEngageDistance: 10
+  maxEngageDistance: 20
+  fleeDistance: 15
+  fleeHealthThreshold: 0.1
+  cautionHealthThreshold: 0.1
 --- !u!1 &4244136424091634591
 GameObject:
   m_ObjectHideFlags: 0

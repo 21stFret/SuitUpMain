@@ -36,6 +36,8 @@ public class CrawlerMovement : MonoBehaviour
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
 
+    public Crawler m_crawler;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -59,18 +61,12 @@ public class CrawlerMovement : MonoBehaviour
         {
             distanceToTarget = Vector3.Distance(target.position, transform.position);
         }
-        if (!canMove)
-        {
-            return;
-        }
         MoveCrawler();
 
     }
 
     private void MoveCrawler()
-    {
-
-
+    { 
         if (tracking)
         {
             if (target != null)
@@ -91,7 +87,11 @@ public class CrawlerMovement : MonoBehaviour
         }
 
         Vector3 swarmForce = CalculateSwarmForce();
-        direction += swarmForce;
+        if(!m_crawler.triggeredAttack)
+        {
+            direction += swarmForce; 
+        }
+
 
         RayCastSteering();
         Debug.DrawRay(transform.position, direction * 5, Color.blue);
@@ -100,12 +100,19 @@ public class CrawlerMovement : MonoBehaviour
         dir.y = 0;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
+
+        if (!canMove)
+        {
+            return;
+        }
+
         float speed = speedFinal;
         if (isSlowed)
         {
             speed *= slowedAmount;
         }
-        rb.MovePosition(transform.position + dir.normalized * speed * Time.deltaTime);
+        rb.AddForce(dir.normalized * speed, ForceMode.Force);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, speed);
     }
 
     private void UpdateNearbySwarmMembers()
@@ -175,10 +182,13 @@ public class CrawlerMovement : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(raycastPos, rayDirection, out hit, rayDistance, SteeringRaycast))
             {
+                /*
                 if (hit.collider == groundCollider)
                 {
                     continue;
                 }
+
+                */
                 Vector3 steerDirection = -(hit.point - transform.position);
                 Debug.DrawRay(transform.position, steerDirection, Color.red);
                 direction = steerDirection;
