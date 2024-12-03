@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         InitializeStats();
+        AudioManager.instance.Init();
+        AudioManager.instance.PlayMusic(1);
 
         if (!playOnAwake) return;
 
@@ -56,7 +58,6 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.SetBattleType();
         BattleManager.instance.currentBattleIndex = 0;
         BattleManager.instance.UpdateCrawlerSpawner();
-        AudioManager.instance.PlayMusic(1);
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }
 
