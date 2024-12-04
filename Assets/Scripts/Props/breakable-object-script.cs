@@ -59,13 +59,29 @@ public class BreakableObject : MonoBehaviour
             part.SetActive(true);
             activeparts.Add(part);
             part.transform.localScale = new Vector3(localScale, localScale, localScale);
-
             Rigidbody rb = part.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
-                rb.AddExplosionForce(Random.Range(explosionForce * 0.8f, explosionForce * 1.2f), transform.position, explosionRadius, explosionForce / 2);
+
+                // Add random offset to explosion center
+                Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
+                Vector3 explosionCenter = transform.position + randomOffset;
+
+                // Add random torque for spin
+                rb.AddTorque(Random.insideUnitSphere * Random.Range(10f, 30f), ForceMode.Impulse);
+
+                // Randomize the upwards modifier
+                float randomUpwardsModifier = Random.Range(0.5f, 2f) * (explosionForce / 2);
+
+                // Add explosion force with randomized parameters
+                rb.AddExplosionForce(
+                    Random.Range(explosionForce * 0.7f, explosionForce * 1.3f),
+                    explosionCenter,
+                    Random.Range(explosionRadius * 0.8f, explosionRadius * 1.2f),
+                    randomUpwardsModifier
+                );
             }
         }
 
