@@ -29,6 +29,14 @@ public class Crate : Prop
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();
         explosionEffect.Play();
+        StartCoroutine(DelayedDestroy(1.0f));
+    }
+
+    private IEnumerator DelayedDestroy(float delay)
+    {
+        GetComponent<Collider>().enabled = false;
+        GetComponent<Renderer>().enabled = false;
+        yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
     }
 }

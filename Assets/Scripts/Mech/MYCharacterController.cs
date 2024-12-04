@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class MYCharacterController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class MYCharacterController : MonoBehaviour
     private Rigidbody _rigidbody;
     public Animator CharacterAnimator;
     public float Speed;
+    public float maxSpeed;
     public float minSpeed;
     public float rotateSpeed;
     private Vector3 direction = Vector3.forward;
@@ -37,6 +39,9 @@ public class MYCharacterController : MonoBehaviour
     private bool isSlowed;
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
+
+    public bool onIce;
+    public float iceDrift = 0.8f;
 
     private void Awake()
     {
@@ -185,6 +190,15 @@ public class MYCharacterController : MonoBehaviour
         icedPos.y += 2.6f;
         icedEffect.transform.position = icedPos;
 
+        if(onIce)
+        {
+            _rigidbody.drag = iceDrift;
+        }
+        else
+        {
+            _rigidbody.drag = 3;
+        }
+
         if (isAimLocked)
         {
             if (aimDirectionLoc == Vector3.zero)
@@ -227,7 +241,17 @@ public class MYCharacterController : MonoBehaviour
             {
                 inputedSpeed *= slowedAmount;
             }
-            _rigidbody.AddForce(direction * inputedSpeed);
+            if(!isDodging)
+            {
+                if (_rigidbody.velocity.magnitude < maxSpeed)
+                {
+                    _rigidbody.AddForce(direction * inputedSpeed, ForceMode.Force);
+                }
+                else
+                {
+                    _rigidbody.velocity = direction * maxSpeed;
+                }
+            }
 
         }
         RotateMech();

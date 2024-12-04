@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &348966200778045663
 Transform:
@@ -57,7 +57,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8845850827576061709
 Transform:
@@ -68,7 +68,7 @@ Transform:
   m_GameObject: {fileID: 7305799196643974526}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6, y: 17.3, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -86,8 +86,8 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.7253471, g: 0.9433962, b: 0.8310527, a: 1}
-  m_Intensity: 1
-  m_Range: 5
+  m_Intensity: 6
+  m_Range: 11.38
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -125,12 +125,12 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
+  m_ColorTemperature: 20000
+  m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -246,7 +246,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: edd04641e6be96948aa4b6ffd0f55062, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -256,6 +256,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -366,6 +371,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Single_Ice_Block (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -475,6 +485,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Single_Ice_Block (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -573,7 +588,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2713d20cfa53d0242aef5e58b290de37, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -583,6 +598,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -682,7 +702,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: edd04641e6be96948aa4b6ffd0f55062, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -692,6 +712,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -802,6 +827,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Single_Ice_Block (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -900,7 +930,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2713d20cfa53d0242aef5e58b290de37, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -910,6 +940,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1009,7 +1044,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: edd04641e6be96948aa4b6ffd0f55062, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -1019,6 +1054,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1118,7 +1158,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2713d20cfa53d0242aef5e58b290de37, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b58721bb0dba804c8db97bd84986a7e, type: 2}
     - target: {fileID: -7511558181221131132, guid: b944135f1509d2049a69577ca1f520be,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -1128,6 +1168,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Single_Ice_Block
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b944135f1509d2049a69577ca1f520be,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
