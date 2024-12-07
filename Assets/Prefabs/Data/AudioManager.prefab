@@ -43,9 +43,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -1680374953978355037, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
     type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_audioClip: {fileID: 8300000, guid: 681c08777ce544f1f9fa101411f9c5e2, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -187,13 +187,17 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9f6aa5af78c92ca4494ac9c46d61f961, type: 3}
   - {fileID: 8300000, guid: 7ee9ede440422534192830c927230cc4, type: 3}
   hurtClips:
-  - {fileID: 8300000, guid: fd4838b36b4237d41b494abc26434ccd, type: 3}
-  - {fileID: 8300000, guid: 9d8dda217f9277a4190a9e722542bd4a, type: 3}
+  - {fileID: 8300000, guid: a615af9796db06242a84e175dec40171, type: 3}
+  - {fileID: 8300000, guid: 7ee9ede440422534192830c927230cc4, type: 3}
   - {fileID: 8300000, guid: 07e57c9acd21fb24082df8e9fe8fac6c, type: 3}
+  - {fileID: 8300000, guid: 2406acbce4660b14caf81514ebdb27a3, type: 3}
+  healClips:
+  - {fileID: 8300000, guid: 06a58a7eb882b6e4e923e3fe52cc61af, type: 3}
+  - {fileID: 8300000, guid: 0192fe1f74e88bf4487cf2c47a96edfa, type: 3}
   audioMixer: {fileID: 24100000, guid: b5ecbaa5b9c376f4fa87ef13f374c38f, type: 2}
   backgroundMusic: {fileID: 812579786764937570}
   soundEffect: {fileID: 5786783779343771227}
-  musicVolume: 1
+  musicVolume: 0
   sfxVolume: 1
   eventSystem: {fileID: 0}
   buttonClicked: 0

@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
         gameActive = true;
         BattleManager.instance.SetBattleType();
         BattleManager.instance.currentBattleIndex = 0;
+        BattleManager.instance.crawlerSpawner.Init();
         BattleManager.instance.UpdateCrawlerSpawner();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
     }

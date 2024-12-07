@@ -56,9 +56,6 @@ public class MechWeapon : MonoBehaviour
     public float weaponFuelUseRate;
     [HideInInspector]
     public bool isFiring;
-    public bool isFiringPrimary;
-    [HideInInspector]
-    public bool isFiringAlt;
     public RangeSensor rangeSensor;
     [Header("Main Weapon")]
     public LOSSensor sensor;
@@ -67,9 +64,6 @@ public class MechWeapon : MonoBehaviour
     [Header("Weapon Mods")]
     public WeaponMod weaponMod;
     public bool weaponOverride;
-
-
-
 
     public virtual void Init()
     {
@@ -98,23 +92,6 @@ public class MechWeapon : MonoBehaviour
         weaponFuelUseRate = baseWeaponInfo._weaponFuelUseRate[weaponData.level];
     }
 
-    public virtual void FireAlt()
-    {
-        if (isFiring)
-        {
-            return;
-        }
-
-        isFiringAlt = true;
-    }
-
-    public virtual void StopAlt()
-    {
-
-        isFiringAlt = false;
-    }
-
-
     public void FireMod()
     {
         if(weaponMod == null)
@@ -137,11 +114,6 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Fire()
     {
-        if(isFiringAlt)
-        {
-            return;
-        }
-
 
         if (weaponMod != null && weaponOverride)
         {
@@ -149,7 +121,7 @@ public class MechWeapon : MonoBehaviour
             return;
         }
         isFiring = true;
-        //Debug.Log("Firing " + name);
+
         if (weaponEffects.weaponEffect != null)
         {
             weaponEffects.weaponEffect.Play();
@@ -176,7 +148,6 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Stop()
     {
-
         if (weaponMod != null && weaponOverride)
         {
             StopMod();
@@ -187,7 +158,7 @@ public class MechWeapon : MonoBehaviour
             return;
         }
         isFiring = false;
-        //Debug.Log("Stopping " + name);
+
         if (weaponEffects.weaponEffect != null)
         {
             weaponEffects.weaponEffect.Stop();

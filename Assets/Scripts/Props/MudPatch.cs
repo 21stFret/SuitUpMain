@@ -6,6 +6,7 @@ public class MudPatch : MonoBehaviour
 {
     private MYCharacterController player;
     private float savedSpeed;
+    public float slowAmount = 0.2f;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,8 +17,7 @@ public class MudPatch : MonoBehaviour
                 return;
             }
             player = other.gameObject.GetComponent<MYCharacterController>();
-            savedSpeed = player.Speed;
-            player.Speed = player.Speed / 2;
+            player.ToggleSlow(slowAmount, true);
         }
     }
 
@@ -29,7 +29,7 @@ public class MudPatch : MonoBehaviour
             {
                 return;
             }
-            player.Speed = savedSpeed;
+            player.ToggleSlow(slowAmount, false);
             player = null;
         }
     }

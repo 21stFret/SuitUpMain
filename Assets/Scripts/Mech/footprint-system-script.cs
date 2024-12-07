@@ -39,6 +39,7 @@ public class FootprintSystem : MonoBehaviour
 
     private void InitializeFootprintPool()
     {
+        transform.parent = null;
         footprintPool = new List<GameObject>();
         for (int i = 0; i < poolSize; i++)
         {

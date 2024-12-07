@@ -19,6 +19,7 @@ public class Crate : Prop
 
     public override void Die()
     {
+        base.Die();
         if (Random.value * 100 <= lootChance)
         {
             GameObject randomLoot = loot[Random.Range(0, loot.Length)];

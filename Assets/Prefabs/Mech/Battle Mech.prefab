@@ -20802,6 +20802,60 @@ Transform:
   - {fileID: 3427105339875407612}
   m_Father: {fileID: 5221571773524470837}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4355555809449295204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5750433708171439372}
+  - component: {fileID: 2590945720924019808}
+  m_Layer: 0
+  m_Name: Footprint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &5750433708171439372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355555809449295204}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.04046848, z: -0, w: 0.99918085}
+  m_LocalPosition: {x: 50.265034, y: 0.9708258, z: 20.241074}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6858550102467727535}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2590945720924019808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4355555809449295204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12aab4bcb42aad64ba6233ea34f0507b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  footprintPrefab: {fileID: 2938019028778332909, guid: 9842e45c8eb5d5342944f3d9844ff75d,
+    type: 3}
+  poolSize: 50
+  footprintLifetime: 3
+  footprintInterval: 0.4
+  IsMoving: 0
+  leftFoot: {fileID: 8975475975594432439}
+  rightFoot: {fileID: 8035512995391342973}
+  player: {fileID: 6858550102467727535}
+  footStepLeft: 0
 --- !u!1 &4515972146192616712
 GameObject:
   m_ObjectHideFlags: 0
@@ -56592,7 +56646,6 @@ GameObject:
   - component: {fileID: 5979783455418939766}
   - component: {fileID: 6329598924691163358}
   - component: {fileID: 364384307396218630}
-  - component: {fileID: 4119666744576634704}
   - component: {fileID: 3920902903643086238}
   - component: {fileID: 5514233860546987800}
   - component: {fileID: 547715015366089029}
@@ -56627,6 +56680,7 @@ Transform:
   - {fileID: 6092388055687074138}
   - {fileID: 8911576879706428601}
   - {fileID: 293862036266924511}
+  - {fileID: 5750433708171439372}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1428538622160451209
@@ -56776,20 +56830,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4c9fbd9fa537d43acec0d67f1fbdfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 0}
-  value: {fileID: 0}
-  updatingUI: 0
-  healthLightColor: {r: 4.2221007, g: 6.422235, b: 0, a: 1}
-  damageLightColor: {r: 8.142475, g: 0, b: 0, a: 1}
-  damagefalshColor: {r: 0.6886792, g: 0.016242431, b: 0.016242431, a: 1}
+  healthBar: {fileID: 0}
+  damageOverlay: {fileID: 0}
+  healthText: {fileID: 0}
+  healthLightColor: {r: 0.3171711, g: 2.1185472, b: 0, a: 1}
+  damageLightColor: {r: 5.656854, g: 0, b: 0, a: 1}
+  lerpSpeed: 1
+  damageFlashDuration: 0.5
   screenFlash: {fileID: 0}
   impulseSource: {fileID: 7926855109315850022}
   deathEffect: {fileID: 6092388055686581626}
-  deathClip: {fileID: 8300000, guid: 0e06c997f66813242af742395e3e0dc3, type: 3}
   mainObject: {fileID: 4834883123767186782}
-  topHlafObject: {fileID: 7564854925590220414}
+  topHalfObject: {fileID: 7564854925590220414}
   targetHealth: {fileID: 5979783455418939766}
-  regenRate: 20
+  deathClip: {fileID: 8300000, guid: 0e06c997f66813242af742395e3e0dc3, type: 3}
+  TakeDam: 0
+  Heal: 0
 --- !u!54 &364384307396218630
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -56798,7 +56854,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8800413595774208468}
   serializedVersion: 4
-  m_Mass: 7
+  m_Mass: 5
   m_Drag: 3
   m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -56817,29 +56873,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &4119666744576634704
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8800413595774208468}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.13
-  m_Height: 6.86
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.26, z: 0}
 --- !u!136 &3920902903643086238
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -57113,7 +57146,8 @@ MonoBehaviour:
   _moveInputVector: {x: 0, y: 0}
   runAudio: {fileID: 5618686854592692052}
   CharacterAnimator: {fileID: 1428538622160451209}
-  Speed: 350
+  Speed: 280
+  maxSpeed: 45
   minSpeed: 0
   rotateSpeed: 3
   isAimLocked: 0
@@ -57122,8 +57156,9 @@ MonoBehaviour:
   lookingDirection: {fileID: 9105495936394417343}
   distanceTravelled: 0
   isDodging: 0
-  dashForce: 250
+  dashForce: 200
   dashCooldown: 2
+  dashDuration: 0.3
   dashEffect: {fileID: 434970746085168401}
   dashEffect2: {fileID: 9052721921795810133}
   dashShoes: {fileID: 3423844266178021478}
@@ -57132,10 +57167,12 @@ MonoBehaviour:
   footStep: {fileID: 978492852434238963}
   footStep2: {fileID: 6458035312969665616}
   candodge: 1
-  footprintSystem: {fileID: 0}
+  footprintSystem: {fileID: 2590945720924019808}
   icedEffect: {fileID: 3153263962369969714}
   slowedDuration: 4
   slowedAmount: 0.6
+  onIce: 0
+  iceDrift: 0.5
 --- !u!114 &7926855109315850022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57203,7 +57240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pulsewave: {fileID: 2081187983803785084}
   range: 7
-  forceMagnitude: 20
+  forceMagnitude: 100
   crawlerLayer:
     serializedVersion: 2
     m_Bits: 20865

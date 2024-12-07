@@ -1,58 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1553360118073370218
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1598688563878670529}
-  - component: {fileID: 1512139350355409810}
-  m_Layer: 7
-  m_Name: GroundCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1598688563878670529
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553360118073370218}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 3944224738408491638}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1512139350355409810
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553360118073370218}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &3941092624371446948
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,13 +205,14 @@ GameObject:
   - component: {fileID: 7385233175854182989}
   - component: {fileID: 8265754060228884709}
   - component: {fileID: 8835100205756127941}
+  - component: {fileID: 2247234208028704554}
   m_Layer: 8
   m_Name: Crawler
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3944224738408491638
 Transform:
   m_ObjectHideFlags: 0
@@ -282,7 +230,6 @@ Transform:
   - {fileID: 7485218815305774024}
   - {fileID: 4374270347625340281}
   - {fileID: 5470394275269479015}
-  - {fileID: 1598688563878670529}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -201.865, z: 0}
 --- !u!95 &4026478879676073528
@@ -323,15 +270,13 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  health: 0
-  healthMax: 1
   attackDamage: 1
   attackDistacne: 5
-  speed: 12
-  _randomSpeed: 2
-  randomScale: 2
+  speed: 170
+  randomScale: 0.2
   DeathBlood: {fileID: 7485218815324124808}
   _spawnEffect: {fileID: 7966955931502245795}
+  animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 418313318034436250}
   immune: 0
@@ -347,6 +292,9 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
+  _targetHealth: {fileID: 0}
+  triggeredAttack: 0
+  spawnLocation: {x: 0, y: 0, z: 0}
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -355,8 +303,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3941810313144788156}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 1
+  m_Mass: 2
+  m_Drag: 5.5
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -373,7 +321,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &95319451911253448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,7 +353,7 @@ MonoBehaviour:
   DetectionMode: 0
   Shape: 0
   Sphere:
-    Radius: 150
+    Radius: 10
   Box:
     HalfExtents: {x: 0.5, y: 0.5, z: 0.5}
   Capsule:
@@ -417,7 +365,7 @@ MonoBehaviour:
   IgnoreTriggerColliders: 0
   pulseRoutine:
     Mode:
-      value: 1
+      value: 0
     UpdateFunction: 0
     Interval:
       value: 0.5
@@ -435,28 +383,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destination: {x: 0, y: 0, z: 0}
   speedFinal: 0
-  steerSpeed: 7
-  lookSpeed: 300
+  steerSpeed: 60
+  lookSpeed: 200
   stoppingDistance: 4
   canMove: 1
+  canSwarm: 1
   direction: {x: 0, y: 0, z: 0}
-  rayAmount: 5
+  rayAmount: 9
   rayDistance: 3
   SteeringRaycast:
     serializedVersion: 2
     m_Bits: 135169
   distanceToTarget: 0
-  tracking: 1
-  groundLevel: 0
-  groundCollider: {fileID: 1512139350355409810}
-  separationWeight: 10
+  tracking: 0
+  separationWeight: 1
   alignmentWeight: 1
   cohesionWeight: 1
-  swarmRadius: 5
-  desiredSeparation: 10
+  swarmRadius: 20
+  desiredSeparation: 5
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
+  m_crawler: {fileID: 0}
+  obstacleAvoidanceWeight: 1
 --- !u!136 &8265754060228884709
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -464,7 +413,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3941810313144788156}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: f2e275dc3f584e289f307d12afa60d1e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -493,10 +442,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 0
+  maxHealth: 1
   invincible: 0
   alive: 0
   immuneWeapons: 
+--- !u!114 &2247234208028704554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3941810313144788156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseAggression: 1
+  healthAggressionModifier: 0.3
+  preferredEngageDistance: 10
+  maxEngageDistance: 20
+  fleeDistance: 15
+  fleeHealthThreshold: 0.3
+  cautionHealthThreshold: 0.5
 --- !u!1 &3941811552011450084
 GameObject:
   m_ObjectHideFlags: 0

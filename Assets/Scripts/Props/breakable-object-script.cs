@@ -54,7 +54,10 @@ public class BreakableObject : MonoBehaviour
         for (int i = 0; i < brokenPartPrefabs.Length; i++)
         {
             GameObject part = GetPooledpart(i);
-            part.transform.position = transform.position;
+            Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
+            randomOffset.y = 3f;
+            Vector3 newPos = transform.position + randomOffset;
+            part.transform.position = transform.position + randomOffset;
             part.transform.rotation = transform.rotation;
             part.SetActive(true);
             activeparts.Add(part);
@@ -66,8 +69,9 @@ public class BreakableObject : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
 
                 // Add random offset to explosion center
-                Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
-                Vector3 explosionCenter = transform.position + randomOffset;
+                Vector3 randomOffset1 = Random.insideUnitSphere * 0.5f;
+                randomOffset1.y = -0.5f;
+                Vector3 explosionCenter = newPos + randomOffset1;
 
                 // Add random torque for spin
                 rb.AddTorque(Random.insideUnitSphere * Random.Range(10f, 30f), ForceMode.Impulse);

@@ -27,13 +27,15 @@ public class CrawlerBehavior : MonoBehaviour
     private CrawlerMovement movement;
     
     public float CurrentAggression { get; private set; }
+
+    private bool isDead;
     
-    private void Awake()
+    public void Init()
     {
+        isDead = false;
         crawler = GetComponent<Crawler>();
         movement = GetComponent<CrawlerMovement>();
-        
-        // Initialize states
+
         availableStates = new Dictionary<System.Type, CrawlerState>
         {
             { typeof(IdleState), new IdleState(crawler, movement, this) },
@@ -43,7 +45,7 @@ public class CrawlerBehavior : MonoBehaviour
             { typeof(CautiousState), new CautiousState(crawler, movement, this) },
             { typeof(ChargeState), new ChargeState(crawler, movement, this) }
         };
-        
+
         // Add specialized states for different crawler types
         if (crawler is CrawlerHunter)
         {
@@ -53,16 +55,13 @@ public class CrawlerBehavior : MonoBehaviour
         {
             availableStates.Add(typeof(RangedAttackState), new RangedAttackState(crawler, movement, this));
         }
-    }
-
-    private void Start()
-    {
         // Start in idle state
         TransitionToState(availableStates[typeof(IdleState)]);
     }
 
     private void Update()
     {
+        if (isDead) return;
         UpdateAggression();
         currentState?.Update();
     }
@@ -84,7 +83,7 @@ public class CrawlerBehavior : MonoBehaviour
     
     private void UpdateAggression()
     {
-        float healthPercentage = crawler.health / crawler.healthMax;
+        float healthPercentage = crawler._targetHealth.health / crawler._targetHealth.maxHealth;
         float healthModifier = (1f - healthPercentage) * healthAggressionModifier;
         CurrentAggression = Mathf.Clamp01(baseAggression - healthModifier);
     }
@@ -99,7 +98,7 @@ public class CrawlerBehavior : MonoBehaviour
         currentState?.OnDamaged();
         
         // Check for state transitions based on health
-        float healthPercentage = crawler.health / crawler.healthMax;
+        float healthPercentage = crawler._targetHealth.health / crawler._targetHealth.maxHealth;
         
         if (healthPercentage <= fleeHealthThreshold)
         {
@@ -108,11 +107,25 @@ public class CrawlerBehavior : MonoBehaviour
             {
                 TransitionToState(typeof(FleeState));
             }
+            else
+            {
+                TransitionToState(typeof(PursuitState));
+            }
         }
         else if (healthPercentage <= cautionHealthThreshold && CurrentAggression < 0.7f)
         {
             TransitionToState(typeof(CautiousState));
         }
+        else
+        {
+            TransitionToState(typeof(PursuitState));
+        }
+    }
+
+    public void OnDeath()
+    {
+        isDead = true;
+        currentState = null;
     }
 }
 
@@ -121,11 +134,42 @@ public class IdleState : CrawlerState
 {
     public IdleState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
         : base(crawler, movement, behavior) { }
-    
+
+    float IdleTimer = 0;
+    float pulseCheckTime = 1f;
+
     public override void Enter()
     {
         base.Enter();
+        IdleTimer = Random.Range(0,1);
         movement.canMove = false;
+        movement.tracking = false;
+        crawler.animator.SetBool("Idle", true);
+        crawler.FindClosestTarget();
+        if(crawler.target != null)
+        {
+            behavior.TransitionToState(typeof(PursuitState));
+        }
+    }
+
+    private Vector3 FindIdleRandomPos()
+    {
+        float attempts = 0;
+        float maxAttempts = 15;
+        Vector3 randomPos;
+        while (attempts < maxAttempts)
+        {
+            randomPos = crawler.spawnLocation + (Random.insideUnitSphere * movement.stoppingDistance * 4);
+            randomPos.y = crawler.transform.position.y;
+            var colliders = Physics.OverlapSphere(randomPos, 1f, movement.SteeringRaycast);
+            if (colliders.Length == 0 && Vector3.Distance(crawler.transform.position, randomPos) >= movement.stoppingDistance*2)
+            {
+                return randomPos;
+            }
+            attempts++;
+        }
+        Debug.Log("couldn't find a random position, stayed still");
+        return crawler.transform.position;
     }
     
     public override void Update()
@@ -133,7 +177,28 @@ public class IdleState : CrawlerState
         if (crawler.target != null)
         {
             behavior.TransitionToState(typeof(PursuitState));
+            return;
         }
+        
+        IdleTimer += Time.deltaTime;
+        if (IdleTimer > 2)
+        {
+            movement.SetDestination(FindIdleRandomPos());
+            behavior.TransitionToState(typeof(PursuitState));
+        }
+
+        pulseCheckTime -= Time.deltaTime;
+        if (pulseCheckTime <= 0)
+        {
+            pulseCheckTime = 1f;
+            crawler.FindClosestTarget();
+        }
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        crawler.animator.SetBool("Idle", false);
     }
 }
 
@@ -145,22 +210,27 @@ public class PursuitState : CrawlerState
     public override void Enter()
     {
         base.Enter();
+        movement.tracking = false;
         movement.canMove = true;
-        movement.tracking = true;
     }
     
     public override void Update()
     {
-        if (crawler.target == null)
-        {
-            behavior.TransitionToState(typeof(IdleState));
-            return;
-        }
-
         float engagementRange = behavior.GetEngagementRange();
+
+        if (crawler.target != null)
+        {
+            movement.SetDestination(crawler.target.transform.position);
+        }
         
         if (movement.distanceToTarget <= movement.stoppingDistance)
         {
+            if (crawler.target == null)
+            {
+                behavior.TransitionToState(typeof(IdleState));
+                return;
+            }
+
             behavior.TransitionToState(typeof(AttackState));
         }
         // Consider stealth for hunter type
@@ -194,8 +264,9 @@ public class AttackState : CrawlerState
     
     public override void Update()
     {
+        movement.SetDestination(crawler.target.transform.position);
 
-        if(!crawler.triggeredAttack)
+        if (!crawler.triggeredAttack)
         {
             if (movement.distanceToTarget > crawler.attackDistacne)
             {
@@ -230,7 +301,8 @@ public class ChargeState : CrawlerState
 
     public override void Update()
     {
-        if(charger.charging)
+        movement.SetDestination(crawler.target.transform.position); 
+        if (charger.charging)
         {
             charger.Charging();
         }
@@ -301,7 +373,7 @@ public class CautiousState : CrawlerState
     {
         base.Enter();
         movement.canMove = true;
-        movement.tracking = false;
+        movement.tracking = true;
         circlingTime = 0f;
     }
     

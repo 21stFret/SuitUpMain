@@ -52,7 +52,6 @@ public class CrawlerSpitter : Crawler
 
             //return;
         }
-        crawlerMovement.tracking = false;
         Vector3 randomPos = Random.insideUnitSphere * 30;
         randomPos.y = 1;
         runnerTarget.position = randomPos;
@@ -101,12 +100,9 @@ public class CrawlerSpitter : Crawler
         if(crawlerMovement.distanceToTarget < escapeDistance)
         {
             animator.SetBool("InRange", false);
-            crawlerMovement.tracking = false;
-            crawlerMovement.canMove = true;
             crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
             return;
         }
         base.CheckDistance();
-        crawlerMovement.tracking = true;
     }
 }

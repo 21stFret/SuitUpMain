@@ -10,7 +10,7 @@ public class BattleDataReader : MonoBehaviour
     {
         Debug.Log("Loading Squads for all Area Types");
         Dictionary<AreaType, List<CrawlerSquad>> areaSquads = new Dictionary<AreaType, List<CrawlerSquad>>();
-        List<Dictionary<string, object>> data = CSVReader.Read("WeaponBaseData - Enemy Squads");
+        List<Dictionary<string, object>> data = CSVReader.Read("Suit Up Data - Enemy Squads");
 
         if (data == null || data.Count == 0)
         {
