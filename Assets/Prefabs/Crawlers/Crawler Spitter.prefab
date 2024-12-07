@@ -204,7 +204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6036483922864507147
 Transform:
   m_ObjectHideFlags: 0
@@ -249,8 +249,8 @@ MonoBehaviour:
   healthMax: 5
   attackDamage: 7
   attackDistacne: 50
-  speed: 9
-  _randomSpeed: 0
+  speed: 90
+  _finalSpeed: 0
   randomScale: 0
   DeathBlood: {fileID: 6372291188587022168}
   _spawnEffect: {fileID: 5054925395757251297}
@@ -349,8 +349,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8672713152846678191}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 1
+  m_Mass: 2
+  m_Drag: 2
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

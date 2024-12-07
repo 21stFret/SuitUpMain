@@ -46,7 +46,7 @@ public class CrawlerSpawner : MonoBehaviour
     private bool standardBattle;
     private int burstSpawnAmount;
 
-    private void Start()
+    public void Init()
     {
         InitCrawlers();
     }

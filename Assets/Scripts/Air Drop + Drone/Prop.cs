@@ -7,14 +7,20 @@ public class Prop : MonoBehaviour
 {
     private float health;
     private float healthMax;
-    private bool isDead;
     public TargetHealth _targetHealth;
-
     public DamageNumber damageNumberPrefab;
     public bool damageNumbersOn;
 
+    private Collider _collider;
+
+    private void Start()
+    {
+        Init();
+    }
+
     public virtual void Init()
     {
+        _collider = GetComponent<Collider>();
         if (_targetHealth == null)
         {
             print("No target health found on " + gameObject.name);
@@ -62,11 +68,6 @@ public class Prop : MonoBehaviour
 
     public void TakeDamage(float damage, WeaponType weapon)
     {
-        // Destroy the prop
-        if (isDead)
-        {
-            return;
-        }
         health -= damage;
 
         if (damageNumbersOn)
@@ -82,7 +83,15 @@ public class Prop : MonoBehaviour
 
     public virtual void Die()
     {
-        isDead = true;
+        _targetHealth.alive = false;
+        _collider.enabled = false;
         print(gameObject.name + " has died");
+    }
+
+    public void RefreshProp()
+    {
+        _targetHealth.health = _targetHealth.maxHealth;
+        _targetHealth.alive = true;
+        _collider.enabled = true;
     }
 }

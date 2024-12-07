@@ -38,12 +38,9 @@ public class Crawler : MonoBehaviour
 
 
     [SerializeField]
-    public float health;
-    public int healthMax;
     public int attackDamage;
     public float attackDistacne;
     public float speed;
-    [SerializeField]
     private float _finalSpeed;
     public float randomScale;
     public ParticleSystem DeathBlood;
@@ -67,13 +64,14 @@ public class Crawler : MonoBehaviour
 
     public bool forceSpawn;
 
-    private float pulseCheckTime = 0.5f;
-
     public DamageNumber damageNumberPrefab;
     public bool damageNumbersOn;
-    private TargetHealth _targetHealth;
+    public TargetHealth _targetHealth;
 
     public bool triggeredAttack;
+
+    private CrawlerBehavior _crawlerBehavior;
+    public Vector3 spawnLocation;
 
     public virtual void Init()
     {
@@ -86,6 +84,8 @@ public class Crawler : MonoBehaviour
         crawlerMovement.m_crawler = this;
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        _crawlerBehavior = GetComponent<CrawlerBehavior>();
+        _crawlerBehavior.Init();
         rb = GetComponent<Rigidbody>();
         SetSpeed();
         _collider.enabled = false;
@@ -140,13 +140,6 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        pulseCheckTime -= Time.deltaTime;
-        if(pulseCheckTime <= 0)
-        {
-            pulseCheckTime = 1f;
-            FindClosestTarget();
-        }
-
         if(!target)
         {
             return;
@@ -163,9 +156,7 @@ public class Crawler : MonoBehaviour
             }
         }
 
-        crawlerMovement.SetTarget(target);
-        //CheckDistance();
-        CheckPosition();
+        //CheckPosition();
     }
 
     private void CheckPosition()
@@ -181,25 +172,23 @@ public class Crawler : MonoBehaviour
     }
 
 
-    public void FindClosestTarget()
+    public void FindClosestTarget(bool trueFind = false)
     {
+        float range = trueFind? 100 : 10;
+        rangeSensor.SetSphereShape(range);
+        target = null;
         rangeSensor.Pulse();
-        if (!rangeSensor.GetNearestDetection())
+        var _targets = rangeSensor.GetNearestDetection();
+        if (!_targets)
         {
             return;
         }
-        target = rangeSensor.GetNearestDetection().transform;
+        target = _targets.transform;
+        crawlerMovement.SetTarget(target);
     }
 
     public virtual void CheckDistance()
     {
-        var aggressionBehavior = GetComponent<CrawlerAggression>();
-        if (aggressionBehavior != null && aggressionBehavior.HandleAggressionBehavior())
-        {
-            return; // Aggression behavior handled the movement/attack
-        }
-        // Continue with normal behavior
-
         if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
         {
             inRange = true;
@@ -246,15 +235,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        var targethealth = target.GetComponent<TargetHealth>();
-
-        if(targethealth.health<=0)
-        {
-            target = null;
-            return;
-        }
-
-        targethealth.TakeDamage(attackDamage, WeaponType.Cralwer);
+        target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
     }
 
     public void EndAttack()
@@ -326,7 +307,10 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        GetComponent<CrawlerBehavior>()?.OnDamageTaken();
+        if(target == null)
+        {
+            FindClosestTarget(true);
+        }
 
         FlashRed();
         TakeDamageOveride();
@@ -340,9 +324,11 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        health -= damage;
+        _targetHealth.health -= damage;
 
-        if (health <= 0 )
+        _crawlerBehavior.OnDamageTaken();
+
+        if (_targetHealth.health <= 0 )
         {
             Die(killedBy);
         }
@@ -375,7 +361,7 @@ public class Crawler : MonoBehaviour
     public virtual void Die(WeaponType weapon)
     {
         dead = true;
-        health = 0;
+        _targetHealth.health = 0;
         PlayDeathNoise();
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -385,6 +371,7 @@ public class Crawler : MonoBehaviour
         target = null;
         DeathBlood.transform.SetParent(null);
         DeathBlood.Play();
+        _crawlerBehavior.OnDeath();
 
         if(crawlerSpawner != null)
         {
@@ -433,20 +420,14 @@ public class Crawler : MonoBehaviour
         meshRenderer.enabled = true;
         _collider.enabled = true;
         rb.velocity = Vector3.zero;
-        health = healthMax;
+        _targetHealth.health = _targetHealth.maxHealth;
         SetSpeed();
         crawlerMovement.speedFinal = _finalSpeed;
-        if (transform.position.y< crawlerMovement.groundLevel)
-        {
-            print("Crawler spawned below ground");
-            transform.position = new Vector3(transform.position.x, crawlerMovement.groundLevel + 1, transform.position.z);
-        }
         transform.localScale = Vector3.zero;
         animator.SetTrigger("Respawn");
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
         rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
-        pulseCheckTime = 0;
         DeathBlood.transform.SetParent(transform);
     }
 
@@ -460,6 +441,7 @@ public class Crawler : MonoBehaviour
         crawlerMovement.enabled = true;
         crawlerMovement.canMove = true;
         animator.speed = 1;
+        spawnLocation = transform.position;
     }
 
     private void SetCrawlerScale()

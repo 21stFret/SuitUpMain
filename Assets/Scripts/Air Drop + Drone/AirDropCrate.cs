@@ -44,12 +44,12 @@ public class AirDropCrate : MonoBehaviour
         _object.SetActive(false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        print("box hit " + other.gameObject.name);
-        if (other.gameObject.CompareTag("Player"))
+        print("air drop crate hit " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if(!active)
+            if (!active)
             {
                 return;
             }

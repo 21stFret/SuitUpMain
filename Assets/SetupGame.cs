@@ -36,6 +36,7 @@ public class SetupGame : MonoBehaviour
     {
         gameManager = _gameManager;
         gameManager.endlessMode = endlessMode;
+        gameManager.playOnAwake = true;
 
         BattleManager.instance.Battles.Clear();
         switch (diffiulty)

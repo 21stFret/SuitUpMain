@@ -15,6 +15,7 @@ public class MYCharacterController : MonoBehaviour
     public float Speed;
     public float maxSpeed;
     public float minSpeed;
+    private float bonusSpeed;
     public float rotateSpeed;
     private Vector3 direction = Vector3.forward;
     public bool isAimLocked;
@@ -31,7 +32,7 @@ public class MYCharacterController : MonoBehaviour
     public float dashDuration;
     public ParticleSystem dashEffect, dashEffect2;
     public MeshRenderer dashShoes, dashShoes2;
-    public WeaponController manualWeaponController;
+    public WeaponController weaponController;
     public ParticleSystem footStep, footStep2;
     public bool candodge;
     public FootprintSystem footprintSystem;
@@ -42,6 +43,8 @@ public class MYCharacterController : MonoBehaviour
 
     public bool onIce;
     public float iceDrift = 0.8f;
+
+    public float weaponFiringSlowAmount;
 
     private void Awake()
     {
@@ -189,15 +192,7 @@ public class MYCharacterController : MonoBehaviour
         Vector3 icedPos = transform.position;
         icedPos.y += 2.6f;
         icedEffect.transform.position = icedPos;
-
-        if(onIce)
-        {
-            _rigidbody.drag = iceDrift;
-        }
-        else
-        {
-            _rigidbody.drag = 3;
-        }
+        _rigidbody.drag = onIce? iceDrift : 3;
 
         if (isAimLocked)
         {
@@ -205,21 +200,14 @@ public class MYCharacterController : MonoBehaviour
             {
                 aimDirectionLoc = transform.position + transform.forward *10;
             }
-            //aimDirection.transform.position = aimDirectionLoc;
-            //aimDirection.SetActive(true);
-            //lookingDirection.SetActive(false);
             Vector3 lookDirection = aimDirectionLoc - transform.position;
             lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
         }
         else
         {
-            //aimDirection.SetActive(false);
-            //lookingDirection.SetActive(true);
             aimDirectionLoc = Vector3.zero;
             lookRotation = Quaternion.LookRotation(direction, Vector3.up);
-            Vector3 lookDirection = new Vector3(manualWeaponController.aimX, 0, manualWeaponController.aimZ);
-            //lookRotation = Quaternion.LookRotation(lookDirection, Vector3.up);
-
+            Vector3 lookDirection = new Vector3(weaponController.aimX, 0, weaponController.aimZ);
         }
 
         if (isRunning)
@@ -227,7 +215,7 @@ public class MYCharacterController : MonoBehaviour
             direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
             direction.Normalize();
             float inputedSpeed = _moveInputVector.magnitude * Speed;
-            float bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
+
             if (bonusSpeed > Speed)
             {
                 print("Speed Bonus: " + bonusSpeed);
@@ -237,6 +225,11 @@ public class MYCharacterController : MonoBehaviour
                     inputedSpeed = minSpeed;
                 }
             }
+
+            float weaponFiringSlow = weaponFiringSlowAmount * weaponController.WeaponsFiring();
+            if(weaponFiringSlow !=0) 
+            { inputedSpeed *= 1-weaponFiringSlow; }
+
             if(isSlowed)
             {
                 inputedSpeed *= slowedAmount;
@@ -259,6 +252,11 @@ public class MYCharacterController : MonoBehaviour
         CheckDistance();
     }
 
+    public void SetBonusSpeed()
+    {
+        bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
+    }
+
     private void CheckDistance()
     {
         distTimer += Time.deltaTime;
@@ -270,8 +268,23 @@ public class MYCharacterController : MonoBehaviour
         }
     }
 
-    public void ApplySlow()
+    public void ToggleSlow(float amount, bool isOn)
     {
+        if(isOn)
+        {
+            slowedAmount = amount;
+            isSlowed = true;
+        }
+        else
+        {
+            isSlowed = false;
+        }
+
+    }
+
+    public void ApplyIce(float amount)
+    {
+        slowedAmount = amount;
         icedEffect.Play();
         icedEffect.transform.parent = null;
         isSlowed = true;

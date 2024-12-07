@@ -48,6 +48,11 @@ public class WeaponFuelManager : MonoBehaviour
         FuelManagement();
     }
 
+    public void SetBonus()
+    {
+        weaponFuelBonus = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.FuelRate);
+    }
+
     private void Recharge()
     {
         if(!canRecharge)
@@ -55,7 +60,6 @@ public class WeaponFuelManager : MonoBehaviour
             return;
         }
 
-        weaponFuelBonus = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.FuelRate);
         if (weaponFuelBonus !=0)
         {
             float total = weaponFuelBonus;

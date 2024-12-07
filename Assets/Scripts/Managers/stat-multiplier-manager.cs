@@ -97,38 +97,8 @@ public class StatMultiplierManager : MonoBehaviour
         if (statDictionary.TryGetValue(statType, out Stat stat))
         {
             stat.AddMultiplier(percentageIncrease);
-            switch (statType)
-            {
-                case StatType.MWD_Increase_Percent:
-                    // DOne in targetHealth
-                    Debug.Log($"MWD Increased by {percentageIncrease}");
-                    break;
-                case StatType.AWD_Increase_Percent:
-                    // DOne in targetHealth
-                    Debug.Log($"AWD Increased by {percentageIncrease}");
-                    break;
-                case StatType.Health:
-                    Debug.Log("Health");
-                    // DOne in targetHealth
-                    BattleMech.instance.targetHealth.SetNewMaxHealth();
-                    break;
-                case StatType.FuelRate:
-                    // DOne in WeaponFuel Manager
-                    Debug.Log($"Fuel Rate Increased by {percentageIncrease}");
-                    break;
-                case StatType.FireRate:
-                    Debug.Log($"Fire Rate Increased by {percentageIncrease}");
-                    // DOne in weaponController
-                    BattleMech.instance.weaponController.SetFireRate();
-                    break;
-                case StatType.Speed:
-                    // DOne in MYCharacterController
-                    Debug.Log($"Speed Increased by {percentageIncrease}");
-                    break;
-                default:
-                    Debug.LogWarning($"Stat '{statType}' not found.");
-                    break;
-            }
+            SetStat(statType, percentageIncrease);
+
         }
         else
         {
@@ -141,10 +111,50 @@ public class StatMultiplierManager : MonoBehaviour
         if (statDictionary.TryGetValue(statType, out Stat stat))
         {
             stat.RemoveMultiplier(percentageIncrease);
+            float value = GetCurrentValue(statType);
+            SetStat(statType, value);
         }
         else
         {
             Debug.LogWarning($"Stat '{statType}' not found.");
+        }
+    }
+
+    private void SetStat(StatType statType, float percentageIncrease)
+    {
+        switch (statType)
+        {
+            case StatType.MWD_Increase_Percent:
+                // DOne in targetHealth
+                Debug.Log($"MWD Increased by {percentageIncrease}");
+                break;
+            case StatType.AWD_Increase_Percent:
+                // DOne in targetHealth
+                Debug.Log($"AWD Increased by {percentageIncrease}");
+                break;
+            case StatType.Health:
+                Debug.Log("Health");
+                // DOne in targetHealth
+                BattleMech.instance.targetHealth.SetNewMaxHealth();
+                break;
+            case StatType.FuelRate:
+                // DOne in WeaponFuel Manager
+                Debug.Log($"Fuel Rate Increased by {percentageIncrease}");
+                BattleMech.instance.weaponFuelManager.SetBonus();
+                break;
+            case StatType.FireRate:
+                Debug.Log($"Fire Rate Increased by {percentageIncrease}");
+                // DOne in weaponController
+                BattleMech.instance.weaponController.SetFireRate();
+                break;
+            case StatType.Speed:
+                // DOne in MYCharacterController
+                Debug.Log($"Speed Increased by {percentageIncrease}");
+                BattleMech.instance.myCharacterController.SetBonusSpeed();
+                break;
+            default:
+                Debug.LogWarning($"Stat '{statType}' not found.");
+                break;
         }
     }
 

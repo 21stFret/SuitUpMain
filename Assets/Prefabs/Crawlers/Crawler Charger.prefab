@@ -14573,7 +14573,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8662104389732504624
 Transform:
   m_ObjectHideFlags: 0
@@ -14662,7 +14662,7 @@ MonoBehaviour:
   attackDamage: 10
   attackDistacne: 7
   speed: 100
-  _randomSpeed: 1
+  _finalSpeed: 0
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
   _spawnEffect: {fileID: 9130449179126203357}
@@ -14687,7 +14687,7 @@ MonoBehaviour:
   chargeDistance: 18
   chargeTime: 4
   chargeRadius: 3
-  chargeForce: 400
+  chargeForce: 150
   chargeDamage: 15
   chargeLayerMask:
     serializedVersion: 2
@@ -14695,7 +14695,7 @@ MonoBehaviour:
   chargeTimer: 0
   chargeCooldown: 3
   charging: 0
-  chargeSpeed: 150
+  chargeSpeed: 200
 --- !u!54 &6614920390643891118
 Rigidbody:
   m_ObjectHideFlags: 0

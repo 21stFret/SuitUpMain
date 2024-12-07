@@ -46,6 +46,11 @@ public class TargetHealth : MonoBehaviour
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {
+        if (!alive)
+        {
+            return;
+        }
+
         if (invincible)
         {
             damage = 0;
@@ -98,13 +103,15 @@ public class TargetHealth : MonoBehaviour
 
     public void ApplySlow()
     {
+        float amount = 0.5f;
+        //TODO add slow multipier to increase slowed amount in bonus mods
         if (_crawler != null)
         {
-            _crawler.crawlerMovement.ApplySlow();
+            _crawler.crawlerMovement.ApplySlow(amount);
         }
         if (_mech != null)
         {
-            BattleMech.instance.myCharacterController.ApplySlow();
+            BattleMech.instance.myCharacterController.ApplyIce(amount);
         }
     }
 

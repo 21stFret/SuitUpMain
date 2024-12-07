@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "FireAlt",
                     "type": "Button",
                     "id": "b3ed8966-a462-4d28-93d3-d7c13ed49df1",
                     "expectedControlType": "Button",
@@ -33,18 +33,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "FireP",
+                    "name": "FireMain",
                     "type": "Button",
                     "id": "3227da8a-61dc-4a83-8b20-1836f31e46d0",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "FireAlt",
-                    "type": "Button",
-                    "id": "456e110a-1c4a-4c78-83a8-b0397f368d91",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -126,7 +117,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
-                    "action": "Fire",
+                    "action": "FireAlt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -137,7 +128,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "Fire",
+                    "action": "FireAlt",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -297,28 +288,6 @@
                 },
                 {
                     "name": "",
-                    "id": "adbbb56d-81c0-4880-a189-4b5278cc1aa9",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Default",
-                    "action": "FireAlt",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "7e047c0e-a10c-4d6c-8c83-5c68d415fc4e",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "FireAlt",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "748570dc-0da5-4c94-a2b4-72833a039a56",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -346,7 +315,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Default",
-                    "action": "FireP",
+                    "action": "FireMain",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -357,7 +326,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
-                    "action": "FireP",
+                    "action": "FireMain",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

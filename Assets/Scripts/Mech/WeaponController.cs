@@ -8,8 +8,8 @@ public class WeaponController : MonoBehaviour
     public InputActionAsset primaryActions;
     InputActionMap gameplayActionMap;
     public PlayerInput playerInput;
-    public InputAction FireInputAction;
-    public InputAction FireManualInputAction;
+    public InputAction FireAltWeaponInput;
+    public InputAction FireMainWeaponInput;
     public MechWeapon altWeaponEquiped;
     public MechWeapon mainWeaponEquiped;
     public GameObject rotatingObject;
@@ -23,6 +23,7 @@ public class WeaponController : MonoBehaviour
 
     public bool isAiming;
     private bool initialized;
+
     public void Init(MechWeapon mechWeapon = null)
     {
         rotatingObject.transform.SetParent(null);
@@ -41,7 +42,6 @@ public class WeaponController : MonoBehaviour
         }
 
         ResetAim();
-
         initialized = true;
     }
 
@@ -55,88 +55,48 @@ public class WeaponController : MonoBehaviour
         mainWeaponEquiped.fireRate = fireRate;
     }
 
-    private void SetAltWeaponInputs()
-    {
-        gameplayActionMap = primaryActions.FindActionMap("Gameplay");
-        FireInputAction = gameplayActionMap.FindAction("Fire");
-        FireInputAction.performed += GetFireInput;
-        FireInputAction.canceled += FireRelease;
-    }
-
     private void SetMainWeaponInputs()
     {
         gameplayActionMap = primaryActions.FindActionMap("Gameplay");
-        FireInputAction = gameplayActionMap.FindAction("FireP");
-        FireInputAction.performed += FirePrimary;
-        FireInputAction.canceled += StopPrimary;
+        FireAltWeaponInput = gameplayActionMap.FindAction("FireMain");
+        FireAltWeaponInput.performed += FireMain;
+        FireAltWeaponInput.canceled += HaltFireMain;
+    }
+
+    private void SetAltWeaponInputs()
+    {
+        gameplayActionMap = primaryActions.FindActionMap("Gameplay");
+        FireAltWeaponInput = gameplayActionMap.FindAction("FireAlt");
+        FireAltWeaponInput.performed += FireAlt;
+        FireAltWeaponInput.canceled += HaltFireAlt;
     }
 
     public void ClearWeaponInputs()
     {
-        FireInputAction.performed -= GetFireInput;
-        FireInputAction.canceled -= FireRelease;
-        FireManualInputAction.performed -= GetFireAltInput;
-        FireManualInputAction.canceled -= FireAltRelease;
+        FireMainWeaponInput.performed -= FireMain;
+        FireMainWeaponInput.canceled -= HaltFireMain;
+        FireAltWeaponInput.performed -= FireAlt;
+        FireAltWeaponInput.canceled -= HaltFireAlt;
     }
 
-    private void GetFireInput(InputAction.CallbackContext context)
-    {
-        Fire();
-    }
-
-    private void FireRelease(InputAction.CallbackContext context)
-    {
-        Stop();
-    }
-
-    private void GetFireAltInput(InputAction.CallbackContext context)
-    {
-        FireAlt();
-    }
-
-    private void FireAltRelease(InputAction.CallbackContext context)
-    {
-        StopAlt();
-    }
-
-    private void FirePrimary(InputAction.CallbackContext context)
-    {
-        FireP();
-    }
-
-    private void StopPrimary(InputAction.CallbackContext context)
-    {
-        StopP();
-    }
-
-    public void FireP()
+    private void FireMain(InputAction.CallbackContext context)
     {
         mainWeaponEquiped.Fire();
     }
 
-    public void StopP()
+    private void HaltFireMain(InputAction.CallbackContext context)
     {
         mainWeaponEquiped.Stop();
     }
 
-    public void Fire()
+    private void FireAlt(InputAction.CallbackContext context)
     {
         altWeaponEquiped.Fire();
     }
 
-    public void Stop()
+    private void HaltFireAlt(InputAction.CallbackContext context)
     {
         altWeaponEquiped.Stop();
-    }
-
-    public void FireAlt()
-    {
-        altWeaponEquiped.FireAlt();
-    }
-
-    public void StopAlt()
-    {
-        altWeaponEquiped.StopAlt();
     }
 
     public void FixedUpdate()
@@ -214,5 +174,22 @@ public class WeaponController : MonoBehaviour
         aimZ = 0;
     }
 
+    public int WeaponsFiring()
+    {
+        if(mainWeaponEquiped == null || altWeaponEquiped == null)
+        {
+            return 0;
+        }
+        int firing = 0;
+        if (mainWeaponEquiped.isFiring)
+        {
+            firing++;
+        }
+        if (altWeaponEquiped.isFiring)
+        {
+            firing++;
+        }
+        return firing;
+    }
 
 }
