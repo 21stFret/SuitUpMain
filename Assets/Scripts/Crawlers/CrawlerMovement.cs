@@ -5,14 +5,14 @@ using UnityEngine.Rendering;
 
 public class CrawlerMovement : MonoBehaviour
 {
-    private Transform target;
+    [SerializeField]
+    private Transform movementTarget;
     [SerializeField] private Vector3 destination;
     public float speedFinal;
     public float steerSpeed = 2f;
     public float lookSpeed = 5f;
     public float stoppingDistance = 1f;
     public bool canMove = true;
-    public bool canSwarm = true;
     [SerializeField] private Vector3 direction;
     private Rigidbody rb;
     public int rayAmount = 5;
@@ -23,8 +23,6 @@ public class CrawlerMovement : MonoBehaviour
 
     // Swarm behavior parameters
     public float separationWeight = 1.5f;
-    public float alignmentWeight = 1.0f;
-    public float cohesionWeight = 1.0f;
     public float swarmRadius = 5f;
     public float desiredSeparation = 2f; // Desired distance between crawlers
 
@@ -39,7 +37,8 @@ public class CrawlerMovement : MonoBehaviour
     private bool isGrounded;
 
     [SerializeField] private float obstacleAvoidanceWeight = 2f;
-    private bool canSeePlayer;
+
+    public float wanderRadius = 10f;
 
     private void MoveCrawler()
     {
@@ -54,22 +53,15 @@ public class CrawlerMovement : MonoBehaviour
         if (avoidanceDirection != Vector3.zero)
         {
             direction = (targetDirection + avoidanceDirection * obstacleAvoidanceWeight).normalized;
-            //direction = avoidanceDirection.normalized;
         }
         else
         {
-            if (canSwarm)
+            if (!m_crawler.triggeredAttack)
             {
-                Vector3 swarmForce = CalculateSeparationForce();
-                if (!m_crawler.triggeredAttack)
-                {
-                    Vector3 separationForce = CalculateSeparationForce();
-                    direction = (direction + separationForce * separationWeight).normalized;
-                }
-            }
+                Vector3 separationForce = CalculateSeparationForce();
+                direction = (direction + separationForce * separationWeight).normalized;
+            }        
         }
-
-
 
         // Visualization
         Debug.DrawRay(transform.position, targetDirection * 5, Color.blue);
@@ -80,7 +72,7 @@ public class CrawlerMovement : MonoBehaviour
 
         if (tracking)
         {
-            direction = (target.position - transform.position).normalized;
+            direction = (movementTarget.position - transform.position).normalized;
         }
 
 
@@ -160,8 +152,9 @@ public class CrawlerMovement : MonoBehaviour
 
     public void SetTarget(Transform transform, bool hivemindlock = false)
     {
-        target = transform;
-        SetDestination(target.position);
+        movementTarget = transform;
+        m_crawler.target = transform;
+        SetDestination(movementTarget.position);
         if(hivemindlock)
         {
             return;
@@ -169,13 +162,16 @@ public class CrawlerMovement : MonoBehaviour
         UpdateNearbySwarmMembers();
         foreach (CrawlerMovement crawler in nearbySwarmMembers)
         {
-            crawler.SetTarget(target, true);
+            crawler.SetTarget(movementTarget, true);
+            print("Set target for: " + crawler.name);
         }
     }
 
     public void SetDestination(Vector3 position)
     {
         destination = position;
+        distanceToTarget = Vector3.Distance(destination, transform.position);
+
     }
 
     private void FixedUpdate()
@@ -223,48 +219,6 @@ public class CrawlerMovement : MonoBehaviour
                 nearbySwarmMembers.Add(crawler);
             }
         }
-    }
-
-    private Vector3 CalculateSwarmForce()
-    {
-        Vector3 separation = Vector3.zero;
-        Vector3 alignment = Vector3.zero;
-        Vector3 cohesion = Vector3.zero;
-        int count = 0;
-
-        foreach (CrawlerMovement crawler in nearbySwarmMembers)
-        {
-            Vector3 diff = transform.position - crawler.transform.position;
-            float distance = diff.magnitude;
-
-            // Enhanced separation
-            if (distance < desiredSeparation)
-            {
-                separation += diff.normalized / distance; // Inverse proportional to distance
-            }
-
-            // Alignment and Cohesion
-            if (distance < swarmRadius)
-            {
-                alignment += crawler.rb.velocity;
-                cohesion += crawler.transform.position;
-                count++;
-            }
-        }
-
-        if (count > 0)
-        {
-            alignment /= count;
-            cohesion /= count;
-            cohesion = (cohesion - transform.position).normalized;
-        }
-
-        // Apply weights
-        separation *= separationWeight;
-        alignment *= alignmentWeight;
-        cohesion *= cohesionWeight;
-
-        return separation + alignment + cohesion;
     }
 
     private Vector3 CalculateSeparationForce()

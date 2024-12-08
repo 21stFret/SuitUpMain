@@ -25,6 +25,7 @@ public class CrawlerLeaper : Crawler
         fangsMat = meshRenderer.materials[2];
     }
 
+    /*
     public override void CheckDistance()
     {
         // Always count down leap timer
@@ -48,6 +49,7 @@ public class CrawlerLeaper : Crawler
             base.CheckDistance();
         }
     }
+    */
 
     private void StartLeap()
     {
@@ -108,7 +110,7 @@ public class CrawlerLeaper : Crawler
         if (hasDealtDamage)
             return;
 
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackDistacne);
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange);
         foreach (Collider col in hitColliders)
         {
             if (col.CompareTag("Player"))

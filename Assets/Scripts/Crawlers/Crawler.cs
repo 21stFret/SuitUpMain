@@ -39,7 +39,7 @@ public class Crawler : MonoBehaviour
 
     [SerializeField]
     public int attackDamage;
-    public float attackDistacne;
+    public float attackRange;
     public float speed;
     private float _finalSpeed;
     public float randomScale;
@@ -51,7 +51,6 @@ public class Crawler : MonoBehaviour
     protected bool inRange;
     [SerializeField]
     private bool immune;
-    public float randomLocationRadius;
     public float crawlerScale;
     public int cashWorth;
     public int expWorth;
@@ -70,7 +69,7 @@ public class Crawler : MonoBehaviour
 
     public bool triggeredAttack;
 
-    private CrawlerBehavior _crawlerBehavior;
+    public CrawlerBehavior _crawlerBehavior;
     public Vector3 spawnLocation;
 
     public virtual void Init()
@@ -84,8 +83,7 @@ public class Crawler : MonoBehaviour
         crawlerMovement.m_crawler = this;
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        _crawlerBehavior = GetComponent<CrawlerBehavior>();
-        _crawlerBehavior.Init();
+
         rb = GetComponent<Rigidbody>();
         SetSpeed();
         _collider.enabled = false;
@@ -98,6 +96,13 @@ public class Crawler : MonoBehaviour
             return;
         }
         damageNumbersOn = true;
+        Invoke("EnableBrain", 0.2f);
+    }
+
+    private void EnableBrain()
+    {
+        _crawlerBehavior = GetComponent<CrawlerBehavior>();
+        _crawlerBehavior.Init();
     }
 
     private void Start()
@@ -155,26 +160,11 @@ public class Crawler : MonoBehaviour
                 return;
             }
         }
-
-        //CheckPosition();
     }
-
-    private void CheckPosition()
-    {
-        if (transform.position.y < -10)
-        {
-            if(dead)
-            {
-                return;
-            }
-            TakeDamage(1000, WeaponType.Default);
-        }
-    }
-
 
     public void FindClosestTarget(bool trueFind = false)
     {
-        float range = trueFind? 100 : 10;
+        float range = trueFind? 100 : attackRange;
         rangeSensor.SetSphereShape(range);
         target = null;
         rangeSensor.Pulse();
@@ -185,22 +175,6 @@ public class Crawler : MonoBehaviour
         }
         target = _targets.transform;
         crawlerMovement.SetTarget(target);
-    }
-
-    public virtual void CheckDistance()
-    {
-        if (crawlerMovement.distanceToTarget < crawlerMovement.stoppingDistance)
-        {
-            inRange = true;
-
-            Attack();
-        }
-        else
-        {
-            inRange = false;
-            animator.SetBool("InRange", false);
-            crawlerMovement.canMove = true;
-        }
     }
 
     public virtual void Attack()
@@ -228,7 +202,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        if (crawlerMovement.distanceToTarget >= attackDistacne)
+        if (crawlerMovement.distanceToTarget >= attackRange)
         {
             animator.SetBool("InRange", false);
             print("Player out of range");

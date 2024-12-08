@@ -102,6 +102,10 @@ public class MechHealth : MonoBehaviour
 
         // Accumulate pending damage for flash effect
         pendingDamage += damage;
+        if (targetHealth.health <= 0)
+        {
+            Die();
+        }
         healthBar.fillAmount = Mathf.Clamp01(cachedFillamount -(pendingDamage / targetHealth.maxHealth));
 
         if (healthBar.fillAmount <= 0.21f)
@@ -142,10 +146,7 @@ public class MechHealth : MonoBehaviour
         rb.velocity = Vector3.zero;
 
         // Check death
-        if (targetHealth.health <= 0)
-        {
-            Die();
-        }
+
 
         UpdateHealthUI(targetHealth.health);
     }

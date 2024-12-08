@@ -15,6 +15,7 @@ public class CrawlerAlbino : Crawler
     public float smashmovementDelay;
     private bool smashing;
 
+    /*
     public override void CheckDistance()
     {
         if (crawlerMovement.distanceToTarget < smashDistance)
@@ -35,6 +36,7 @@ public class CrawlerAlbino : Crawler
         base.CheckDistance();
 
     }
+    */
 
     public void Smash()
     {

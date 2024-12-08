@@ -18,7 +18,8 @@ public class CrawlerCharger : Crawler
     private List<GameObject> chargeTargets = new List<GameObject>();
     private int hitCount;
 
-    public override void CheckDistance()
+    
+    public void CheckDistance()
     {
         if (charging)
         {
@@ -46,6 +47,7 @@ public class CrawlerCharger : Crawler
         //base.CheckDistance();
 
     }
+    
 
     public void Charging()
     {
