@@ -1,58 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &904766311135297461
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 19578709690155362}
-  - component: {fileID: 7732307822892334644}
-  m_Layer: 7
-  m_Name: GroundCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &19578709690155362
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 904766311135297461}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 6036483922864507147}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &7732307822892334644
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 904766311135297461}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &5481265561883088842
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,9 +54,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 40
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -142,7 +89,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -198,6 +145,7 @@ GameObject:
   - component: {fileID: 6186126386389266529}
   - component: {fileID: 7089888831725209665}
   - component: {fileID: 1853808369309738232}
+  - component: {fileID: 3358707237729660399}
   m_Layer: 8
   m_Name: Crawler Spitter
   m_TagString: Enemy
@@ -222,7 +170,6 @@ Transform:
   - {fileID: 6372291188572865048}
   - {fileID: 2919909792663865689}
   - {fileID: 7159700264110475045}
-  - {fileID: 19578709690155362}
   - {fileID: 3788557735923584039}
   - {fileID: 8711787888356430424}
   - {fileID: 4193902812616045012}
@@ -245,20 +192,16 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  health: 0
-  healthMax: 5
   attackDamage: 7
-  attackDistacne: 50
-  speed: 90
-  _finalSpeed: 0
-  randomScale: 0
+  attackRange: 35
+  speed: 180
+  randomScale: 0.1
   DeathBlood: {fileID: 6372291188587022168}
   _spawnEffect: {fileID: 5054925395757251297}
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 2977521352958846146}
   immune: 0
-  randomLocationRadius: 0
   crawlerScale: 0.8
   cashWorth: 10
   expWorth: 7
@@ -270,7 +213,10 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
   damageNumbersOn: 1
+  _targetHealth: {fileID: 0}
   triggeredAttack: 0
+  _crawlerBehavior: {fileID: 0}
+  spawnLocation: {x: 0, y: 0, z: 0}
   DeathEffect: {fileID: 0}
   layerMask:
     serializedVersion: 2
@@ -295,31 +241,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad473b26ffd16d499fb9d7c6d864494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementTarget: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
   speedFinal: 0
-  steerSpeed: 6
-  lookSpeed: 250
-  stoppingDistance: 22
+  steerSpeed: 30
+  lookSpeed: 200
+  stoppingDistance: 1
   canMove: 1
   direction: {x: 0, y: 0, z: 0}
-  rayAmount: 5
+  rayAmount: 7
   rayDistance: 3
   SteeringRaycast:
     serializedVersion: 2
     m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
-  groundLevel: 0
-  groundCollider: {fileID: 7732307822892334644}
-  separationWeight: 1.5
-  alignmentWeight: 1
-  cohesionWeight: 1
-  swarmRadius: 5
+  separationWeight: 1
+  swarmRadius: 25
   desiredSeparation: 2
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
+  obstacleAvoidanceWeight: 1
+  wanderRadius: 20
 --- !u!95 &1088147171486223594
 Animator:
   serializedVersion: 5
@@ -349,8 +294,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8672713152846678191}
   serializedVersion: 4
-  m_Mass: 2
-  m_Drag: 2
+  m_Mass: 3
+  m_Drag: 5.5
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -451,10 +396,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 0
+  maxHealth: 20
   invincible: 0
   alive: 0
   immuneWeapons: 
+--- !u!114 &3358707237729660399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8672713152846678191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseAggression: 1
+  healthAggressionModifier: 0.3
+  preferredEngageDistance: 20
+  maxEngageDistance: 30
+  fleeDistance: 15
+  fleeHealthThreshold: 0.3
+  cautionHealthThreshold: 0.5
 --- !u!1001 &62135138584733998
 PrefabInstance:
   m_ObjectHideFlags: 0

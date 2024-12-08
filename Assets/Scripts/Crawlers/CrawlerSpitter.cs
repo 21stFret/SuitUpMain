@@ -69,7 +69,6 @@ public class CrawlerSpitter : Crawler
 
     public IEnumerator Spit()
     {
-
         animator.SetTrigger("Spit");
         yield return new WaitForSeconds(0.3f);
         CycleProjectiles();
@@ -80,29 +79,15 @@ public class CrawlerSpitter : Crawler
         {
             spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage, target);
         }
-
-        crawlerMovement.canMove = true;
     }
 
     public override void Attack()
     {
-        crawlerMovement.canMove = false;
         spitTimer += Time.deltaTime;
         if (spitTimer > spitSpeed)
         {
             StartCoroutine(Spit());
             spitTimer = 0;
         }
-    }
-
-    public override void CheckDistance()
-    {
-        if(crawlerMovement.distanceToTarget < escapeDistance)
-        {
-            animator.SetBool("InRange", false);
-            crawlerMovement.SetDestination(transform.position + (transform.position - target.position).normalized * 10);
-            return;
-        }
-        base.CheckDistance();
     }
 }

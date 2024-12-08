@@ -57146,8 +57146,8 @@ MonoBehaviour:
   _moveInputVector: {x: 0, y: 0}
   runAudio: {fileID: 5618686854592692052}
   CharacterAnimator: {fileID: 1428538622160451209}
-  Speed: 280
-  maxSpeed: 45
+  Speed: 240
+  maxSpeed: 20
   minSpeed: 0
   rotateSpeed: 3
   isAimLocked: 0
@@ -57163,7 +57163,7 @@ MonoBehaviour:
   dashEffect2: {fileID: 9052721921795810133}
   dashShoes: {fileID: 3423844266178021478}
   dashShoes2: {fileID: 8677017111506578234}
-  manualWeaponController: {fileID: 2587136083339096648}
+  weaponController: {fileID: 2587136083339096648}
   footStep: {fileID: 978492852434238963}
   footStep2: {fileID: 6458035312969665616}
   candodge: 1
@@ -57173,6 +57173,7 @@ MonoBehaviour:
   slowedAmount: 0.6
   onIce: 0
   iceDrift: 0.5
+  weaponFiringSlowAmount: 0.25
 --- !u!114 &7926855109315850022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57335,20 +57336,20 @@ MonoBehaviour:
   primaryActions: {fileID: -944628639613478452, guid: f751f7846a93fff48b1cb9132203a203,
     type: 3}
   playerInput: {fileID: 5514233860546987800}
-  FireInputAction:
-    m_Name: Fire Input
+  FireAltWeaponInput:
+    m_Name: Fire Alt Weapon Input
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 6bc8182f-f5b3-4ea5-b4ca-43eedc2d1f4e
+    m_Id: 47837d14-7b98-4c4f-8579-4930638231b2
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
-  FireManualInputAction:
-    m_Name: Fire Manual Input
+  FireMainWeaponInput:
+    m_Name: Fire Main Weapon Input
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 759b2bfe-06fe-4799-a558-432a9c2b8c3a
+    m_Id: 67b67e84-3f76-44b8-a5ac-ca68722aff4d
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []

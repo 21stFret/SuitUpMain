@@ -3,24 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-public class DeadTree : Prop
+public class DeadTree : Crate
 {
-    BreakableObject breakableObject;
-
-    void Start()
+    public void OnCollisionEnter(Collision collision)
     {
-        Init();
-    }
-
-    public override void Init()
-    {
-        base.Init();
-    }
-
-    public override void Die()
-    {
-        breakableObject.transform.parent = null;
-        breakableObject.Break();
-        gameObject.SetActive(false);
+        if (collision.gameObject.tag == "Player")
+        {
+            Die();
+        }
     }
 }

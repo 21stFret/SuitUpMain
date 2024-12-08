@@ -33,42 +33,6 @@ public class CrawlerHunter : Crawler
         }
     }
 
-    public override void CheckDistance()
-    {
-        if (isStealthed)
-        {
-            // If in stealth attack range, perform powerful attack
-            if (crawlerMovement.distanceToTarget <= stealthAttackRange)
-            {
-                StealthAttack();
-                return;
-            }
-        }
-        else
-        {
-            // Count down stealth cooldown
-            if (stealthTimer > 0)
-            {
-                stealthTimer -= Time.deltaTime;
-            }
-            // Try to enter stealth if in range and cooldown ready
-            else if (crawlerMovement.distanceToTarget <= stealthRange)
-            {
-                EnterStealth();
-                return;
-            }
-
-            if (isAttacking)
-            {
-                return;
-            }
-            // Use normal behavior if not handling stealth
-            base.CheckDistance();
-        }
-
-
-    }
-
     private void EnterStealth()
     {
         if(isAttacking || isStealthed)
@@ -76,7 +40,7 @@ public class CrawlerHunter : Crawler
             return;
         }
         isStealthed = true;
-        crawlerMovement.canMove = false;
+
         StartCoroutine(FadeOut());
         if (stealthEffect != null)
         {
@@ -88,7 +52,7 @@ public class CrawlerHunter : Crawler
     private void RevealFromStealth()
     {
         if (!isStealthed) return;
-        crawlerMovement.canMove = true;
+
         isStealthed = false;
         stealthTimer = stealthCooldown;
         StartCoroutine(FadeIn());
@@ -110,13 +74,13 @@ public class CrawlerHunter : Crawler
        
         // Trigger attack animation
         animator.SetTrigger("StealthAttack");
-        crawlerMovement.canMove = false;
+
     }
 
     public void StealthAttackHit()
     {
         isAttacking = false;
-        crawlerMovement.canMove = true;
+
         animator.ResetTrigger("StealthAttack");
         // Do enhanced damage
         if (target != null)
@@ -156,7 +120,7 @@ public class CrawlerHunter : Crawler
         }
 
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        crawlerMovement.canMove = true;
+
     }
 
     private IEnumerator FadeIn()
