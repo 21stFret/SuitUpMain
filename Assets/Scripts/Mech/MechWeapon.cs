@@ -12,7 +12,8 @@ public enum WeaponType
     Cryo,
     AoE,
     Cralwer,
-    Default
+    Default,
+    Heal
 }
 
 [Serializable]
