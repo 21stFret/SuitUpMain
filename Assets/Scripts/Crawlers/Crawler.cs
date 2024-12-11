@@ -87,7 +87,6 @@ public class Crawler : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         SetSpeed();
         _collider.enabled = false;
-        //crawlerMovement.groundCollider.enabled = false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         if (damageNumberPrefab == null)
@@ -96,11 +95,11 @@ public class Crawler : MonoBehaviour
             return;
         }
         damageNumbersOn = true;
-        Invoke("EnableBrain", 0.2f);
     }
 
     private void EnableBrain()
     {
+        //Called by Invoke above
         _crawlerBehavior = GetComponent<CrawlerBehavior>();
         _crawlerBehavior.Init();
     }
@@ -389,6 +388,7 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
+        EnableBrain();
         gameObject.SetActive(true);
         dead = false;
         meshRenderer.enabled = true;
