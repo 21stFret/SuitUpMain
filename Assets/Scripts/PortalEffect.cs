@@ -62,6 +62,7 @@ public class PortalEffect : MonoBehaviour
         doTweenFade.FadeOut();
         _particleSystem.Stop();
         _particleSystem2.Stop();
+
     }
 
     public void StopEffect()

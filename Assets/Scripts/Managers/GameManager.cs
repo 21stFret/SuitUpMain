@@ -117,8 +117,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
+        BattleMech.instance.myCharacterController.enabled = true;
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
+
     }
 
     public IEnumerator LoadVoidRoom()
@@ -132,6 +134,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
+        BattleMech.instance.myCharacterController.enabled = true;
         gameUI.gameUIFade.FadeIn();
 
     }
@@ -161,7 +164,7 @@ public class GameManager : MonoBehaviour
 
         if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 1)
         {
-           voidPortalManager.StartVoidEffect();
+            voidPortalManager.StartVoidEffect();
             BattleManager.instance.ResetOnNewArea();
         }
         else

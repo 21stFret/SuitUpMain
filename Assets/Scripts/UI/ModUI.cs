@@ -81,7 +81,7 @@ public class ModUI : MonoBehaviour
         switch(mod.rarity)
         {
             case 0:
-                rarity = "Common";
+                rarity = "Basic";
                 break;
             case 1:
                 rarity = "Rare";
