@@ -85,37 +85,41 @@ public class MechHealth : MonoBehaviour
 
     private void TakeDamage1()
     {
-        TakeDamage(10);
+        targetHealth.TakeDamage(10);
     }
 
     private void HealTest()
     {
-        TakeDamage(-10);
+        targetHealth.TakeDamage(-10);
     }
 
     public void TakeDamage(float damage)
     {
-        if (characterController.isDodging || isDead) return;
+        if (isDead) return;
+
+        bool isHeal = damage < 0;
+
+        if (!isHeal && characterController.isDodging)
+        {
+            return;
+        }
 
         // Update actual health
         targetHealth.health = Mathf.Clamp(targetHealth.health - damage, 0, targetHealth.maxHealth);
+        UpdateHealthUI(targetHealth.health);
 
         // Accumulate pending damage for flash effect
         pendingDamage += damage;
-        if (targetHealth.health <= 0)
-        {
-            Die();
-        }
+
         healthBar.fillAmount = Mathf.Clamp01(cachedFillamount -(pendingDamage / targetHealth.maxHealth));
 
         if (healthBar.fillAmount <= 0.21f)
         {
-            if(healthlow)
+            if(!healthlow)
             {
-                return; 
+                healthlow = true;
+                StartCoroutine(HealthBarFlash());
             }
-            healthlow = true;
-            StartCoroutine(HealthBarFlash());
         }
         else
         {
@@ -124,15 +128,17 @@ public class MechHealth : MonoBehaviour
         }
 
         // Visual effects
-        float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
-        impulseSource.GenerateImpulse(damagePercent);
 
-        if (damage > 0)
+
+        if (!isHeal)
         {
             flash.color = damageLightColor;
             hit = true;
             lastDamageTime = Time.time;
             AudioManager.instance.PlayHurt();
+            rb.velocity = Vector3.zero;
+            float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
+            impulseSource.GenerateImpulse(damagePercent);
         }
         else
         {
@@ -143,12 +149,11 @@ public class MechHealth : MonoBehaviour
 
         StartCoroutine(DamageFlash());
 
-        rb.velocity = Vector3.zero;
+        if (targetHealth.health <= 0)
+        {
+            Die();
+        }
 
-        // Check death
-
-
-        UpdateHealthUI(targetHealth.health);
     }
 
     private IEnumerator LerpHealthBar()

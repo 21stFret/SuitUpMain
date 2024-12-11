@@ -1,3 +1,4 @@
+using DamageNumbersPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,9 @@ public class TargetHealth : MonoBehaviour
     private Prop _prop;
 
     public List<WeaponType> immuneWeapons;
+
+    public bool damageNumbersOn;
+    public DamageNumber damageNumberPrefab;
 
     public void Init(Crawler C = null, MechHealth M =null, Prop P=null)
     {
@@ -69,6 +73,11 @@ public class TargetHealth : MonoBehaviour
             ApplySlow();
         }
 
+        if (damageNumbersOn)
+        {
+            DamageNumbers(damage, weaponType);
+        }
+
         if (_mech != null)
         {
             _mech.TakeDamage(damage);
@@ -98,6 +107,54 @@ public class TargetHealth : MonoBehaviour
                 return;
             }
             _crawler.TakeDamage(damage, weaponType, stunTime);
+        }
+    }
+
+    public void DamageNumbers(float dam, WeaponType weapon)
+    {
+        if (weapon == WeaponType.Default)
+        {
+            return;
+        }
+
+        if(dam<0)
+        {
+            weapon = WeaponType.Heal;
+        }
+        
+
+        DamageNumber newPopup = damageNumberPrefab.Spawn(transform.position, Mathf.Abs(dam));
+        newPopup.SetFollowedTarget(transform);
+        newPopup.SetScale(5);
+        switch (weapon)
+        {
+            case WeaponType.Minigun:
+                newPopup.SetColor(Color.white);
+                break;
+            case WeaponType.Shotgun:
+                break;
+            case WeaponType.Flame:
+                newPopup.SetColor(Color.red);
+                break;
+            case WeaponType.Lightning:
+                newPopup.SetColor(Color.cyan);
+                break;
+            case WeaponType.Cryo:
+                newPopup.SetColor(Color.blue);
+                break;
+            case WeaponType.Plasma:
+                newPopup.SetColor(Color.magenta);
+                break;
+            case WeaponType.AoE:
+                break;
+            case WeaponType.Cralwer:
+                newPopup.SetColor(Color.red);
+                break;
+            case WeaponType.Heal:
+                newPopup.SetColor(Color.green);
+                break;
+            default:
+                break;
         }
     }
 

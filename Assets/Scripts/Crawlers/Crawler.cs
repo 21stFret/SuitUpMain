@@ -63,8 +63,6 @@ public class Crawler : MonoBehaviour
 
     public bool forceSpawn;
 
-    public DamageNumber damageNumberPrefab;
-    public bool damageNumbersOn;
     public TargetHealth _targetHealth;
 
     public bool triggeredAttack;
@@ -83,18 +81,11 @@ public class Crawler : MonoBehaviour
         crawlerMovement.m_crawler = this;
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-
         rb = GetComponent<Rigidbody>();
         SetSpeed();
         _collider.enabled = false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
-        if (damageNumberPrefab == null)
-        {
-            damageNumbersOn = false;
-            return;
-        }
-        damageNumbersOn = true;
     }
 
     private void EnableBrain()
@@ -228,45 +219,6 @@ public class Crawler : MonoBehaviour
         
     }
 
-    public void DamageNumbers(float dam, WeaponType weapon)
-    {
-        if(weapon == WeaponType.Default)
-        {
-            return;
-        }
-        DamageNumber newPopup = damageNumberPrefab.Spawn(transform.position, dam);
-        newPopup.SetFollowedTarget(transform);
-        newPopup.SetScale(5);
-        switch (weapon)
-        {
-            case WeaponType.Minigun:
-                newPopup.SetColor(Color.white);
-                break;
-            case WeaponType.Shotgun:
-                break;
-            case WeaponType.Flame:
-                newPopup.SetColor(Color.red);
-                break;
-            case WeaponType.Lightning:
-                newPopup.SetColor(Color.cyan);
-                break;
-            case WeaponType.Cryo:
-                newPopup.SetColor(Color.blue);
-                break;
-            case WeaponType.Plasma:
-                newPopup.SetColor(Color.magenta);
-                break;
-            case WeaponType.AoE:
-                break;
-            case WeaponType.Cralwer:
-                break;
-            case WeaponType.Default:
-                break;
-            default:
-                break;
-        }
-    }
-
     
     public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
     {
@@ -287,10 +239,7 @@ public class Crawler : MonoBehaviour
 
         FlashRed();
         TakeDamageOveride();
-        if (damageNumbersOn)
-        {
-            DamageNumbers(damage, killedBy);
-        }
+
 
         if (immune)
         {
