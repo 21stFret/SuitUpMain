@@ -43,6 +43,7 @@ public class CrawlerBehavior : MonoBehaviour
 
         availableStates = new Dictionary<System.Type, CrawlerState>
         {
+            { typeof(SpawnedState), new SpawnedState(crawler, movement, this) },
             { typeof(IdleState), new IdleState(crawler, movement, this) },
             { typeof(PursuitState), new PursuitState(crawler, movement, this) },
             { typeof(AttackState), new AttackState(crawler, movement, this) },
@@ -61,7 +62,7 @@ public class CrawlerBehavior : MonoBehaviour
             availableStates.Add(typeof(RangedAttackState), new RangedAttackState(crawler, movement, this));
         }
         // Start in idle state
-        TransitionToState(availableStates[typeof(IdleState)]);
+        TransitionToState(availableStates[typeof(SpawnedState)]);
     }
 
     private void Update()
@@ -249,7 +250,7 @@ public class PursuitState : CrawlerState
                 {
                     behavior.TransitionToState(typeof(RangedAttackState));
                 }
-                return;
+            break;
 
             case CrawlerHunter hunter:
                 otherBehavior = true;
@@ -257,11 +258,15 @@ public class PursuitState : CrawlerState
                 {
                     behavior.TransitionToState(typeof(StealthState));
                 }
-                return;
+            break;
 
             case CrawlerCharger charger:
-                charger.CheckDistance();
-                return;
+                if(charger.CheckCanCharge())
+                {
+                    otherBehavior = true;
+                    behavior.TransitionToState(typeof(ChargeState));
+                }
+            break;
         }
 
         if (otherBehavior) { return; }
@@ -314,6 +319,33 @@ public class AttackState : CrawlerState
     }
 }
 
+public class SpawnedState : CrawlerState
+{
+    public SpawnedState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior)
+        : base(crawler, movement, behavior) { }
+
+    public override void Enter()
+    {
+        base.Enter();
+    }
+
+    float spawnTimer = 0;
+
+    public override void Update()
+    {
+        spawnTimer += Time.deltaTime;
+        if (spawnTimer >= 1f)
+        {
+            behavior.TransitionToState(typeof(IdleState));
+        }
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+}
+
 public class ChargeState : CrawlerState
 {
     public ChargeState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior)
@@ -321,11 +353,16 @@ public class ChargeState : CrawlerState
 
     public CrawlerCharger charger;
 
+    private float chargePulseTime = 0.8f;
+    private float chargePulseTimer;
+
     public override void Enter()
     {
         charger = crawler as CrawlerCharger;
         base.Enter();
         charger.StartCoroutine(charger.Charge());
+        chargePulseTimer = chargePulseTime;
+        movement.SetRaycastSteering(charger.chargeLookLayerMask);
     }
 
     public override void Update()
@@ -333,7 +370,12 @@ public class ChargeState : CrawlerState
         movement.SetDestination(crawler.target.transform.position); 
         if (charger.charging)
         {
-            charger.Charging();
+            chargePulseTimer += Time.deltaTime;
+            if(chargePulseTimer >= chargePulseTime)
+            {
+                charger.Charging();
+                chargePulseTimer = 0;
+            }
         }
         else
         {
@@ -344,6 +386,7 @@ public class ChargeState : CrawlerState
     public override void Exit()
     {
         base.Exit();
+        movement.SetRaycastSteering(charger.normalLookLayerMask);
     }
 }
 
@@ -481,6 +524,12 @@ public class RangedAttackState : CrawlerState
     
     public override void Update()
     {
+        if (crawler.target == null)
+        {
+            behavior.TransitionToState(typeof(IdleState));
+            return;
+        }
+
         movement.SetDestination(crawler.target.transform.position);
 
         spitterCrawler.Attack();

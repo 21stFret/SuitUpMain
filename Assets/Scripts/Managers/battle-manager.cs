@@ -13,6 +13,7 @@ public class BattleManager : MonoBehaviour
     public Pickup roomDrop;
     public LayerMask dropLayer;
     public string objectiveMessage;
+    public float dificultyMultiplier = 1;
 
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
@@ -97,6 +98,7 @@ public class BattleManager : MonoBehaviour
             GameManager.instance.EndGame(true);
             return;
         }
+        GameManager.instance.gameActive = false;
         SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
         roomDrop.Init(GameManager.instance.nextBuildtoLoad);

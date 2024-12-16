@@ -16,13 +16,24 @@ public class AreaManager : MonoBehaviour
     public List<GameObject> DesertRoomPrefabs = new List<GameObject>();
     public List<GameObject> IceRoomPrefabs = new List<GameObject>();
     public List<GameObject> JungleRoomPrefabs = new List<GameObject>();
+    private List<GameObject> allRooms = new List<GameObject>();
 
     public GameObject voidArea;
 
     public GameObject currentRoom;
 
+    private void Start()
+    {
+        allRooms.AddRange(GrassRoomPrefabs);
+        allRooms.AddRange(DesertRoomPrefabs);
+        allRooms.AddRange(IceRoomPrefabs);
+        allRooms.AddRange(JungleRoomPrefabs);
+    }
+
     public void LoadRoom(AreaType areaType)
     {
+        allRooms.ForEach(room => room.SetActive(false));
+
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);

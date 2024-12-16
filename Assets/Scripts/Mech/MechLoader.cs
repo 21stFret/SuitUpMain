@@ -71,8 +71,11 @@ public class MechLoader : MonoBehaviour
             weaponController.enabled = true;
             weaponController.Init(altWeapon);
             altWeapon.Init();
-            weaponModManager.weapon = altWeapon;
-            weaponModManager.altWeapon = weaponController;
+            if(weaponModManager != null)
+            {
+                weaponModManager.weapon = altWeapon;
+                weaponModManager.altWeapon = weaponController;
+            }
         }
 
     }

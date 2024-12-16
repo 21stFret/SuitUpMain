@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public WeaponController altWeaponController;
     public AreaManager areaManager;
     public VoidPortalManager voidPortalManager;
+    public VoidAreaManager voidAreaManager;
     public RoomPortal RoomPortal;
     public int currentRoomIndex;
     public bool endlessMode;
@@ -22,11 +23,14 @@ public class GameManager : MonoBehaviour
     public ModBuildType nextBuildtoLoad;
     public AreaType currentAreaType;
     public StatMultiplierManager statMultiplierManager;
+    public RunUpgradeManager runUpgradeManager;
 
     public bool playOnAwake = false;
 
     [InspectorButton("SpawnPortalsToNextRoom")]
     public bool spawnPortal;
+
+    private MYCharacterController _myCharacterController;
 
     private void Awake()
     {
@@ -41,7 +45,8 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
-
+        _myCharacterController = BattleMech.instance.myCharacterController;
+        _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
@@ -60,6 +65,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.crawlerSpawner.Init();
         BattleManager.instance.UpdateCrawlerSpawner();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
+        runUpgradeManager.LoadData();
     }
 
     public void InitializeStats()
@@ -116,10 +122,10 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.roomDrop.gameObject.SetActive(false);
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
-        yield return new WaitForSeconds(1);
-        BattleMech.instance.myCharacterController.enabled = true;
+        _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
+        gameActive = true;
 
     }
 
@@ -129,17 +135,18 @@ public class GameManager : MonoBehaviour
         RoomPortal.portalEffect.StopEffect();
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
+        voidAreaManager.InitVoidArea();
         DayNightCycle(true);
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
-        BattleMech.instance.myCharacterController.enabled = true;
+        _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
 
     }
 
-    private void CompleteVoidRoom()
+    public void CompleteVoidRoom()
     {
         //TODO: Add Void Room Completion interaction
         currentAreaType++;

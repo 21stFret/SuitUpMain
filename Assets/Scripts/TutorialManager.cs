@@ -70,7 +70,7 @@ public class TutorialManager : MonoBehaviour
     private void InitializeComponents()
     {
         manualWeaponController.enabled = false;
-        myCharacterController.enabled = false;
+        myCharacterController.ToggleCanMove(false);
         playerInput.SwitchCurrentActionMap("Gameplay");
         droneController.enabled = false;
         sceneLoader = SceneLoader.instance;
@@ -289,7 +289,7 @@ public class TutorialManager : MonoBehaviour
 
     private void EnableMovement()
     {
-        myCharacterController.enabled = true;
+        myCharacterController.ToggleCanMove(true);
         manualWeaponController.enabled = true;
         manualWeaponController.Init();
         playerInput.ActivateInput();
@@ -311,7 +311,7 @@ public class TutorialManager : MonoBehaviour
         DroneRepair.SetActive(false);
         DroneAirStrike.SetActive(true);
         droneController.enabled = true;
-        droneController.airDropTimer.timeElapsed = 5;
+        droneController.FullyChargeDrone();
         tutorialUI.airDrop.SetActive(true);
         crawlers2.SetActive(true);
         crawlers2.transform.SetParent(null);

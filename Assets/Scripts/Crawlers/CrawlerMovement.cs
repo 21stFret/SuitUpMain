@@ -207,6 +207,11 @@ public class CrawlerMovement : MonoBehaviour
         }
     }
 
+    public void SetRaycastSteering(LayerMask layerMask)
+    {
+        SteeringRaycast = layerMask;
+    }
+
     private void UpdateNearbySwarmMembers()
     {
         nearbySwarmMembers.Clear();

@@ -46,6 +46,8 @@ public class MYCharacterController : MonoBehaviour
 
     public float weaponFiringSlowAmount;
 
+    private bool canMove;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -83,6 +85,10 @@ public class MYCharacterController : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
+        if (!canMove)
+        {
+            return;
+        }
         if (!candodge)
         {
             return;
@@ -120,6 +126,7 @@ public class MYCharacterController : MonoBehaviour
         isRunning = false;
         footprintSystem.IsMoving = false;
         runAudio.Stop();
+        canMove = false;
     }
 
     public void TriggerFootLeft()
@@ -175,6 +182,11 @@ public class MYCharacterController : MonoBehaviour
 
     private void RotateMech()
     {
+        if(!canMove)
+        {
+            return;
+        }
+
         transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed);
 
         if(transform.rotation != lookRotation)
@@ -189,6 +201,11 @@ public class MYCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(!canMove)
+        {
+            return;
+        }
+
         Vector3 icedPos = transform.position;
         icedPos.y += 2.6f;
         icedEffect.transform.position = icedPos;
@@ -218,7 +235,7 @@ public class MYCharacterController : MonoBehaviour
 
             if (bonusSpeed > Speed)
             {
-                print("Speed Bonus: " + bonusSpeed);
+                //print("Speed Bonus: " + bonusSpeed);
                 inputedSpeed = bonusSpeed;
                 if (inputedSpeed <= 0)
                 {
@@ -296,6 +313,12 @@ public class MYCharacterController : MonoBehaviour
         yield return new WaitForSeconds(slowedDuration);
         isSlowed = false;
         icedEffect.Stop();
+    }
+
+    public void ToggleCanMove(bool value)
+    {
+        canMove = value;
+        _rigidbody.velocity = Vector3.zero;
     }
 
 }

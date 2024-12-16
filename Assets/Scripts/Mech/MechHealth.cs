@@ -58,7 +58,8 @@ public class MechHealth : MonoBehaviour
         UpdateHealthUI(targetHealth.health);
 
         // Setup damage overlay
-        damageOverlay.color = damageLightColor;
+        healthBar.material.SetColor("_StrongTintTint", healthLightColor);
+        healthBar.fillAmount = 1;
         damageOverlay.fillAmount = 1;
         cachedFillamount = 1;
 
@@ -104,6 +105,8 @@ public class MechHealth : MonoBehaviour
             return;
         }
 
+        BattleMech.instance.droneController.ChargeDroneOnHit(damage);
+
         // Update actual health
         targetHealth.health = Mathf.Clamp(targetHealth.health - damage, 0, targetHealth.maxHealth);
         UpdateHealthUI(targetHealth.health);
@@ -136,7 +139,7 @@ public class MechHealth : MonoBehaviour
             hit = true;
             lastDamageTime = Time.time;
             AudioManager.instance.PlayHurt();
-            rb.velocity = Vector3.zero;
+            rb.velocity = rb.velocity/2;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
         }

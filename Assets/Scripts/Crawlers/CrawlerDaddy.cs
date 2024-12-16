@@ -16,6 +16,8 @@ public class CrawlerDaddy : Crawler
     {
         if(killedBy != WeaponType.Default)
         {
+            Vector3 pos = transform.position;
+            pos.y += 3;
             crawlerSpawner.SpawnAtPoint(transform, spawnCount);
             DeathEffect.transform.SetParent(null);
             DeathEffect.SetActive(true);

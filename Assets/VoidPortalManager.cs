@@ -54,7 +54,7 @@ public class VoidPortalManager : MonoBehaviour
                 color = Color.red;
                 break;
             case ModBuildType.TECH:
-                color = Color.blue;
+                color = Color.cyan;
                 break;
             case ModBuildType.TANK:
                 color = Color.green;

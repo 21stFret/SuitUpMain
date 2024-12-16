@@ -10,7 +10,7 @@ public class RunModifierDataReader : MonoBehaviour
         List<Dictionary<string, object>> data = CSVReader.Read("WeaponBaseData - Mods");
         for (var i = 0; i < data.Count; i++)
         {
-            print(i);
+            //print(i);
             List<RunMod> runMods = new List<RunMod>();
             switch((string)data[i]["Build"])
             {
@@ -43,11 +43,13 @@ public class RunModifierDataReader : MonoBehaviour
                 rMod.modDescription = (string)data[i]["Description"];
             }
 
-            Sprite sprite = Resources.Load<Sprite>("ModIcons/" + rMod.modName);
+            string path = rMod.modBuildType.ToString().ToLower() + "_" + rMod.modCategory.ToString().ToLower();
+            Sprite sprite = Resources.Load<Sprite>("ModIcons/" +path);
             if (sprite != null)
             {
                 rMod.sprite = sprite;
             }
+
 
             for (int j = 0; j < 3; j++)
             {

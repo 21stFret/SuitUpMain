@@ -10,6 +10,7 @@ public class BattleMech : MonoBehaviour
     public WeaponController weaponController;
     public WeaponFuelManager weaponFuelManager;
     public TargetHealth targetHealth;
+    public DroneController droneController;
     public bool isDead;
 
     private void Awake()
@@ -27,7 +28,6 @@ public class BattleMech : MonoBehaviour
     {
         isDead = true;
         myCharacterController.Die();
-        myCharacterController.enabled = false;
         if(GameManager.instance != null)
         {
             GameManager.instance.EndGameCall(false);

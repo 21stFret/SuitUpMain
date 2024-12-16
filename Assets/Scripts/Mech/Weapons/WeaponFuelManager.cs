@@ -32,7 +32,27 @@ public class WeaponFuelManager : MonoBehaviour
         weaponRechargeRate = 15;
     }
 
-
+    public void RefillFuel(float value)
+    {
+        weaponFuel += value;
+        if (weaponFuelBonus != 0)
+        {
+            float total = weaponFuelBonus;
+            if (weaponFuel >= total)
+            {
+                weaponFuel = total;
+                return;
+            }
+        }
+        else
+        {
+            if (weaponFuel >= weaponFuelMax)
+            {
+                weaponFuel = weaponFuelMax;
+                return;
+            }
+        }
+    }
 
     void Update()
     {
@@ -60,26 +80,7 @@ public class WeaponFuelManager : MonoBehaviour
             return;
         }
 
-        if (weaponFuelBonus !=0)
-        {
-            float total = weaponFuelBonus;
-            if(weaponFuel>= total)
-            {
-                weaponFuel = total;
-                return;
-            }
-        }
-        else
-        {
-            if (weaponFuel >= weaponFuelMax)
-            {
-                weaponFuel = weaponFuelMax;
-                return;
-            }
-        }
-
-
-        weaponFuel += Time.deltaTime * weaponRechargeRate;
+        RefillFuel(Time.deltaTime * weaponRechargeRate);
     }
 
     private void BurstFuel()
