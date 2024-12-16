@@ -101,6 +101,7 @@ public class PulseShockwave : MonoBehaviour
 
     private void ApplyForceToCrawlers()
     {
+        float crawlerCount = 0;
         Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
         foreach (Collider collider in colliders)
         {
@@ -108,6 +109,7 @@ public class PulseShockwave : MonoBehaviour
             if (crawler != null)
             {
                 crawler.StartCoroutine(crawler.StunCralwer(0.2f));
+                crawlerCount++;
             }
             Vector3 forceDirection = (collider.transform.position - transform.position).normalized;
             Mathf.Clamp(forceDirection.y, 0.1f, 1);
@@ -125,7 +127,7 @@ public class PulseShockwave : MonoBehaviour
             }
 
         }
-        if (colliders.Length > 8)
+        if (crawlerCount > 8)
         {
             PlayerAchievements.instance.SetAchievement("SHOCKWAVE_1");
         }

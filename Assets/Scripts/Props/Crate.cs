@@ -23,7 +23,9 @@ public class Crate : Prop
         if (Random.value * 100 <= lootChance)
         {
             GameObject randomLoot = loot[Random.Range(0, loot.Length)];
-            Instantiate(randomLoot, transform.position, Quaternion.identity);
+            Vector3 pos = transform.position;
+            pos.y += 0.5f;
+            Instantiate(randomLoot, pos, Quaternion.identity);
         }
         breakableObject.transform.parent = null;
         breakableObject.Break();

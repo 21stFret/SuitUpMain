@@ -12,7 +12,7 @@ public class SplashScreen : MonoBehaviour
     private void Start()
     {
         sceneLoader = SceneLoader.instance;
-        ShowSpalshScreen();
+        Invoke("ShowSpalshScreen", 0.5f);
     }
 
     public void ShowSpalshScreen()
@@ -28,7 +28,6 @@ public class SplashScreen : MonoBehaviour
         yield return new WaitForSeconds(1);
         doTweenFade.FadeOut();
         sceneLoader.LoadScene(1);
-
     }
 
     public void SkipSplashScreen()

@@ -192,7 +192,8 @@ public class CrawlerSpawner : MonoBehaviour
         for (int j = 0; j < currentSquad.crawlerGroups.Length; j++)
         {
             var list = GetCrawlerList(currentSquad.crawlerGroups[j].type);
-            for (int k = 0; k < currentSquad.crawlerGroups[j].amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
+            float amount = currentSquad.crawlerGroups[j].amount * BattleManager.instance.dificultyMultiplier;
+            for (int k = 0; k < amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
             {
                 _spawnList.Add(list[k]);
             }
@@ -246,9 +247,10 @@ public class CrawlerSpawner : MonoBehaviour
         {
             SelectSpawnPoint();
             PlaySpawnEffect();
+            yield return new WaitForSeconds(0.5f);
         }
 
-        yield return new WaitForSeconds(0.5f);
+
         for (int i = 0; i < bugs.Count; i++)
         {
             if (portalAllowed >= portalMaxAllowed)
@@ -259,14 +261,33 @@ public class CrawlerSpawner : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
             }
 
-            Vector3 randomCircle = Random.insideUnitSphere;
-            randomCircle.z = 0;
+            Vector3 randomCircle = Random.insideUnitSphere * 5;
+
+            if (!FromDaddy)
+            {
+                randomCircle.z = 0;
+            }
+            else
+            {
+                randomCircle.y = spawnPoint.position.y + 2;
+            }
+
             Vector3 randomPoint = randomCircle + spawnPoint.position;
             bugs[i].transform.position = randomPoint;
-            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+            float randomY;
+            if (FromDaddy)
+            {
+                randomY = Random.Range(0, 360);
+            }
+            else
+            {
+                randomY = randomCircle.y;
+            }
+
+            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomY, 0);
 
             float delay = FromDaddy? 0 : i * 0.2f;
-            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            StartCoroutine(SpawnRandomizer(bugs[i], delay));
             portalAllowed++;
         }
     }
@@ -309,7 +330,7 @@ public class CrawlerSpawner : MonoBehaviour
         bug.Spawn();
         AddToActiveList(bug);
 
-        Debug.Log($"Spawned and activated: {bug.name}");
+        //Debug.Log($"Spawned and activated: {bug.name}");
     }
 
     private void PlaySpawnEffect()
@@ -350,7 +371,7 @@ public class CrawlerSpawner : MonoBehaviour
         {
             GetCrawlerList(type).Add(crawler);
             crawler.gameObject.SetActive(false);
-            Debug.Log($"Crawler {crawler.name} returned to pool and deactivated.");
+            //Debug.Log($"Crawler {crawler.name} returned to pool and deactivated.");
         }
     }
 
@@ -362,7 +383,7 @@ public class CrawlerSpawner : MonoBehaviour
             {
                 activeCrawlers.Add(crawler);
                 crawler.gameObject.SetActive(true);
-                Debug.Log($"Crawler {crawler.name} added to active list and activated.");
+                //Debug.Log($"Crawler {crawler.name} added to active list and activated.");
             }
         }
     }

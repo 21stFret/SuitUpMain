@@ -16,26 +16,32 @@ public class RoomPortal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(!_active) return;
-
         if (other.CompareTag("Player"))
         {
-            BattleMech.instance.myCharacterController.enabled = false;
-            VoidPortalManager.SetPortalColor(visualPortalEffect, portalType);
-            visualPortalEffect.gameObject.SetActive(true);
-            visualPortalEffect.StartFirstPersonEffect();
-            if(voidPortal)
-            {
-                GameManager.instance.StartCoroutine(GameManager.instance.LoadVoidRoom());
-            }
-            else
-            {
-                GameManager.instance.LoadNextRoom();
-                GameManager.instance.nextBuildtoLoad = portalType;
-            }
-            voidPortalManager.StopEffect();
-            _active = false;
-            audioSource.clip = portalSounds[Random.Range(0, portalSounds.Length)];
-            audioSource.Play();
+            StartCoroutine(LoadRoomRoutine());
         }
+
+    }
+
+    private IEnumerator LoadRoomRoutine()
+    {
+        BattleMech.instance.myCharacterController.ToggleCanMove(false);
+        VoidPortalManager.SetPortalColor(visualPortalEffect, portalType);
+        visualPortalEffect.gameObject.SetActive(true);
+        visualPortalEffect.StartFirstPersonEffect();
+        yield return new WaitForSeconds(1f);
+        if (voidPortal)
+        {
+            GameManager.instance.StartCoroutine(GameManager.instance.LoadVoidRoom());
+        }
+        else
+        {
+            GameManager.instance.LoadNextRoom();
+            GameManager.instance.nextBuildtoLoad = portalType;
+        }
+        voidPortalManager.StopEffect();
+        _active = false;
+        audioSource.clip = portalSounds[Random.Range(0, portalSounds.Length)];
+        audioSource.Play();      
     }
 }

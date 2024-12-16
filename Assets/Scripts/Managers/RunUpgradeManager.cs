@@ -24,7 +24,6 @@ public enum ModCategory
 }
 public class RunUpgradeManager : MonoBehaviour
 {
-    public Pickup Pickup;
     public ModUI ModUI;
     public WeaponModManager weaponModManager;
     public PulseShockwave pulseShockwave;
@@ -69,7 +68,7 @@ public class RunUpgradeManager : MonoBehaviour
         LoadData();
     }
 
-    private void LoadData()
+    public void LoadData()
     {
         ResetAllData();
         runModifierDataReader.LoadFromExcell(this);

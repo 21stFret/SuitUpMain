@@ -10,8 +10,7 @@ public class DroneController : MonoBehaviour
 {
     public AirDropDrone drone;
     public AirDropCrate crate;
-    public int airDropCost;
-    public AirDropTimer airDropTimer;
+    public AirDropCharger airDropTimer;
     public GameObject airdropMenu;
     public TMP_Text[] texts;
     public PlayerInput playerInput;
@@ -45,16 +44,14 @@ public class DroneController : MonoBehaviour
                 return;
             }
         }
-        if(!airDropTimer.activated)
+        if(!airDropTimer.charged)
         {
             return;
         }
         Time.timeScale = 0.3f;
         airdropMenu.SetActive(true);
-        UpdatePrice();
         playerInput.SwitchCurrentActionMap("UI");
         eventSystem.SetSelectedGameObject(firstSelected);
-        //CashCollector.Instance.ShowUI();
     }
 
     public void OnCloseMenu(InputAction.CallbackContext context)
@@ -75,7 +72,6 @@ public class DroneController : MonoBehaviour
         Time.timeScale = 1;
         airdropMenu.SetActive(false);
         playerInput.SwitchCurrentActionMap("Gameplay");
-        //CashCollector.Instance.HideUI();
     }
 
     public void InitAirSupport(int type)
@@ -86,14 +82,6 @@ public class DroneController : MonoBehaviour
         }
 
         StartCoroutine(InputDelay());
-        if(!tutorial)
-        {
-            if (PlayerProgressManager.instance.crawlerParts < airDropCost)
-            {
-                fade.PlayTween();
-                return;
-            }
-        }
         switch (type)
         {
             case 0:
@@ -106,9 +94,8 @@ public class DroneController : MonoBehaviour
                 MissileStrike();
                 break;
         }
-        //CashCollector.Instance.AddCrawlerPart(-airDropCost);
+
         timesUsed++;
-        airDropCost = airDropCost * timesUsed;
         airDropTimer.ResetAirDrop();
         CloseMenu();
     }
@@ -141,11 +128,14 @@ public class DroneController : MonoBehaviour
         }
     }
 
-    private void UpdatePrice()
+    public void FullyChargeDrone()
     {
-        foreach(var text in texts)
-        {
-            //text.text = airDropCost.ToString();
-        }
+        airDropTimer.DroneCharge = airDropTimer.DroneMaxCharge;
     }
+
+    public void ChargeDroneOnHit(float value)
+    {
+        airDropTimer.DroneCharge += value;
+    }
+
 }

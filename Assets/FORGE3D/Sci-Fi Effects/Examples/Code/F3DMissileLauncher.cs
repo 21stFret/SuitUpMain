@@ -65,6 +65,7 @@ namespace FORGE3D
                 missile.target = targets[target];
             }
         }
+
         public List<Transform> SetTargetInRadius(Vector3 center, float radius, LayerMask layerMask)
         {
             List<Transform> targets = new List<Transform>();
@@ -87,9 +88,11 @@ namespace FORGE3D
                 for (int i = 0; i < missleAmount; i++)
                 {
                     var newTarget = Instantiate(new GameObject());
-                    newTarget.transform.position = GetRandomPointInSphere(center, radius);
+                    Vector3 randomPoint = GetRandomPointInSphere(center, radius);
+                    randomPoint.y = 0;
+                    newTarget.transform.position = randomPoint;
                     targets.Add(newTarget.transform);
-                    Destroy(newTarget, 3f);
+                    Destroy(newTarget, 5f);
                 }
             }
             return targets;

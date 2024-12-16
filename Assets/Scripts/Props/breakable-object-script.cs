@@ -55,7 +55,7 @@ public class BreakableObject : MonoBehaviour
         {
             GameObject part = GetPooledpart(i);
             Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
-            randomOffset.y = 3f;
+            randomOffset.y = 1f;
             Vector3 newPos = transform.position + randomOffset;
             part.transform.position = transform.position + randomOffset;
             part.transform.rotation = transform.rotation;

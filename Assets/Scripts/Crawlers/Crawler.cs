@@ -30,7 +30,7 @@ public class Crawler : MonoBehaviour
     public CrawlerMovement crawlerMovement;
     [HideInInspector]
     public SkinnedMeshRenderer meshRenderer;
-    [HideInInspector]
+    //[HideInInspector]
     public Transform target;
     private Collider _collider;
     [HideInInspector]
@@ -40,6 +40,7 @@ public class Crawler : MonoBehaviour
     [SerializeField]
     public int attackDamage;
     public float attackRange;
+    public float seekRange;
     public float speed;
     private float _finalSpeed;
     public float randomScale;
@@ -90,18 +91,16 @@ public class Crawler : MonoBehaviour
 
     private void EnableBrain()
     {
-        //Called by Invoke above
         _crawlerBehavior = GetComponent<CrawlerBehavior>();
         _crawlerBehavior.Init();
     }
 
     private void Start()
     {
-        dead = false;
-        if (forceSpawn)
+        if (forceSpawn && _targetHealth==null)
         {
-            Init();
-            Spawn();
+            Invoke("Init", 0.5f);
+            Invoke("Spawn", 0.6f);
         }
     }
 
@@ -154,7 +153,7 @@ public class Crawler : MonoBehaviour
 
     public void FindClosestTarget(bool trueFind = false)
     {
-        float range = trueFind? 100 : attackRange;
+        float range = trueFind? 100 : seekRange;
         rangeSensor.SetSphereShape(range);
         target = null;
         rangeSensor.Pulse();
@@ -199,7 +198,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
+         target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
     }
 
     public void EndAttack()
@@ -265,7 +264,7 @@ public class Crawler : MonoBehaviour
     private IEnumerator DealyedDamageCoroutine(float damage, float delay, WeaponType weapon)
     {
         yield return new WaitForSeconds(delay);
-        TakeDamage(damage, weapon);
+        _targetHealth.TakeDamage(damage, weapon);
     }
 
     private void FlashRed()
@@ -322,6 +321,8 @@ public class Crawler : MonoBehaviour
             }
         }
 
+        BattleMech.instance.droneController.ChargeDroneOnHit(expWorth);
+
         if(PlayerProgressManager.instance != null)
         {
             PlayerProgressManager.instance.UpdateKillCount(1, weapon);
@@ -337,9 +338,9 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
+        dead = false;
         EnableBrain();
         gameObject.SetActive(true);
-        dead = false;
         meshRenderer.enabled = true;
         _collider.enabled = true;
         rb.velocity = Vector3.zero;
@@ -347,10 +348,9 @@ public class Crawler : MonoBehaviour
         SetSpeed();
         crawlerMovement.speedFinal = _finalSpeed;
         transform.localScale = Vector3.zero;
-        animator.SetTrigger("Respawn");
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
-        rb.AddForce(transform.forward * Random.Range(5, 10), ForceMode.Impulse);
+        rb.AddForce(transform.forward * Random.Range(speed/2, _finalSpeed), ForceMode.Impulse);
         DeathBlood.transform.SetParent(transform);
     }
 

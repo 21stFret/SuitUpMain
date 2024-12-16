@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class CrawlerSpitter : Crawler
 {
-    public GameObject DeathEffect;
     public LayerMask layerMask;
     public GameObject[] spitProjectiles = new GameObject[3];
     private int spitIndex;

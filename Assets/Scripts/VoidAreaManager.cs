@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class VoidAreaManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public HealthPickup healthPickup;
+
+    public void InitVoidArea()
     {
-        
+        healthPickup.voidPickUp = true;
+        healthPickup.ResetPickup();
     }
 }

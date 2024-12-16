@@ -35,6 +35,7 @@ public class TargetHealth : MonoBehaviour
 
     public void SetNewMaxHealth()
     {
+        float curtentHealthPercent = health / maxHealth;
         maxHealth = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Health);
         if(maxHealth<=0)
         {
@@ -44,6 +45,7 @@ public class TargetHealth : MonoBehaviour
         {
             health = maxHealth;
         }
+        health = maxHealth * curtentHealthPercent;
         _mech.UpdateHealthUI(health);
     }
 

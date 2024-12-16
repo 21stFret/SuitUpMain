@@ -17,17 +17,15 @@ public class FlameTrigger : MonoBehaviour
         shotDamage = damage;
         shotSpeed = speed;
         fovCollider.Length = range;
+        isOn = false;
     }
 
     public void SetCol(bool value)
     {
-        fovCollider.enabled = value;
         isOn = value;
-        triggerSensor.enabled = value;
         if(!value)
         {
-           //triggerSensor.Clear();
-            
+           triggerSensor.Clear();     
         }
     }
 
