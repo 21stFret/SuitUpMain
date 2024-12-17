@@ -5,12 +5,14 @@ using System.Collections.Generic;
 public class BattleDataReader : MonoBehaviour
 {
     public static BattleDataReader instance;
+    public bool usingTestData;
 
     public Dictionary<AreaType, List<CrawlerSquad>> LoadSquadsFromExcel()
     {
         Debug.Log("Loading Squads for all Area Types");
         Dictionary<AreaType, List<CrawlerSquad>> areaSquads = new Dictionary<AreaType, List<CrawlerSquad>>();
-        List<Dictionary<string, object>> data = CSVReader.Read("Suit Up Data - Enemy Squads");
+        string fileName = usingTestData ? "Suit Up Data - Enemy Squads Test" : "Suit Up Data - Enemy Squads";
+        List<Dictionary<string, object>> data = CSVReader.Read(fileName);
 
         if (data == null || data.Count == 0)
         {

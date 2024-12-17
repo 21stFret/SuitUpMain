@@ -79,10 +79,7 @@ public class Grenade : MonoBehaviour
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpward);
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
-            if (hit.CompareTag("Enemy"))
-            {
-                hit.GetComponent<Crawler>().DealyedDamage(damage, 0.5f, WeaponType.AoE);
-            }
+            hit.GetComponent<TargetHealth>()?.TakeDamage(damage);
         }
         live = false;
         meshRenderer.enabled = false;
