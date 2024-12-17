@@ -78,7 +78,7 @@ public class MechHealth : MonoBehaviour
         }
 
         // Achievement check
-        if (Time.time > 180f && !hit && GameManager.instance != null && !GameManager.instance.RoomPortal._active)
+        if (Time.time > 180f && !hit && GameManager.instance != null && GameManager.instance.gameActive)
         {
             PlayerAchievements.instance?.SetAchievement("DODGE_1");
         }

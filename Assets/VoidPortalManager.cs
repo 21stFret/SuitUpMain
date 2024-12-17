@@ -40,8 +40,11 @@ public class VoidPortalManager : MonoBehaviour
     {
         for (int i = 0; i < portalEffects.Length; i++)
         {
-            portalEffects[i].StopEffect();
-            portalEffects[i].GetComponent<RoomPortal>()._active = false;
+            if (portalEffects[i].isActive)
+            {
+                portalEffects[i].StopEffect();
+                portalEffects[i].GetComponent<RoomPortal>()._active = false;
+            }
         }
     }
 
