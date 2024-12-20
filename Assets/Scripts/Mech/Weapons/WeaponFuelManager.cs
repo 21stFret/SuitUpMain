@@ -54,6 +54,11 @@ public class WeaponFuelManager : MonoBehaviour
         }
     }
 
+    public bool isFull()
+    {
+        return weaponFuel >= weaponFuelMax;
+    }
+
     void Update()
     {
         if(!_enabled)

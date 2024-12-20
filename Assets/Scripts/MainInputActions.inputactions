@@ -691,45 +691,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "PauseMenu",
-            "id": "c222f71e-905e-4333-ac4c-92611c09d0bd",
-            "actions": [
-                {
-                    "name": "Close Pause Menu",
-                    "type": "Button",
-                    "id": "bfe45e32-8fb6-479e-a88d-6a55a9593ca5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "d836aae1-21b4-47fd-aea2-5d271175339c",
-                    "path": "<Gamepad>/start",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Default",
-                    "action": "Close Pause Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5f420746-6b0f-40d8-979f-6c920af7fda4",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Close Pause Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
         }
     ],
     "controlSchemes": [

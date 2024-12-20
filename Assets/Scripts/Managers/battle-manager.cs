@@ -126,9 +126,12 @@ public class BattleManager : MonoBehaviour
             attempts++;
 
             if(Vector3.Distance(playerPos, pos) < minDistance) continue;
+            if(Vector3.Distance(Vector3.zero, pos) > 50) continue;
 
             // Check if the position is valid (not obstructed)
-            if (!Physics.SphereCast(pos, minDistance, Vector3.down, out RaycastHit hit, 30, dropLayer))
+            Collider[] colliders = Physics.OverlapSphere(pos, 1, dropLayer);
+
+            if (colliders.Length==0)
             {
                 roomDrop.transform.position = pos;
                 return;
@@ -136,9 +139,9 @@ public class BattleManager : MonoBehaviour
         } while (attempts < maxAttempts);
 
         // If we've exceeded max attempts, fall back to a position at minDistance
-        Vector3 fallbackDirection = Random.insideUnitSphere.normalized;
-        pos = playerPos + fallbackDirection * minDistance;
-        pos.y = 1;
+        print("Failed to find a valid drop position, falling back to map centre");
+        pos = Vector3.zero;
+        pos.y = 3;
         roomDrop.transform.position = pos;
     }
 

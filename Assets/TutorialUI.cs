@@ -48,9 +48,7 @@ public class TutorialUI : MonoBehaviour
             {"openDrone", 6},
             {"select", 7},
             {"bomb", 8},
-            {"openDrone2", 9},
-            {"select2", 10},
-            {"repair", 11},
+            {"repair", 9},
         };
     }
 
@@ -88,6 +86,8 @@ public class TutorialUI : MonoBehaviour
     public void UpdateInputInstructions(string[] controls, string[] instructions)
     {
         HideAllInputUIs();
+
+        Sprite[] controlSprites = InputTracker.instance.usingMouse? controlSprites;
 
         for (int i = 0; i < controls.Length && i < inputUIs.Length; i++)
         {

@@ -99,6 +99,7 @@ public class Crawler : MonoBehaviour
     {
         if (forceSpawn && _targetHealth==null)
         {
+            crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
             Invoke("Init", 0.5f);
             Invoke("Spawn", 0.6f);
         }
@@ -175,7 +176,6 @@ public class Crawler : MonoBehaviour
         triggeredAttack = true;
         animator.SetBool("InRange", true);
         animator.SetTrigger("Attack");
-        crawlerMovement.canMove = false;
     }
 
     public void DoDamage()
@@ -190,11 +190,15 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
+        rb.AddForce(transform.forward * 50, ForceMode.Impulse);
+        Vector3 attackloc = transform.position + (transform.forward * (transform.localScale.x*2));
 
-        if (crawlerMovement.distanceToTarget >= attackRange)
+        print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
+
+        if (Vector3.Distance(attackloc, target.transform.position) >= attackRange)
         {
             animator.SetBool("InRange", false);
-            print("Player out of range");
+            print("Target out of range");
             return;
         }
 
@@ -301,6 +305,11 @@ public class Crawler : MonoBehaviour
 
         var BM = BattleManager.instance;
 
+        if (BM == null)
+        {
+            return;
+        }
+
         if (BM.Battles[BM.currentBattleIndex].battleType == BattleType.Exterminate)
         {
             BM.StartCoroutine(BM.CheckActiveEnemies());
@@ -338,6 +347,7 @@ public class Crawler : MonoBehaviour
 
     public virtual void Spawn()
     {
+        meshRenderer.material.SetFloat("_FlashOn", 0);
         dead = false;
         EnableBrain();
         gameObject.SetActive(true);
@@ -350,7 +360,6 @@ public class Crawler : MonoBehaviour
         transform.localScale = Vector3.zero;
         StartCoroutine(SpawnEffect());
         StartCoroutine(SpawnImmunity());
-        rb.AddForce(transform.forward * Random.Range(speed/2, _finalSpeed), ForceMode.Impulse);
         DeathBlood.transform.SetParent(transform);
     }
 
@@ -358,11 +367,11 @@ public class Crawler : MonoBehaviour
     {
         _spawnEffect.Play();
         SetCrawlerScale();
+        yield return new WaitForSeconds(0.1f);
+        rb.AddForce(transform.forward * 10, ForceMode.Impulse);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.2f);
         tag = "Enemy";
-        crawlerMovement.enabled = true;
-        crawlerMovement.canMove = true;
         animator.speed = 1;
         spawnLocation = transform.position;
     }

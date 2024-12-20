@@ -15,6 +15,7 @@ public class HealthPickup : MonoBehaviour
     private void Awake()
     {
         col = GetComponent<Collider>();
+        canpickup = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -24,38 +25,71 @@ public class HealthPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PickUp();
-            RemovePickup();
         }
     }
 
     private void PickUp()
     {
-        canpickup = false;
+        bool meterFull = false;
         if (GameManager.instance == null)
         {
             return;
         }
         if(Drone)
         {
-            BattleMech.instance.droneController.ChargeDroneOnHit(amount);
+            if(BattleMech.instance.droneController.CanUseDrone())
+            {
+                meterFull = true;
+            }
+            else
+            {
+                BattleMech.instance.droneController.ChargeDroneOnHit(amount);
+            }
+
         }
         else if(Fuel)
         {
-            BattleMech.instance.weaponFuelManager.RefillFuel(amount);
+            if(BattleMech.instance.weaponFuelManager.isFull())
+            {
+                meterFull = true;
+            }
+            else
+            {
+                BattleMech.instance.weaponFuelManager.RefillFuel(amount);
+            }
+
         }
         else
         {
-            BattleMech.instance.targetHealth.TakeDamage(-amount);
+
+            if (BattleMech.instance.targetHealth.isFull())
+            {
+                meterFull = true;
+            }
+            else
+            {
+                BattleMech.instance.targetHealth.TakeDamage(-amount);
+            }
+            if (voidPickUp)
+            {
+                GameManager.instance.CompleteVoidRoom();
+                meterFull = false;
+            }
+
         }
 
-        if (voidPickUp)
+
+
+        if(meterFull)
         {
-            GameManager.instance.CompleteVoidRoom();
+            return;
         }
+        RemovePickup();
     }
 
     private void RemovePickup()
     {
+        canpickup = false;
         col.enabled = false;
         obj.SetActive(false);
     }

@@ -271,9 +271,9 @@ MonoBehaviour:
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
   attackDamage: 2
-  attackRange: 5
+  attackRange: 4
   seekRange: 25
-  speed: 170
+  speed: 200
   randomScale: 0.2
   DeathBlood: {fileID: 7485218815324124808}
   _spawnEffect: {fileID: 7966955931502245795}
@@ -460,7 +460,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseAggression: 1
   healthAggressionModifier: 0.3
-  preferredEngageDistance: 2
+  preferredEngageDistance: 1
   maxEngageDistance: 3
   fleeDistance: 15
   fleeHealthThreshold: 0.3

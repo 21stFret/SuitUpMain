@@ -20,30 +20,38 @@ public class AirDropCharger : MonoBehaviour
 
     void Update()
     {
-        if(!GameManager.instance.gameActive)
-        {
-            return;
-        }
-
-        if(charged)
-        {
-            return;
-        }
-        DroneCharge += chargeRate * Time.deltaTime;
+        ChargeOverTime();
 
         float percentage = DroneCharge / DroneMaxCharge;
 
         cover.fillAmount = percentage;
         if (DroneCharge >= DroneMaxCharge)
         {
-            DroneCharge = DroneMaxCharge;
             ActivateButton(true);
         }
     }
 
-    private void ActivateButton(bool value)
+    private void ChargeOverTime()
+    {
+        if (GameManager.instance != null)
+        {
+            if (!GameManager.instance.gameActive)
+            {
+                return;
+            }
+        }
+        if (charged)
+        {
+            return;
+        }
+        DroneCharge += chargeRate * Time.deltaTime;
+    }
+
+    public void ActivateButton(bool value)
     {
         charged = value;
+        DroneCharge = value ? DroneMaxCharge:0;
+        cover.fillAmount = value ? 1 : 0;
         airDropText.enabled = value;
     }
 
