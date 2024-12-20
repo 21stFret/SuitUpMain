@@ -26,7 +26,8 @@ public class TutorialUI : MonoBehaviour
     public TutorialInputUI[] inputUIs; // Array of TutorialInputUI components
     public GameObject[] inputTicks;
     public GameObject inputPanel; // Panel containing input UIs
-    public Sprite[] controlSprites; // Array of control sprites (keyboard, gamepad, etc.)
+    public Sprite[] controlSpritesPC;
+    public Sprite[] controlSpritesGamePad; // Array of control sprites (keyboard, gamepad, etc.)
 
     private Dictionary<string, int> controlIndexMap; // Map control names to sprite indices
 
@@ -86,8 +87,8 @@ public class TutorialUI : MonoBehaviour
     public void UpdateInputInstructions(string[] controls, string[] instructions)
     {
         HideAllInputUIs();
-
-        Sprite[] controlSprites = InputTracker.instance.usingMouse? controlSprites;
+         
+        Sprite[] controlSprites = InputTracker.instance.usingMouse? controlSpritesPC : controlSpritesGamePad;
 
         for (int i = 0; i < controls.Length && i < inputUIs.Length; i++)
         {
