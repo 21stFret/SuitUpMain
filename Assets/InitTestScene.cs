@@ -19,9 +19,11 @@ public class InitTestScene : MonoBehaviour
 
     public void DelayedStart()
     {
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
+        crawlerSpawner.Init();
         crawlerSpawner.isActive = spawnersActive;
         AudioManager.instance.PlayMusic(1);
     }

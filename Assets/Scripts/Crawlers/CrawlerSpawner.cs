@@ -261,14 +261,16 @@ public class CrawlerSpawner : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
             }
 
-            Vector3 randomCircle = Random.insideUnitSphere * 5;
+            Vector3 randomCircle = Random.insideUnitSphere;
 
             if (!FromDaddy)
             {
+                randomCircle *= 5;
                 randomCircle.z = 0;
             }
             else
             {
+                //randomCircle = Vector3.zero;
                 randomCircle.y = spawnPoint.position.y + 2;
             }
 

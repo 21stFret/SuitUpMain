@@ -152,7 +152,7 @@ public class TutorialManager : MonoBehaviour
     {
         tutorialUI.ShowInstructions("Utilize support systems.");
         tutorialUI.UpdateInputInstructions(
-            new string[] { "openDrone2", "select2" ,"repair" },
+            new string[] { "openDrone", "select" ,"repair" },
             new string[] { "To Open Drone Menu", "To Select Ability", "Collect box To Repair" }
         );
         EnableDroneAndRepair();
@@ -322,8 +322,9 @@ public class TutorialManager : MonoBehaviour
         DroneRepair.SetActive(true);
         DroneAirStrike.SetActive(false);
         droneController.enabled = true;
+        droneController.FullyChargeDrone();
         tutorialUI.airDrop.SetActive(true);
-        tutorialUI.mechHealth.TakeDamage(50);
+        tutorialUI.mechHealth.TakeDamage(10);
     }
 
     public void SkipTutorial()

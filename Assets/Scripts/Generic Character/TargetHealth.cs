@@ -49,6 +49,11 @@ public class TargetHealth : MonoBehaviour
         _mech.UpdateHealthUI(health);
     }
 
+    public bool isFull()
+    {
+        return health >= maxHealth;
+    }
+
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {

@@ -12,7 +12,6 @@ public class DroneController : MonoBehaviour
     public AirDropCrate crate;
     public AirDropCharger airDropTimer;
     public GameObject airdropMenu;
-    public TMP_Text[] texts;
     public PlayerInput playerInput;
     public DoTweenFade fade;
     public EventSystem eventSystem;
@@ -130,12 +129,20 @@ public class DroneController : MonoBehaviour
 
     public void FullyChargeDrone()
     {
-        airDropTimer.DroneCharge = airDropTimer.DroneMaxCharge;
+        airDropTimer.ActivateButton(true);
     }
 
     public void ChargeDroneOnHit(float value)
     {
+        if(airDropTimer.DroneCharge >= airDropTimer.DroneMaxCharge)
+        {
+            return;
+        }
         airDropTimer.DroneCharge += value;
     }
 
+    public bool CanUseDrone()
+    {
+        return airDropTimer.DroneCharge >= airDropTimer.DroneMaxCharge;
+    }
 }

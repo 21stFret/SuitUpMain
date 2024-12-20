@@ -287,6 +287,7 @@ public class AttackState : CrawlerState
     public override void Enter()
     {
         base.Enter();
+        movement.canMove = false;
         crawler.Attack();
     }
     
@@ -327,6 +328,8 @@ public class SpawnedState : CrawlerState
     public override void Enter()
     {
         base.Enter();
+        movement.enabled = true;
+        movement.canMove = true;
     }
 
     float spawnTimer = 0;
@@ -334,7 +337,7 @@ public class SpawnedState : CrawlerState
     public override void Update()
     {
         spawnTimer += Time.deltaTime;
-        if (spawnTimer >= 1f)
+        if (spawnTimer >= 0.5f)
         {
             behavior.TransitionToState(typeof(IdleState));
         }
