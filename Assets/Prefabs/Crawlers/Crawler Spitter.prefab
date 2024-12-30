@@ -215,6 +215,7 @@ MonoBehaviour:
   triggeredAttack: 0
   _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
+  dummy: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -260,7 +261,7 @@ MonoBehaviour:
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
-  obstacleAvoidanceWeight: 1
+  obstacleAvoidanceWeight: 1.5
   wanderRadius: 20
 --- !u!95 &1088147171486223594
 Animator:
@@ -416,7 +417,7 @@ MonoBehaviour:
   healthAggressionModifier: 0.3
   preferredEngageDistance: 20
   maxEngageDistance: 40
-  fleeDistance: 15
+  fleeDistance: 10
   fleeHealthThreshold: 0.3
   cautionHealthThreshold: 0.5
 --- !u!1001 &62135138584733998

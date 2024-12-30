@@ -2,13 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Difficulty
+{
+    Easy,
+    Mid,
+    Hard
+}
+
 public class SetupGame : MonoBehaviour
 {
     public static SetupGame instance;
     public GameManager gameManager;
     public bool endlessMode;
     public bool inGame;
-    public int diffiulty;
+    public Difficulty diffiulty;
     public List<Battle> roomwavesEasy = new List<Battle>();
     public List<Battle> roomwavesMid = new List<Battle>();
     public List<Battle> roomwavesHard = new List<Battle>();
@@ -41,16 +48,15 @@ public class SetupGame : MonoBehaviour
         BattleManager.instance.Battles.Clear();
         switch (diffiulty)
         {
-            case 0:
-                BattleManager.instance.Battles = roomwavesEasy;
+            case Difficulty.Easy:
+                BattleManager.instance.Battles.AddRange(roomwavesEasy);
                 break;
-            case 1:
-                BattleManager.instance.Battles = roomwavesMid;
+            case Difficulty.Mid:
+                BattleManager.instance.Battles.AddRange(roomwavesMid);
                 break;
-            case 2:
-                BattleManager.instance.Battles = roomwavesHard;
+            case Difficulty.Hard:
+                BattleManager.instance.Battles.AddRange(roomwavesHard);
                 break;
-
         }
 
         gameManager.DelayedStart();

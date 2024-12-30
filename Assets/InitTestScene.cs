@@ -25,6 +25,7 @@ public class InitTestScene : MonoBehaviour
         mechLoadOut.Init();
         crawlerSpawner.Init();
         crawlerSpawner.isActive = spawnersActive;
+        AudioManager.instance.Init();
         AudioManager.instance.PlayMusic(1);
     }
 }

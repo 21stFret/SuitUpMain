@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Collections;
 using FORGE3D;
@@ -17,6 +18,8 @@ public class TutorialManager : MonoBehaviour
     public GameObject crawlers2;
     public GameObject DroneRepair;
     public GameObject DroneAirStrike;
+
+    public static TutorialManager instance;
 
     private enum TutorialStage
     {
@@ -51,6 +54,7 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
+        instance = this;
         Invoke("InitScene", 0.1f);
         InitializeComponents();
         StartCoroutine(RunTutorial());
@@ -60,6 +64,8 @@ public class TutorialManager : MonoBehaviour
     {
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        AudioManager.instance.Init();
+        AudioManager.instance.PlayMusic(2);
     }
 
     void Update()
@@ -98,6 +104,7 @@ public class TutorialManager : MonoBehaviour
                     yield return StartCoroutine(RunOffensiveSystems());
                     break;
                 case TutorialStage.SupportSystems:
+                    yield return tutorialUI.StartCoroutine(tutorialUI.StartDroneTraining());
                     yield return StartCoroutine(RunSupportSystems());
                     break;
             }
@@ -112,7 +119,7 @@ public class TutorialManager : MonoBehaviour
         tutorialUI.ShowInstructions("Master basic movement.");
         tutorialUI.UpdateInputInstructions(
             new string[] { "move", "aim", "dash" },
-            new string[] { "To Move", "To Aim", "To Dash"}
+            new string[] { "Use <image>button</image> to Move.", "Use <image>button</image> to Aim.", "Press <image>button</image> to Dash" }
         );
         canCheckProgress = true;
 
@@ -121,7 +128,8 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         canCheckProgress = false;
-        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Basic Movement Complete."));
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Well Done!\nBasic movement complete!"));
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("... noob.exe not needed ..."));
         tutorialUI.HideAllInputUIs();
         yield return new WaitForSeconds(1f);
         currentStage = TutorialStage.Combat;
@@ -129,10 +137,10 @@ public class TutorialManager : MonoBehaviour
 
     private IEnumerator RunAdvancedCombat()
     {
-        tutorialUI.ShowInstructions("Use basic combat techniques.");
+        tutorialUI.ShowInstructions("Utilize basic combat controls and exterminate all enemies to continue.");
         tutorialUI.UpdateInputInstructions(
             new string[] { "firePrimary", "fireSecondary", "pulse" },
-            new string[] { "To Fire Primary", "To Fire Secondary", "To Pulse" }
+            new string[] { "Press <image>button</image> to Fire Assault Weapon", "Press <image>button</image> to Fire Tech Weapon", "Press <image>button</image> to Pulse" }
         );
         EnableSecondaryWeaponAndPulse();
         canCheckProgress = true;
@@ -142,18 +150,39 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         canCheckProgress = false;
-        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Basic Combat Complete."));
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Crawlers eradicated! Congratuslations on passing Basic Combat."));
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText(".... this one might have potential ..."));
         tutorialUI.HideAllInputUIs();
         yield return new WaitForSeconds(1f);
         currentStage = TutorialStage.OffensiveSystems;
     }
 
+    private IEnumerator RunOffensiveSystems()
+    {
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Enabling D.R.O.N.E system. 'Drop Repairs or Nuke Enemies'."));
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Call in an Air Strike!"));
+        tutorialUI.UpdateInputInstructions(
+            new string[] { "openDrone", "select", "bomb" },
+            new string[] { "Press <image>button</image> to open the Drone Menu", "Press <image>button</image> to Select Ability", "Kill all Crawlers!" }
+        );
+        EnableAirStrike();
+        canCheckProgress = true;
+        while (!hasUsedAttack || !hasselected1 || !hasOpenedDroneMenu || !hasKilledAll2)
+        {
+            yield return null;
+        }
+        canCheckProgress = false;
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Drone Offensive Systems Online."));
+        tutorialUI.HideAllInputUIs();
+        currentStage = TutorialStage.SupportSystems;
+    }
+
     private IEnumerator RunSupportSystems()
     {
-        tutorialUI.ShowInstructions("Utilize support systems.");
+        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Call in a Repair!"));
         tutorialUI.UpdateInputInstructions(
             new string[] { "openDrone", "select" ,"repair" },
-            new string[] { "To Open Drone Menu", "To Select Ability", "Collect box To Repair" }
+            new string[] { "Press <image>button</image> to open the Drone Menu", "Press <image>button</image> to Select Ability", "Collect drop box to Repair" }
         );
         EnableDroneAndRepair();
         canCheckProgress = true;
@@ -167,24 +196,7 @@ public class TutorialManager : MonoBehaviour
         currentStage = TutorialStage.Complete;
     }
 
-    private IEnumerator RunOffensiveSystems()
-    {
-        tutorialUI.ShowInstructions("Utilize offensive systems.");
-        tutorialUI.UpdateInputInstructions(
-            new string[] { "openDrone", "select", "bomb" },
-            new string[] { "To Open Drone Menu", "To Select Ability", "To Repair" }
-        );
-        EnableAirStrike();
-        canCheckProgress = true;
-        while (!hasUsedAttack || !hasselected1 || !hasOpenedDroneMenu || !hasKilledAll2)
-        {
-            yield return null;
-        }
-        canCheckProgress = false;
-        yield return tutorialUI.StartCoroutine(tutorialUI.PrintText("Offensive Systems Complete."));
-        tutorialUI.HideAllInputUIs();
-        currentStage = TutorialStage.SupportSystems;
-    }
+
 
     private void CheckTutorialProgress()
     {
@@ -252,7 +264,6 @@ public class TutorialManager : MonoBehaviour
                 if (!hasUsedAttack && droneController.airstikes>0)
                 {
                     hasUsedAttack = true;
-                    tutorialUI.SetControlGreen(2);
                 }
                 int killed2 = 0;
                 foreach (Crawler crawler in crawlersArray2)
@@ -265,6 +276,7 @@ public class TutorialManager : MonoBehaviour
                 if (killed2 == crawlersArray2.Length)
                 {
                     hasKilledAll2 = true;
+                    tutorialUI.SetControlGreen(2);
                 }
                 break;
             case TutorialStage.SupportSystems:
@@ -278,7 +290,7 @@ public class TutorialManager : MonoBehaviour
                     hasselected2 = true;
                     tutorialUI.SetControlGreen(1);
                 }
-                if (!hasUsedRepair && tutorialUI.mechHealth.targetHealth.health > 70)
+                if (!hasUsedRepair && tutorialUI.mechHealth.targetHealth.health > 90)
                 {
                     hasUsedRepair = true;
                     tutorialUI.SetControlGreen(2);
@@ -312,6 +324,7 @@ public class TutorialManager : MonoBehaviour
         DroneAirStrike.SetActive(true);
         droneController.enabled = true;
         droneController.FullyChargeDrone();
+        droneController.eventSystem.SetSelectedGameObject(DroneAirStrike.GetComponentInChildren<Button>().gameObject);
         tutorialUI.airDrop.SetActive(true);
         crawlers2.SetActive(true);
         crawlers2.transform.SetParent(null);
@@ -323,6 +336,7 @@ public class TutorialManager : MonoBehaviour
         DroneAirStrike.SetActive(false);
         droneController.enabled = true;
         droneController.FullyChargeDrone();
+        droneController.eventSystem.SetSelectedGameObject(DroneRepair.GetComponentInChildren<Button>().gameObject);
         tutorialUI.airDrop.SetActive(true);
         tutorialUI.mechHealth.TakeDamage(10);
     }
@@ -332,6 +346,6 @@ public class TutorialManager : MonoBehaviour
         GameUI.instance.pauseMenu.ResumeGame();
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
-        sceneLoader.LoadScene(2);
+        sceneLoader.LoadScene(3);
     }
 }

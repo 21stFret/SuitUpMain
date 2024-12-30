@@ -35,7 +35,7 @@ public class MainMenu : MonoBehaviour
         instance = this;
     }
 
-    public void StartGame()
+    public void StartGame(int value)
     {
         if (PlayerSavedData.instance._firstLoad)
         {
@@ -43,7 +43,7 @@ public class MainMenu : MonoBehaviour
         }
         else
         {
-            sceneLoader.LoadScene(2, true);
+            sceneLoader.LoadScene(value, true);
         }
     }
 

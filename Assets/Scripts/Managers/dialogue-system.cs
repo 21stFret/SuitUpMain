@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     private float typeTimer = 0f;
     private int typeIndex = 0;
 
+    public InteractableObject interactableObject;
+
     [System.Serializable]
     public class DialogueEntry
     {
@@ -37,6 +39,10 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         dialoguePanel.SetBool("Open", false);
+        if(interactableObject == null)
+        {
+            interactableObject = GetComponent<InteractableObject>();
+        }
     }
 
     public void Interact()
@@ -123,7 +129,23 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogue()
     {
         isDialogueActive = false;
-        dialoguePanel.SetBool("Open", false);
+        CloseDialougeBox();
         currentDialogueIndex = 0;
+        if(interactableObject != null)
+        {
+            interactableObject.EndInteraction();
+        }
+    }
+
+    public void ForceReset()
+    {           
+        isDialogueActive = false;
+        CloseDialougeBox();
+        currentDialogueIndex = 0;
+    }
+
+    public void CloseDialougeBox()
+    {
+        dialoguePanel.SetBool("Open", false);
     }
 }

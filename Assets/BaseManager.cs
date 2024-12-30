@@ -25,7 +25,7 @@ public class BaseManager : MonoBehaviour
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         AudioManager.instance.Init();
-        AudioManager.instance.PlayMusic(1);
+        AudioManager.instance.PlayMusic(3);
 
         Debug.Log("Base Initialized");
     }

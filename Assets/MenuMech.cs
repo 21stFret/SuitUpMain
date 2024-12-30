@@ -26,7 +26,17 @@ public class MenuMech : MonoBehaviour
 
     public IEnumerator FadeLights(bool on)
     {
-        if(on)
+
+        // for demo purposes
+        if (on)
+        {
+            yield return new WaitForSeconds(2);
+            SceneLoader.instance.LoadScene(2);
+            yield return null;
+        }
+
+        /*
+        if (on)
         {
             float alpha = 0;
             while (alpha < 2)
@@ -46,6 +56,8 @@ public class MenuMech : MonoBehaviour
                 yield return null;
             }
         }
+        */
+
 
     }
 }

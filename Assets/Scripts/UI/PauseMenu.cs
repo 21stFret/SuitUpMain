@@ -19,11 +19,13 @@ public class PauseMenu : MonoBehaviour
     public GameObject firstSelectedButton;
     public GameObject controlsSelectedButton;
     public bool menuLocked;
+    private bool menuOpen;
 
     void Start()
     {
         pauseMenu.SetActive(false);
         isPaused = false;
+        menuOpen = false;
     }
 
     void Update()
@@ -32,10 +34,11 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
-        if(menuLocked)
+        if(menuLocked || menuOpen)
         {
             return;
         }
+        menuOpen = true;
         GameUI.instance.CloseAll();
         pauseMenu.SetActive(true);
         menu.SetActive(true);
@@ -48,6 +51,11 @@ public class PauseMenu : MonoBehaviour
 
     public void ResumeGame()
     {
+        if(!menuOpen)
+        {
+            return;
+        }
+        menuOpen = false;
         cheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
         menu.SetActive(false);

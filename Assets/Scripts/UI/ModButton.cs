@@ -12,6 +12,7 @@ public class ModButton : MonoBehaviour
     public TMP_Text modType;
     public ModStats[] modStats;
     public Image modImage;
+    public Image modRarityImage;
 }
 
 

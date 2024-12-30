@@ -124,11 +124,11 @@ public class StatMultiplierManager : MonoBehaviour
     {
         switch (statType)
         {
-            case StatType.MWD_Increase_Percent:
+            case StatType.Assault_Damage:
                 // DOne in targetHealth
                 Debug.Log($"MWD Increased by {percentageIncrease}");
                 break;
-            case StatType.AWD_Increase_Percent:
+            case StatType.Tech_Damage:
                 // DOne in targetHealth
                 Debug.Log($"AWD Increased by {percentageIncrease}");
                 break;
@@ -137,12 +137,12 @@ public class StatMultiplierManager : MonoBehaviour
                 // DOne in targetHealth
                 BattleMech.instance.targetHealth.SetNewMaxHealth();
                 break;
-            case StatType.FuelRate:
+            case StatType.Fuel_Tank:
                 // DOne in WeaponFuel Manager
                 Debug.Log($"Fuel Rate Increased by {percentageIncrease}");
                 BattleMech.instance.weaponFuelManager.SetBonus();
                 break;
-            case StatType.FireRate:
+            case StatType.Fire_Rate:
                 Debug.Log($"Fire Rate Increased by {percentageIncrease}");
                 // DOne in weaponController
                 BattleMech.instance.weaponController.SetFireRate();

@@ -47,11 +47,11 @@ public class PulseShockwave : MonoBehaviour
                 canHeal = true;
                 healAmount =  value;
                 break;
-            case StatType.MWD_Increase_Percent:
+            case StatType.Assault_Damage:
                 canDamage = true;
                 damage = value;
                 break;
-            case StatType.FuelRate:
+            case StatType.Fuel_Tank:
                 canRegenFuel = true;
                 regenTime = value;
                 break;

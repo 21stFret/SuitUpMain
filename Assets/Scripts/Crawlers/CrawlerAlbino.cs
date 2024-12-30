@@ -12,31 +12,6 @@ public class CrawlerAlbino : Crawler
     public LayerMask smashLayerMask;
     private float smashTimer;
     public float smashCooldown;
-    public float smashmovementDelay;
-    private bool smashing;
-
-    /*
-    public override void CheckDistance()
-    {
-        if (crawlerMovement.distanceToTarget < smashDistance)
-        {
-            smashTimer += Time.deltaTime;
-            if (smashTimer > smashCooldown)
-            {
-                animator.SetTrigger("Smash Attack");
-                smashTimer = 0;
-                StartCoroutine(SmashMovementDelay());
-            }
-        }
-        if(smashing)
-        {
-            return;
-        }
-
-        base.CheckDistance();
-
-    }
-    */
 
     public void Smash()
     {
@@ -65,15 +40,6 @@ public class CrawlerAlbino : Crawler
             }
         }
 
-    }
-
-    private IEnumerator SmashMovementDelay()
-    {
-        smashing = true;
-        crawlerMovement.canMove = false;
-        yield return new WaitForSeconds(smashmovementDelay);
-        crawlerMovement.canMove = true;
-        smashing = false;
     }
 
     public override void Die(WeaponType weapon)

@@ -95,12 +95,13 @@ public class ModUI : MonoBehaviour
         }
         button.modRarity.text = rarity;
         button.modRarity.color = color;
+        button.modRarityImage.color = color;
         for (int j = 0; j < mod.modifiers.Count; j++)
         {
             var modifier = mod.modifiers[j];
             var stat = button.modStats[j];
             stat.gameObject.SetActive(true);
-            stat.modStat.text = modifier.statType.ToString();
+            stat.modStat.text = ReplaceUnderscoreWithSpace(modifier.statType.ToString());
             string modValue = modifier.statValue.ToString();
             if (modifier.statValue < 0)
             {
@@ -121,5 +122,10 @@ public class ModUI : MonoBehaviour
             stat.modStatValue.text += "%";
         }
         
+    }
+
+    public static string ReplaceUnderscoreWithSpace(string input)
+    {
+        return input.Replace("_", " ");
     }
 }

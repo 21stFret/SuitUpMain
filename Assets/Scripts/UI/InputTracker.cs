@@ -83,6 +83,10 @@ public class InputTracker : MonoBehaviour
             {
                 GameUI.instance.pauseMenu.SwapControlsMenu();
             }
+            if(TutorialManager.instance != null)
+            {
+                TutorialManager.instance.tutorialUI.UpdateInputImages();
+            }
             lastControlScheme = playerInput.currentControlScheme;
         }
         if (usingMouse)

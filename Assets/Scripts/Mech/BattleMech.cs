@@ -1,3 +1,4 @@
+using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class BattleMech : MonoBehaviour
     public WeaponFuelManager weaponFuelManager;
     public TargetHealth targetHealth;
     public DroneController droneController;
+    public PlayerInput playerInput;
     public bool isDead;
 
     private void Awake()
@@ -22,6 +24,7 @@ public class BattleMech : MonoBehaviour
         weaponController = GetComponent<WeaponController>();
         weaponFuelManager = GetComponent<WeaponFuelManager>();
         targetHealth = GetComponent<TargetHealth>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     public void OnDie()

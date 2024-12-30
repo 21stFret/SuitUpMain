@@ -23,6 +23,12 @@ public class DroneController : MonoBehaviour
     private bool inputDelay;
     public int airstikes;
     public bool tutorial;
+    public SequenceInputController[] sequenceInputController;
+
+    [InspectorButton("FullyChargeDrone")]
+    public bool chargeDrone;
+
+
 
     private void Start()
     {
@@ -36,21 +42,33 @@ public class DroneController : MonoBehaviour
         {
             return;
         }
-        if(!tutorial)
+
+        if(!airDropTimer.charged)
+        {
+            return;
+        }
+
+
+        if (!tutorial)
         {
             if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
             {
                 return;
             }
         }
-        if(!airDropTimer.charged)
-        {
-            return;
-        }
+
+        AudioManager.instance.PlaySFX(SFX.Select);
         Time.timeScale = 0.3f;
         airdropMenu.SetActive(true);
+        if(!tutorial)
+        {
+            InputTracker.instance.SetLastSelectedGameObject(firstSelected);
+            foreach (SequenceInputController sequence in sequenceInputController)
+            {
+                sequence.StartNewSequence();
+            }
+        }
         playerInput.SwitchCurrentActionMap("UI");
-        eventSystem.SetSelectedGameObject(firstSelected);
     }
 
     public void OnCloseMenu(InputAction.CallbackContext context)
@@ -93,6 +111,8 @@ public class DroneController : MonoBehaviour
                 MissileStrike();
                 break;
         }
+
+        AudioManager.instance.PlaySFX(SFX.Confirm);
 
         timesUsed++;
         airDropTimer.ResetAirDrop();

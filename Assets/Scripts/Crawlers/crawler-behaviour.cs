@@ -407,17 +407,71 @@ public class FleeState : CrawlerState
         movement.tracking = false;
         CalculateFleePosition();
     }
-    
+
     private void CalculateFleePosition()
     {
         if (crawler.target != null)
         {
             Vector3 directionFromTarget = (crawler.transform.position - crawler.target.transform.position).normalized;
-            fleePosition = crawler.transform.position + directionFromTarget * behavior.fleeDistance;
-            //TODO: Calculate for if pinned into a corner or at edge of map
+            Vector3 proposedFleePosition = crawler.transform.position + directionFromTarget * behavior.fleeDistance;
+
+            // Check if the proposed position is valid within map bounds
+            Vector3 clampedPosition = ClampPositionToMapBounds(proposedFleePosition);
+
+            // If the clamped position is too close to the target, find alternative flee direction
+            if (Vector3.Distance(clampedPosition, crawler.target.transform.position) < behavior.fleeDistance * 0.5f)
+            {
+                // Try to find an alternative direction by rotating the flee vector
+                Vector3 alternativeDirection = FindAlternativeFleeDirection(directionFromTarget);
+                fleePosition = ClampPositionToMapBounds(crawler.transform.position + alternativeDirection * behavior.fleeDistance);
+            }
+            else
+            {
+                fleePosition = clampedPosition;
+            }
         }
     }
-    
+
+    private Vector3 ClampPositionToMapBounds(Vector3 position)
+    {
+        // Replace these with your actual map bounds
+        float minX = -50;
+        float maxX = 50;
+        float minZ = -50;
+        float maxZ = 50;
+        float y = position.y; // Preserve the y position
+
+        return new Vector3(
+            Mathf.Clamp(position.x, minX, maxX),
+            y,
+            Mathf.Clamp(position.z, minZ, maxZ)
+        );
+    }
+
+    private Vector3 FindAlternativeFleeDirection(Vector3 originalDirection)
+    {
+        // Try different angles to find a valid escape route
+        float[] testAngles = new float[] { 45f, -45f, 90f, -90f, 135f, -135f };
+
+        foreach (float angle in testAngles)
+        {
+            // Rotate the original direction around the Y axis
+            Vector3 rotatedDirection = Quaternion.Euler(0, angle, 0) * originalDirection;
+            Vector3 testPosition = crawler.transform.position + rotatedDirection * behavior.fleeDistance;
+
+            // Check if this position would be valid
+            Vector3 clampedTestPosition = ClampPositionToMapBounds(testPosition);
+
+            if (Vector3.Distance(clampedTestPosition, crawler.target.transform.position) >= behavior.fleeDistance * 0.5f)
+            {
+                return rotatedDirection;
+            }
+        }
+
+        // If no good alternative is found, return the original direction
+        return originalDirection;
+    }
+
     public override void Update()
     {
         movement.SetDestination(fleePosition);

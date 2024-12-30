@@ -110,7 +110,7 @@ public class LoadOutPanel : MonoBehaviour
             }
         }
 
-        SetupGame.instance.diffiulty = currentDifficulty;
+        SetupGame.instance.diffiulty = (Difficulty)currentDifficulty;
         DifficultyButtonImage.sprite = DifficultyButtonSprites[currentDifficulty];
 
         switch (currentDifficulty)

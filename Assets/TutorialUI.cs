@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TutorialUI : MonoBehaviour
 {
@@ -23,14 +22,14 @@ public class TutorialUI : MonoBehaviour
     public GameObject airDrop;
     public float textSpeed = 0.05f;
 
-    public TutorialInputUI[] inputUIs; // Array of TutorialInputUI components
+    public TutorialTextWithImage[] inputUIs; // Array of TutorialInputUI components
     public GameObject[] inputTicks;
     public GameObject inputPanel; // Panel containing input UIs
     public Sprite[] controlSpritesPC;
     public Sprite[] controlSpritesGamePad; // Array of control sprites (keyboard, gamepad, etc.)
 
     private Dictionary<string, int> controlIndexMap; // Map control names to sprite indices
-
+    private string[] curControls;
     void Awake()
     {
         InitializeControlMap();
@@ -55,38 +54,51 @@ public class TutorialUI : MonoBehaviour
 
     public IEnumerator InitializeMech()
     {
-        yield return StartCoroutine(PrintText("Initializing Mech..."));
+        mechHealthObject.SetActive(false);
+        yield return StartCoroutine(PrintText("New user detected, running initialization protocols..."));
         mechHealthObject.SetActive(true);
         mechHealth.enabled = true;
         mechHealth.targetHealth.health = mechHealth.targetHealth.maxHealth;
+        StartCoroutine(PrintText("Health and Fuel systems loading..."));
         mechFuelObject.SetActive(true);
         weaponFuelManager._enabled = true;
         weaponFuelManager.weaponRechargeRate = 35;
         yield return new WaitForSeconds(3f);
-        yield return StartCoroutine(PrintText("Loading Complete! Scanning environment..."));
+        yield return StartCoroutine(PrintText("Systems check complete! Preparing training environment..."));
         yield return new WaitForSeconds(1f);
         weaponFuelManager.weaponRechargeRate = 15;
         instructionPanel.SetActive(false);
-        //yield return StartCoroutine(EnableMainWeapon());
     }
 
     public IEnumerator StartCombatTraining()
     {
         mainWeapon.SetActive(true);
         mainWeaponImage.SetActive(true);
-        yield return StartCoroutine(PrintText("Weapons enabled. Prepare for combat training."));
+        yield return StartCoroutine(PrintText("Weapons have now been enabled. Please get ready for combat training."));
         yield return new WaitForSeconds(1f);
         instructionPanel.SetActive(false);
     }
 
-    public void ShowInstructions(string instructions)
+    public IEnumerator StartDroneTraining()
     {
-        StartCoroutine(PrintText(instructions));
+        yield return StartCoroutine(PrintText("Well Done! Now simulating pain!"));
+        instructionPanel.SetActive(false);
+    }
+
+    public IEnumerator EndTutorial()
+    {
+        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.SavePlayerData();
+        yield return StartCoroutine(PrintText("Systems check complete. Ready for live combat!"));
+        yield return new WaitForSeconds(1f);
+        SceneLoader.instance.LoadScene(2);
     }
 
     public void UpdateInputInstructions(string[] controls, string[] instructions)
     {
         HideAllInputUIs();
+
+        curControls = controls;
          
         Sprite[] controlSprites = InputTracker.instance.usingMouse? controlSpritesPC : controlSpritesGamePad;
 
@@ -94,8 +106,20 @@ public class TutorialUI : MonoBehaviour
         {
             inputPanel.SetActive(true);
             inputUIs[i].gameObject.SetActive(true);
-            inputUIs[i].inputImage.sprite = controlSprites[controlIndexMap[controls[i]]];
-            inputUIs[i].inputText.text = instructions[i];
+            inputUIs[i].SetTutorialText(instructions[i], controlSprites[controlIndexMap[controls[i]]]);
+        }
+    }
+
+    public void UpdateInputImages()
+    {
+        if(curControls == null)
+        {
+            return;
+        }
+        Sprite[] controlSprites = InputTracker.instance.usingMouse ? controlSpritesPC : controlSpritesGamePad;
+        for (int i = 0; i < inputUIs.Length; i++)
+        {
+            inputUIs[i].UpdateImage(controlSprites[controlIndexMap[curControls[i]]]);
         }
     }
 
@@ -112,13 +136,9 @@ public class TutorialUI : MonoBehaviour
         }
     }
 
-    public IEnumerator EndTutorial()
+    public void ShowInstructions(string instructions)
     {
-        PlayerSavedData.instance.UpdateFirstLoad(false);
-        PlayerSavedData.instance.SavePlayerData();
-        yield return StartCoroutine(PrintText("Systems check complete. Ready for live combat!"));
-        yield return new WaitForSeconds(1f);
-        SceneLoader.instance.LoadScene(2);
+        StartCoroutine(PrintText(instructions));
     }
 
     public IEnumerator PrintText(string text)
@@ -130,6 +150,7 @@ public class TutorialUI : MonoBehaviour
             instructionText.text += text[i];
             yield return new WaitForSeconds(textSpeed);
         }
+        yield return new WaitForSeconds(1f);
     }
 
     public void SetControlGreen(int control)
@@ -142,12 +163,5 @@ public class TutorialUI : MonoBehaviour
                 break;
             }
         }
-    }
-
-    public void SwapControlsToPC(bool isPC)
-    {
-        // Implement logic to swap between PC and console sprites
-        // This might involve having separate sprite arrays for PC and console
-        // and updating the controlSprites reference based on isPC
     }
 }

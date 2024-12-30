@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         mechLoadOut.Init();
         InitializeStats();
         AudioManager.instance.Init();
-        AudioManager.instance.PlayMusic(1);
+        AudioManager.instance.PlayBattleMusic();
 
         if (!playOnAwake) return;
 
@@ -73,11 +73,11 @@ public class GameManager : MonoBehaviour
         Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>
         {
         { StatType.Health, BattleMech.instance.targetHealth.maxHealth },
-        { StatType.MWD_Increase_Percent, BattleMech.instance.weaponController.mainWeaponEquiped.damage},
+        { StatType.Assault_Damage, BattleMech.instance.weaponController.mainWeaponEquiped.damage},
         { StatType.Speed, BattleMech.instance.myCharacterController.Speed },
-        { StatType.FireRate, BattleMech.instance.weaponController.mainWeaponEquiped.fireRate },
-        { StatType.AWD_Increase_Percent, BattleMech.instance.weaponController.altWeaponEquiped.damage},
-        { StatType.FuelRate, BattleMech.instance.weaponFuelManager.weaponFuelMax}
+        { StatType.Fire_Rate, BattleMech.instance.weaponController.mainWeaponEquiped.fireRate },
+        { StatType.Tech_Damage, BattleMech.instance.weaponController.altWeaponEquiped.damage},
+        { StatType.Fuel_Tank, BattleMech.instance.weaponFuelManager.weaponFuelMax}
         };
 
         statMultiplierManager.LoadBaseValues(baseStats);
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
     public void LoadMainMenu()
     {
         altWeaponController.ClearWeaponInputs();
-        SceneLoader.instance.LoadScene(1);
+        SceneLoader.instance.LoadScene(2);
     }
 
     public void LoadNextRoom()
@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame(bool won)
     {
-        AudioManager.instance.PlayMusic(3);
+        AudioManager.instance.PlayMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
         PlayerProgressManager.instance.EndGamePlayerProgress(won);
