@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: A_FX_Shield_Glow_Mat
   m_Shader: {fileID: 4800000, guid: f10ac0b05347ab14bab376ef55d18c03, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _TIMESETTINGS_LINEAR_DEFAULT
   m_InvalidKeywords: []
@@ -18,6 +20,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -41,11 +44,11 @@ Material:
     - _HologramDistortionOffset: 0.5
     - _HologramDistortionScale: 10
     - _HologramDistortionSpeed: 2
-    - _HologramFade: 1
+    - _HologramFade: 0.548
     - _HologramLineFrequency: 500
     - _HologramLineGap: 3
     - _HologramLineSpeed: 0.01
-    - _HologramMinAlpha: 0.2
+    - _HologramMinAlpha: 0.297
     - _TimeFPS: 5
     - _TimeFrequency: 2
     - _TimeRange: 0.5
@@ -54,5 +57,5 @@ Material:
     - _TimeValue: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _HologramTint: {r: 0.3137255, g: 1.662745, b: 2.996078, a: 1}
+    - _HologramTint: {r: 0.028817236, g: 0.0105797, b: 0.003126399, a: 1}
   m_BuildTextureStacks: []

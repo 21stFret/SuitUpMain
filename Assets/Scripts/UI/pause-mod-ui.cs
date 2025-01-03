@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class PauseModUI : MonoBehaviour
 {
@@ -12,12 +11,6 @@ public class PauseModUI : MonoBehaviour
 
     public List<ModEntry> modEntryPool = new List<ModEntry>();
     public List<ModEntry> statEntryPool = new List<ModEntry>();
-
-    private void Start()
-    {
-        if (pauseModPanel != null)
-            pauseModPanel.SetActive(false);
-    }
 
     public void ShowPauseMods()
     {

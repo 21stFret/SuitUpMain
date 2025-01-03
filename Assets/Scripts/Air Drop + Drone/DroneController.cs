@@ -34,6 +34,16 @@ public class DroneController : MonoBehaviour
     {
         gameUI = GameUI.instance;
         timesUsed =0;
+        SetupSequencers();
+    }
+
+    private void SetupSequencers()
+    {
+        for (int i = 0; i < sequenceInputController.Length; i++)
+        {
+            int currentIndex = i;  // Create a local copy of the index
+            sequenceInputController[i].OnSequenceComplete += () => InitAirSupport(currentIndex);
+        }
     }
 
     public void OnOpenMenu(InputAction.CallbackContext context)
@@ -105,10 +115,10 @@ public class DroneController : MonoBehaviour
                 InitDrone(0);
                 break;
             case 1:
-                InitDrone(1);
+                MissileStrike();
                 break;
             case 3:
-                MissileStrike();
+
                 break;
         }
 
@@ -122,7 +132,7 @@ public class DroneController : MonoBehaviour
     private IEnumerator InputDelay()
     {
         inputDelay = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         inputDelay = false;
     }
 

@@ -15149,171 +15149,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 85937788}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &618192711
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: FOVColliderPoints
-  serializedVersion: 11
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 36
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 8
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 5.3298573}
-      m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 020001000000030002000000070005000400060007000400020003000400050002000400000001000600010007000600030000000400000006000400010002000500070001000500
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 8
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 96
-    _typelessdata: afb78abc177eb53c32adc43dafb78abc177eb5bc32adc43dafb78a3c177eb5bc32adc43dafb78a3c177eb53c32adc43db56beebf5cf81b40d7042941b56bee3f5cf81b40d7042941b56beebf5cf81bc0d7042941b56bee3f5cf81bc0d7042941
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0, z: 5.3298573}
-    m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshMetrics[0]: 1
-  m_MeshMetrics[1]: 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
 --- !u!1 &620890263
 GameObject:
   m_ObjectHideFlags: 0
@@ -16743,8 +16578,92 @@ MonoBehaviour:
     m_ActionName: Gameplay/Interact[/Keyboard/e,/XInputControllerWindows/buttonWest]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 33023101-3994-4ffe-896c-6fd741874e7f
-    m_ActionName: Gameplay/InteractEnd[/Keyboard/escape,/XInputControllerWindows/buttonEast]
+    m_ActionId: 16f54a89-8644-4fbf-a70d-3738d6bbb7d2
+    m_ActionName: UI/InteractUI[/Keyboard/e,/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c8d25d9d-d5c9-4f89-bf84-bce2e5f351cc
+    m_ActionName: UI/InteractEnd[/Keyboard/escape,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 434c49d8-ded3-440a-9cca-62dac40fa36a
+    m_ActionName: UI/Open Pause Menu[/XInputControllerWindows/start,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 030debd8-dc07-4c48-be1e-4c335cd3df43
+    m_ActionName: UI/Up[/Keyboard/upArrow,/XInputControllerWindows/dpad/up]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 976e5cf6-274b-41ef-b720-8d441e3593e6
+    m_ActionName: UI/Down[/Keyboard/downArrow,/XInputControllerWindows/dpad/down]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4abe77ae-2cba-439b-9705-e678e5ff205f
+    m_ActionName: UI/Left[/Keyboard/leftArrow,/XInputControllerWindows/dpad/left]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3babb40-6fa9-4bb6-b636-ba2317f57e8d
+    m_ActionName: UI/Right[/Keyboard/rightArrow,/XInputControllerWindows/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f771ad94-054d-4278-b9d8-7c2c245dd3ec
+    m_ActionName: Base UI/MoveUI[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7fc36bb3-4d41-406e-96fb-b35fce74d72c
+    m_ActionName: Base UI/SelectUI[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e232e9c8-8aab-42d1-8950-250f0e8e9b76
+    m_ActionName: Base UI/CloseMenu[/XInputControllerWindows/buttonNorth,/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 342c20e1-a3b5-4acf-b48a-11cb30fd655b
+    m_ActionName: Base UI/Close Pause Menu[/XInputControllerWindows/start,/Keyboard/escape,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 116cf69d-5aa6-4093-844c-97be0e574195
+    m_ActionName: Base UI/MousePoint[/Mouse/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fbfc7f97-a9c1-4144-af53-d872f29519e4
+    m_ActionName: Base UI/LeftClick[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 22c3140e-fe8e-4bce-bc67-89a87be5dc9f
+    m_ActionName: Base UI/Any[/Keyboard/anyKey,/XInputControllerWindows/start,/Mouse/press]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b8352685-69e2-44f9-bf5a-1335a741fa2c
+    m_ActionName: Base UI/CycleMenuHeaderLeft[/XInputControllerWindows/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 46b02170-895d-41d3-bb4a-e7711ef11294
+    m_ActionName: Base UI/CycleMenuHeaderRIght[/XInputControllerWindows/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 22e4875c-62bd-450c-a1a8-0fde2742c769
+    m_ActionName: Base UI/ReturntoMainMenu[/Keyboard/escape,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 812b06a7-eea7-4c48-bae0-db1182121ab6
+    m_ActionName: Base UI/Open Pause Menu[/XInputControllerWindows/start,/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bf395b03-e98c-41bb-9707-7d9bab09f1c0
+    m_ActionName: Base UI/Up[/Keyboard/upArrow,/XInputControllerWindows/dpad/up]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d2e2a925-fc3d-43c3-bfcb-12afce1834b7
+    m_ActionName: Base UI/Down[/Keyboard/downArrow,/XInputControllerWindows/dpad/down]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a3120c96-e35c-4399-973e-5dcc318b9f88
+    m_ActionName: Base UI/Left[/Keyboard/leftArrow,/XInputControllerWindows/dpad/left]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0ea53b20-f47e-410c-8abc-19ed3460f8ca
+    m_ActionName: Base UI/Right[/Keyboard/rightArrow,/XInputControllerWindows/dpad/right]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Default
   m_DefaultActionMap: UI
@@ -24949,6 +24868,7 @@ GameObject:
   - component: {fileID: 897221073}
   - component: {fileID: 897221075}
   - component: {fileID: 897221074}
+  - component: {fileID: 897221076}
   m_Layer: 5
   m_Name: Curencies
   m_TagString: Untagged
@@ -25016,6 +24936,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897221072}
   m_CullTransparentMesh: 1
+--- !u!114 &897221076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897221072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa89e6ca4d0c1e4492502772b0143eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Artifacts: {fileID: 1084318827}
+  _waves: {fileID: 0}
+  _cash: {fileID: 1291450776}
 --- !u!1 &898148948
 GameObject:
   m_ObjectHideFlags: 0
@@ -28117,7 +28052,6 @@ GameObject:
   - component: {fileID: 1115428304}
   - component: {fileID: 1115428303}
   - component: {fileID: 1115428302}
-  - component: {fileID: 1115428301}
   - component: {fileID: 1115428307}
   - component: {fileID: 1115428306}
   m_Layer: 5
@@ -28126,22 +28060,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1115428301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1115428300}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fa89e6ca4d0c1e4492502772b0143eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Artifacts: {fileID: 1084318827}
-  _waves: {fileID: 0}
-  _cash: {fileID: 1291450776}
+  m_IsActive: 1
 --- !u!114 &1115428302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35171,7 +35090,7 @@ MonoBehaviour:
   upgradeAudio: {fileID: 2135812754}
   mainWeaponButton: {fileID: 1422915437}
   altWeaponButton: {fileID: 28005899}
-  statsUI: {fileID: 1115428301}
+  statsUI: {fileID: 0}
   lockedPanel: {fileID: 425132131}
   cantAffordPanel: {fileID: 846158615}
   UpgradeButtonText: {fileID: 1904457749}
@@ -46033,7 +45952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mechLoadOut: {fileID: 631748976}
-  statsUI: {fileID: 1115428301}
+  statsUI: {fileID: 0}
   weaponHolder: {fileID: 1577240236}
   mainMenu: {fileID: 719015962}
   MainMenu: 1
@@ -46321,6 +46240,171 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987254729}
   m_CullTransparentMesh: 1
+--- !u!43 &1994721751
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FOVColliderPoints
+  serializedVersion: 11
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 36
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 5.3298573}
+      m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 020001000000030002000000070005000400060007000400020003000400050002000400000001000600010007000600030000000400000006000400010002000500070001000500
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 96
+    _typelessdata: afb78abc177eb53c32adc43dafb78abc177eb5bc32adc43dafb78a3c177eb5bc32adc43dafb78a3c177eb53c32adc43db56beebf5cf81b40d7042941b56bee3f5cf81b40d7042941b56beebf5cf81bc0d7042941b56bee3f5cf81bc0d7042941
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 0, y: 0, z: 5.3298573}
+    m_Extent: {x: 1.862662, y: 2.4370337, z: 5.2338243}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshMetrics[0]: 1
+  m_MeshMetrics[1]: 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!1 &2016796657 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6891773658586310055, guid: c3ad999b3e7b2724bb4130a94f9b3928,

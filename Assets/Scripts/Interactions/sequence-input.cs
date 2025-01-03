@@ -85,7 +85,7 @@ public class SequenceInputController : MonoBehaviour
     private void Start()
     {
         InitializeDirectionMappings();
-        sequencePanel.SetActive(false);
+        //sequencePanel.SetActive(false);
     }
 
     private void InitializeDirectionMappings()
@@ -164,7 +164,7 @@ public class SequenceInputController : MonoBehaviour
     {
         isSequenceActive = false;
         OnSequenceComplete?.Invoke();
-        StartCoroutine(HideSequencePanel(1f));
+        //StartCoroutine(HideSequencePanel(1f));
     }
 
     private void SequenceFailed()
@@ -178,7 +178,7 @@ public class SequenceInputController : MonoBehaviour
             sequenceDisplayImages[i].color = Color.red;
         }
 
-        StartCoroutine(HideSequencePanel(1f));
+        StartCoroutine(RefreshSequence(1f));
     }
 
     private IEnumerator SequenceTimer()
@@ -201,10 +201,10 @@ public class SequenceInputController : MonoBehaviour
         }
     }
 
-    private IEnumerator HideSequencePanel(float delay)
+    private IEnumerator RefreshSequence(float delay)
     {
         yield return new WaitForSeconds(delay);
-        sequencePanel.SetActive(false);
+        StartNewSequence();
     }
 
     // Public getter for testing and debugging

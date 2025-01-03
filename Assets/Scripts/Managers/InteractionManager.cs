@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEngine.Animations.Rigging;
+using System.Collections;
 
 public class InteractionManager : MonoBehaviour
 {
@@ -11,7 +11,32 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private InputActionReference interactEndAction;
     private IInteractable currentInteractable;
     public InteractableObject interactableObject;
+    
+    private bool canInteract = true;
+    [SerializeField] private float interactionCooldown = 0.5f;
 
+    private void OnInteract(InputAction.CallbackContext context)
+    {
+        if (!context.performed || !canInteract)
+        {
+            return;
+        }
+        if (currentInteractable != null && currentInteractable.CanInteract())
+        {
+            BattleMech.instance.myCharacterController.ToggleCanMove(false);
+            canInteract = false;
+            currentInteractable.ShowPrompt(false);
+            AudioManager.instance.PlaySFX(SFX.Select);
+            currentInteractable.Interact();
+            StartCoroutine(ResetInteraction());
+        }
+    }
+
+    private IEnumerator ResetInteraction()
+    {
+        yield return new WaitForSeconds(interactionCooldown);
+        canInteract = true;
+    }
     private void Awake()
     {
         interactAction.action.Enable();
@@ -46,20 +71,10 @@ public class InteractionManager : MonoBehaviour
     {
         if (other.TryGetComponent(out IInteractable interactable) && interactable == currentInteractable)
         {
-            currentInteractable.EndInteraction();
+            //currentInteractable.EndInteraction();
             currentInteractable.ShowPrompt(false);
             currentInteractable = null;
             interactableObject = null;
-        }
-    }
-
-    private void OnInteract(InputAction.CallbackContext context)
-    {
-        if (currentInteractable != null && currentInteractable.CanInteract())
-        {
-            currentInteractable.ShowPrompt(false);
-            AudioManager.instance.PlaySFX(SFX.Select);
-            currentInteractable.Interact();
         }
     }
 
@@ -69,6 +84,7 @@ public class InteractionManager : MonoBehaviour
         {
             currentInteractable.ShowPrompt(true);
             currentInteractable.EndInteraction();
+            BattleMech.instance.myCharacterController.ToggleCanMove(true);
         }
     }
 }

@@ -30,7 +30,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
     {
         if(BattleMech.instance != null)
         {
-            //BattleMech.instance.myCharacterController.ToggleCanMove(true);
+            BattleMech.instance.myCharacterController.ToggleCanMove(true);
             BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
         }
         onEnd?.Invoke();

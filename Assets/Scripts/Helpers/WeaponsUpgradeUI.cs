@@ -12,7 +12,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public TMP_Text level, cost;
     public TMP_Text  Ulevel;
     public List<WeaponInfoUI> weaponInfoUIs;
-    public List<GameObject> weaonUpgadreArrows;
     public TMP_Text uniqueText;
 
     public TMP_Text weaponName;
@@ -39,7 +38,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     private int MaxLevel;
 
-    private void OnEnable()
+    public void Init()
     {
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
@@ -255,11 +254,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public void UpdateUI(BaseWeaponInfo info, int weaponLevel)
     {
-        for (int j = 0; j < weaonUpgadreArrows.Count; j++)
-        {
-            weaonUpgadreArrows[j].SetActive(true);
-        }
-
         var itemlist = new List<float>
         {
             info._damage[weaponLevel],
@@ -294,10 +288,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
             if (!currentWeapon.weaponData.unlocked)
             {
                 weaponInfoUIs[i].boostedlevel.text = "";
-                for(int j = 0; j < weaonUpgadreArrows.Count; j++)
-                {
-                    weaonUpgadreArrows[j].SetActive(false);
-                }
                 continue;
             }
 

@@ -20,6 +20,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject controlsSelectedButton;
     public bool menuLocked;
     private bool menuOpen;
+    public PauseModUI pauseModUI;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class PauseMenu : MonoBehaviour
         GameUI.instance.CloseAll();
         pauseMenu.SetActive(true);
         menu.SetActive(true);
+        pauseModUI.ShowPauseMods();
         Time.timeScale = 0;
         isPaused = true;
         playerInput.SwitchCurrentActionMap("UI");

@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -49,7 +51,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (!isDialogueActive)
         {
-            StartDialogue(dialogueSequences[0]);
+            StartCoroutine(StartDialogue(dialogueSequences[0]));
         }
         else if (!isTyping)
         {
@@ -82,12 +84,15 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueSequence sequence)
+    public IEnumerator StartDialogue(DialogueSequence sequence)
     {
+        dialogueText.text = "";
         currentDialogue = sequence.dialogue;
         currentDialogueIndex = 0;
+        nameText.text = currentDialogue[currentDialogueIndex].speakerName;
         isDialogueActive = true;
         dialoguePanel.SetBool("Open", true);
+        yield return new WaitForSeconds(1f);
         DisplayCurrentDialogue();
     }
 
@@ -107,7 +112,6 @@ public class DialogueManager : MonoBehaviour
     private void DisplayCurrentDialogue()
     {
         DialogueEntry entry = currentDialogue[currentDialogueIndex];
-        nameText.text = entry.speakerName;
         StartTyping(entry.dialogueText);
     }
 
