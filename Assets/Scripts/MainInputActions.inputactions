@@ -404,6 +404,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Upgrade",
+                    "type": "Button",
+                    "id": "55f6c0e8-691d-4937-91ee-a4532a694408",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CloseMenu",
                     "type": "Button",
                     "id": "b028e02a-a9fb-4b11-a7a6-1971a9d126ea",
@@ -592,7 +601,7 @@
                     "name": "",
                     "id": "acc998d3-d889-486f-bab4-571433e7df3d",
                     "path": "<Gamepad>/buttonSouth",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Default",
                     "action": "SelectUI",
@@ -904,6 +913,17 @@
                     "processors": "",
                     "groups": "Default",
                     "action": "InteractUI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87cbe31a-8d61-47ea-ade7-e428e4c91443",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Default",
+                    "action": "Upgrade",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

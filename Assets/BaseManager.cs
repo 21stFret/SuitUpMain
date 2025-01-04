@@ -7,10 +7,13 @@ public class BaseManager : MonoBehaviour
     public static BaseManager instance; 
     public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
+    public StatsUI statsUI;
+    public SceneLoader sceneLoader;
 
     private void Awake()
     {
         if (instance == null) instance = this;
+        sceneLoader = SceneLoader.instance;
     }
 
     public void Start()
@@ -28,8 +31,14 @@ public class BaseManager : MonoBehaviour
         mechLoadOut.Init();
         AudioManager.instance.Init();
         AudioManager.instance.PlayMusic(3);
-
+        statsUI.UpdateCash(PlayerSavedData.instance._Cash);
+        statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
 
         Debug.Log("Base Initialized");
+    }
+
+    public void StartGame(int value)
+    {
+        sceneLoader.LoadScene(value, true);
     }
 }
