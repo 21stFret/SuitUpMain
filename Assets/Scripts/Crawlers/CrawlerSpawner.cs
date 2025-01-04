@@ -372,7 +372,7 @@ public class CrawlerSpawner : MonoBehaviour
         if (activeCrawlers.Remove(crawler))
         {
             GetCrawlerList(type).Add(crawler);
-            crawler.gameObject.SetActive(false);
+            //crawler.gameObject.SetActive(false);
             //Debug.Log($"Crawler {crawler.name} returned to pool and deactivated.");
         }
     }
@@ -384,7 +384,7 @@ public class CrawlerSpawner : MonoBehaviour
             if (!activeCrawlers.Contains(crawler))
             {
                 activeCrawlers.Add(crawler);
-                crawler.gameObject.SetActive(true);
+                //crawler.gameObject.SetActive(true);
                 //Debug.Log($"Crawler {crawler.name} added to active list and activated.");
             }
         }

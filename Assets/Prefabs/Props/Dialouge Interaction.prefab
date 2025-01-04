@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 4543935470986842690}
   - component: {fileID: 6780518403915341012}
   - component: {fileID: 2288844963002270612}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Dialouge Interaction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,6 +228,7 @@ MonoBehaviour:
   dialogueText: {fileID: 0}
   nameText: {fileID: 0}
   typingSpeed: 0.05
+  interactableObject: {fileID: 0}
   dialogueSequences:
   - sequenceName: Test
     dialogue:
@@ -289,7 +290,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4543935470986842690}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
-        m_MethodName: EndDialogue
+        m_MethodName: ForceReset
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

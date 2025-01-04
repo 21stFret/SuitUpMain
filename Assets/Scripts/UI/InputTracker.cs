@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class InputTracker : MonoBehaviour
     public PlayerInput playerInput;
     public bool usingMouse = false;
     private string lastControlScheme;
+
+    public Action OnInputChange;
 
 
     private void Awake()
@@ -83,7 +86,12 @@ public class InputTracker : MonoBehaviour
             {
                 GameUI.instance.pauseMenu.SwapControlsMenu();
             }
+            if(TutorialManager.instance != null)
+            {
+                TutorialManager.instance.tutorialUI.UpdateInputImages();
+            }
             lastControlScheme = playerInput.currentControlScheme;
+            OnInputChange?.Invoke();
         }
         if (usingMouse)
         {

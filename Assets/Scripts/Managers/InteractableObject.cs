@@ -16,13 +16,25 @@ public class InteractableObject : MonoBehaviour, IInteractable
     {
         if (CanInteract())
         {
+            if(BattleMech.instance != null)
+            {
+                //BattleMech.instance.myCharacterController.ToggleCanMove(false);
+                BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
+            }
+            
             onInteract?.Invoke();
         }
     }
 
     public void EndInteraction()
     {
+        if(BattleMech.instance != null)
+        {
+            BattleMech.instance.myCharacterController.ToggleCanMove(true);
+            BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
+        }
         onEnd?.Invoke();
+        ShowPrompt(true);
     }
 
     public bool CanInteract()

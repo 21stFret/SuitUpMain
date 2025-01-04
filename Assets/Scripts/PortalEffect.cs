@@ -20,6 +20,27 @@ public class PortalEffect : MonoBehaviour
     public bool stopEffect;
 
 
+    public void DealyedEffect(float delay)
+    {         
+        StartCoroutine(StartEffectWithDelay(delay));
+    }
+
+    public void DealyedStopEffect(float delay)
+    {
+        StartCoroutine(StopEffectWithDelay(delay));
+    }
+
+    public IEnumerator StartEffectWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartEffect();
+    }
+
+    public IEnumerator StopEffectWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StopEffect();
+    }
 
     public void StartEffect()
     {

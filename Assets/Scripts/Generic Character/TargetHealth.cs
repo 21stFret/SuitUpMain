@@ -64,7 +64,7 @@ public class TargetHealth : MonoBehaviour
 
         if (invincible)
         {
-            damage = 0;
+            //damage = 0;
         }
 
         foreach(WeaponType immuneWeapon in immuneWeapons)
@@ -113,7 +113,7 @@ public class TargetHealth : MonoBehaviour
             {
                 return;
             }
-            _crawler.TakeDamage(damage, weaponType, stunTime);
+            _crawler.TakeDamage(damage, weaponType, stunTime, invincible);
         }
     }
 
@@ -191,11 +191,11 @@ public class TargetHealth : MonoBehaviour
 
         if (multiplierType == 1)
         {
-            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.MWD_Increase_Percent);
+            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Assault_Damage);
         }
         else if (multiplierType == 2)
         {
-            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.AWD_Increase_Percent);
+            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage);
         }
 
         return newDamage;

@@ -56,7 +56,7 @@ public class SceneLoader : MonoBehaviour
         {
             audioManager = AudioManager.instance;
         }
-        audioManager.PlayMusic(2);
+        audioManager.PlayMusic(1);
 
         yield return new WaitForSeconds(1);
 

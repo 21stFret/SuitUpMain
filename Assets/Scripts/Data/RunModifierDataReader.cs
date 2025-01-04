@@ -7,7 +7,7 @@ public class RunModifierDataReader : MonoBehaviour
 {
     public void LoadFromExcell(RunUpgradeManager runUpgradeManager)
     {
-        List<Dictionary<string, object>> data = CSVReader.Read("WeaponBaseData - Mods");
+        List<Dictionary<string, object>> data = CSVReader.Read("Suit Up Data - Mods");
         for (var i = 0; i < data.Count; i++)
         {
             //print(i);

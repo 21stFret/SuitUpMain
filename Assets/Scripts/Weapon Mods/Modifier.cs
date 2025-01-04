@@ -4,18 +4,18 @@ using UnityEngine;
 
 public enum StatType
 {
-    MWD_Increase_Percent,
-    AWD_Increase_Percent,
-    Time,
+    Assault_Damage,
+    Tech_Damage,
+    Seconds,
     Health,
-    FireRate,
-    FuelRate,
+    Fire_Rate,
+    Fuel_Tank,
     Speed,
     Unique,
-    AWD_Percent,
-    MWD_Percent,
-    Healing,
-    Stun
+    Assault,
+    Tech,
+    Heals,
+    Stun_Time
 
 }
 

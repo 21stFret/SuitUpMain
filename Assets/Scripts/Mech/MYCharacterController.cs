@@ -318,7 +318,18 @@ public class MYCharacterController : MonoBehaviour
     public void ToggleCanMove(bool value)
     {
         canMove = value;
-        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.velocity = value? _rigidbody.velocity : Vector3.zero;
+        if(!value)
+        {
+            isRunning = false;
+            footprintSystem.IsMoving = false;
+            runAudio.Stop();
+            _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        }
+        else
+        {
+            _rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        }
     }
 
 }

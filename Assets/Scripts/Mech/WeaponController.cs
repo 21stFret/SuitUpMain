@@ -47,7 +47,7 @@ public class WeaponController : MonoBehaviour
 
     public void SetFireRate()
     {
-        float fireRate = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.FireRate);
+        float fireRate = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Fire_Rate);
         if(fireRate<0)
         {
             fireRate = 0.05f;

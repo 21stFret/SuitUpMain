@@ -34,13 +34,13 @@ public class WeaponMod : MonoBehaviour
 
             switch(mod.statType)
             {
-                case StatType.MWD_Increase_Percent:     
+                case StatType.Assault_Damage:     
                     damage += value * damage;
                     break;
-                case StatType.FireRate:
+                case StatType.Fire_Rate:
                     baseWeapon.fireRate -= value * baseWeapon.fireRate;
                     break;
-                case StatType.FuelRate:
+                case StatType.Fuel_Tank:
                     modFuelCost -= value * modFuelCost;
                     break;
                 case StatType.Unique:

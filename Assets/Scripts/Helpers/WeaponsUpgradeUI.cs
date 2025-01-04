@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -12,7 +14,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public TMP_Text level, cost;
     public TMP_Text  Ulevel;
     public List<WeaponInfoUI> weaponInfoUIs;
-    public List<GameObject> weaonUpgadreArrows;
     public TMP_Text uniqueText;
 
     public TMP_Text weaponName;
@@ -33,53 +34,77 @@ public class WeaponsUpgradeUI : MonoBehaviour
     private bool lockUpgradebutton; 
     public GameObject lockedPanel;
     public GameObject cantAffordPanel;
+    public GameObject techIcon;
 
     public TMP_Text UpgradeButtonText;
     public TMP_Text UnlockAmount;
 
-    private int MaxLevel;
+    public GameObject firstSlected;
 
-    private void OnEnable()
+    private int MaxLevel;
+    public GameObject levels, arrows;
+
+
+    public InputActionReference inputUpgrade;
+
+
+    public void Init()
     {
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
-        SetMainWeaponBool(true);
+        ToggleMainWeapon(true);
         MaxLevel = weaponsManager._mainWeapons[0].baseWeaponInfo._damage.Length - 1;
+        InputTracker.instance.OnInputChange += UpdateUIafterInputSwap;
+        inputUpgrade.action.Enable();
+        inputUpgrade.action.performed += UpgradeWeapon;
     }
 
-    public void SetMainWeaponBool(bool value)
+    public void ToggleMenuOpen(bool value)
+    {
+        weaponParent.gameObject.SetActive(value);
+        techIcon.SetActive(value);
+        if (value)
+        {
+            UpdateUIafterInputSwap();
+        }
+        if(!value)
+        {
+            inputUpgrade.action.performed -= UpgradeWeapon;
+            inputUpgrade.action.Disable();
+        }
+    }
+
+    private void UpdateUIafterInputSwap()
+    {
+        if (InputTracker.instance.usingMouse)
+        {
+            return;
+        }
+        EventSystem.current.SetSelectedGameObject(firstSlected);
+    }
+
+    public void ToggleMainWeapon(bool value)
     {
         isMainWeapon = value;
         index = 0;
-        LoadWeapon(index);
-        var color = mainWeaponButton.color;
-        color.a = 0.2f;
-        altWeaponButton.color = color;
-        color.a = 1f;
-        mainWeaponButton.color = color;
-    }
 
-    public void ToggleMainWeapon()
-    {
-        isMainWeapon = !isMainWeapon;
-        index = 0;
-        LoadWeapon(index);
-        
-        if(!isMainWeapon)
+        if (!isMainWeapon)
         {
             var color = mainWeaponButton.color;
             color.a = 0.2f;
             mainWeaponButton.color = color;
-            color.a = 1f;
-            altWeaponButton.color = color;
+            var color2 = altWeaponButton.color;
+            color2.a = 1f;
+            altWeaponButton.color = color2;
         }
         else
         {
-            var color = mainWeaponButton.color;
+            var color = altWeaponButton.color;
             color.a = 0.2f;
             altWeaponButton.color = color;
-            color.a = 1f;
-            mainWeaponButton.color = color;
+            var color2 = mainWeaponButton.color;
+            color2.a = 1f;
+            mainWeaponButton.color = color2;
         }
     }
 
@@ -122,6 +147,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         if(value)
         {
             UpgradeButtonText.text = "UNLOCK";
+            cost.text = "N/A";
         }
         else
         {
@@ -129,28 +155,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         }
     }
 
-    public void NextWeapon()
-    {
-        index++;
-        int maxIndex = isMainWeapon? weaponsManager._mainWeapons.Length : weaponsManager._altWeapons.Length;
-        if (index > maxIndex - 1)
-        {
-            index = 0;
-        }
-        LoadWeapon(index);
-    }
-
-    public void PreviousWeapon()
-    {
-        index--;
-        if (index < 0)
-        {
-            index = isMainWeapon ? weaponsManager._mainWeapons.Length - 1 : weaponsManager._altWeapons.Length - 1;
-        }
-        LoadWeapon(index);
-    }
-
-    public void UpgradeWeapon()
+    public void UpgradeWeapon(InputAction.CallbackContext context)
     {
         StartCoroutine(pauseInput());
         if (!currentWeapon.weaponData.unlocked)
@@ -181,15 +186,19 @@ public class WeaponsUpgradeUI : MonoBehaviour
         statsUI.RemoveCash(currentWeapon.baseWeaponInfo._cost[currentWeapon.weaponData.level]);
         currentWeapon.weaponData.level++;
         PlayerSavedData.instance._gameStats.totalUpgrades++;
-        if(PlayerSavedData.instance._gameStats.totalUpgrades == 1)
+        if(PlayerAchievements.instance!=null)
         {
-            PlayerAchievements.instance.SetAchievement("UPGRADE_1");
+            if (PlayerSavedData.instance._gameStats.totalUpgrades == 1)
+            {
+                PlayerAchievements.instance.SetAchievement("UPGRADE_1");
+            }
+            if (currentWeapon.weaponData.level == MaxLevel)
+            {
+                PlayerAchievements.instance.SetAchievement("UPGRADE_MAX_1");
+                CheckAllMaxed();
+            }
         }
-        if(currentWeapon.weaponData.level == MaxLevel)
-        {
-            PlayerAchievements.instance.SetAchievement("UPGRADE_MAX_1");
-            CheckAllMaxed();
-        }
+
         weaponsManager.UpdateWeaponData();
         StartCoroutine(PlayUpgradeEffect());
     }
@@ -226,7 +235,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         upgradeAudio.Play();
         upgradeEffect.SetActive(true);
         yield return new WaitForSeconds(0.5f);
-        LoadWeapon(index);
+        UpdateUI(currentWeapon.baseWeaponInfo, currentWeapon.weaponData.level);
         upgradeEffect.SetActive(false);
         lockUpgradebutton = false;
     }
@@ -255,33 +264,38 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public void UpdateUI(BaseWeaponInfo info, int weaponLevel)
     {
-        for (int j = 0; j < weaonUpgadreArrows.Count; j++)
-        {
-            weaonUpgadreArrows[j].SetActive(true);
-        }
-
         var itemlist = new List<float>
         {
             info._damage[weaponLevel],
             info._fireRate[weaponLevel],
             info._range[weaponLevel],
-            info._weaponFuelUseRate[weaponLevel],
             info._uniqueValue[weaponLevel]
         };
 
+
         var itemlistPlus = new List<float>
         {
-            info._damage[weaponLevel+1],
-            info._fireRate[weaponLevel+1],
-            info._range[weaponLevel+1],
-            info._weaponFuelUseRate[weaponLevel+1],
-            info._uniqueValue[weaponLevel+1]
+            info._damage[weaponLevel],
+            info._fireRate[weaponLevel],
+            info._range[weaponLevel],
+            info._uniqueValue[weaponLevel]
         };
+
+        if (weaponLevel +1 < info._damage.Length)
+        {
+            itemlistPlus = new List<float>
+            {
+                info._damage[weaponLevel + 1],
+                info._fireRate[weaponLevel + 1],
+                info._range[weaponLevel + 1],
+                info._uniqueValue[weaponLevel + 1]
+            };
+        }
 
 
         for (int i = 0; i < weaponInfoUIs.Count; i++)
         {
-            if (weaponLevel + 1 == info._damage.Length)
+            if (weaponLevel + 1 <= info._damage.Length)
             {
                 weaponInfoUIs[i].amount.text = itemlist[i].ToString();
                 weaponInfoUIs[i].boostedlevel.text = itemlistPlus[i].ToString();
@@ -294,10 +308,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
             if (!currentWeapon.weaponData.unlocked)
             {
                 weaponInfoUIs[i].boostedlevel.text = "";
-                for(int j = 0; j < weaonUpgadreArrows.Count; j++)
-                {
-                    weaonUpgadreArrows[j].SetActive(false);
-                }
                 continue;
             }
 
@@ -329,9 +339,19 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
         weaponName.text = info.weaponName;
         weaponDescription.text = info.weaponDescription;
+        if(weaponLevel == MaxLevel)
+        {
+            levels.SetActive(false);
+            arrows.SetActive(false);
+            level.text = "";
+            cost.text = "N/A";
+            Ulevel.text = "Max";
+            return;
+        }
+        levels.SetActive(true);
+        arrows.SetActive(true);
         level.text = (weaponLevel + 1).ToString();
         cost.text = "$"+info._cost[weaponLevel].ToString();
-
         Ulevel.text = (weaponLevel + 2).ToString();
     }
 

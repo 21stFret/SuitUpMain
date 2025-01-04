@@ -214,6 +214,7 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void SelectModButton(int index)
     {
+        AudioManager.instance.PlaySFX(SFX.Confirm);
         var mod = listMods[index];
         EnableModSelection(mod);
     }

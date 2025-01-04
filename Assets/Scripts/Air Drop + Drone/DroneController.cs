@@ -23,11 +23,27 @@ public class DroneController : MonoBehaviour
     private bool inputDelay;
     public int airstikes;
     public bool tutorial;
+    public SequenceInputController[] sequenceInputController;
+
+    [InspectorButton("FullyChargeDrone")]
+    public bool chargeDrone;
+
+
 
     private void Start()
     {
         gameUI = GameUI.instance;
         timesUsed =0;
+        SetupSequencers();
+    }
+
+    private void SetupSequencers()
+    {
+        for (int i = 0; i < sequenceInputController.Length; i++)
+        {
+            int currentIndex = i;  // Create a local copy of the index
+            sequenceInputController[i].OnSequenceComplete += () => InitAirSupport(currentIndex);
+        }
     }
 
     public void OnOpenMenu(InputAction.CallbackContext context)
@@ -36,21 +52,33 @@ public class DroneController : MonoBehaviour
         {
             return;
         }
-        if(!tutorial)
+
+        if(!airDropTimer.charged)
+        {
+            return;
+        }
+
+
+        if (!tutorial)
         {
             if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
             {
                 return;
             }
         }
-        if(!airDropTimer.charged)
-        {
-            return;
-        }
+
+        AudioManager.instance.PlaySFX(SFX.Select);
         Time.timeScale = 0.3f;
         airdropMenu.SetActive(true);
+        if(!tutorial)
+        {
+            InputTracker.instance.SetLastSelectedGameObject(firstSelected);
+            foreach (SequenceInputController sequence in sequenceInputController)
+            {
+                sequence.StartNewSequence();
+            }
+        }
         playerInput.SwitchCurrentActionMap("UI");
-        eventSystem.SetSelectedGameObject(firstSelected);
     }
 
     public void OnCloseMenu(InputAction.CallbackContext context)
@@ -87,12 +115,14 @@ public class DroneController : MonoBehaviour
                 InitDrone(0);
                 break;
             case 1:
-                InitDrone(1);
-                break;
-            case 3:
                 MissileStrike();
                 break;
+            case 3:
+
+                break;
         }
+
+        AudioManager.instance.PlaySFX(SFX.Confirm);
 
         timesUsed++;
         airDropTimer.ResetAirDrop();
@@ -102,7 +132,7 @@ public class DroneController : MonoBehaviour
     private IEnumerator InputDelay()
     {
         inputDelay = true;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         inputDelay = false;
     }
 

@@ -19,7 +19,10 @@ public enum SFX
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
+    [NamedArray(new string[] { "Main Menu", "Loading", "Tutorial", "Base", "Win Game" })]
     public AudioClip[] musicClips;
+    public AudioClip[] battleClips;
+    [NamedArray(new string[] { "Move", "Select", "Back", "Confirm", "Error"})]
     public AudioClip[] effectClips;
     public AudioClip[] hurtClips;
     public AudioClip[] healClips;
@@ -37,6 +40,7 @@ public class AudioManager : MonoBehaviour
     private GameObject lastSelectedObject;
 
     public bool buttonClicked;
+
 
     private void Awake()
     {
@@ -96,6 +100,21 @@ public class AudioManager : MonoBehaviour
         //DOTween.To(() => volume, x => volume = x, 0.0001f, 1f).OnComplete(() => FadeMusicIn());
         //audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
         currentClipIndex = clipIndex;
+    }
+
+    public void PlayBattleMusic(int trackID = -1)
+    {
+        if (trackID == -1)
+        {
+            backgroundMusic.clip = battleClips[Random.Range(0, battleClips.Length)];
+        }
+        else
+        {
+            backgroundMusic.clip = battleClips[trackID];
+        }
+
+        backgroundMusic.clip = battleClips[Random.Range(0, battleClips.Length)];
+        backgroundMusic.Play();
     }
 
     private void FadeMusicIn()

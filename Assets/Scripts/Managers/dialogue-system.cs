@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -17,6 +19,8 @@ public class DialogueManager : MonoBehaviour
     private string currentText = "";
     private float typeTimer = 0f;
     private int typeIndex = 0;
+
+    public InteractableObject interactableObject;
 
     [System.Serializable]
     public class DialogueEntry
@@ -37,13 +41,17 @@ public class DialogueManager : MonoBehaviour
     private void Start()
     {
         dialoguePanel.SetBool("Open", false);
+        if(interactableObject == null)
+        {
+            interactableObject = GetComponent<InteractableObject>();
+        }
     }
 
     public void Interact()
     {
         if (!isDialogueActive)
         {
-            StartDialogue(dialogueSequences[0]);
+            StartCoroutine(StartDialogue(dialogueSequences[0]));
         }
         else if (!isTyping)
         {
@@ -76,12 +84,15 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue(DialogueSequence sequence)
+    public IEnumerator StartDialogue(DialogueSequence sequence)
     {
+        dialogueText.text = "";
         currentDialogue = sequence.dialogue;
         currentDialogueIndex = 0;
+        nameText.text = currentDialogue[currentDialogueIndex].speakerName;
         isDialogueActive = true;
         dialoguePanel.SetBool("Open", true);
+        yield return new WaitForSeconds(1f);
         DisplayCurrentDialogue();
     }
 
@@ -101,7 +112,6 @@ public class DialogueManager : MonoBehaviour
     private void DisplayCurrentDialogue()
     {
         DialogueEntry entry = currentDialogue[currentDialogueIndex];
-        nameText.text = entry.speakerName;
         StartTyping(entry.dialogueText);
     }
 
@@ -123,7 +133,23 @@ public class DialogueManager : MonoBehaviour
     public void EndDialogue()
     {
         isDialogueActive = false;
-        dialoguePanel.SetBool("Open", false);
+        CloseDialougeBox();
         currentDialogueIndex = 0;
+        if(interactableObject != null)
+        {
+            interactableObject.EndInteraction();
+        }
+    }
+
+    public void ForceReset()
+    {           
+        isDialogueActive = false;
+        CloseDialougeBox();
+        currentDialogueIndex = 0;
+    }
+
+    public void CloseDialougeBox()
+    {
+        dialoguePanel.SetBool("Open", false);
     }
 }

@@ -71,6 +71,9 @@ public class Crawler : MonoBehaviour
     public CrawlerBehavior _crawlerBehavior;
     public Vector3 spawnLocation;
 
+
+    public bool dummy;
+
     public virtual void Init()
     {
         dead = false;
@@ -100,8 +103,9 @@ public class Crawler : MonoBehaviour
         if (forceSpawn && _targetHealth==null)
         {
             crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
-            Invoke("Init", 0.5f);
-            Invoke("Spawn", 0.6f);
+            Init();
+            meshRenderer.enabled = false;
+            Invoke("Spawn", 0.1f);
         }
     }
 
@@ -223,8 +227,10 @@ public class Crawler : MonoBehaviour
     }
 
     
-    public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
+    public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0,bool invincible = false)
     {
+
+
         if (stunTime > 0)
         {
             StartCoroutine(StunCralwer(stunTime));
@@ -243,13 +249,15 @@ public class Crawler : MonoBehaviour
         FlashRed();
         TakeDamageOveride();
 
-
         if (immune)
         {
             return;
         }
 
-        _targetHealth.health -= damage;
+        if(!dummy)
+        {
+            _targetHealth.health -= damage;
+        }   
 
         _crawlerBehavior.OnDamageTaken();
 

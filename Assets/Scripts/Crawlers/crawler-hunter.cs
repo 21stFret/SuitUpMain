@@ -153,7 +153,7 @@ public class CrawlerHunter : Crawler
         meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.TwoSided;
     }
 
-    public override void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0)
+    public override void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0, bool invincible = false)
     {
         // Reveal when taking damage
         RevealFromStealth();

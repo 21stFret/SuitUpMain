@@ -45,7 +45,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 8300000, guid: 681c08777ce544f1f9fa101411f9c5e2, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -177,15 +177,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicClips:
   - {fileID: 8300000, guid: 3e350732b6e2d494295eda933a188623, type: 3}
-  - {fileID: 8300000, guid: 681c08777ce544f1f9fa101411f9c5e2, type: 3}
+  - {fileID: 8300000, guid: 48a50e3b116314156a6bf348ccbfb9ce, type: 3}
+  - {fileID: 8300000, guid: 028fad23ce107174ba75450737f4d2a4, type: 3}
   - {fileID: 8300000, guid: 6ae4e594a1ee3426a9c513a001e5668d, type: 3}
+  - {fileID: 8300000, guid: 9201051e6f0a5459785c5fa8c87ceacb, type: 3}
+  battleClips:
+  - {fileID: 8300000, guid: de3749edf7fb88e428260a1fc0d6c2c3, type: 3}
+  - {fileID: 8300000, guid: a186349e021d64743abac3c35d0df372, type: 3}
+  - {fileID: 8300000, guid: aebebad860563ec419f77e172d9f2bfe, type: 3}
   effectClips:
-  - {fileID: 8300000, guid: 8a9cbdef82c9829489a7aa5e0f133f52, type: 3}
-  - {fileID: 8300000, guid: 9f6aa5af78c92ca4494ac9c46d61f961, type: 3}
-  - {fileID: 8300000, guid: 9f6aa5af78c92ca4494ac9c46d61f961, type: 3}
-  - {fileID: 8300000, guid: 9f6aa5af78c92ca4494ac9c46d61f961, type: 3}
-  - {fileID: 8300000, guid: 9f6aa5af78c92ca4494ac9c46d61f961, type: 3}
-  - {fileID: 8300000, guid: 7ee9ede440422534192830c927230cc4, type: 3}
+  - {fileID: 8300000, guid: f9d62b4e6d5e2eb428414ca7b14d3aa5, type: 3}
+  - {fileID: 8300000, guid: 2d5372e6adf36b04d8ae5d52ed37914c, type: 3}
+  - {fileID: 8300000, guid: 6f751a186cc382247a8c6cd2e186028f, type: 3}
+  - {fileID: 8300000, guid: 4ed79e6a2b8a20d4b888d2df596738f8, type: 3}
+  - {fileID: 8300000, guid: a6583ed590b415445abe2f09aa11f273, type: 3}
   hurtClips:
   - {fileID: 8300000, guid: a615af9796db06242a84e175dec40171, type: 3}
   - {fileID: 8300000, guid: 7ee9ede440422534192830c927230cc4, type: 3}
@@ -193,11 +198,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2406acbce4660b14caf81514ebdb27a3, type: 3}
   healClips:
   - {fileID: 8300000, guid: 06a58a7eb882b6e4e923e3fe52cc61af, type: 3}
-  - {fileID: 8300000, guid: 0192fe1f74e88bf4487cf2c47a96edfa, type: 3}
   audioMixer: {fileID: 24100000, guid: b5ecbaa5b9c376f4fa87ef13f374c38f, type: 2}
   backgroundMusic: {fileID: 812579786764937570}
   soundEffect: {fileID: 5786783779343771227}
-  musicVolume: 0
+  musicVolume: 1
   sfxVolume: 1
   eventSystem: {fileID: 0}
   buttonClicked: 0
@@ -245,7 +249,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
