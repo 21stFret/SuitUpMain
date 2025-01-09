@@ -707,16 +707,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser Weapon
       objectReference: {fileID: 0}
-    - target: {fileID: 2229872019701436046, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 2554992489879498107, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2760412817417953826, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -765,36 +755,6 @@ PrefabInstance:
     - target: {fileID: 2760412817417953826, guid: c6085c2b156acf941b1267c321d2114b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: MaxHorizAngle
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: MinimumVisibility
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: pulseRoutine.Mode.value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3265058790905310545, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: pulseRoutine.Interval.value
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5539866116353843305, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.81
-      objectReference: {fileID: 0}
-    - target: {fileID: 5835245423656740121, guid: c6085c2b156acf941b1267c321d2114b,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1171,6 +1131,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3376525042641261081, guid: 9428193766c3b6f49b45995ae77a021e,
         type: 3}
+      propertyPath: weaponType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3376525042641261081, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
       propertyPath: weaponFuelUseRate
       value: 20
       objectReference: {fileID: 0}
@@ -1189,6 +1154,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Flame Claw
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379564410850293112, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: m_UseCustomVertexStreams
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379564410850293112, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379564410850293112, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[1]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379564410850293112, guid: 9428193766c3b6f49b45995ae77a021e,
+        type: 3}
+      propertyPath: m_VertexStreams.Array.data[2]
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8129288891078569133, guid: 9428193766c3b6f49b45995ae77a021e,
         type: 3}

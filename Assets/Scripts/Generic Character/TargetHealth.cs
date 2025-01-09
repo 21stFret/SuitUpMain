@@ -64,7 +64,7 @@ public class TargetHealth : MonoBehaviour
 
         if (invincible)
         {
-            //damage = 0;
+            damage = 0;
         }
 
         foreach(WeaponType immuneWeapon in immuneWeapons)

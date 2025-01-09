@@ -13,6 +13,14 @@ public class Prop : MonoBehaviour
 
     private Collider _collider;
 
+    [InspectorButton("RefreshProp")]
+    public bool init;
+
+    private void Awake()
+    {
+        _collider = GetComponent<Collider>();
+    }
+
     private void Start()
     {
         Init();
@@ -20,7 +28,7 @@ public class Prop : MonoBehaviour
 
     public virtual void Init()
     {
-        _collider = GetComponent<Collider>();
+
         if (_targetHealth == null)
         {
             print("No target health found on " + gameObject.name);
@@ -83,15 +91,17 @@ public class Prop : MonoBehaviour
 
     public virtual void Die()
     {
+        
         _targetHealth.alive = false;
         _collider.enabled = false;
         print(gameObject.name + " has died");
     }
 
-    public void RefreshProp()
+    public virtual void RefreshProp()
     {
         _targetHealth.health = _targetHealth.maxHealth;
         _targetHealth.alive = true;
         _collider.enabled = true;
+        gameObject.SetActive(true);
     }
 }

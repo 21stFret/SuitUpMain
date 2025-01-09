@@ -330,6 +330,10 @@ public class CrawlerSpawner : MonoBehaviour
         if (!isActive) yield break;
         bug.gameObject.SetActive(true);
         bug.Spawn();
+        if(BattleManager.instance.currentBattle.battleType == BattleType.Upload)
+        {
+            bug.target = BattleManager.instance.capturePoint.transform;
+        }
         AddToActiveList(bug);
 
         //Debug.Log($"Spawned and activated: {bug.name}");

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class BreakableObject : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class BreakableObject : MonoBehaviour
     private List<GameObject> activeparts = new List<GameObject>();
     private bool isBroken = false;
     public float localScale;
+    public LayerMask layerMask;
 
 
     private void Awake()
@@ -54,12 +56,27 @@ public class BreakableObject : MonoBehaviour
         for (int i = 0; i < brokenPartPrefabs.Length; i++)
         {
             GameObject part = GetPooledpart(i);
+
+            var rend = part.GetComponent<Renderer>();
+            if(rend != null)
+            {
+                if(rend.material.HasProperty("_Color"))
+                {
+                    Color color = rend.material.color;
+                    color.a = 1;
+                    rend.material.color = color;
+                }
+
+            }
+
+
             Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
             randomOffset.y = 1f;
             Vector3 newPos = transform.position + randomOffset;
             part.transform.position = transform.position + randomOffset;
             part.transform.rotation = transform.rotation;
             part.SetActive(true);
+            part.layer = layerMask;
             activeparts.Add(part);
             part.transform.localScale = new Vector3(localScale, localScale, localScale);
             Rigidbody rb = part.GetComponent<Rigidbody>();
@@ -96,7 +113,16 @@ public class BreakableObject : MonoBehaviour
     private IEnumerator HideBrokenParts()
     {
         yield return new WaitForSeconds(hideDelay);
-
+        foreach (GameObject part in activeparts)
+        {
+            Renderer renderer = part.GetComponent<Renderer>();
+            if (renderer == null)
+            {
+                continue;
+            }
+            renderer.material.DOFade(0, 1f);
+        }
+        yield return new WaitForSeconds(1);
         foreach (GameObject part in activeparts)
         {
             part.SetActive(false);

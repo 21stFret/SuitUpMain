@@ -11,6 +11,7 @@ public class Grenade : MonoBehaviour
     public float explosionUpward;
     public float fuseTime;
     public bool explodeOnImpact;
+    public WeaponType weaponType;
     public LayerMask layerMask;
     public ParticleSystem explosionEffect;
     protected Rigidbody rb;
@@ -79,7 +80,7 @@ public class Grenade : MonoBehaviour
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpward);
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
-            hit.GetComponent<TargetHealth>()?.TakeDamage(damage);
+            hit.GetComponent<TargetHealth>()?.TakeDamage(damage, weaponType);
         }
         live = false;
         meshRenderer.enabled = false;

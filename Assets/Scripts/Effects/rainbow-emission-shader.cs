@@ -15,7 +15,7 @@ public class SmoothRainbowEmission : MonoBehaviour
     void Start()
     {
         Renderer renderer = GetComponent<Renderer>();
-        material = renderer.material;
+        material = renderer.sharedMaterial;
 
         // Initialize hues for rainbow colors
         hues = new float[colorSteps];

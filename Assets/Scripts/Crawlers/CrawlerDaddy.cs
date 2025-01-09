@@ -11,6 +11,7 @@ public class CrawlerDaddy : Crawler
     public float explosionRadius = 10f;
     public float explosionForce = 1000f;
     public LayerMask layerMask;
+    public GameObject eggs;
 
     public override void Die(WeaponType killedBy)
     {
@@ -24,6 +25,7 @@ public class CrawlerDaddy : Crawler
             ExplodeIfInRange();
         }
         base.Die(killedBy);
+        eggs.SetActive(false);
     }
 
     private void ExplodeIfInRange()
@@ -47,6 +49,7 @@ public class CrawlerDaddy : Crawler
     public override void Spawn()
     {
         base.Spawn();
+        eggs.SetActive(true);
         DeathEffect.transform.SetParent(transform);
         DeathEffect.SetActive(false);
     }

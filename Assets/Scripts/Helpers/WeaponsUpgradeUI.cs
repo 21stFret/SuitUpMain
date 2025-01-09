@@ -155,7 +155,20 @@ public class WeaponsUpgradeUI : MonoBehaviour
         }
     }
 
+    public void UpgradeWeaponButton()
+    {
+        ActualUpgrade();
+    }
+
     public void UpgradeWeapon(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            ActualUpgrade();
+        }
+    }
+
+    private void ActualUpgrade()
     {
         StartCoroutine(pauseInput());
         if (!currentWeapon.weaponData.unlocked)
@@ -165,20 +178,21 @@ public class WeaponsUpgradeUI : MonoBehaviour
                 statsUI.RemoveArtifact(currentWeapon.baseWeaponInfo._unlockCost);
                 weaponsManager.UnlockWeapon(currentWeaponIndex, isMainWeapon);
                 ShowLockedPanel(false);
+                AudioManager.instance.PlaySFX(SFX.Unlock);
             }
             return;
         }
 
-        if(currentWeapon.weaponData.level == MaxLevel)
+        if (currentWeapon.weaponData.level == MaxLevel)
         {
             return;
         }
-        
-        if(!CheckCost(currentWeapon.baseWeaponInfo))
+
+        if (!CheckCost(currentWeapon.baseWeaponInfo))
         {
             return;
         }
-        if(lockUpgradebutton)
+        if (lockUpgradebutton)
         {
             return;
         }
@@ -186,7 +200,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         statsUI.RemoveCash(currentWeapon.baseWeaponInfo._cost[currentWeapon.weaponData.level]);
         currentWeapon.weaponData.level++;
         PlayerSavedData.instance._gameStats.totalUpgrades++;
-        if(PlayerAchievements.instance!=null)
+        if (PlayerAchievements.instance != null)
         {
             if (PlayerSavedData.instance._gameStats.totalUpgrades == 1)
             {

@@ -25,6 +25,7 @@ public class ExplodingBarrel : Prop
     public BreakableObject breakableObject;
     public DamageArea damageArea;
     private Rigidbody rb;
+    private int _currentFuseCount;
 
     private void Start()
     {
@@ -43,6 +44,7 @@ public class ExplodingBarrel : Prop
         breakableObject.transform.parent = this.transform;
         rb = GetComponent<Rigidbody>();
         _fuseTimer = 0;
+        _currentFuseCount = fuseCount;
     }
 
     public override void Die()
@@ -101,7 +103,7 @@ public class ExplodingBarrel : Prop
 
     public void TimerDelay()
     {
-        if(fuseCount>0)
+        if(_currentFuseCount>0)
         {
             if (_fuseTimer < flashTime)
             {
@@ -126,8 +128,8 @@ public class ExplodingBarrel : Prop
         }
         if (_fuseTimer >= fuseTime)
         {
-            fuseCount--;
-            if (fuseCount <= 0)
+            _currentFuseCount--;
+            if (_currentFuseCount <= 0)
             {
                 Explode();
                 return;
@@ -158,5 +160,19 @@ public class ExplodingBarrel : Prop
 
         // Restore original color
         Gizmos.color = originalColor;
+    }
+
+    public override void RefreshProp()
+    {
+        base.RefreshProp();
+        explosionEffect.transform.parent = this.transform;
+        explosionEffect.Stop();
+        explosionSound.Stop();
+        breakableObject.transform.parent = this.transform;
+        prefab.SetActive(true);
+        warningLight.enabled = false;
+        explosionRadiusPrefab.SetActive(false);
+        _fuseTimer = 0;
+        _currentFuseCount = fuseCount;
     }
 }
