@@ -273,6 +273,12 @@ public class PursuitState : CrawlerState
 
         if (movement.distanceToTarget <= behavior.GetEngagementRange())
         {
+            if(crawler.target.GetComponent<TargetHealth>() == null)
+            {
+                crawler.FindClosestTarget();
+                behavior.TransitionToState(typeof(IdleState));
+                return;
+            }
             behavior.TransitionToState(typeof(AttackState));
         }
 
@@ -339,7 +345,14 @@ public class SpawnedState : CrawlerState
         spawnTimer += Time.deltaTime;
         if (spawnTimer >= 0.5f)
         {
-            behavior.TransitionToState(typeof(IdleState));
+            if(crawler.target == null)
+            {
+                behavior.TransitionToState(typeof(IdleState));
+            }
+            else
+            {
+                behavior.TransitionToState(typeof(PursuitState));
+            }
         }
     }
 

@@ -99,6 +99,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
         GameManager.instance.gameActive = false;
+        AudioManager.instance.PlayMusic(5);
         SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
         roomDrop.Init(GameManager.instance.nextBuildtoLoad);
@@ -149,7 +150,9 @@ public class BattleManager : MonoBehaviour
     {
         crawlerSpawner.battleManager = this;
         crawlerSpawner.waveText.text = "Here they come...";
-        crawlerSpawner.spawnPoints = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>().spawnPoints;
+        EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
+        crawlerSpawner.spawnPoints = area.spawnPoints;
+        area.RefreshArea();
         crawlerSpawner.LoadBattle();
         if (currentBattle.battleType == BattleType.Exterminate)
         {

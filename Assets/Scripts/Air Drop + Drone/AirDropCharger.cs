@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class AirDropCharger : MonoBehaviour
 {
@@ -22,6 +23,11 @@ public class AirDropCharger : MonoBehaviour
     {
         ChargeOverTime();
 
+        if(charged)
+        {
+            return;
+        }
+
         float percentage = DroneCharge / DroneMaxCharge;
 
         cover.fillAmount = percentage;
@@ -37,7 +43,16 @@ public class AirDropCharger : MonoBehaviour
         {
             if (!GameManager.instance.gameActive)
             {
+                if (charged)
+                {
+                    airDropText.enabled = true;
+                    airDropText.text = "Drone On Standby";
+                }
                 return;
+            }
+            else
+            {
+                airDropText.text = "Drone Ready";
             }
         }
         if (charged)

@@ -48,6 +48,7 @@ namespace FORGE3D
             isFXSpawned = false;
             timer = 0f;
             hitPoint = new RaycastHit();
+            hitObjects.Clear();
         }
 
         // OnDespawned called by pool manager 

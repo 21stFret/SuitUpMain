@@ -13,16 +13,16 @@ public enum SFX
     Back,
     Confirm,
     Error,
-    Hurt
+    Unlock
 }
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
-    [NamedArray(new string[] { "Main Menu", "Loading", "Tutorial", "Base", "Win Game" })]
+    [NamedArray(new string[] { "Main Menu", "Loading", "Tutorial", "Base", "Win Game", "DownTime" })]
     public AudioClip[] musicClips;
     public AudioClip[] battleClips;
-    [NamedArray(new string[] { "Move", "Select", "Back", "Confirm", "Error"})]
+    [NamedArray(new string[] { "Move", "Select", "Back", "Confirm", "Error", "Unlock" })]
     public AudioClip[] effectClips;
     public AudioClip[] hurtClips;
     public AudioClip[] healClips;
@@ -97,8 +97,6 @@ public class AudioManager : MonoBehaviour
     public void PlayMusic(int clipIndex)
     {
         DOVirtual.Float(musicVolume, 0.0001f, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20)).OnComplete(FadeMusicIn);
-        //DOTween.To(() => volume, x => volume = x, 0.0001f, 1f).OnComplete(() => FadeMusicIn());
-        //audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
         currentClipIndex = clipIndex;
     }
 

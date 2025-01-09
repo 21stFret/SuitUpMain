@@ -10,16 +10,29 @@ public class Crate : Prop
     public AudioClip[] audioClips;
     public AudioSource explosionSound;
     public BreakableObject breakableObject;
+    private Vector3 originalPosition;
+    private Vector3 originalRoation;
+    private Renderer rend;
+    private Rigidbody rb;
 
-    public void Start()
+    public override void Init()
     {
-        Init();
+        base.Init();
+        originalPosition = transform.position;
+        originalRoation = transform.eulerAngles;
         breakableObject.transform.parent = this.transform;
+        rend = GetComponent<Renderer>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public override void Die()
     {
         base.Die();
+        if(rb != null)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeAll;
+        }
+
         if (Random.value * 100 <= lootChance)
         {
             GameObject randomLoot = loot[Random.Range(0, loot.Length)];
@@ -32,15 +45,21 @@ public class Crate : Prop
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();
         explosionEffect.Play();
-        StartCoroutine(DelayedDestroy(1.0f));
+        rend.enabled = false;
     }
 
-    private IEnumerator DelayedDestroy(float delay)
+    public override void RefreshProp()
     {
-        GetComponent<Collider>().enabled = false;
-        GetComponent<Renderer>().enabled = false;
-        yield return new WaitForSeconds(delay);
-        gameObject.SetActive(false);
+        Init();
+        base.RefreshProp();
+        rend.enabled = true;
+        if(rb != null)
+        {
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        transform.position = originalPosition;
+        transform.eulerAngles = originalRoation;
     }
+    
 
 }
