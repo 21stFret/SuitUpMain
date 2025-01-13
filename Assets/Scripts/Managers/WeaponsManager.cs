@@ -6,14 +6,14 @@ public class WeaponsManager : MonoBehaviour
 {
     public static WeaponsManager instance;
     public GameObject weaponsHolder;
-    public MechWeapon[] _mainWeapons;
-    public MechWeapon[] _altWeapons;
+    public MechWeapon[] _assaultWeapons;
+    public MechWeapon[] _techWeapons;
     public int mainWeapon;
     public int altWeapon;
     private PlayerSavedData _playerSavedData;
     private WeaponBaseDataReader weaponBaseDataReader;
-    public MechWeapon currentMainWeapon { get { return _mainWeapons[mainWeapon]; } }
-    public MechWeapon currentAltWeapon { get { return _altWeapons[altWeapon]; } }
+    public MechWeapon currentMainWeapon { get { return _assaultWeapons[mainWeapon]; } }
+    public MechWeapon currentAltWeapon { get { return _techWeapons[altWeapon]; } }
 
     private void Awake()
     {
@@ -50,11 +50,11 @@ public class WeaponsManager : MonoBehaviour
         _playerSavedData = PlayerSavedData.instance;
         for (int i = 0; i < mainWeapons.Length; i++)
         {
-            _mainWeapons[i].weaponData = mainWeapons[i];
+            _assaultWeapons[i].weaponData = mainWeapons[i];
         }
         for (int i = 0; i < altWeapons.Length; i++)
         {
-            _altWeapons[i].weaponData = altWeapons[i];
+            _techWeapons[i].weaponData = altWeapons[i];
         }
 
         mainWeapon = (int)_playerSavedData._playerLoadout.x;
@@ -76,13 +76,13 @@ public class WeaponsManager : MonoBehaviour
 
     public void UpdateWeaponData()
     {
-        for (int i = 0; i < _mainWeapons.Length; i++)
+        for (int i = 0; i < _assaultWeapons.Length; i++)
         {
-            _playerSavedData.UpdateMainWeaponData(_mainWeapons[i].weaponData, i);
+            _playerSavedData.UpdateMainWeaponData(_assaultWeapons[i].weaponData, i);
         }
-        for (int i = 0; i < _altWeapons.Length; i++)
+        for (int i = 0; i < _techWeapons.Length; i++)
         {
-            _playerSavedData.UpdateAltWeaponData(_altWeapons[i].weaponData, i);
+            _playerSavedData.UpdateAltWeaponData(_techWeapons[i].weaponData, i);
         }
         _playerSavedData.SavePlayerData();
     }
@@ -90,13 +90,13 @@ public class WeaponsManager : MonoBehaviour
     public void GetWeaponsFromHolder(ConnectWeaponHolderToManager holder)
     {
         weaponsHolder = holder.gameObject;
-        _mainWeapons = holder.mainWeapons;
-        _altWeapons = holder.altWeapons;
+        _assaultWeapons = holder.mainWeapons;
+        _techWeapons = holder.altWeapons;
     }
     
     public void UnlockWeapon(int index, bool mainWeapon)
     {
-        var weapon = mainWeapon ? _mainWeapons[index] : _altWeapons[index];
+        var weapon = mainWeapon ? _assaultWeapons[index] : _techWeapons[index];
         weapon.weaponData.unlocked = true;
         UpdateWeaponData();
     }

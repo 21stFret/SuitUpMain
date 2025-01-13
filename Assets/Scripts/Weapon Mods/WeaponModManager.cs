@@ -5,10 +5,15 @@ using UnityEngine;
 public class WeaponModManager : MonoBehaviour
 {
     public List<WeaponMod> mods;
-    public MechWeapon weapon;
-    public WeaponController altWeapon;
-    public WeaponMod currentMod;
+    public MechWeapon assualtWeapon;
+    public MechWeapon techWeapon;
+    public WeaponController weaponController;
+    public WeaponMod currentTechMod;
+    public WeaponMod currentAssaultMod;
     public List<WeaponMod> currentMods = new List<WeaponMod>();
+
+    [InspectorButton("EquipAssaultModTEst")]
+    public bool equipMod;
 
     public void LoadCurrentWeaponMods(WeaponType type)
     {
@@ -29,26 +34,58 @@ public class WeaponModManager : MonoBehaviour
         return mod;
     }
 
-    public void EquipWeaponMod(WeaponMod mod)
+    public void EquipTechWeaponMod(WeaponMod mod)
     {
         if(mod == null)
         {
             print("No mod found");
             return;
         }
-        if(currentMod != null)
+        if(currentAssaultMod != null)
         {
-            currentMod.RemoveMods();
+            currentAssaultMod.RemoveMods();
         }
 
-        currentMod = mod;
-        weapon.weaponMod = currentMod;
-        currentMod.baseWeapon = weapon;
-        currentMod.transform.SetParent(weapon.transform);
-        currentMod.transform.localPosition = Vector3.zero;
-        currentMod.transform.localRotation = Quaternion.identity;
-        currentMod.Init();
+        currentTechMod = mod;
+        techWeapon.weaponMod = currentTechMod;
+        currentTechMod.baseWeapon = techWeapon;
+        currentTechMod.transform.SetParent(assualtWeapon.transform);
+        currentTechMod.transform.localPosition = Vector3.zero;
+        currentTechMod.transform.localRotation = Quaternion.identity;
+        currentTechMod.enabled = true;
+        currentTechMod.Init();
         //altWeapon.SetAltWeaponInputs();
         GameUI.instance.CloseModUI();
+    }
+
+    public void EquipAssaultMod(WeaponMod mod)
+    {
+        if(currentAssaultMod == null)
+        {
+            return;
+        }
+        currentAssaultMod = mod;
+        assualtWeapon.weaponMod = currentAssaultMod;
+        currentAssaultMod.baseWeapon = assualtWeapon;
+        currentAssaultMod.enabled = true;
+        currentAssaultMod.transform.SetParent(assualtWeapon.transform);
+        currentAssaultMod.transform.localPosition = Vector3.zero;
+        currentAssaultMod.transform.localRotation = Quaternion.identity;
+        currentAssaultMod.Init();
+    }
+
+    public void EquipAssaultModTEst()
+    {
+        if (currentAssaultMod == null)
+        {
+            return;
+        }
+        assualtWeapon.weaponMod = currentAssaultMod;
+        currentAssaultMod.baseWeapon = assualtWeapon;
+        currentAssaultMod.enabled = true;
+        currentAssaultMod.transform.SetParent(assualtWeapon.transform);
+        currentAssaultMod.transform.localPosition = Vector3.zero;
+        currentAssaultMod.transform.localRotation = Quaternion.identity;
+        currentAssaultMod.Init();
     }
 }

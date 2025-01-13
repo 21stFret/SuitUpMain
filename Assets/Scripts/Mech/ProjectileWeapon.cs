@@ -88,7 +88,7 @@ public class ProjectileWeapon : MonoBehaviour
         AdvanceSocket();
     }
 
-    public void Minigun(float dam)
+    public void Minigun(float dam, int bounce)
     {
         // Spawn muzzle flash and projectile at current socket position
         F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanMuzzle, TurretSocket[curSocket].position,
@@ -105,6 +105,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj._weaponController = this;
             proj.weaponType = WeaponType.Minigun;
             proj.impactForce = 1;
+            proj.bounceCount = bounce;
         }
 
 

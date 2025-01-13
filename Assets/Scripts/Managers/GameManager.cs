@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public RunUpgradeManager runUpgradeManager;
 
     public bool playOnAwake = false;
+    public TestPlayerData TESTplayerData;
 
     [InspectorButton("SpawnPortalsToNextRoom")]
     public bool spawnPortal;
@@ -45,6 +46,12 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
+        if(SetupGame.instance != null) SetupGame.instance.LinkGameManager(this);
+        else
+        {
+            Debug.Log("No Setup Game Instance Found using test data.");
+            TESTplayerData.InittestData();
+        }
         _myCharacterController = BattleMech.instance.myCharacterController;
         _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
@@ -77,7 +84,10 @@ public class GameManager : MonoBehaviour
         { StatType.Speed, BattleMech.instance.myCharacterController.Speed },
         { StatType.Fire_Rate, BattleMech.instance.weaponController.mainWeaponEquiped.fireRate },
         { StatType.Tech_Damage, BattleMech.instance.weaponController.altWeaponEquiped.damage},
-        { StatType.Fuel_Tank, BattleMech.instance.weaponFuelManager.weaponFuelMax}
+        { StatType.Fuel_Tank, BattleMech.instance.weaponFuelManager.weaponFuelMax},
+        { StatType.Dash_Cooldown, BattleMech.instance.myCharacterController.dashCooldown},
+        { StatType.Pulse_Range, BattleMech.instance.pulseShockwave.range},
+        { StatType.Charge_Rate, BattleMech.instance.droneController.airDropTimer.chargeRate},
         };
 
         statMultiplierManager.LoadBaseValues(baseStats);

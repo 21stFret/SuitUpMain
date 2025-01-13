@@ -15,7 +15,10 @@ public enum StatType
     Assault,
     Tech,
     Heals,
-    Stun_Time
+    Stun_Time,
+    Charge_Rate,
+    Dash_Cooldown,
+    Pulse_Range,
 
 }
 

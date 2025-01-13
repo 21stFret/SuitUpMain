@@ -10,6 +10,9 @@ public class WeaponMod : MonoBehaviour
     public float damage;
     public float range;
     public RunMod RunMod;
+    public bool assaultMod;
+    public RunUpgradeManager runUpgradeManager;
+
 
     public virtual void GetBaseWeapon(MechWeapon weapon)
     {
@@ -18,11 +21,16 @@ public class WeaponMod : MonoBehaviour
 
     public virtual void Init()
     {
-        modFuelCost = baseWeapon.weaponFuelManager.weaponFuelRate;
+        runUpgradeManager = FindObjectOfType<RunUpgradeManager>();
+        assaultMod = baseWeapon.weaponFuelManager == null;
         damage = baseWeapon.damage;
         range = baseWeapon.range;
         baseWeapon.weaponOverride = false;
-        baseWeapon.weaponFuelManager.constantUse = true;
+        if(!assaultMod)
+        {
+            baseWeapon.weaponFuelManager.constantUse = true;
+            modFuelCost = baseWeapon.weaponFuelManager.weaponFuelRate;
+        }
         ApplyMods();
     }
 

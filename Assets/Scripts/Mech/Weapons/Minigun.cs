@@ -10,12 +10,14 @@ public class Minigun : MechWeapon
     public GameObject gunturret;
     private Animator _animator;
     public ProjectileWeapon weaponController;
+    public float bonusDamage;
 
     private float _timer;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        bounces = 0;
     }
 
     void Update()
@@ -38,10 +40,11 @@ public class Minigun : MechWeapon
         _animator.SetBool("HasTarget", hasTarget);
         if(isFiring)
         {
+            _animator.SetBool("HasTarget", true);
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                weaponController.Minigun(damage);
+                weaponController.Minigun(damage + bonusDamage, bounces);
                 _timer = 0.0f;
             }
         }
@@ -49,17 +52,6 @@ public class Minigun : MechWeapon
         {
             _timer = 0.0f;
         }
-        /*
-        if(hasTarget)
-        {
-            _timer += Time.deltaTime;
-           if(_timer > fireRate)
-            {
-                weaponController.Minigun(damage);
-                _timer = 0.0f;
-            }
-        }
-        */
     }
 
     public void OnFire(InputAction.CallbackContext context)

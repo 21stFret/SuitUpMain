@@ -7,8 +7,8 @@ public class MechLoader : MonoBehaviour
     public bool battleLoadout;
     [HideInInspector]
     public WeaponsManager weaponsManager;
-    public MechWeapon mainWeapon;
-    public MechWeapon altWeapon;
+    public MechWeapon assaultWeapon;
+    public MechWeapon techWeapon;
     public WeaponController weaponController;
     public Transform mainWeaponMount;
     public Transform altWeaponMount;
@@ -42,16 +42,16 @@ public class MechLoader : MonoBehaviour
     {
         RemoveMainWeapon();
         if (weaponsManager.mainWeapon < 0) { return; }
-        mainWeapon = weaponsManager._mainWeapons[weaponsManager.mainWeapon];
-        mainWeapon.transform.SetParent(mainWeaponMount);
-        mainWeapon.transform.localPosition = Vector3.zero;
-        mainWeapon.transform.localRotation = Quaternion.identity;
+        assaultWeapon = weaponsManager._assaultWeapons[weaponsManager.mainWeapon];
+        assaultWeapon.transform.SetParent(mainWeaponMount);
+        assaultWeapon.transform.localPosition = Vector3.zero;
+        assaultWeapon.transform.localRotation = Quaternion.identity;
 
         if(battleLoadout)
         {
             weaponController.enabled = true;
-            weaponController.Init(mainWeapon);
-            mainWeapon.Init();
+            weaponController.Init(assaultWeapon);
+            assaultWeapon.Init();
         }
 
     }
@@ -60,21 +60,22 @@ public class MechLoader : MonoBehaviour
     {
         RemoveAltWeapon();
         if (weaponsManager.altWeapon < 0) { return; }
-        altWeapon = weaponsManager._altWeapons[weaponsManager.altWeapon];
-        altWeapon.weaponFuelManager = transform.GetComponent<WeaponFuelManager>();
-        altWeapon.transform.SetParent(altWeaponMount);
-        altWeapon.transform.localPosition = Vector3.zero;
-        altWeapon.transform.localRotation = Quaternion.identity;
+        techWeapon = weaponsManager._techWeapons[weaponsManager.altWeapon];
+        techWeapon.weaponFuelManager = transform.GetComponent<WeaponFuelManager>();
+        techWeapon.transform.SetParent(altWeaponMount);
+        techWeapon.transform.localPosition = Vector3.zero;
+        techWeapon.transform.localRotation = Quaternion.identity;
 
         if(battleLoadout)
         {
             weaponController.enabled = true;
-            weaponController.Init(altWeapon);
-            altWeapon.Init();
+            weaponController.Init(techWeapon);
+            techWeapon.Init();
             if(weaponModManager != null)
             {
-                weaponModManager.weapon = altWeapon;
-                weaponModManager.altWeapon = weaponController;
+                weaponModManager.assualtWeapon = assaultWeapon;
+                weaponModManager.techWeapon = techWeapon;
+                weaponModManager.weaponController = weaponController;
             }
         }
 
@@ -82,21 +83,21 @@ public class MechLoader : MonoBehaviour
 
     public void RemoveMainWeapon()
     {
-        if(mainWeapon != null)
+        if(assaultWeapon != null)
         {
-            mainWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
-            weaponsHanger.SetMainWeaponPositionToSlot(mainWeapon);
-            mainWeapon = null;
+            assaultWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
+            weaponsHanger.SetMainWeaponPositionToSlot(assaultWeapon);
+            assaultWeapon = null;
         }
     }
 
     public void RemoveAltWeapon()
     {
-        if (altWeapon != null)
+        if (techWeapon != null)
         {
-            altWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
-            weaponsHanger.SetAltWeaponPositionToSlot(altWeapon);
-            altWeapon = null;
+            techWeapon.transform.SetParent(weaponsManager.weaponsHolder.transform);
+            weaponsHanger.SetAltWeaponPositionToSlot(techWeapon);
+            techWeapon = null;
         }
     }
 

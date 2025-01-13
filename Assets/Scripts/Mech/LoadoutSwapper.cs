@@ -19,8 +19,8 @@ public class LoadoutSwapper : MonoBehaviour
 
     public void SwapLoadout(int mainIndex, int altIndex)
     {
-        loadOut.mainWeapon = weaponsManager._mainWeapons[mainIndex];
-        loadOut.altWeapon = weaponsManager._altWeapons[altIndex];
+        loadOut.assaultWeapon = weaponsManager._assaultWeapons[mainIndex];
+        loadOut.techWeapon = weaponsManager._techWeapons[altIndex];
     }
 
     public void SwapAltWeapon(int Index)
@@ -44,7 +44,7 @@ public class LoadoutSwapper : MonoBehaviour
 
     private void SetMods()
     {
-        loadOut.weaponModManager.LoadCurrentWeaponMods(loadOut.altWeapon.weaponType);
+        loadOut.weaponModManager.LoadCurrentWeaponMods(loadOut.techWeapon.weaponType);
         modWeaponDropdown.ClearOptions();
         List<string> options = new List<string>();
         for (int i = 0; i < loadOut.weaponModManager.currentMods.Count; i++)

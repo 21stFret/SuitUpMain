@@ -152,6 +152,18 @@ public class StatMultiplierManager : MonoBehaviour
                 Debug.Log($"Speed Increased by {percentageIncrease}");
                 BattleMech.instance.myCharacterController.SetBonusSpeed();
                 break;
+            case StatType.Dash_Cooldown:
+                // DOne in MYCharacterController
+                Debug.Log($"Speed Increased by {percentageIncrease}");
+                BattleMech.instance.myCharacterController.SetDashCooldown();
+                break;
+            case StatType.Unique:
+                Debug.Log("Unique");
+                break;
+            case StatType.Charge_Rate:
+                Debug.Log($"Charge Rate Increased by {percentageIncrease}");
+                BattleMech.instance.droneController.airDropTimer.SetChargeRate(GetCurrentValue(StatType.Charge_Rate));
+                break;
             default:
                 Debug.LogWarning($"Stat '{statType}' not found.");
                 break;
@@ -175,6 +187,19 @@ public class StatMultiplierManager : MonoBehaviour
         if (statDictionary.TryGetValue(statType, out Stat stat))
         {
             return stat.currentValue;
+        }
+        else
+        {
+            Debug.LogWarning($"Stat '{statType}' not found.");
+            return 0f;
+        }
+    }
+
+    public float GetCurrentMultiplier(StatType statType)
+    {
+        if (statDictionary.TryGetValue(statType, out Stat stat))
+        {
+            return stat.currentValue / stat.baseValue;
         }
         else
         {

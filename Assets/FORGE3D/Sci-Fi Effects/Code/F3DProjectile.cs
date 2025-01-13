@@ -32,6 +32,7 @@ namespace FORGE3D
         public WeaponType weaponType;
 
         public List<GameObject> hitObjects = new List<GameObject>();
+        public int bounceCount;
 
         void Awake()
         {
@@ -172,6 +173,20 @@ namespace FORGE3D
                         _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
                         ApplyForce(impactForce, stunTime);
                         pierceCount--;
+                    }
+                    return;
+                }
+                if (bounceCount > 0)
+                {
+                    if (!hitObjects.Contains(hitPoint.collider.gameObject))
+                    {
+                        hitObjects.Add(hitPoint.collider.gameObject);
+                        _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
+                        ApplyForce(impactForce, stunTime);
+                        bounceCount--;
+                        transform.forward = Vector3.Reflect(transform.forward, hitPoint.normal);
+                        Vector3 newDirection = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+                        transform.forward = newDirection;
                     }
                     return;
                 }

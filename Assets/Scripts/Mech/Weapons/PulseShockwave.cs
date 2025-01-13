@@ -20,8 +20,9 @@ public class PulseShockwave : MonoBehaviour
     public bool canDamage;
     public float damage;
     public bool canStun;
+    public float stunTime;
     public bool canRegenFuel;
-    public float regenTime;
+    public float regenAmount;
     private WeaponFuelManager weaponFuelManager;
     public bool canHeal;
     public float healAmount;
@@ -53,7 +54,14 @@ public class PulseShockwave : MonoBehaviour
                 break;
             case StatType.Fuel_Tank:
                 canRegenFuel = true;
-                regenTime = value;
+                regenAmount = value;
+                break;
+            case StatType.Pulse_Range:
+                range = value;
+                break;
+            case StatType.Stun_Time:
+                stunTime = value;
+                canStun = true;
                 break;
         }
     }
@@ -63,6 +71,7 @@ public class PulseShockwave : MonoBehaviour
         canHeal = false;
         canDamage = false;
         canRegenFuel = false;
+        canStun = false;
     }
 
     private void PulseWave()
@@ -72,14 +81,6 @@ public class PulseShockwave : MonoBehaviour
         pulsewave.Play();
         AudioManager.instance.PlaySFXFromClip(pulseWaveSound);
         ApplyForceToCrawlers();
-        if(canRegenFuel)
-        {
-            if(weaponFuelManager==null)
-            {
-                weaponFuelManager = GetComponent<WeaponFuelManager>();
-            }
-            StartCoroutine(weaponFuelManager.BoostRecharge(regenTime));
-        }
     }
 
     private void Update()
@@ -103,29 +104,42 @@ public class PulseShockwave : MonoBehaviour
     {
         float crawlerCount = 0;
         Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
+        float baseDam = BattleMech.instance.weaponController.mainWeaponEquiped.damage;
+        float dam = baseDam * (damage/100);
         foreach (Collider collider in colliders)
         {
             Crawler crawler = collider.GetComponent<Crawler>();
             if (crawler != null)
             {
-                crawler.StartCoroutine(crawler.StunCralwer(0.2f));
+                float stunDuration = canStun? stunTime :0.2f;
+                crawler.StartCoroutine(crawler.StunCralwer(stunDuration));
                 crawlerCount++;
             }
-            Vector3 forceDirection = (collider.transform.position - transform.position).normalized;
-            Mathf.Clamp(forceDirection.y, 0.1f, 1);
-            if(collider.attachedRigidbody != null)
+            if(!canStun)
             {
-                collider.attachedRigidbody.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+                Vector3 forceDirection = (collider.transform.position - transform.position).normalized;
+                Mathf.Clamp(forceDirection.y, 0.1f, 1);
+                if (collider.attachedRigidbody != null)
+                {
+                    collider.attachedRigidbody.AddForce(forceDirection * forceMagnitude, ForceMode.Impulse);
+                }
             }
             if (canDamage)
             {
                 TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(damage, WeaponType.AoE);
+                    targetHealth.TakeDamage(dam, WeaponType.AoE);
                 }
             }
-
+        }
+        if (canHeal)
+        {
+            BattleMech.instance.RepairArmour(healAmount);
+        }
+        if (canRegenFuel)
+        {
+            weaponFuelManager.RefillFuel(regenAmount * crawlerCount);
         }
         if (crawlerCount > 8)
         {
