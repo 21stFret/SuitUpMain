@@ -33,50 +33,50 @@ public class LoadOutPanel : MonoBehaviour
         currentMainIndex = weaponsManager.mainWeapon;
         currentAltIndex = weaponsManager.altWeapon;
         ChangeWeaponImage();
-        mainWeaponName.text = weaponsManager._mainWeapons[currentMainIndex].baseWeaponInfo.weaponName;
-        altWeaponName.text = weaponsManager._altWeapons[currentAltIndex].baseWeaponInfo.weaponName;
+        mainWeaponName.text = weaponsManager._assaultWeapons[currentMainIndex].baseWeaponInfo.weaponName;
+        altWeaponName.text = weaponsManager._techWeapons[currentAltIndex].baseWeaponInfo.weaponName;
         //armorName.text = "Armor " + currentArmorIndex;
         armorName.text = "Coming soon!";
     }
 
     private void ChangeWeaponImage()
     {
-        mainImage.sprite = weaponsManager._mainWeapons[currentMainIndex].weaponSprite;
-        altImage.sprite = weaponsManager._altWeapons[currentAltIndex].weaponSprite;
+        mainImage.sprite = weaponsManager._assaultWeapons[currentMainIndex].weaponSprite;
+        altImage.sprite = weaponsManager._techWeapons[currentAltIndex].weaponSprite;
         armorImage.sprite = armorSprites[currentArmorIndex];
     }
 
     public void NextMainWeapon()
     {
         currentMainIndex++;
-        if (currentMainIndex >= weaponsManager._mainWeapons.Length)
+        if (currentMainIndex >= weaponsManager._assaultWeapons.Length)
         {
             currentMainIndex = 0;
         }
-        if (!weaponsManager._mainWeapons[currentMainIndex].weaponData.unlocked)
+        if (!weaponsManager._assaultWeapons[currentMainIndex].weaponData.unlocked)
         {
             NextMainWeapon();
             return;
         }
         weaponsManager.SetMainWeaponIndex(currentMainIndex);
-        mainWeaponName.text = weaponsManager._mainWeapons[currentMainIndex].baseWeaponInfo.weaponName;
+        mainWeaponName.text = weaponsManager._assaultWeapons[currentMainIndex].baseWeaponInfo.weaponName;
         ChangeWeaponImage();
     }
 
     public void NextAltWeapon()
     {
         currentAltIndex++;
-        if (currentAltIndex >= weaponsManager._altWeapons.Length)
+        if (currentAltIndex >= weaponsManager._techWeapons.Length)
         {
             currentAltIndex = 0;
         }
-        if (!weaponsManager._altWeapons[currentAltIndex].weaponData.unlocked)
+        if (!weaponsManager._techWeapons[currentAltIndex].weaponData.unlocked)
         {
             NextAltWeapon();
             return;
         }
         weaponsManager.SetAltWeaponIndex(currentAltIndex);
-        altWeaponName.text = weaponsManager._altWeapons[currentAltIndex].baseWeaponInfo.weaponName;
+        altWeaponName.text = weaponsManager._techWeapons[currentAltIndex].baseWeaponInfo.weaponName;
         ChangeWeaponImage();
     }
 

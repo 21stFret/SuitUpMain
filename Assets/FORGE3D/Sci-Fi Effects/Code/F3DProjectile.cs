@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using static UnityEditor.PlayerSettings;
 
 namespace FORGE3D
 {
@@ -32,6 +33,10 @@ namespace FORGE3D
         public WeaponType weaponType;
 
         public List<GameObject> hitObjects = new List<GameObject>();
+        public int bounceCount;
+
+        public bool shockRounds;
+        public float shockDamage;
 
         void Awake()
         {
@@ -94,10 +99,25 @@ namespace FORGE3D
             {
                 targetHealth.TakeDamage(impactDamage, weaponType, stunTime);
                 if (hitPoint.rigidbody != null)
-                { 
-                    targetHealth.GetComponent<Rigidbody>().AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Force);
+                {
+                    hitPoint.rigidbody.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Impulse);
+
                 }
             }
+        }
+
+        private void ShockRounds()
+        {
+            var colliders = Physics.OverlapSphere(hitPoint.point, 2f, layerMask);
+            foreach (var collider in colliders)
+            {
+                if (collider.GetComponent<TargetHealth>() != null)
+                {
+                    collider.GetComponent<TargetHealth>().TakeDamage(shockDamage, WeaponType.Lightning, stunTime);
+                }
+            }
+            F3DAudioController.instance.LightningGunHit(hitPoint.point);
+            _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
         }
 
         void Update()
@@ -117,6 +137,10 @@ namespace FORGE3D
                         return;
                     }
                     ApplyForce(impactForce, stunTime);
+                    if (shockRounds)
+                    {
+                        Invoke("ShockRounds", 0.2f);
+                    }
 
                 }
 
@@ -172,6 +196,20 @@ namespace FORGE3D
                         _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
                         ApplyForce(impactForce, stunTime);
                         pierceCount--;
+                    }
+                    return;
+                }
+                if (bounceCount > 0)
+                {
+                    if (!hitObjects.Contains(hitPoint.collider.gameObject))
+                    {
+                        hitObjects.Add(hitPoint.collider.gameObject);
+                        _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
+                        ApplyForce(impactForce, stunTime);
+                        bounceCount--;
+                        transform.forward = Vector3.Reflect(transform.forward, hitPoint.normal);
+                        Vector3 newDirection = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+                        transform.forward = newDirection;
                     }
                     return;
                 }

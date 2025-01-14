@@ -80,26 +80,27 @@ public class TargetHealth : MonoBehaviour
             ApplySlow();
         }
 
-        if (damageNumbersOn)
-        {
-            DamageNumbers(damage, weaponType);
-        }
-
         if (_mech != null)
         {
+            if (damageNumbersOn)
+            {
+                DamageNumbers(damage, weaponType);
+            }
+
             _mech.TakeDamage(damage);
             return;
         }
 
-        float newDam = ApplyDamageMultiplier(damage, weaponType);
-
-        //print("Base Damage: " + baseDamage);
-        if(newDam > 0)
+        float multiplier = ApplyDamageMultiplier(damage, weaponType);
+        if(multiplier != 0)
         {
-            damage = newDam;
-            //print("New Damage: " + damage);
+            damage *= multiplier;
         }
- 
+
+        if (damageNumbersOn)
+        {
+            DamageNumbers(damage, weaponType);
+        }
 
         if (_prop != null)
         {
@@ -186,19 +187,19 @@ public class TargetHealth : MonoBehaviour
             return 0;
         }
 
-        float newDamage = damage;
+        float damageMultiplier = damage;
         int multiplierType = AscertainMultiplier(weaponType);
 
         if (multiplierType == 1)
         {
-            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Assault_Damage);
+            damageMultiplier = BattleMech.instance.statMultiplierManager.GetCurrentMultiplier(StatType.Assault_Damage);
         }
         else if (multiplierType == 2)
         {
-            newDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage);
+            damageMultiplier = BattleMech.instance.statMultiplierManager.GetCurrentMultiplier(StatType.Tech_Damage);
         }
 
-        return newDamage;
+        return damageMultiplier;
     }
 
     private int AscertainMultiplier(WeaponType weaponType)

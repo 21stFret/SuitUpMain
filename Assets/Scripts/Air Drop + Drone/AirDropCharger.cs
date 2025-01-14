@@ -37,6 +37,11 @@ public class AirDropCharger : MonoBehaviour
         }
     }
 
+    public void SetChargeRate(float rate)
+    {
+        chargeRate = rate;
+    }
+
     private void ChargeOverTime()
     {
         if (GameManager.instance != null)

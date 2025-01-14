@@ -65,6 +65,7 @@ public class MechWeapon : MonoBehaviour
     [Header("Weapon Mods")]
     public WeaponMod weaponMod;
     public bool weaponOverride;
+    public int bounces;
 
     public virtual void Init()
     {

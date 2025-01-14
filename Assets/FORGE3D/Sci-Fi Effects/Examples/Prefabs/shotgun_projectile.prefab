@@ -68,7 +68,7 @@ MonoBehaviour:
   fxType: 3
   layerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 384
   lifeTime: 2
   despawnDelay: 0
   velocity: 200
@@ -78,10 +78,11 @@ MonoBehaviour:
   impactDamage: 0
   impactForce: 0
   pierceCount: 0
-  isStun: 0
+  stunTime: 0
   sphereCastRadius: 0.5
   _weaponController: {fileID: 0}
   weaponType: 0
+  hitObjects: []
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0

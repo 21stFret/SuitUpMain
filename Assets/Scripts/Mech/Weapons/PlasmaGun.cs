@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserGun : MechWeapon
+public class PlasmaGun : MechWeapon
 {
     public bool hasTarget;
     public GameObject gunturret;

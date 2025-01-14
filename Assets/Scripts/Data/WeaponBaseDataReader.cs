@@ -10,13 +10,13 @@ public class WeaponBaseDataReader : MonoBehaviour
         for (var i = 0; i < data.Count; i++)
         {
             BaseWeaponInfo BWD;
-            if (i < weaponsManager._mainWeapons.Length)
+            if (i < weaponsManager._assaultWeapons.Length)
             {
-                BWD = weaponsManager._mainWeapons[i].baseWeaponInfo;
+                BWD = weaponsManager._assaultWeapons[i].baseWeaponInfo;
             }
             else
             {
-                BWD = weaponsManager._altWeapons[i - weaponsManager._mainWeapons.Length].baseWeaponInfo;
+                BWD = weaponsManager._techWeapons[i - weaponsManager._assaultWeapons.Length].baseWeaponInfo;
             }
 
             BWD._damage = new float[5];
@@ -52,13 +52,13 @@ public class WeaponBaseDataReader : MonoBehaviour
                 BWD._uniqueValue[j] = (float)data[i]["Unique " + (j + 1)];
             }
             BWD._unlockCost = (int)data[i]["Unlock Cost"];
-            if (i < weaponsManager._mainWeapons.Length)
+            if (i < weaponsManager._assaultWeapons.Length)
             {
-                weaponsManager._mainWeapons[i].baseWeaponInfo = BWD;
+                weaponsManager._assaultWeapons[i].baseWeaponInfo = BWD;
             }
             else
             {
-                weaponsManager._altWeapons[i - weaponsManager._mainWeapons.Length].baseWeaponInfo = BWD;
+                weaponsManager._techWeapons[i - weaponsManager._assaultWeapons.Length].baseWeaponInfo = BWD;
             }
 
 

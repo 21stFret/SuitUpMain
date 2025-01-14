@@ -35,7 +35,7 @@ public class ProjectileWeapon : MonoBehaviour
             curSocket = 0;
     }
 
-    public void Shotgun(float dam, float force, int index, float angle, int burst, int acutalI, float stunTime)
+    public void Shotgun(float dam, float force, int index, float angle, int burst, int acutalI, float stunTime, bool shockRounds, float shockDamage)
     {
         float rand = UnityEngine.Random.Range(-3, 3);
         float Angle = ((angle / burst)) + rand;
@@ -59,6 +59,10 @@ public class ProjectileWeapon : MonoBehaviour
             proj._weaponController = this;
             proj.stunTime = stunTime;
             proj.weaponType = WeaponType.Shotgun;
+            //proj.bounceCount = 0;
+            //proj.pierceCount = 0;
+            proj.shockRounds = shockRounds;
+            proj.shockDamage = shockDamage;
         }
 
         F3DAudioController.instance.ShotGunShot(TurretSocket[curSocket].position);
@@ -88,7 +92,7 @@ public class ProjectileWeapon : MonoBehaviour
         AdvanceSocket();
     }
 
-    public void Minigun(float dam)
+    public void Minigun(float dam, int bounce)
     {
         // Spawn muzzle flash and projectile at current socket position
         F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanMuzzle, TurretSocket[curSocket].position,
@@ -105,6 +109,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj._weaponController = this;
             proj.weaponType = WeaponType.Minigun;
             proj.impactForce = 1;
+            proj.bounceCount = bounce;
         }
 
 

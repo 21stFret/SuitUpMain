@@ -274,6 +274,11 @@ public class MYCharacterController : MonoBehaviour
         bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
     }
 
+    public void SetDashCooldown()
+    {
+        dashCooldown = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Dash_Cooldown);
+    }
+
     private void CheckDistance()
     {
         distTimer += Time.deltaTime;
@@ -319,12 +324,16 @@ public class MYCharacterController : MonoBehaviour
     {
         canMove = value;
         _rigidbody.velocity = value? _rigidbody.velocity : Vector3.zero;
-        if(!value)
+        enabled = value;
+        if (!value)
         {
             isRunning = false;
             footprintSystem.IsMoving = false;
             runAudio.Stop();
             _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            CharacterAnimator.SetFloat("InputMag", 0);
+            CharacterAnimator.SetFloat("Forward", 0);
+            CharacterAnimator.SetFloat("Turn", 0);
         }
         else
         {

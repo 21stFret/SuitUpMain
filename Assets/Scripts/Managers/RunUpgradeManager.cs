@@ -242,11 +242,11 @@ public class RunUpgradeManager : MonoBehaviour
         {
             case ModCategory.MAIN:
                 WeaponMod MWmod = weaponModManager.FindModByName(mod.modName);
-                weaponModManager.EquipWeaponMod(MWmod);
+                weaponModManager.EquipAssaultMod(MWmod);
                 break;
             case ModCategory.ALT:
                 WeaponMod Wmod = weaponModManager.FindModByName(mod.modName);
-                weaponModManager.EquipWeaponMod(Wmod);
+                weaponModManager.EquipTechWeaponMod(Wmod);
                 break;
             case ModCategory.DRONE:
                 // Implement drone mod logic if needed
@@ -270,10 +270,14 @@ public class RunUpgradeManager : MonoBehaviour
         GameManager.instance.SpawnPortalsToNextRoom();
     }
 
-    private void ApplyStatModifiers(RunMod mod)
+    public void ApplyStatModifiers(RunMod mod)
     {
         foreach (var modifier in mod.modifiers)
         {
+            if(modifier.statType == StatType.Unique)
+            {
+                continue;
+            }
             statManager.AddMultiplier(modifier.statType, modifier.statValue);
         }
     }
@@ -320,6 +324,19 @@ public class RunUpgradeManager : MonoBehaviour
             }
             // Re-apply other mod types if necessary
         }
+    }
+
+    public RunMod HasModByName(string ModName)
+    {
+        if(currentEquipedMods.Any(mod => mod.modName == ModName))
+        {
+            Debug.Log("Mod is equipped");
+        }
+        else
+        {
+            Debug.Log("Mod is not equipped");
+        }
+        return currentEquipedMods.Find(mod => mod.modName == ModName);
     }
 
 }

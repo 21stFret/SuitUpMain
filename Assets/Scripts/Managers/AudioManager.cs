@@ -120,8 +120,6 @@ public class AudioManager : MonoBehaviour
         backgroundMusic.clip = musicClips[currentClipIndex];
         backgroundMusic.Play();
         DOVirtual.Float(0.0001f, musicVolume, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20));
-        //DOTween.To(() => volume, x => volume = x, musicVolume, 1f);
-        //audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
     }
 
     // Play a sound effect clip

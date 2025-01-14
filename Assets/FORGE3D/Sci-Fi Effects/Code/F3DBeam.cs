@@ -31,7 +31,13 @@ namespace FORGE3D
         int FrameTimerID; // Frame timer reference
         float beamLength; // Current beam length
         float initialBeamOffset; // Initial UV offset 
-        public float fxOffset; // Fx offset from bullet's touch point      
+        public float fxOffset; // Fx offset from bullet's touch point
+                               // 
+
+        public float beamDamage;
+        private float damageTimer;
+        public float damageInterval = 0.1f;
+
 
         void Awake()
         {
@@ -69,6 +75,16 @@ namespace FORGE3D
             {
                 F3DTime.time.RemoveTimer(FrameTimerID);
                 FrameTimerID = -1;
+            }
+        }
+
+        void OnHitEnemy()
+        {
+            damageTimer += Time.deltaTime;
+            if (damageTimer >= damageInterval)
+            {
+                damageTimer = 0;
+                hitPoint.collider.gameObject.GetComponent<TargetHealth>().TakeDamage(beamDamage, WeaponType.Plasma);
             }
         }
 
@@ -115,6 +131,11 @@ namespace FORGE3D
                 // Adjust impact effect position
                 if (rayImpact)
                     rayImpact.position = hitPoint.point - transform.forward * 0.5f;
+
+                if(hitPoint.collider.gameObject.GetComponent<TargetHealth>() != null)
+                {
+                    OnHitEnemy();
+                }
             }
             //checking in 2d mode
             else

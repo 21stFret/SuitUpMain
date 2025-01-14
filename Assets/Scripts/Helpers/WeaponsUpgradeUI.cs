@@ -53,7 +53,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
         ToggleMainWeapon(true);
-        MaxLevel = weaponsManager._mainWeapons[0].baseWeaponInfo._damage.Length - 1;
+        MaxLevel = weaponsManager._assaultWeapons[0].baseWeaponInfo._damage.Length - 1;
         InputTracker.instance.OnInputChange += UpdateUIafterInputSwap;
         inputUpgrade.action.Enable();
         inputUpgrade.action.performed += UpgradeWeapon;
@@ -124,12 +124,12 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
         if (isMainWeapon)
         {
-            currentWeapon = weaponsManager._mainWeapons[_index];
+            currentWeapon = weaponsManager._assaultWeapons[_index];
             UpdateUI(currentWeapon.baseWeaponInfo, currentWeapon.weaponData.level);
         }
         else
         {
-            currentWeapon = weaponsManager._altWeapons[_index];
+            currentWeapon = weaponsManager._techWeapons[_index];
             UpdateUI(currentWeapon.baseWeaponInfo, currentWeapon.weaponData.level);
         }
         currentWeapon.transform.position = weaponParent.position;
@@ -221,18 +221,18 @@ public class WeaponsUpgradeUI : MonoBehaviour
     {
         int checkAmount = 0;
         int doubleCheck = 0;
-        for (int i = 0; i < weaponsManager._mainWeapons.Length; i++)
+        for (int i = 0; i < weaponsManager._assaultWeapons.Length; i++)
         {
             doubleCheck++;
-            if (weaponsManager._mainWeapons[i].weaponData.level == MaxLevel)
+            if (weaponsManager._assaultWeapons[i].weaponData.level == MaxLevel)
             {
                 checkAmount++;
             }
         }
-        for (int i = 0; i < weaponsManager._altWeapons.Length; i++)
+        for (int i = 0; i < weaponsManager._techWeapons.Length; i++)
         {
             doubleCheck++;
-            if (weaponsManager._altWeapons[i].weaponData.level == MaxLevel)
+            if (weaponsManager._techWeapons[i].weaponData.level == MaxLevel)
             {
                 checkAmount++;
             }
