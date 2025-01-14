@@ -306,6 +306,22 @@ public class Crawler : MonoBehaviour
         DeathBlood.Play();
         _crawlerBehavior.OnDeath();
 
+        if(weapon == WeaponType.Plasma)
+        {
+            RunMod selectMod = GameManager.instance.runUpgradeManager.HasModByName("Energy Blast");
+            if (selectMod != null)
+            {
+                var burningPatch = BurningPatchPooler.Instance.GetBurningPatch();
+                burningPatch.SetActive(true);
+                burningPatch.transform.position = transform.position;
+                var burningPatchScript = burningPatch.GetComponent<BurningPatch>();
+                burningPatchScript.damageArea.damageAmount = 0.5f;
+                burningPatchScript.burnDuration = selectMod.modifiers[0].statValue;
+                burningPatchScript.EnableDamageArea();
+
+            }
+        }
+
         if(crawlerSpawner != null)
         {
             crawlerSpawner.AddtoRespawnList(this, crawlerType);

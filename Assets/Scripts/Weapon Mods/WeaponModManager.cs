@@ -80,6 +80,7 @@ public class WeaponModManager : MonoBehaviour
         {
             return;
         }
+        
         assualtWeapon.weaponMod = currentAssaultMod;
         currentAssaultMod.baseWeapon = assualtWeapon;
         currentAssaultMod.enabled = true;

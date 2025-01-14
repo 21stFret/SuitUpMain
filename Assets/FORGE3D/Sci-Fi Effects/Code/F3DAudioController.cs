@@ -57,6 +57,7 @@ namespace FORGE3D
         [Header("Lightning gun")] public AudioClip lightningGunOpen;
         public AudioClip lightningGunLoop;
         public AudioClip lightningGunClose;
+        public AudioClip lightningGunHit;
 
         [Header("Flame gun")] public AudioClip flameGunOpen;
         public AudioClip flameGunLoop;
@@ -519,6 +520,23 @@ namespace FORGE3D
         {
             AudioSource aClose =
                 F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, lightningGunClose, pos, null)
+                    .gameObject.GetComponent<AudioSource>();
+
+            if (aClose != null)
+            {
+                aClose.pitch = Random.Range(0.8f, 1f);
+                aClose.volume = Random.Range(0.8f, 1f);
+                aClose.minDistance = 50f;
+                aClose.loop = false;
+                aClose.Play();
+            }
+        }
+
+        // Play lightning gun closing audio at specific position
+        public void LightningGunHit(Vector3 pos)
+        {
+            AudioSource aClose =
+                F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, lightningGunHit, pos, null)
                     .gameObject.GetComponent<AudioSource>();
 
             if (aClose != null)

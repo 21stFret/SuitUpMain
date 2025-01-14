@@ -15,11 +15,14 @@ public class Shotgun : MechWeapon
     public int shotsPerBurst;
     public float spreadAngle;
     public float stunTime;
+    public bool shockRounds;
+    public float shockDamage;
+    public bool fired;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        
+        shockRounds = false; 
     }
 
     private void Update()
@@ -42,16 +45,22 @@ public class Shotgun : MechWeapon
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                for (int i = 0; i < shotsPerBurst; i++)
-                {
-                    int newI = i - (shotsPerBurst / 2);
-                    weaponController.Shotgun(damage, force, newI, spreadAngle, shotsPerBurst, i, stunTime);
-                }
                 _timer = 0.0f;
-                _animator.SetTrigger("Recoil");
+                FireShotgun();
             }
         }
 
+    }
+
+    public void FireShotgun()
+    {
+        fired = true;
+        for (int i = 0; i < shotsPerBurst; i++)
+        {
+            int newI = i - (shotsPerBurst / 2);
+            weaponController.Shotgun(damage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
+        }
+        _animator.SetTrigger("Recoil");
     }
 }
 

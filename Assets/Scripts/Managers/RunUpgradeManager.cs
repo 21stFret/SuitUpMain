@@ -326,6 +326,19 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
+    public RunMod HasModByName(string ModName)
+    {
+        if(currentEquipedMods.Any(mod => mod.modName == ModName))
+        {
+            Debug.Log("Mod is equipped");
+        }
+        else
+        {
+            Debug.Log("Mod is not equipped");
+        }
+        return currentEquipedMods.Find(mod => mod.modName == ModName);
+    }
+
 }
 
 [System.Serializable]
