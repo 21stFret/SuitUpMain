@@ -9,8 +9,8 @@ public class CompressorMod : WeaponMod
     {
         base.Init();
         Shotgun gun = baseWeapon as Shotgun;
-        var Force = RunMod.modifiers[0].statValue;
-        runUpgradeManager.ApplyStatModifiers(RunMod);
+        var Force = runMod.modifiers[0].statValue;
+        runUpgradeManager.ApplyStatModifiers(runMod);
         float newForce = gun.force * (Force / 100);
         gun.force += newForce;
     }

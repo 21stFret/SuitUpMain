@@ -15,8 +15,8 @@ public class DoubleBarrelMod : WeaponMod
     {
         base.Init();
         gun = baseWeapon as Shotgun;
-        var SpreadAngle = RunMod.modifiers[0].statValue;
-        runUpgradeManager.ApplyStatModifiers(RunMod);
+        var SpreadAngle = runMod.modifiers[0].statValue;
+        runUpgradeManager.ApplyStatModifiers(runMod);
         float newSpread = gun.spreadAngle * (SpreadAngle / 100);
         gun.spreadAngle += newSpread;
     }

@@ -8,8 +8,8 @@ public class BouncingBulletsMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        runUpgradeManager.ApplyStatModifiers(RunMod);
-        baseWeapon.bounces = (int)RunMod.modifiers[0].statValue;
+        runUpgradeManager.ApplyStatModifiers(runMod);
+        baseWeapon.bounces = (int)runMod.modifiers[0].statValue;
     }
 
     // Fire Weapon

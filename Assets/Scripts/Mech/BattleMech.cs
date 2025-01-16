@@ -11,7 +11,8 @@ public class BattleMech : MonoBehaviour
     public WeaponController weaponController;
     public WeaponFuelManager weaponFuelManager;
     public TargetHealth targetHealth;
-    public DroneController droneController;
+    public MechHealth mechHealth;
+    public DroneControllerUI droneController;
     public PlayerInput playerInput;
     public PulseShockwave pulseShockwave;
     public bool isDead;
@@ -27,6 +28,7 @@ public class BattleMech : MonoBehaviour
         targetHealth = GetComponent<TargetHealth>();
         playerInput = GetComponent<PlayerInput>();
         pulseShockwave = GetComponent<PulseShockwave>();
+        mechHealth = GetComponent<MechHealth>();
     }
 
     public void OnDie()
@@ -44,6 +46,13 @@ public class BattleMech : MonoBehaviour
     {
         targetHealth.TakeDamage(amount, WeaponType.Default);
         print("Repaired Amrour");
+    }
+
+    public void Shield()
+    {
+        mechHealth.shieldHealthMax = targetHealth.maxHealth * 0.5f;
+        mechHealth.shieldHealth = mechHealth.shieldHealthMax;
+        mechHealth.SetShieldBar(0);
     }
 
 }

@@ -107,6 +107,7 @@ public class RunUpgradeManager : MonoBehaviour
                 break;
         }
 
+        int maxMods = 0;
         // Randomly select the Mods
         for (int i = 0; i < 3 && maxAttempts > 0;)
         {
@@ -116,6 +117,12 @@ public class RunUpgradeManager : MonoBehaviour
 
                 if (listMods.Contains(mod))
                 {
+                    maxMods++;
+                    if (maxMods > 3)
+                    {
+                        Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
+                        break;
+                    }
                     continue;
                 }
 
@@ -123,6 +130,7 @@ public class RunUpgradeManager : MonoBehaviour
                 {
                     if (mod.modCategory != OverideCategory)
                     {
+      
                         continue;
                     }
                 }
@@ -242,6 +250,7 @@ public class RunUpgradeManager : MonoBehaviour
         {
             case ModCategory.MAIN:
                 WeaponMod MWmod = weaponModManager.FindModByName(mod.modName);
+                MWmod.runMod = mod;
                 weaponModManager.EquipAssaultMod(MWmod);
                 break;
             case ModCategory.ALT:
@@ -249,9 +258,24 @@ public class RunUpgradeManager : MonoBehaviour
                 weaponModManager.EquipTechWeaponMod(Wmod);
                 break;
             case ModCategory.DRONE:
-                // Implement drone mod logic if needed
+                switch (mod.modName)
+                {
+                    case "Orbital Strike":
+                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Orbital);
+                        break;
+                    case "Fat Man":
+                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.FatMan);
+                        break;
+                    case "Shield":
+                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Shield);
+                        break;
+                    case "Companion":
+                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Companion);
+                        break;
+                }
                 break;
             case ModCategory.PULSE:
+                pulseShockwave.ResetMods();
                 for (int i = 0; i < mod.modifiers.Count; i++)
                 {
                     var modifier = mod.modifiers[i];

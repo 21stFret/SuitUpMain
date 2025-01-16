@@ -9,7 +9,6 @@ public class SequenceInputController : MonoBehaviour
     [Header("Sequence Settings")]
     [SerializeField] private int sequenceLength = 5;
     [SerializeField] private float timeLimit = 10f;
-    [SerializeField] private float inputDelayThreshold = 0.5f;
 
     [Header("UI References")]
     [SerializeField] private Image[] sequenceDisplayImages;
@@ -47,6 +46,12 @@ public class SequenceInputController : MonoBehaviour
     public delegate void SequenceEvent();
     public event SequenceEvent OnSequenceComplete;
     public event SequenceEvent OnSequenceFailed;
+
+    public void RemoveAllListeners()
+    {
+        OnSequenceComplete = null;
+        OnSequenceFailed = null;
+    }
 
     private void Awake()
     {
@@ -147,7 +152,7 @@ public class SequenceInputController : MonoBehaviour
             // Correct input
             sequenceDisplayImages[currentInputIndex].sprite = completeSprite;
             currentInputIndex++;
-
+            AudioManager.instance.PlaySFX(SFX.Select);
             if (currentInputIndex >= sequenceLength)
             {
                 SequenceSuccess();
@@ -164,7 +169,7 @@ public class SequenceInputController : MonoBehaviour
     {
         isSequenceActive = false;
         OnSequenceComplete?.Invoke();
-        //StartCoroutine(HideSequencePanel(1f));
+        AudioManager.instance.PlaySFX(SFX.Confirm);
     }
 
     private void SequenceFailed()

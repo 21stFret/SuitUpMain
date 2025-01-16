@@ -187,7 +187,7 @@ public class TargetHealth : MonoBehaviour
             return 0;
         }
 
-        float damageMultiplier = damage;
+        float damageMultiplier = 0;
         int multiplierType = AscertainMultiplier(weaponType);
 
         if (multiplierType == 1)

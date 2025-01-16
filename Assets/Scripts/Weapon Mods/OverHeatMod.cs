@@ -18,8 +18,8 @@ public class OverHeatMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        overHeatDamage = RunMod.modifiers[0].statValue;
-        overHeatTime = RunMod.modifiers[1].statValue;
+        overHeatDamage = runMod.modifiers[0].statValue;
+        overHeatTime = runMod.modifiers[1].statValue;
         bonusDamage = baseWeapon.damage * (overHeatDamage /100);
         minigun = baseWeapon as Minigun;
         if (minigun == null)

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using static UnityEditor.PlayerSettings;
+using DG.Tweening.Core.Easing;
 
 namespace FORGE3D
 {
@@ -37,6 +38,9 @@ namespace FORGE3D
 
         public bool shockRounds;
         public float shockDamage;
+
+        public bool splitRounds;
+        public int splitCount;
 
         void Awake()
         {
@@ -120,6 +124,32 @@ namespace FORGE3D
             _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
         }
 
+        private void PlasmaSplitRounds()
+        {
+            Transform newDir = transform;
+            newDir.forward = Vector3.Cross(newDir.forward, hitPoint.normal);
+            Vector3 newDirection = new Vector3(newDir.forward.x, 0, newDir.forward.z).normalized;
+
+            for (int i = 0; i < splitCount; i++)
+            {
+                newDir.forward = i==0 ? newDirection:-newDirection;
+                var newGO =
+                    F3DPoolManager.Pools["GeneratedPool"].Spawn(_weaponController.vulcanProjectile,
+                                       null, newDir.position,
+                                                         newDir.rotation).gameObject;
+
+                var proj = newGO.gameObject.GetComponent<F3DProjectile>();
+                if (proj)
+                {
+                    proj.impactDamage = impactDamage / 2;
+                    proj._weaponController = _weaponController;
+                    proj.weaponType = WeaponType.Plasma;
+                    proj.impactForce = impactForce;
+                    proj.splitCount = splitCount - 1;
+                }
+            }
+        }
+
         void Update()
         {
             // If something was hit
@@ -140,6 +170,10 @@ namespace FORGE3D
                     if (shockRounds)
                     {
                         Invoke("ShockRounds", 0.2f);
+                    }
+                    if (splitRounds)
+                    {
+                        PlasmaSplitRounds();
                     }
 
                 }

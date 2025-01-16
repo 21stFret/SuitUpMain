@@ -10,7 +10,7 @@ public class GameUI : MonoBehaviour
 {
     public static GameUI instance;
     public PauseMenu pauseMenu;
-    public DroneController droneController;
+    public DroneControllerUI droneController;
     public ModUI modUI;
     public bool modOpen;
     public TMP_Text killCountText;

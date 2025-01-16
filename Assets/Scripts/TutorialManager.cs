@@ -9,7 +9,7 @@ public class TutorialManager : MonoBehaviour
     public SceneLoader sceneLoader;
     public MYCharacterController myCharacterController;
     public WeaponController manualWeaponController;
-    public DroneController droneController;
+    public DroneControllerUI droneController;
     public TutorialUI tutorialUI;
     public PlayerInput playerInput;
     public MechLoader mechLoader;

@@ -18,7 +18,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public TMP_Text weaponName;
     public TMP_Text weaponDescription;
-    private int index = 0;
     public MechWeapon currentWeapon;
     private int currentWeaponIndex;
     public bool isMainWeapon;
@@ -86,7 +85,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
     public void ToggleMainWeapon(bool value)
     {
         isMainWeapon = value;
-        index = 0;
 
         if (!isMainWeapon)
         {

@@ -11,15 +11,18 @@ namespace FORGE3D
     public class F3DMissileLauncher : MonoBehaviour
     {
         public Transform missilePrefab;
+        public Transform fatManPrefab;
         public Transform player;
         public Vector3 target;
         public Transform[] socket;
         public Transform explosionPrefab;
+        public Transform fatManEffectPrefab;
         public float trackingRaduis = 20f;
         public LayerMask layerMask;
         private F3DMissile.MissileType missileType;
         public List<Transform> targets;
-        public DroneController droneController;
+        public DroneControllerUI droneController;
+        public bool FatMan;
 
         public Text missileTypeLabel;
 
@@ -32,9 +35,19 @@ namespace FORGE3D
         // Spawns explosion
         public void SpawnExplosion(Vector3 position)
         {
-            F3DPoolManager.Pools["GeneratedPool"]
+            if(FatMan)
+            {
+                F3DPoolManager.Pools["GeneratedPool"]
+                .Spawn(fatManEffectPrefab, position, Quaternion.identity, null);
+                F3DAudioController.instance.RailGunHit(position);
+            }
+            else
+            {
+                F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(explosionPrefab, position, Quaternion.identity, null);
-            F3DAudioController.instance.RailGunHit(position);
+                F3DAudioController.instance.RailGunExplosion(position);
+            }
+
         }
 
         public void LaunchMissiles(int amount)
@@ -48,8 +61,9 @@ namespace FORGE3D
 
         public void LaunchMissile(int target)
         {
+            Transform _missilePrefab = FatMan ? fatManPrefab : missilePrefab;
             var randomSocketId = Random.Range(0, socket.Length);
-            var tMissile = F3DPoolManager.Pools["GeneratedPool"].Spawn(missilePrefab,
+            var tMissile = F3DPoolManager.Pools["GeneratedPool"].Spawn(_missilePrefab,
                 socket[randomSocketId].position, socket[randomSocketId].rotation, null);
 
             if (tMissile != null)
@@ -101,52 +115,6 @@ namespace FORGE3D
         private Vector3 GetRandomPointInSphere(Vector3 center, float radius)
         {
             return center + Random.insideUnitSphere * radius;
-        }
-        // Processes input for launching missile
-        private void ProcessInput()
-        {
-            /*
-            if (Input.GetMouseButtonDown(0))
-            {
-                var randomSocketId = Random.Range(0, socket.Length);
-                var tMissile = F3DPoolManager.Pools["GeneratedPool"].Spawn(missilePrefab,
-                    socket[randomSocketId].position, socket[randomSocketId].rotation, null);
-
-                if (tMissile != null)
-                {
-                    var missile = tMissile.GetComponent<F3DMissile>();
-
-                    missile.launcher = this;
-                    missile.missileType = missileType;
-
-                    if (target != null)
-                        missile.target = target;
-                }
-            }
-            
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                missileType = F3DMissile.MissileType.Unguided;
-                missileTypeLabel.text = "Missile crateType: Unguided";
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                missileType = F3DMissile.MissileType.Guided;
-                missileTypeLabel.text = "Missile crateType: Guided";
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                missileType = F3DMissile.MissileType.Predictive;
-                missileTypeLabel.text = "Missile crateType: Predictive";
-            }
-            */
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
-            ProcessInput();
         }
     }
 }

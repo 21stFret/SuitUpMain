@@ -30,7 +30,7 @@ public class WeaponModManager : MonoBehaviour
 
     public WeaponMod FindModByName(string name)
     {
-        var mod = mods.Find(x => x.RunMod.modName == name);
+        var mod = mods.Find(x => x.runMod.modName == name);
         return mod;
     }
 

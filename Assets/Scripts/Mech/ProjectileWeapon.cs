@@ -122,7 +122,7 @@ public class ProjectileWeapon : MonoBehaviour
         AdvanceSocket();
     }
 
-    public void Laser(float dam, int pierceC)
+    public void Laser(float dam, int pierceC, bool splitrounds = false, int splitCount =1)
     {
         // Spawn muzzle flash and projectile at current socket position
         F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanMuzzle, TurretSocket[curSocket].position,
@@ -139,6 +139,8 @@ public class ProjectileWeapon : MonoBehaviour
             proj._weaponController = this;
             proj.weaponType = WeaponType.Plasma;
             proj.pierceCount = pierceC;
+            proj.splitRounds = splitrounds;
+            proj.splitCount = splitCount;
         }
 
 

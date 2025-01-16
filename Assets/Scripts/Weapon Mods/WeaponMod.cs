@@ -9,7 +9,7 @@ public class WeaponMod : MonoBehaviour
     public float modFuelCost;
     public float damage;
     public float range;
-    public RunMod RunMod;
+    public RunMod runMod;
     public bool assaultMod;
     public RunUpgradeManager runUpgradeManager;
 
@@ -36,7 +36,7 @@ public class WeaponMod : MonoBehaviour
 
     private void ApplyMods()
     {
-        foreach(Modifier mod in RunMod.modifiers)
+        foreach(Modifier mod in runMod.modifiers)
         {
             var value = mod.statValue / 100; 
 

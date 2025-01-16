@@ -8,8 +8,8 @@ public class ShockRoundsMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        float StunTime = RunMod.modifiers[0].statValue;
-        float shockDamage = RunMod.modifiers[1].statValue;
+        float StunTime = runMod.modifiers[0].statValue;
+        float shockDamage = runMod.modifiers[1].statValue;
         Shotgun gun = baseWeapon as Shotgun;
         gun.stunTime = StunTime;
         gun.shockRounds = true;

@@ -47,6 +47,11 @@ public class MechHealth : MonoBehaviour
     private Image flash;
 
     private bool healthlow;
+
+    public float shieldHealth;
+    public float shieldHealthMax;
+    public Image shieldBar;
+
     public void Init()
     {
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -62,7 +67,7 @@ public class MechHealth : MonoBehaviour
         healthBar.fillAmount = 1;
         damageOverlay.fillAmount = 1;
         cachedFillamount = 1;
-
+        SetShieldBar(0);
         flash = screenFlash.GetComponent<Image>();
     }
 
@@ -107,31 +112,36 @@ public class MechHealth : MonoBehaviour
 
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
-        // Update actual health
-        targetHealth.health = Mathf.Clamp(targetHealth.health - damage, 0, targetHealth.maxHealth);
-        UpdateHealthUI(targetHealth.health);
 
-        // Accumulate pending damage for flash effect
-        pendingDamage += damage;
-
-        healthBar.fillAmount = Mathf.Clamp01(cachedFillamount -(pendingDamage / targetHealth.maxHealth));
-
-        if (healthBar.fillAmount <= 0.21f)
+        if(shieldHealth >0)
         {
-            if(!healthlow)
-            {
-                healthlow = true;
-                StartCoroutine(HealthBarFlash());
-            }
+            SetShieldBar(damage);
         }
         else
         {
-            healthlow = false;
-            healthBar.material.SetColor("_StrongTintTint", healthLightColor);
+            // Update actual health
+            targetHealth.health = Mathf.Clamp(targetHealth.health - damage, 0, targetHealth.maxHealth);
+            UpdateHealthUI(targetHealth.health);
+
+            // Accumulate pending damage for flash effect
+            pendingDamage += damage;
+
+            healthBar.fillAmount = Mathf.Clamp01(cachedFillamount - (pendingDamage / targetHealth.maxHealth));
+
+            if (healthBar.fillAmount <= 0.21f)
+            {
+                if (!healthlow)
+                {
+                    healthlow = true;
+                    StartCoroutine(HealthBarFlash());
+                }
+            }
+            else
+            {
+                healthlow = false;
+                healthBar.material.SetColor("_StrongTintTint", healthLightColor);
+            }
         }
-
-        // Visual effects
-
 
         if (!isHeal)
         {
@@ -157,6 +167,16 @@ public class MechHealth : MonoBehaviour
             Die();
         }
 
+    }
+
+    public void SetShieldBar(float dam)
+    {
+        shieldHealth = Mathf.Clamp(shieldHealth - dam, 0, shieldHealthMax);
+        shieldBar.fillAmount = shieldHealth / shieldHealthMax;
+        if(shieldHealth <= 0)
+        {
+            shieldBar.fillAmount = 0;
+        }
     }
 
     private IEnumerator LerpHealthBar()

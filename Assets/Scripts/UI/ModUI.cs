@@ -117,7 +117,7 @@ public class ModUI : MonoBehaviour
 
             if (modifier.statType == StatType.Unique)
             {
-                return;
+                continue;
             }
             stat.modStatValue.text += "%";
         }
