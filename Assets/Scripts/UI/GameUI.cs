@@ -45,6 +45,10 @@ public class GameUI : MonoBehaviour
 
     public void CloseAll()
     {
+        if (droneController == null)
+        {
+            return;
+        }
         droneController.airdropMenu.SetActive(false);
     }
 

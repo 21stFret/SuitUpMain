@@ -9,7 +9,8 @@ public enum ModBuildType
     ASSAULT,
     TECH,
     TANK,
-    AGILITY
+    AGILITY, 
+    UPGRADE
 }
 
 public enum ModCategory
@@ -36,6 +37,8 @@ public class RunUpgradeManager : MonoBehaviour
     public List<RunMod> runModsTank = new List<RunMod>();
     [HideInInspector]
     public List<RunMod> runModsAgility = new List<RunMod>();
+    [HideInInspector]
+    public List<RunMod> runModsWeaponUpgrades = new List<RunMod>();
     [HideInInspector]
     public List<RunMod> listMods = new List<RunMod>();
     public List<RunMod> currentEquipedMods = new List<RunMod>();
@@ -102,6 +105,9 @@ public class RunUpgradeManager : MonoBehaviour
                 break;
             case ModBuildType.AGILITY:
                 selectedMods = new List<RunMod>(runModsAgility);
+                break;
+            case ModBuildType.UPGRADE:
+                selectedMods = new List<RunMod>(runModsWeaponUpgrades);
                 break;
             default:
                 break;

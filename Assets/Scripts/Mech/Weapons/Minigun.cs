@@ -11,12 +11,15 @@ public class Minigun : MechWeapon
     private Animator _animator;
     public ProjectileWeapon weaponController;
     public float bonusDamage;
+    public MeshRenderer meshRenderer;
 
     private float _timer;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
+        meshRenderer.material.SetFloat("_Flash_Strength", 0);
         bounces = 0;
     }
 

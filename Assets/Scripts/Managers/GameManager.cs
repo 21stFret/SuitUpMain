@@ -41,17 +41,17 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (SetupGame.instance != null) SetupGame.instance.LinkGameManager(this);
-        else Invoke("DelayedStart", 0.1f);
-    }
-
-    public void DelayedStart()
-    {
-        if(SetupGame.instance != null) SetupGame.instance.LinkGameManager(this);
         else
         {
             Debug.Log("No Setup Game Instance Found using test data.");
             TESTplayerData.InittestData();
+            Invoke("DelayedStart", 0.1f);
         }
+    }
+
+    public void DelayedStart()
+    {
+
         _myCharacterController = BattleMech.instance.myCharacterController;
         _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
@@ -136,6 +136,7 @@ public class GameManager : MonoBehaviour
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
         gameActive = true;
+        AudioManager.instance.PlayBattleMusic();
 
     }
 
@@ -165,15 +166,22 @@ public class GameManager : MonoBehaviour
 
     private void DayNightCycle(bool night = false)
     {
-        bool dayTime = Random.Range(0, 100) < 50;
-        dayLight.SetActive(dayTime);
-        nightLight.SetActive(!dayTime);
-        if (night)
+
+        dayLight.SetActive(!night);
+        nightLight.SetActive(night);
+        if (IsDarkRoom())
         {
             dayLight.SetActive(false);
             nightLight.SetActive(true);
         }
     }
+
+    private bool IsDarkRoom()
+    {
+        BattleType currenType = BattleManager.instance.currentBattle.battleType;
+        return currentAreaType == AreaType.Void || currenType == BattleType.Survive || currenType == BattleType.Boss;
+    }
+
 
     public void SpawnPortalsToNextRoom(bool voidRoom = false)
     {

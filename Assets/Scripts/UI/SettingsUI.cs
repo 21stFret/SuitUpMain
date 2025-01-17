@@ -8,11 +8,31 @@ public class SettingsUI : MonoBehaviour
 {
     public Slider BGM;
     public Slider SFX;
+    public bool damageNumbersOn;
 
     private void OnEnable()
     {
         BGM.value = AudioManager.instance.musicVolume;
         SFX.value = AudioManager.instance.sfxVolume;
+        if (PlayerPrefs.HasKey("DamageNumbers"))
+        {
+            damageNumbersOn = PlayerPrefs.GetInt("DamageNumbers", 1) == 1;
+        }
+        else
+        {
+            PlayerPrefs.SetInt("DamageNumbers", 1);
+        }
+    }
+
+    public void SetDamageNumber(bool value)
+    {
+        damageNumbersOn = value;
+        PlayerPrefs.SetInt("DamageNumbers", damageNumbersOn ? 1 : 0);
+        var targets = FindObjectsOfType<TargetHealth>();
+        foreach (var target in targets)
+        {
+            target.SetDamageNumbers(damageNumbersOn);
+        }
     }
 
     public void SetBGMVolume(float value)

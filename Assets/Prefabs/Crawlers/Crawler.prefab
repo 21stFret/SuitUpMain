@@ -282,7 +282,7 @@ MonoBehaviour:
   deathNoise: {fileID: 418313318034436250}
   immune: 0
   crawlerScale: 0.5
-  cashWorth: 5
+  cashWorth: 2
   expWorth: 3
   dropRate: 5
   crawlerType: 0
@@ -293,6 +293,8 @@ MonoBehaviour:
   triggeredAttack: 0
   _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
+  SpawnForce: 100
+  dummy: 0
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -422,10 +424,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.6
-  m_Height: 5
+  m_Radius: 2.31
+  m_Height: 6
   m_Direction: 1
-  m_Center: {x: 0, y: 2.5, z: 0}
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!114 &8835100205756127941
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class ObjectiveUI : MonoBehaviour
     public TMP_Text progressText;
     public Animator objectiveAnimator;
     public float ObjectiveFlashTime = 2f;
+    public GameObject objectivePanel;
 
     public void Init(bool showBar)
     {
@@ -20,7 +21,8 @@ public class ObjectiveUI : MonoBehaviour
         objectiveBG.enabled = showBar;
         objectiveBar.fillAmount = 0;
         objectiveText.text = "";
-        progressText.text = showBar? "Upload Progress 0%" : "";
+        progressText.text = BattleManager.instance.currentBattle.battleType == BattleType.Survive ? "survive" : "upload progress";
+        objectivePanel.SetActive(showBar);
     }
 
     public void UpdateBar(float fillamount)
@@ -56,12 +58,21 @@ public class ObjectiveUI : MonoBehaviour
         objectiveAnimator.SetBool("Open", open);
     }
 
+    public void HideObjectivePanel()
+    {
+        objectiveBar.enabled = false;
+        objectiveBG.enabled = false;
+        progressText.text = "";
+        objectivePanel.SetActive(false);
+    }
+
     public IEnumerator ObjectiveComplete()
     {
         yield return new WaitForSeconds(1f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
         progressText.text = "";
+        objectivePanel.SetActive(false);
         yield return new WaitForSeconds(1f);
         string objective = "Objective Complete! \n Collect reward to continue!";
         UpdateObjective(objective);

@@ -13,11 +13,12 @@ public class OverHeatMod : WeaponMod
     bool cooldown;
     Minigun minigun;
     public AudioClip overHeatSound;
-    public Material overHeatMaterial;
+    private Material overHeatMaterial;
 
     public override void Init()
     {
         base.Init();
+
         overHeatDamage = runMod.modifiers[0].statValue;
         overHeatTime = runMod.modifiers[1].statValue;
         bonusDamage = baseWeapon.damage * (overHeatDamage /100);
@@ -25,11 +26,14 @@ public class OverHeatMod : WeaponMod
         if (minigun == null)
         {
             Debug.LogError("Base weapon is not a Minigun.");
+            return;
         }
         else
         {
             Debug.Log($"Mini Gun found with {overHeatDamage} extra damage and {overHeatTime}'s shoooting time.");
+
         }
+        overHeatMaterial = minigun.meshRenderer.material;
     }
 
     // Fire Weapon

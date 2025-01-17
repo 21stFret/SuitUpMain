@@ -8,6 +8,7 @@ public enum AreaType
     Desert,
     Ice,
     Jungle,
+    Void,
 }
 
 public class AreaManager : MonoBehaviour

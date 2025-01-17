@@ -56,6 +56,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         InputTracker.instance.OnInputChange += UpdateUIafterInputSwap;
         inputUpgrade.action.Enable();
         inputUpgrade.action.performed += UpgradeWeapon;
+        LoadWeapon(0);
     }
 
     public void ToggleMenuOpen(bool value)

@@ -18,6 +18,7 @@ public class EnvironmentArea : MonoBehaviour
         foreach (Prop child in props)
         {
             child.RefreshProp();
+
         }
     }
 }

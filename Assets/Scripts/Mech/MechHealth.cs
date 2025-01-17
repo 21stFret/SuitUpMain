@@ -51,10 +51,12 @@ public class MechHealth : MonoBehaviour
     public float shieldHealth;
     public float shieldHealthMax;
     public Image shieldBar;
+    public Material shieldMaterial;
 
     public void Init()
     {
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        shieldMaterial = meshRenderer.sharedMaterial;
         rb = GetComponent<Rigidbody>();
         characterController = GetComponent<MYCharacterController>();
 
@@ -169,10 +171,26 @@ public class MechHealth : MonoBehaviour
 
     }
 
+    private void SetEmmsiveLights()
+    {
+        float lerpValue = shieldHealth / shieldHealthMax;
+        float emmsiveStrength = Mathf.Lerp(0.5f, 2, lerpValue);
+        shieldMaterial.SetFloat("_Emmssive_Strength", emmsiveStrength);
+        shieldMaterial.SetColor("_Emmssive_Color", Color.Lerp(healthLightColor, damageLightColor, lerpValue));
+    }
+
     public void SetShieldBar(float dam)
     {
+        if (shieldBar == null)
+        {
+            return;
+        }
+
         shieldHealth = Mathf.Clamp(shieldHealth - dam, 0, shieldHealthMax);
         shieldBar.fillAmount = shieldHealth / shieldHealthMax;
+
+        int health = shieldHealth > 0 ? 1 : 0;
+        shieldMaterial.SetFloat("_FlashOn", health);
         if(shieldHealth <= 0)
         {
             shieldBar.fillAmount = 0;

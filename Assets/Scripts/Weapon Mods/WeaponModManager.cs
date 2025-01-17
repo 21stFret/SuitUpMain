@@ -41,9 +41,9 @@ public class WeaponModManager : MonoBehaviour
             print("No mod found");
             return;
         }
-        if(currentAssaultMod != null)
+        if(currentTechMod != null)
         {
-            currentAssaultMod.RemoveMods();
+            currentTechMod.RemoveMods();
         }
 
         currentTechMod = mod;
@@ -54,7 +54,6 @@ public class WeaponModManager : MonoBehaviour
         currentTechMod.transform.localRotation = Quaternion.identity;
         currentTechMod.enabled = true;
         currentTechMod.Init();
-        //altWeapon.SetAltWeaponInputs();
         GameUI.instance.CloseModUI();
     }
 

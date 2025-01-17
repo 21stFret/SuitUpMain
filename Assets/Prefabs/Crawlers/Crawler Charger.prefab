@@ -14668,7 +14668,7 @@ MonoBehaviour:
   deathNoise: {fileID: 4195929182837322614}
   immune: 1
   crawlerScale: 1.2
-  cashWorth: 40
+  cashWorth: 10
   expWorth: 20
   dropRate: 20
   crawlerType: 0
@@ -14679,6 +14679,8 @@ MonoBehaviour:
   triggeredAttack: 0
   _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
+  SpawnForce: 0
+  dummy: 0
   chargeEffect: {fileID: 4823605491945663866}
   chargeDistance: 21
   chargeTime: 4
@@ -14821,7 +14823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 50
+  maxHealth: 20
   invincible: 0
   alive: 0
   immuneWeapons: 07000000

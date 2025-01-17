@@ -54,6 +54,11 @@ public class TargetHealth : MonoBehaviour
         return health >= maxHealth;
     }
 
+    public void SetDamageNumbers(bool value)
+    {
+        damageNumbersOn = value;
+    }
+
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {

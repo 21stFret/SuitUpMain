@@ -78,7 +78,15 @@ public class RunModifierDataReader : MonoBehaviour
                     }
                 }
             }
-            runMods.Add(rMod);
+
+            if (rMod.modCategory == ModCategory.MAIN || rMod.modCategory == ModCategory.ALT || rMod.modCategory == ModCategory.DRONE)
+            {
+                runUpgradeManager.runModsWeaponUpgrades.Add(rMod);
+            }
+            else
+            {
+                runMods.Add(rMod);
+            }
         }
     }
 }

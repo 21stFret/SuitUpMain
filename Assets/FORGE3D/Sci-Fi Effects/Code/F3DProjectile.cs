@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using static UnityEditor.PlayerSettings;
 using DG.Tweening.Core.Easing;
 
 namespace FORGE3D

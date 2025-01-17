@@ -17,7 +17,7 @@ public class AchievementUI : MonoBehaviour
     public EventSystem eventSystem;
     private GameObject _selected;
 
-    private void Awake()
+    private void Start()
     {
         playerAchievements = PlayerAchievements.instance;
         playerSavedData = PlayerSavedData.instance;
@@ -52,6 +52,11 @@ public class AchievementUI : MonoBehaviour
 
     public void UpdateAchievements()
     {
+        if (playerAchievements == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < achievementPrefabs.Count; i++)
         {
             achievementPrefabs[i].gameObject.SetActive(false);

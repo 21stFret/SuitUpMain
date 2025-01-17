@@ -317,11 +317,14 @@ MonoBehaviour:
   laserSight: {fileID: 7860228707494681558}
   weaponMod: {fileID: 0}
   weaponOverride: 0
+  bounces: 0
   hasTarget: 0
   gunturret: {fileID: 4498493766254750917}
   weaponController: {fileID: 6951267595185181951}
   pierceCount: 3
   muzzlecharge: {fileID: 8534440649573820014}
+  mirrorRounds: 0
+  splitCount: 0
 --- !u!95 &532385682855123885
 Animator:
   serializedVersion: 5
@@ -561,7 +564,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5574,7 +5577,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -10420,7 +10423,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -15438,7 +15441,7 @@ ParticleSystem:
   emitterVelocityMode: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:

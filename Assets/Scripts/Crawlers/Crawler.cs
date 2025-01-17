@@ -70,7 +70,7 @@ public class Crawler : MonoBehaviour
 
     public CrawlerBehavior _crawlerBehavior;
     public Vector3 spawnLocation;
-
+    public float SpawnForce;
 
     public bool dummy;
 
@@ -197,12 +197,12 @@ public class Crawler : MonoBehaviour
         rb.AddForce(transform.forward * 50, ForceMode.Impulse);
         Vector3 attackloc = transform.position + (transform.forward * (transform.localScale.x*2));
 
-        print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
+        //print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
 
         if (Vector3.Distance(attackloc, target.transform.position) >= attackRange)
         {
             animator.SetBool("InRange", false);
-            print("Target out of range");
+            //print("Target out of range");
             return;
         }
 
@@ -217,7 +217,7 @@ public class Crawler : MonoBehaviour
     private IEnumerator SpawnImmunity()
     {
         immune = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         immune = false;
     }
 
@@ -334,7 +334,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        if (BM.Battles[BM.currentBattleIndex].battleType == BattleType.Exterminate)
+        if (BM._usingBattleType == BattleType.Exterminate)
         {
             BM.StartCoroutine(BM.CheckActiveEnemies());
         }
@@ -392,8 +392,8 @@ public class Crawler : MonoBehaviour
         _spawnEffect.Play();
         SetCrawlerScale();
         yield return new WaitForSeconds(0.1f);
-        rb.AddForce(transform.forward * 10, ForceMode.Impulse);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.AddForce(transform.forward * SpawnForce, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
         tag = "Enemy";
         animator.speed = 1;

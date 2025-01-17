@@ -5,7 +5,6 @@ using UnityEngine;
 public class InitGame : MonoBehaviour
 {
     public MechLoader mechLoadOut;
-    public StatsUI statsUI;
     public ConnectWeaponHolderToManager weaponHolder;
     public MainMenu mainMenu;
     public bool MainMenu;
@@ -30,8 +29,6 @@ public class InitGame : MonoBehaviour
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
-        statsUI.UpdateCash(PlayerSavedData.instance._Cash);
-        statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
         if(SetupGame.instance.inGame)
         {
             mainMenu.OpenInLoadout();

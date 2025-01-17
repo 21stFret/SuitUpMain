@@ -14,6 +14,10 @@ public class BattleManager : MonoBehaviour
     public LayerMask dropLayer;
     public string objectiveMessage;
     public float dificultyMultiplier = 1;
+    public float surviveTime=60;
+    private float surviveTimeT;
+    public LightningController lightningController;
+    public BattleType _usingBattleType;
 
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
@@ -27,7 +31,7 @@ public class BattleManager : MonoBehaviour
     {
         GenerateNewBattle(Battles[currentBattleIndex].battleType);
 
-        Color color = Color.white;
+        //Color color = Color.white;
         float fillAmount = 0;
         bool showBar = false;
         var type = Battles[currentBattleIndex].battleType;
@@ -35,31 +39,66 @@ public class BattleManager : MonoBehaviour
         {
             case BattleType.Hunt:
                 objectiveMessage = "Hunt down and kill the target";
-                color = Color.red;
+                //color = Color.red;
                 fillAmount = 1;
                 SpawnRunner();
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
-                color = Color.cyan;
+                //color = Color.cyan;
                 fillAmount = 0;
                 showBar = true;
                 SpawnCapturePoint();
                 break;
             case BattleType.Survive:
-                objectiveMessage = "Survive all waves!";
-                color = Color.green;
+                objectiveMessage = "Survive the horde!";
+                //color = Color.green;
                 fillAmount = 0;
+                surviveTimeT = surviveTime;
+                showBar = true;
+                StartCoroutine(SurviveBattle());
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
-                color = Color.white;
+                //color = Color.white;
                 fillAmount = 0;
                 break;
         }
         GameManager.instance.gameUI.objectiveUI.Init(showBar);
-        GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
+        //GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+    }
+
+    private IEnumerator SurviveBattle()
+    {
+        lightningController.active = true;
+        while (surviveTimeT > 0)
+        {
+            if (BattleMech.instance.isDead)
+            {
+                yield break;
+            }
+            surviveTimeT -= Time.deltaTime;
+            GameManager.instance.gameUI.objectiveUI.UpdateBar(surviveTimeT / surviveTime);
+            yield return null;
+        }
+        if(!GameManager.instance.gameActive)
+        {
+            yield break;
+        }
+        if (crawlerSpawner.activeCrawlerCount == 0)
+        {
+            ObjectiveComplete();
+            GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
+        }
+        else
+        {
+            GameUI.instance.objectiveUI.UpdateObjective("Finish them off!");
+            _usingBattleType = BattleType.Exterminate;
+        }
+        crawlerSpawner.EndBattle();
+        lightningController.active = false;
+        GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
     private void SpawnRunner()
@@ -74,7 +113,7 @@ public class BattleManager : MonoBehaviour
         pos.y = 1;
         pos += GameManager.instance.playerInput.transform.position;
         capturePoint.transform.position = pos;
-        Invoke("InitCapturePoint", 2);
+        Invoke("InitCapturePoint", 1);
     }
 
     public void ResetOnNewArea()
@@ -102,7 +141,15 @@ public class BattleManager : MonoBehaviour
         AudioManager.instance.PlayMusic(5);
         SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
-        roomDrop.Init(GameManager.instance.nextBuildtoLoad);
+        if(currentBattle.battleType == BattleType.Survive)
+        {
+            roomDrop.Init(ModBuildType.UPGRADE);
+        }
+        else
+        {
+            roomDrop.Init(GameManager.instance.nextBuildtoLoad);
+        }
+
     }
 
     public void ObjectiveFailed()
@@ -130,7 +177,7 @@ public class BattleManager : MonoBehaviour
             if(Vector3.Distance(Vector3.zero, pos) > 50) continue;
 
             // Check if the position is valid (not obstructed)
-            Collider[] colliders = Physics.OverlapSphere(pos, 1, dropLayer);
+            Collider[] colliders = Physics.OverlapSphere(pos, 4, dropLayer);
 
             if (colliders.Length==0)
             {

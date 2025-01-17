@@ -43,7 +43,7 @@ public class ModUI : MonoBehaviour
 
     private void SetBuildImages(ModBuildType type)
     {
-        BG.material.color = pickup.pickupColor;
+        //BG.material.color = pickup.pickupColor;
         buildImage.sprite = buildImages[(int)type];
         buildImage2.sprite = buildImages[(int)type];
         buildName.text = type.ToString();

@@ -9,6 +9,7 @@ public class MYCharacterController : MonoBehaviour
 
     public Vector2 _moveInputVector;
     public AudioSource runAudio;
+    public AudioClip dodgeClip;
     private bool isRunning;
     private Rigidbody _rigidbody;
     public Animator CharacterAnimator;
@@ -106,6 +107,7 @@ public class MYCharacterController : MonoBehaviour
         dashShoes2.enabled = false;
         dashEffect.Play();
         dashEffect2.Play();
+        runAudio.PlayOneShot(dodgeClip);
         isDodging = true;
         _rigidbody.AddForce(direction * dashForce, ForceMode.Impulse);
         StartCoroutine(DashCooldown());

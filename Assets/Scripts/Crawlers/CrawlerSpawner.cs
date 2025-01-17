@@ -9,7 +9,6 @@ public class CrawlerSpawner : MonoBehaviour
     [Header("Object Pools")]
     [SerializeField] private List<Crawler> crawlers = new List<Crawler>();
     [SerializeField] private List<Crawler> crawlerDaddy = new List<Crawler>();
-    [SerializeField] private List<Crawler> Daddycrawlers = new List<Crawler>();
     [SerializeField] private List<Crawler> albinos = new List<Crawler>();
     [SerializeField] private List<Crawler> spitters = new List<Crawler>();
     [SerializeField] private List<Crawler> chargers = new List<Crawler>();
@@ -21,6 +20,7 @@ public class CrawlerSpawner : MonoBehaviour
     private Transform spawnPoint;
     private int currentSpawnPoint;
     public List<PortalEffect> portalEffects;
+    public PortalEffect hordePortal;
     public float burstTimer;
     public int battleRound;
     public int battleRoundMax;
@@ -37,6 +37,7 @@ public class CrawlerSpawner : MonoBehaviour
     public bool isActive;
 
     public int portalMaxAllowed;
+    public float portalSize;
 
     public List<Crawler> spawnListArmy = new List<Crawler>();
 
@@ -45,6 +46,8 @@ public class CrawlerSpawner : MonoBehaviour
     public Battle currentBattle;
     private bool standardBattle;
     private int burstSpawnAmount;
+
+    private bool hordeBattle;
 
     public void Init()
     {
@@ -55,11 +58,12 @@ public class CrawlerSpawner : MonoBehaviour
     {
         currentBattle = battleManager.currentBattle;
         battleRound = 0;
-        timeElapsed = 0;
         totalTimeElapsesd = 0;
         burstTimer = currentBattle.burstTimer;
+        timeElapsed = burstTimer;
         standardBattle = currentBattle.battleType == BattleType.Exterminate;
         endless = !standardBattle;
+        hordeBattle = currentBattle.battleType == BattleType.Survive;
         battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
         GenerateArmyList();
@@ -73,7 +77,7 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (isActive && !standardBattle)
+        if (isActive && hordeBattle)
         {
             BurstTimer();
         }
@@ -95,7 +99,7 @@ public class CrawlerSpawner : MonoBehaviour
             GenerateArmyList();
             SpawnFromArmy();
         }
-        UpdateTimerDisplay();
+        //UpdateTimerDisplay();
     }
 
     private void UpdateTimerDisplay()
@@ -141,10 +145,12 @@ public class CrawlerSpawner : MonoBehaviour
     private void SelectSpawnPoint()
     {
         int randomSpawnPoint;
+        int check = 0;
         do
         {
+            check ++;
             randomSpawnPoint = Random.Range(0, spawnPoints.Count);
-        } while (randomSpawnPoint == currentSpawnPoint);
+        } while (randomSpawnPoint == currentSpawnPoint && check<3);
 
         currentSpawnPoint = randomSpawnPoint;
         spawnPoint = spawnPoints[currentSpawnPoint];
@@ -297,20 +303,38 @@ public class CrawlerSpawner : MonoBehaviour
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
     {
         int portalAllowed = 0;
-        SelectSpawnPoint();
-        PlaySpawnEffect();
-        yield return new WaitForSeconds(0.5f);
+        if (!hordeBattle)
+        {
+            SelectSpawnPoint();
+            PlaySpawnEffect();
+        }
+        else if (!hordePortal.isActive)
+        {
+            spawnPoint = spawnPoints[0];
+            hordePortal.transform.position = spawnPoint.position;
+            hordePortal.transform.rotation = spawnPoint.rotation;
+            hordePortal.StartEffect();
+            yield return new WaitForSeconds(0.5f);
+        }
+
         for (int i = 0; i < burstSpawnAmount; i++)
         {
-            if (portalAllowed >= portalMaxAllowed)
+            if(!hordeBattle)
             {
-                SelectSpawnPoint();
-                PlaySpawnEffect();
-                portalAllowed = 0;
-                yield return new WaitForSeconds(0.5f);
+                if (portalAllowed >= portalMaxAllowed)
+                {
+                    SelectSpawnPoint();
+                    PlaySpawnEffect();
+                    portalAllowed = 0;
+                    yield return new WaitForSeconds(0.5f);
+                }
+            }
+            else
+            {
+                spawnPoint = spawnPoints[0];
             }
 
-            Vector3 randomCircle = Random.insideUnitSphere;
+            Vector3 randomCircle = Random.insideUnitSphere * portalSize;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + spawnPoint.position;
             bugs[i].transform.position = randomPoint;
@@ -359,7 +383,15 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void EndBattle()
     {
+        if(!isActive)
+        {
+            return;
+        }
         isActive = false;
+        if(hordePortal.isActive)
+        {
+            hordePortal.StopEffect();
+        }
         //KillAllCrawlers();
     }
 

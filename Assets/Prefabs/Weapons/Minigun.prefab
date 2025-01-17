@@ -185,7 +185,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   LimitViewAngle: 1
-  MaxHorizAngle: 50
+  MaxHorizAngle: 75
   VisibilityByHorizAngle:
     Mode: 0
     Curve:
@@ -291,6 +291,8 @@ MonoBehaviour:
     - 15
     - 18
     - 22
+    _weaponFuelUseRate: []
+    _uniqueValue: []
     _cost: e8030000d0070000b80b0000
     _unlockCost: 0
     weaponDescription: 
@@ -300,22 +302,26 @@ MonoBehaviour:
     weaponLoop: {fileID: 0}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 0}
+  weaponType: 0
   damage: 0
   force: 0
   fireRate: 0
   range: 0
+  weaponRechargeRate: 0
+  weaponFuelUseRate: 0
   isFiring: 0
-  isFiringAlt: 0
   rangeSensor: {fileID: 0}
   sensor: {fileID: 922689415931832637}
   aimOffest: {x: 0, y: 0, z: 0}
   laserSight: {fileID: 3735716276344981544}
   weaponMod: {fileID: 0}
-  weaponRechargeRate: 0
-  weaponFuelUseRate: 0
+  weaponOverride: 0
+  bounces: 0
   hasTarget: 0
   gunturret: {fileID: 3403235594171588617}
   weaponController: {fileID: 0}
+  bonusDamage: 0
+  meshRenderer: {fileID: 0}
 --- !u!114 &8005139676509938886
 MonoBehaviour:
   m_ObjectHideFlags: 0
