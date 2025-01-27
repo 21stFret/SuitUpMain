@@ -144,7 +144,7 @@ public class CrawlerLeaper : Crawler
         }
     }
 
-    public override void Spawn()
+    public override void Spawn(bool daddy = false)
     {
         base.Spawn();
         leapTimer = leapCooldown;  // Start ready to leap

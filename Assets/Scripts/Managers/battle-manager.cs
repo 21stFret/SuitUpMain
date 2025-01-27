@@ -22,6 +22,8 @@ public class BattleManager : MonoBehaviour
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
 
+    private GameManager _gameManager;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -29,11 +31,14 @@ public class BattleManager : MonoBehaviour
 
     public void SetBattleType()
     {
+        _gameManager = GameManager.instance;
         GenerateNewBattle(Battles[currentBattleIndex].battleType);
+        _usingBattleType = currentBattle.battleType;
 
         //Color color = Color.white;
         float fillAmount = 0;
         bool showBar = false;
+        bool showpercent = false;
         var type = Battles[currentBattleIndex].battleType;
         switch (type)
         {
@@ -48,6 +53,7 @@ public class BattleManager : MonoBehaviour
                 //color = Color.cyan;
                 fillAmount = 0;
                 showBar = true;
+                showpercent = true;
                 SpawnCapturePoint();
                 break;
             case BattleType.Survive:
@@ -64,9 +70,9 @@ public class BattleManager : MonoBehaviour
                 fillAmount = 0;
                 break;
         }
-        GameManager.instance.gameUI.objectiveUI.Init(showBar);
+        _gameManager.gameUI.objectiveUI.Init(showBar, showpercent);
         //GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
-        GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+        _gameManager.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
     }
 
     private IEnumerator SurviveBattle()
@@ -79,10 +85,10 @@ public class BattleManager : MonoBehaviour
                 yield break;
             }
             surviveTimeT -= Time.deltaTime;
-            GameManager.instance.gameUI.objectiveUI.UpdateBar(surviveTimeT / surviveTime);
+            _gameManager.gameUI.objectiveUI.UpdateBar(surviveTimeT / surviveTime);
             yield return null;
         }
-        if(!GameManager.instance.gameActive)
+        if(!_gameManager.gameActive)
         {
             yield break;
         }
@@ -98,6 +104,7 @@ public class BattleManager : MonoBehaviour
         }
         crawlerSpawner.EndBattle();
         lightningController.active = false;
+        _gameManager.areaManager.DayNightCycle(false);
         GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
@@ -111,7 +118,7 @@ public class BattleManager : MonoBehaviour
     {
         Vector3 pos = Random.insideUnitSphere * 20;
         pos.y = 1;
-        pos += GameManager.instance.playerInput.transform.position;
+        pos += _gameManager.playerInput.transform.position;
         capturePoint.transform.position = pos;
         Invoke("InitCapturePoint", 1);
     }
@@ -123,21 +130,23 @@ public class BattleManager : MonoBehaviour
 
     private void InitCapturePoint()
     {
+        //  called by invoke in spawnCapturePoint
         capturePoint.Init();
     }
 
     public void ObjectiveComplete()
     {
-        StartCoroutine(GameManager.instance.gameUI.objectiveUI.ObjectiveComplete());
+        StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
+        lightningController.active = false;
         currentBattleIndex++;
 
-        if (currentBattleIndex >= Battles.Count - 1 && GameManager.instance.currentAreaType==AreaType.Jungle)
+        if (currentBattleIndex >= Battles.Count - 1 && _gameManager.currentAreaType==AreaType.Jungle)
         {
-            GameManager.instance.EndGame(true);
+            _gameManager.EndGame(true);
             return;
         }
-        GameManager.instance.gameActive = false;
+        _gameManager.gameActive = false;
         AudioManager.instance.PlayMusic(5);
         SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
@@ -147,7 +156,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            roomDrop.Init(GameManager.instance.nextBuildtoLoad);
+            roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
 
     }
@@ -199,7 +208,6 @@ public class BattleManager : MonoBehaviour
         crawlerSpawner.waveText.text = "Here they come...";
         EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
         crawlerSpawner.spawnPoints = area.spawnPoints;
-        area.RefreshArea();
         crawlerSpawner.LoadBattle();
         if (currentBattle.battleType == BattleType.Exterminate)
         {

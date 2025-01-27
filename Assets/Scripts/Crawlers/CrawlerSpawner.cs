@@ -63,7 +63,11 @@ public class CrawlerSpawner : MonoBehaviour
         timeElapsed = burstTimer;
         standardBattle = currentBattle.battleType == BattleType.Exterminate;
         endless = !standardBattle;
-        hordeBattle = currentBattle.battleType == BattleType.Survive;
+        hordeBattle = false;
+        if(currentBattle.battleType == BattleType.Survive)
+        {
+            hordeBattle = true;
+        }
         battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
         GenerateArmyList();
@@ -77,7 +81,11 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (isActive && hordeBattle)
+        if(!isActive)
+        {
+            return;
+        }
+        if (hordeBattle || currentBattle.battleType == BattleType.Upload)
         {
             BurstTimer();
         }
@@ -247,10 +255,12 @@ public class CrawlerSpawner : MonoBehaviour
 
     private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs, bool FromDaddy = false)
     {
+
         int portalAllowed = 0;
 
         if (!FromDaddy)
         {
+            if (!isActive) yield break;
             SelectSpawnPoint();
             PlaySpawnEffect();
             yield return new WaitForSeconds(0.5f);
@@ -295,13 +305,14 @@ public class CrawlerSpawner : MonoBehaviour
             bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomY, 0);
 
             float delay = FromDaddy? 0 : i * 0.2f;
-            StartCoroutine(SpawnRandomizer(bugs[i], delay));
+            StartCoroutine(SpawnRandomizer(bugs[i], delay, FromDaddy));
             portalAllowed++;
         }
     }
 
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
     {
+        if (!isActive) yield break;
         int portalAllowed = 0;
         if (!hordeBattle)
         {
@@ -347,13 +358,13 @@ public class CrawlerSpawner : MonoBehaviour
         
     }
 
-    private IEnumerator SpawnRandomizer(Crawler bug, float delay)
+    private IEnumerator SpawnRandomizer(Crawler bug, float delay, bool daddy = false)
     {
         yield return new WaitForSeconds(delay);
-
-        if (!isActive) yield break;
         bug.gameObject.SetActive(true);
-        bug.Spawn();
+        bug.Spawn(daddy);
+        // bugs have a bigger search range at the start of a horde
+        bug.FindClosestTarget(50);
         if(BattleManager.instance.currentBattle.battleType == BattleType.Upload)
         {
             bug.target = BattleManager.instance.capturePoint.transform;
@@ -399,7 +410,7 @@ public class CrawlerSpawner : MonoBehaviour
     {
         foreach (var crawler in activeCrawlers.ToList())
         {
-            crawler.DealyedDamage(1000, 0.2f, WeaponType.Default);
+            crawler.DealyedDamage(1000, 0.2f, WeaponType.AoE);
         }
     }
 

@@ -6,6 +6,7 @@ public class EnvironmentArea : MonoBehaviour
 {
     public List<Transform> spawnPoints;
     public GameObject refreshingObjectsParent;
+    public bool insideArea = false;
 
     public void RefreshArea()
     {

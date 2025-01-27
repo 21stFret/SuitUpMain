@@ -64,6 +64,7 @@ public class GrassBurning : Prop
         isOnFire = true;
         GetComponent<Collider>().enabled = false;
         fireEffect.gameObject.SetActive(true);
+        fireEffect.Play();
         fireLight.DOIntensity(2.5f, 1f);
 
         SpreadFire();
@@ -98,7 +99,7 @@ public class GrassBurning : Prop
             burnedGrassPrefab.SetActive(true);
         }
 
-        fireEffect.gameObject.SetActive(false);
+        fireEffect.Stop();
 
         GrassPrefab.SetActive(false);
 

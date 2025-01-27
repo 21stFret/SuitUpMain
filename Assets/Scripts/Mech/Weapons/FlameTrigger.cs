@@ -11,21 +11,24 @@ public class FlameTrigger : MonoBehaviour
     public float shotDamage;
     public bool isOn;
     private float timer;
+    private WeaponType weaponType;
 
-    public void InitFlameTrigger(float damage, float speed, float range)
+    public void InitFlameTrigger(float damage, float speed, float range, WeaponType type = WeaponType.Flame)
     {
         shotDamage = damage;
         shotSpeed = speed;
         fovCollider.Length = range;
         isOn = false;
+        weaponType = type;
+        fovCollider.CreateCollider();
     }
 
     public void SetCol(bool value)
     {
         isOn = value;
-        if(!value)
+        if(!isOn)
         {
-           triggerSensor.Clear();     
+            //triggerSensor.Clear();
         }
     }
 
@@ -43,12 +46,20 @@ public class FlameTrigger : MonoBehaviour
         timer += Time.deltaTime;
         if(timer > shotSpeed)
         {
-            foreach (GameObject hit in triggerSensor.GetDetections())
+
+            triggerSensor.Pulse();
+            List<GameObject> list = new List<GameObject>();
+            list = triggerSensor.GetDetections();
+            foreach (GameObject hit in list)
             {
                 TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(shotDamage, WeaponType.Flame);
+                    if(!targetHealth.alive)
+                    {                
+                        continue;
+                    }
+                    targetHealth.TakeDamage(shotDamage, weaponType);
                 }
             }
             timer = 0;

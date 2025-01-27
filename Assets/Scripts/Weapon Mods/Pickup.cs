@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
-    private Renderer pickupRenderer;
+    public Renderer pickupRenderer;
     private Collider pickupCollider;
 
     [ColorUsage(true, true)]
@@ -15,6 +16,10 @@ public class Pickup : MonoBehaviour
 
     public RunUpgradeManager runUpgradeManager;
     public ParticleSystem pickupParticles;
+    public GameObject pickupModel;
+
+    public ParticleSystem pickupUpgrade;
+    public bool upgrade;
 
     [InspectorButton("SetupPickupT")]
     public bool canpickup;
@@ -26,10 +31,15 @@ public class Pickup : MonoBehaviour
 
     public void Init(ModBuildType type)
     {
-        pickupRenderer = GetComponent<Renderer>();
         pickupCollider = GetComponent<Collider>();
         pickupLight = GetComponentInChildren<Light>(true);
         pickupType = type;
+        upgrade = false;
+        if(pickupType == ModBuildType.UPGRADE)
+        {
+            upgrade = true;
+        }
+        pickupModel.SetActive(false);
         StartCoroutine(SetupPickup());
     }
 
@@ -51,29 +61,41 @@ public class Pickup : MonoBehaviour
 
     private IEnumerator SetupPickup()
     {
-        switch (pickupType)
+        if (upgrade)
         {
-            case ModBuildType.ASSAULT:
-                pickupColor = Color.red;
-                break;
-            case ModBuildType.TANK:
-                pickupColor = Color.green;
-                break;
-            case ModBuildType.TECH:
-                pickupColor = Color.cyan;
-                break;
-            case ModBuildType.AGILITY:
-                pickupColor = Color.yellow;
-                break;
+            pickupUpgrade.Play();
         }
-        pickupParticles.Play();
-        yield return new WaitForSeconds(1f);
+        else
+        {
+            switch (pickupType)
+            {
+                case ModBuildType.ASSAULT:
+                    pickupColor = Color.red;
+                    break;
+                case ModBuildType.TANK:
+                    pickupColor = Color.green;
+                    break;
+                case ModBuildType.TECH:
+                    pickupColor = Color.cyan;
+                    break;
+                case ModBuildType.AGILITY:
+                    pickupColor = Color.yellow;
+                    break;
+            }
+            pickupParticles.Play();
+            pickupModel.transform.localScale = Vector3.zero;
+            float scale = 0.35f;
+            Vector3 s = new Vector3(scale, scale, scale);
+            pickupModel.transform.DOScale(s, 1f);
+            pickupModel.SetActive(true);
+            yield return new WaitForSeconds(1f);
+            pickupLight.enabled = true;
+            pickupLight.color = pickupColor;
+        }
         pickupCollider.enabled = true;
-        pickupRenderer.enabled = true;
-        pickupLight.enabled = true;
         pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
-        pickupLight.color = pickupColor;
         canpickup = true;
+
     }
 
     private void PickUp()
@@ -84,14 +106,20 @@ public class Pickup : MonoBehaviour
         {
             return;
         }
-        CashCollector.instance.AddArtifact(1);
+        if(upgrade)
+        {
+            CashCollector.instance.AddArtifact(1);
+            pickupUpgrade.Stop();
+        }
+        pickupParticles.Stop();
+
     }
 
     private void RemovePickup()
     {
-        pickupRenderer.enabled = false;
         pickupCollider.enabled = false;
         pickupLight.enabled = false;
-        pickupParticles.Stop();
+        pickupParticles.Clear();
+        pickupModel.SetActive(false);
     }
 }

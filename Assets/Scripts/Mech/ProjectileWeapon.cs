@@ -15,7 +15,9 @@ public class ProjectileWeapon : MonoBehaviour
     [Header("Vulcan")] 
     public Transform vulcanProjectile;
     public Transform vulcanMuzzle; 
-    public Transform vulcanImpact; 
+    public Transform vulcanImpact;
+
+    public float range;
 
     private void Awake()
     {
@@ -63,6 +65,7 @@ public class ProjectileWeapon : MonoBehaviour
             //proj.pierceCount = 0;
             proj.shockRounds = shockRounds;
             proj.shockDamage = shockDamage;
+            proj.range = range;
         }
 
         F3DAudioController.instance.ShotGunShot(TurretSocket[curSocket].position);
@@ -70,25 +73,31 @@ public class ProjectileWeapon : MonoBehaviour
         AdvanceSocket();
     }
 
-    public void Cryo(float dam, float force, float stunTime)
+    public void Cryo(float dam, float force, float stunTime, int shards = 1)
     {
-        var newGO =
-            F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanProjectile,
-                TurretSocket[curSocket].position,
-                TurretSocket[curSocket].rotation).gameObject;
-
-        var proj = newGO.gameObject.GetComponent<F3DProjectile>();
-        if (proj)
+        float angle = 30;
+        int startigIndex = shards>0? -shards : 0;
+        for (int i = startigIndex; i <= shards; i++)
         {
-            proj.impactDamage = dam;
-            proj.impactForce = force;
-            proj._weaponController = this;
-            proj.stunTime = stunTime;
-            proj.weaponType = WeaponType.Cryo;
+            angle = i < 0 ? -angle : angle;
+            float yRotation = angle * i; // Change the rotation of the y axis based on the loop index
+            var newGO =
+            F3DPoolManager.Pools["GeneratedPool"].Spawn(vulcanProjectile,
+            TurretSocket[curSocket].position,
+            TurretSocket[curSocket].rotation * Quaternion.Euler(0f, yRotation, 0f)).gameObject; // Apply y rotation
+
+            var proj = newGO.gameObject.GetComponent<F3DProjectile>();
+            if (proj)
+            {
+                proj.impactDamage = dam;
+                proj.impactForce = force;
+                proj._weaponController = this;
+                proj.stunTime = stunTime;
+                proj.weaponType = WeaponType.Cryo;
+            }
         }
 
         F3DAudioController.instance.SniperShot(TurretSocket[curSocket].position);
-
         AdvanceSocket();
     }
 

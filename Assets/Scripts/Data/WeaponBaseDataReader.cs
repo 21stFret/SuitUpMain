@@ -6,7 +6,7 @@ public class WeaponBaseDataReader : MonoBehaviour
 {
     public void LoadFromExcell(WeaponsManager weaponsManager)
     {
-        List<Dictionary<string, object>> data = CSVReader.Read("WeaponBaseData - WeaponStats");
+        List<Dictionary<string, object>> data = CSVReader.Read("Suit Up Data - WeaponStats");
         for (var i = 0; i < data.Count; i++)
         {
             BaseWeaponInfo BWD;

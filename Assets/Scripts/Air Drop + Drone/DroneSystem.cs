@@ -13,6 +13,7 @@ public class DroneSystem : MonoBehaviour
     public float stoppingDistance;
     public float pingTime;
     private float pingTimeT;
+    public Vector3 hoverOffest;
 
     public Transform CratePivot;
     public bool finishedAbility;
@@ -25,6 +26,7 @@ public class DroneSystem : MonoBehaviour
     public AudioClip droneStart;
     public AudioClip droneLoop;
     private AudioSource _audioSource;
+    public AudioSource _incomingAudioSource;
 
     public bool active;
     private bool hovering;
@@ -33,8 +35,11 @@ public class DroneSystem : MonoBehaviour
     private GameObject player;
 
     public OrbitalStrike orbitalStrike;
-
+    public Minigun minigun;
+    public float companionTime;
+    public float companionDamage;
     private DroneType currentType;
+    public List<AudioClip> droneIncomingSounds;
 
     [InspectorButton("Init")]
     public bool init;
@@ -44,6 +49,8 @@ public class DroneSystem : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         player = BattleMech.instance.gameObject;
         transform.position = startPos.position;
+        minigun.gameObject.SetActive(false);
+        minigun.autoTurret = false;
         triggerAbility = false;
         finishedAbility = false;
         hasCreate = false;
@@ -67,7 +74,19 @@ public class DroneSystem : MonoBehaviour
                 break;
             case DroneType.Orbital:
                 PingClosestEnemy();
+                stoppingDistance = 0.5f;
                 break;
+            case DroneType.Companion:
+                PingClosestEnemy();
+                minigun.gameObject.SetActive(true);
+                stoppingDistance = 10;
+                break;
+        }
+        int droneTypeInt = (int)droneType;
+        if(droneTypeInt < droneIncomingSounds.Count)
+        {
+
+            _incomingAudioSource.PlayOneShot(droneIncomingSounds[droneTypeInt]);
         }
 
         ToggleActive();
@@ -75,6 +94,7 @@ public class DroneSystem : MonoBehaviour
 
     private void InitCrate()
     {
+        stoppingDistance = 0.5f;
         target = BattleMech.instance.transform;
         hasCreate = true;
         airDropCrate.transform.SetParent(CratePivot);
@@ -159,7 +179,9 @@ public class DroneSystem : MonoBehaviour
             return;
         }
 
-        Vector3 newDirection = target.position - transform.position;
+
+        Vector3 newPos = target.position + hoverOffest;
+        Vector3 newDirection = newPos - transform.position;
         newDirection.y = 0;
         transform.forward = Vector3.RotateTowards(transform.forward, newDirection, Time.deltaTime * slewSpeed, 0.0f);
 
@@ -175,7 +197,7 @@ public class DroneSystem : MonoBehaviour
             transform.position = newPosition;
         }
 
-        float dist = transform.position.y - target.position.y - stoppingDistance;
+        float dist = (transform.position.y - target.position.y) + stoppingDistance;
 
         if (Vector3.Distance(transform.position, target.position) < dist)
         {
@@ -233,7 +255,19 @@ public class DroneSystem : MonoBehaviour
             case DroneType.Orbital:
                 orbitalStrike.Init(this);
                 break;
+            case DroneType.Companion:
+                StartCoroutine(DelayFinishedAbility(companionTime));
+                minigun.damage = companionDamage;
+                minigun.autoTurret = true;
+                break;
         }
         triggerAbility = true;
+    }
+
+    private IEnumerator DelayFinishedAbility(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        finishedAbility = true;
+        minigun.autoTurret = false;
     }
 }

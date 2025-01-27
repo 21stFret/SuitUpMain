@@ -28,7 +28,7 @@ public class BaseManager : MonoBehaviour
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
         weaponHolder.SetupWeaponsManager();
-        if(PlayerSavedData.instance._mainWeaponData.Length ==0)
+        if(PlayerSavedData.instance._mainWeaponData == null)
         {
             playerData.InittestData();
         }
@@ -44,6 +44,7 @@ public class BaseManager : MonoBehaviour
 
     public void StartGame(int value)
     {
+        Time.timeScale = 1;
         sceneLoader.LoadScene(value, true);
     }
 }

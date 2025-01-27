@@ -51,8 +51,6 @@ public class WeaponMod : MonoBehaviour
                 case StatType.Fuel_Tank:
                     modFuelCost -= value * modFuelCost;
                     break;
-                case StatType.Unique:
-                    break;
             }
         }
     }

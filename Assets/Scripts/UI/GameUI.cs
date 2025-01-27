@@ -12,7 +12,6 @@ public class GameUI : MonoBehaviour
     public PauseMenu pauseMenu;
     public DroneControllerUI droneController;
     public ModUI modUI;
-    public bool modOpen;
     public TMP_Text killCountText;
     public GameObject completePanel;
     public GameObject completeButton;
@@ -50,18 +49,6 @@ public class GameUI : MonoBehaviour
             return;
         }
         droneController.airdropMenu.SetActive(false);
-    }
-
-    public void OpenModUI(ModBuildType pickType)
-    {
-        modUI.OpenModUI(pickType);
-        modOpen = true;
-    }
-
-    public void CloseModUI()
-    {
-        modUI.CloseModUI();
-        modOpen = false;
     }
 
     public void UpdateKillCount(int killCount)

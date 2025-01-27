@@ -27,12 +27,21 @@ public class MainMenu : MonoBehaviour
     private bool inMainMenu;
     public GameObject header;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
-        AudioManager.instance.PlayMusic(0);
         sceneLoader = SceneLoader.instance;
-        inMainMenu = true;
-        instance = this;
     }
 
     public void StartGame(int value)

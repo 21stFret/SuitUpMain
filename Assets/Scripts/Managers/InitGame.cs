@@ -29,10 +29,5 @@ public class InitGame : MonoBehaviour
         weaponHolder.SetupWeaponsManager();
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
-        if(SetupGame.instance.inGame)
-        {
-            mainMenu.OpenInLoadout();
-        }
-        SetupGame.instance.inGame = true;
     }
 }

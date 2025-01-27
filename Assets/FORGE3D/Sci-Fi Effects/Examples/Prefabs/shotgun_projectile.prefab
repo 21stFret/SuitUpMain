@@ -68,11 +68,11 @@ MonoBehaviour:
   fxType: 3
   layerMask:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 4481
   lifeTime: 2
   despawnDelay: 0
   velocity: 200
-  RaycastAdvance: 4
+  RaycastAdvance: 2
   DelayDespawn: 0
   delayedParticles: []
   impactDamage: 0
@@ -81,8 +81,14 @@ MonoBehaviour:
   stunTime: 0
   sphereCastRadius: 0.5
   _weaponController: {fileID: 0}
-  weaponType: 0
+  weaponType: 1
   hitObjects: []
+  bounceCount: 0
+  shockRounds: 0
+  shockDamage: 0
+  splitRounds: 0
+  splitCount: 0
+  range: 0
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0

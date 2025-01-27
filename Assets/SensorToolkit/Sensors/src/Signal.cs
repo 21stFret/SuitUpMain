@@ -45,7 +45,7 @@ namespace Micosmo.SensorToolkit {
             return ReferenceEquals(Object, other.Object) && Strength == other.Strength && Shape == other.Shape;
         }
         public float DistanceTo(Vector3 point) {
-            return (Bounds.center - point).magnitude;
+            return (Object.transform.position - point).magnitude;
         }
     }
 

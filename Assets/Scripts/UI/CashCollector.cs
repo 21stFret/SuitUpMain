@@ -116,7 +116,8 @@ public class CashCollector : MonoBehaviour
         }
         _timeToHideA = timeToHideA;
         ArtUIshown = true;
-        DOVirtual.Float(Artpanel.anchoredPosition.x, posX, 0.5f, (float value) => panelTrans.anchoredPosition = new Vector2(value, panelTrans.anchoredPosition.y));
+        DOVirtual.Float(Artpanel.anchoredPosition.x, posX, 0.5f, (float value) => Artpanel.anchoredPosition = new Vector2(value, Artpanel.anchoredPosition.y));
+        Artpanel.GetComponentInChildren<ParticleSystem>().Play();
     }
 
     public void HideArtUI()
@@ -126,7 +127,8 @@ public class CashCollector : MonoBehaviour
             return;
         }
         ArtUIshown = false;
-        DOVirtual.Float(Artpanel.anchoredPosition.x, savedPos, 0.5f, (float value) => panelTrans.anchoredPosition = new Vector2(value, panelTrans.anchoredPosition.y));
+        DOVirtual.Float(Artpanel.anchoredPosition.x, savedPos, 0.5f, (float value) => Artpanel.anchoredPosition = new Vector2(value, Artpanel.anchoredPosition.y));
+        Artpanel.GetComponentInChildren<ParticleSystem>().Stop();
     }
 
     private void UpdateUI(int parts)

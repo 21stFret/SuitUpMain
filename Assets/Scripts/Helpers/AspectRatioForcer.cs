@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class AspectRatioEnforcer : MonoBehaviour
 {
-    [SerializeField] private float targetAspectRatio = 16f / 9f; // or 16f/10f
+    public Vector2 screenSize = new Vector2(1920, 1080);
+    public Vector2 aspectRatio  = new Vector2(16, 9);
+    [SerializeField] private float targetAspectRatio; // or 16f/10f
     private Camera mainCamera;
 
     void Start()
     {
-        mainCamera = Camera.main;
+        mainCamera = GetComponent<Camera>();
         UpdateCameraRect();
+        targetAspectRatio = aspectRatio.x / aspectRatio.y;
         //Screen.SetResolution(1920, 1080, true);
     }
 

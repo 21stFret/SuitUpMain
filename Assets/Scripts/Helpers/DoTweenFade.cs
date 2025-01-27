@@ -13,6 +13,7 @@ public class DoTweenFade : MonoBehaviour
     public LoopType loopType;
     public int loopCount = 0;
     public float fadeValue;
+    public bool disableOnEnd;
 
     void Start()
     {
@@ -55,6 +56,8 @@ public class DoTweenFade : MonoBehaviour
 
     public void FadeIn()
     {
+        KillTween(); // Kill any existing tweens first
+
         if (canvasGroup != null)
         {
             canvasGroup.alpha = 0;
@@ -76,15 +79,26 @@ public class DoTweenFade : MonoBehaviour
     {
         if (canvasGroup != null)
         {
-            canvasGroup.DOFade(0, fadeDuration);
+            canvasGroup.DOKill();
+            canvasGroup.DOFade(0, fadeDuration).OnComplete(OnComplete);
         }
         if (image != null)
         {
+            image.DOKill();
             image.DOFade(0, fadeDuration);
         }
         if (material != null)
         {
+            material.DOKill();
             material.DOFade(0, fadeDuration);
+        }
+    }
+
+    public void OnComplete()
+    {
+        if (disableOnEnd)
+        {
+            gameObject.SetActive(false);
         }
     }
 }

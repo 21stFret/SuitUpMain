@@ -49,12 +49,11 @@ public class WeaponModManager : MonoBehaviour
         currentTechMod = mod;
         techWeapon.weaponMod = currentTechMod;
         currentTechMod.baseWeapon = techWeapon;
-        currentTechMod.transform.SetParent(assualtWeapon.transform);
+        currentTechMod.transform.SetParent(techWeapon.transform);
         currentTechMod.transform.localPosition = Vector3.zero;
         currentTechMod.transform.localRotation = Quaternion.identity;
         currentTechMod.enabled = true;
         currentTechMod.Init();
-        GameUI.instance.CloseModUI();
     }
 
     public void EquipAssaultMod(WeaponMod mod)

@@ -19,7 +19,8 @@ public class PlayerSavedData : MonoBehaviour
     public int _Exp                     {get; private set;} 
     public int _Artifact                {get; private set;} 
     public Vector2 _playerLoadout       {get; private set;} 
-    public bool _firstLoad              {get; private set;} 
+    public bool _firstLoad              {get; private set;}
+    public bool _triggeredEasterEgg;     
     public GameStats _gameStats         {get; private set;} 
 
     private void Awake()
@@ -107,7 +108,6 @@ public class PlayerSavedData : MonoBehaviour
 
     public void ResetAllData()
     {
-        SetupGame.instance.inGame = false;
         CreateData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }

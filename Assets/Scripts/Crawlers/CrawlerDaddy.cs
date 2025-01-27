@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class CrawlerDaddy : Crawler
 {
@@ -19,6 +17,7 @@ public class CrawlerDaddy : Crawler
         {
             Vector3 pos = transform.position;
             pos.y += 3;
+            spawnCount = Random.Range(2, 5);
             crawlerSpawner.SpawnAtPoint(transform, spawnCount);
             DeathEffect.transform.SetParent(null);
             DeathEffect.SetActive(true);
@@ -46,7 +45,7 @@ public class CrawlerDaddy : Crawler
         }
     }
 
-    public override void Spawn()
+    public override void Spawn(bool daddy = false)
     {
         base.Spawn();
         eggs.SetActive(true);

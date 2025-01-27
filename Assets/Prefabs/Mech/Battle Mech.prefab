@@ -56725,6 +56725,7 @@ GameObject:
   - component: {fileID: 3920902903643086238}
   - component: {fileID: 5514233860546987800}
   - component: {fileID: 547715015366089029}
+  - component: {fileID: 3571866362691949525}
   - component: {fileID: 7926855109315850022}
   - component: {fileID: 715340335532054391}
   - component: {fileID: 2360268570500086563}
@@ -56931,6 +56932,7 @@ MonoBehaviour:
   shieldHealthMax: 0
   shieldBar: {fileID: 0}
   shieldMaterial: {fileID: 2100000, guid: 777f34780a8192b45bb6c1e818093a0f, type: 2}
+  shieldColor: {r: 0, g: 2.1688414, b: 2.0641198, a: 1}
 --- !u!54 &364384307396218630
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -57199,8 +57201,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: PauseGame
-        m_Mode: 1
+        m_MethodName: PauseGameInput
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -57299,6 +57301,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 0ea53b20-f47e-410c-8abc-19ed3460f8ca
     m_ActionName: Base UI/Right[/Keyboard/rightArrow,/XInputControllerWindows/dpad/right]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: InvokeOnBack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ff7eeb97-e418-4044-90c0-0916a5958f7c
+    m_ActionName: UI/Back[/XInputControllerWindows/buttonEast,/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Default
   m_DefaultActionMap: Gameplay
@@ -57345,9 +57363,38 @@ MonoBehaviour:
   icedEffect: {fileID: 3153263962369969714}
   slowedDuration: 4
   slowedAmount: 0.6
+  dashModsManager: {fileID: 0}
   onIce: 0
   iceDrift: 0.5
   weaponFiringSlowAmount: 0.25
+  battleMech: {fileID: 0}
+--- !u!114 &3571866362691949525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800413595774208468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6456a878036ba49bbaf8b8ea801932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 0}
+  canDamage: 0
+  chargeForce: 150
+  damage: 1
+  invincible: 0
+  invincibleColor: {r: 2.1688414, g: 0.8710403, b: 0, a: 1}
+  attackColor: {r: 8.574187, g: 0, b: 0, a: 1}
+  hologram: 0
+  hologramPrefab: {fileID: 0}
+  holoExplosion: {fileID: 0}
+  speedBoost: 0
+  time: 3
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 266624
 --- !u!114 &7926855109315850022
 MonoBehaviour:
   m_ObjectHideFlags: 0

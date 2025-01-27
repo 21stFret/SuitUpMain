@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurningPatchPooler : MonoBehaviour
+public class MyPooler : MonoBehaviour
 {
-    public static BurningPatchPooler Instance;
+    public static MyPooler Instance;
 
     public GameObject burningPatchPrefab;
+    public GameObject fracturePrefab;
     public int poolSize = 10;
     public List<GameObject> burningPatches;
+    public List<GameObject> fractureEffects;
 
     private void Awake()
     {
@@ -23,6 +25,10 @@ public class BurningPatchPooler : MonoBehaviour
             GameObject burningPatch = Instantiate(burningPatchPrefab, transform);
             burningPatch.SetActive(false);
             burningPatches.Add(burningPatch);
+
+            GameObject fractureEffect = Instantiate(fracturePrefab, transform);
+            fractureEffect.SetActive(false);
+            fractureEffects.Add(fractureEffect);
         }
     }
 
@@ -40,5 +46,21 @@ public class BurningPatchPooler : MonoBehaviour
         newBurningPatch.SetActive(false);
         burningPatches.Add(newBurningPatch);
         return newBurningPatch;
+    }
+
+    public GameObject GetFractureEffect()
+    {
+        foreach (GameObject fractureEffect in fractureEffects)
+        {
+            if (!fractureEffect.activeInHierarchy)
+            {
+                return fractureEffect;
+            }
+        }
+
+        GameObject newFractureEffect = Instantiate(fracturePrefab, transform);
+        newFractureEffect.SetActive(false);
+        fractureEffects.Add(newFractureEffect);
+        return newFractureEffect;
     }
 }

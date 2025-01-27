@@ -35,6 +35,7 @@ namespace FORGE3D
         int OscillateTimerID; // Beam oscillation timer reference
 
         float beamLength; // Current beam length
+        float _beamLength; // Current beam length
         float initialBeamOffset; // Initial UV offset
 
         public LightningRodController lightningRodController;
@@ -106,6 +107,7 @@ namespace FORGE3D
                 MaxBeamLength = lightningRodController.range;
             }
 
+
             // Calculate default beam proportion multiplier based on default scale and maximum length
             float propMult = MaxBeamLength * (beamScale / 10f);
 
@@ -113,9 +115,7 @@ namespace FORGE3D
             {
                 beamLength = Vector3.Distance(transform.position, target.position);
 
-                // Update beam length
-                if (!Oscillate)
-                    lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
+                lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
                 propMult = beamLength * (beamScale / 10f);
                 // Adjust impact effect position
                 if (rayImpact)
@@ -123,6 +123,7 @@ namespace FORGE3D
             }
             else
             {
+                lineRenderer.SetPosition(0, transform.position);
                 // Raycast
                 if (Physics.Raycast(ray, out hitPoint, MaxBeamLength, layerMask))
                 {
@@ -131,7 +132,10 @@ namespace FORGE3D
 
                     // Update line renderer
                     if (!Oscillate)
-                        lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
+                    {
+                        Vector3 worldPoint = transform.position + transform.forward * beamLength;
+                        lineRenderer.SetPosition(1, worldPoint);
+                    }
 
                     // Calculate default beam proportion multiplier based on default scale and current length
                     propMult = beamLength * (beamScale / 10f);
@@ -151,7 +155,11 @@ namespace FORGE3D
 
                     // Update beam length
                     if (!Oscillate)
-                        lineRenderer.SetPosition(1, new Vector3(0f, 0f, beamLength));
+                    {
+                        Vector3 worldPoint = transform.position + transform.forward * beamLength;
+                        lineRenderer.SetPosition(1,worldPoint);
+                    }
+
 
                     // Adjust impact effect position
                     if (rayImpact)
@@ -161,6 +169,34 @@ namespace FORGE3D
 
             if (lightningRodController != null)
             {
+                Collider[] colliders = Physics.OverlapSphere(rayImpact.position, lightningRodController.aimAssit, layerMask);
+                if(colliders.Length > 0)
+                {
+                    foreach (var col in colliders)
+                    {
+                        if (col.gameObject.GetComponent<TargetHealth>() != null)
+                        {
+                            Vector3 dir = col.transform.position - rayImpact.position;
+                            RaycastHit hit;
+                            Ray _ray = new Ray(rayImpact.position, dir);
+                            if (Physics.Raycast(_ray, out hit, MaxBeamLength, layerMask))
+                            {
+                                if(hit.collider.gameObject == col.gameObject)
+                                {
+                                    hitPoint = hit;
+                                    lineRenderer.SetPosition(1, hitPoint.point);
+                                    rayImpact.position = hitPoint.point;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lineRenderer.SetPosition(1, rayImpact.position);
+                        }
+                    }
+                }
+                beamLength = Vector3.Distance(transform.position, hitPoint.point);
                 lightningRodController.LightningHit(hitPoint);
             }
 
@@ -197,16 +233,20 @@ namespace FORGE3D
         // Oscillate beam
         void OnOscillate()
         {
+            _beamLength = beamLength;
             // Calculate number of points based on beam length and default number of points
             int points = (int) ((beamLength/10f)*Points);
 
             // Update line rendered segments in case number of points less than 2
             if (points < 2)
             {
-//                lineRenderer.SetVertexCount(2);
+                //lineRenderer.SetVertexCount(2);
                 lineRenderer.positionCount = 2;
+                lineRenderer.useWorldSpace = false;
                 lineRenderer.SetPosition(0, Vector3.zero);
-                lineRenderer.SetPosition(1, new Vector3(0, 0, beamLength));
+                //Vector3 dir = transform.forward.normalized*_beamLength;
+                //lineRenderer.SetPosition(1, transform.position + dir);
+                lineRenderer.SetPosition(1, new Vector3(0, 0, _beamLength));
             }
             // Update line renderer segments
             else

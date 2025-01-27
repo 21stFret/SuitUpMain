@@ -52,6 +52,25 @@ public class MechHealth : MonoBehaviour
     public float shieldHealthMax;
     public Image shieldBar;
     public Material shieldMaterial;
+    [ColorUsage(true, true)]
+    public Color shieldColor;
+    private bool isFlashing;
+    private Coroutine currentFlashRoutine;
+
+    public void OnDisable()
+    {
+        // Clean up any running flash
+        if (currentFlashRoutine != null)
+        {
+            StopCoroutine(currentFlashRoutine);
+            currentFlashRoutine = null;
+        }
+        isFlashing = false;
+        if (screenFlash != null)
+        {
+            screenFlash.KillTween();
+        }
+    }
 
     public void Init()
     {
@@ -115,7 +134,7 @@ public class MechHealth : MonoBehaviour
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
 
-        if(shieldHealth >0)
+        if(shieldHealth >0 && !isHeal)
         {
             SetShieldBar(damage);
         }
@@ -145,9 +164,10 @@ public class MechHealth : MonoBehaviour
             }
         }
 
+        Color flashColor = isHeal ? healthLightColor : damageLightColor;
+
         if (!isHeal)
         {
-            flash.color = damageLightColor;
             hit = true;
             lastDamageTime = Time.time;
             AudioManager.instance.PlayHurt();
@@ -157,12 +177,15 @@ public class MechHealth : MonoBehaviour
         }
         else
         {
-            flash.color = healthLightColor;
             damageOverlay.fillAmount = healthBar.fillAmount;
             AudioManager.instance.PlayHeal();
         }
 
-        StartCoroutine(DamageFlash());
+        if (!isFlashing)
+        {
+            currentFlashRoutine = StartCoroutine(DamageFlash(flashColor));
+        }
+        SetEmmsiveLights();
 
         if (targetHealth.health <= 0)
         {
@@ -173,7 +196,7 @@ public class MechHealth : MonoBehaviour
 
     private void SetEmmsiveLights()
     {
-        float lerpValue = shieldHealth / shieldHealthMax;
+        float lerpValue = targetHealth.health / targetHealth.maxHealth;
         float emmsiveStrength = Mathf.Lerp(0.5f, 2, lerpValue);
         shieldMaterial.SetFloat("_Emmssive_Strength", emmsiveStrength);
         shieldMaterial.SetColor("_Emmssive_Color", Color.Lerp(healthLightColor, damageLightColor, lerpValue));
@@ -248,10 +271,27 @@ public class MechHealth : MonoBehaviour
     }
 
 
-    private IEnumerator DamageFlash()
+    private IEnumerator DamageFlash(Color color)
     {
+
+        // If there's already a flash in progress, stop it
+        if (currentFlashRoutine != null)
+        {
+            StopCoroutine(currentFlashRoutine);
+            screenFlash.KillTween();
+        }
+
+        flash.color = color;
+        isFlashing = true;
         screenFlash.FadeIn();
+
         yield return new WaitForSeconds(0.2f);
+
         screenFlash.FadeOut();
+
+        yield return new WaitForSeconds(0.2f);
+
+        isFlashing = false;
+        currentFlashRoutine = null;
     }
 }

@@ -114,6 +114,11 @@ public class LightningController : MonoBehaviour
 
     private IEnumerator TriggerLightningSequence()
     {
+        yield return new WaitForEndOfFrame();
+        if(!active)
+        {
+            yield break;
+        }
         FlashPattern selectedPattern = SelectRandomPattern();
 
         // Select and analyze random thunder sound

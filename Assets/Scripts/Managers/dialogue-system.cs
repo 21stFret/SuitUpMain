@@ -38,6 +38,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     public List<DialogueSequence> dialogueSequences;
+    public int currentDialogueSequenceIndex = 0;
 
     private void Start()
     {
@@ -52,7 +53,16 @@ public class DialogueManager : MonoBehaviour
     {
         if (!isDialogueActive)
         {
-            StartCoroutine(StartDialogue(dialogueSequences[0]));
+            int newIndex = Random.Range(0, dialogueSequences.Count);
+            if (newIndex == currentDialogueSequenceIndex)
+            {
+                currentDialogueSequenceIndex = (currentDialogueSequenceIndex + 1) % dialogueSequences.Count;
+            }
+            else
+            {
+                currentDialogueSequenceIndex = newIndex;
+            }
+            StartCoroutine(StartDialogue(dialogueSequences[currentDialogueSequenceIndex]));
         }
         else if (!isTyping)
         {

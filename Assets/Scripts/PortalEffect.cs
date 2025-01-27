@@ -12,7 +12,7 @@ public class PortalEffect : MonoBehaviour
     public float portalEffectDuration = 1f;
     public bool infinite;
     public bool isActive;
-    public Light light;
+    public Light _light;
 
     [InspectorButton("StartEffect")]
     public bool startEffect;
@@ -46,9 +46,9 @@ public class PortalEffect : MonoBehaviour
     public void StartEffect()
     {
         isActive = true;
-        if(light != null)
+        if(_light != null)
         {
-            light.enabled = true;
+            _light.enabled = true;
         }
         for(int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {
@@ -94,9 +94,9 @@ public class PortalEffect : MonoBehaviour
     public void StopEffect()
     {
         isActive = false;
-        if (light != null)
+        if (_light != null)
         {
-            light.enabled = false;
+            _light.enabled = false;
         }
         for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {

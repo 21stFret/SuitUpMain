@@ -20,8 +20,11 @@ public class AreaManager : MonoBehaviour
     private List<GameObject> allRooms = new List<GameObject>();
 
     public GameObject voidArea;
-
     public GameObject currentRoom;
+
+    public GameObject dayLight;
+    public GameObject nightLight;
+    public DirectionalDaylight directionalDaylight;
 
     private void Start()
     {
@@ -29,6 +32,15 @@ public class AreaManager : MonoBehaviour
         allRooms.AddRange(DesertRoomPrefabs);
         allRooms.AddRange(IceRoomPrefabs);
         allRooms.AddRange(JungleRoomPrefabs);
+    }
+
+    public void DayNightCycle(bool night = false)
+    {
+        dayLight.SetActive(!night);
+        nightLight.SetActive(night);
+        directionalDaylight.enabled = !night;
+        directionalDaylight.startTime = Random.Range(0f, 1f);
+        directionalDaylight.Init();
     }
 
     public void LoadRoom(AreaType areaType)
@@ -54,6 +66,9 @@ public class AreaManager : MonoBehaviour
             case AreaType.Jungle:
                 roomPrefabs = JungleRoomPrefabs;
                 break;
+            case AreaType.Void:
+                LoadVoidArea();
+                break;
         }
 
         if (roomPrefabs == null)
@@ -69,10 +84,21 @@ public class AreaManager : MonoBehaviour
             print("Room is the same as the current room");
             randomIndex = (randomIndex + 1) % roomPrefabs.Count;
         }
+        EnvironmentArea area = roomPrefab.GetComponent<EnvironmentArea>();
+        if(directionalDaylight!=null)
+        {
+            bool dark = area.insideArea;
+            if(BattleManager.instance.currentBattle.battleType == BattleType.Survive)
+            {
+                dark = true;
+            }
+            DayNightCycle(dark);
+        }
         TreeClusterGeneration levelGen = roomPrefab.GetComponentInChildren<TreeClusterGeneration>();
         if (levelGen != null) levelGen.GenerateTreeClusters();
         roomPrefab.SetActive(true);
         currentRoom = roomPrefab;
+        area.RefreshArea();
     }
 
     public void LoadVoidArea()

@@ -52,7 +52,7 @@ public class DroneControllerUI : MonoBehaviour
 
     public void TestActiveate()
     {
-        ActivateDroneInput(DroneType.Shield);
+        ActivateDroneInput(DroneType.Companion);
     }
 
     public void ActivateDroneInput(DroneType type)
@@ -116,7 +116,7 @@ public class DroneControllerUI : MonoBehaviour
 
         if (!tutorial)
         {
-            if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
+            if (gameUI.pauseMenu.isPaused || gameUI.modUI.modUI.activeSelf || !GameManager.instance.gameActive)
             {
                 return;
             }
@@ -148,7 +148,7 @@ public class DroneControllerUI : MonoBehaviour
         {
             return;
         }
-        if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
+        if (gameUI.pauseMenu.isPaused || gameUI.modUI.modUI.activeSelf || !GameManager.instance.gameActive)
         {
             return;
         }
@@ -191,6 +191,11 @@ public class DroneControllerUI : MonoBehaviour
         missileLauncher.FatMan = false;
         missileLauncher.LaunchMissiles(missileAmount);
         airstikes++;
+
+        if(PlayerAchievements.instance == null)
+        {
+            return;
+        }
         if(airstikes == 2)
         {
             PlayerAchievements.instance.SetAchievement("AIRSTRIKE_2");

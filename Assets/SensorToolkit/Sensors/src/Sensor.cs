@@ -396,8 +396,15 @@ namespace Micosmo.SensorToolkit {
             signalPipeline.UpdateAllInputs(nextSignals);
         }
 
-        protected void UpdateSignalImmediate(Signal signal) {
-            signalPipeline.UpdateInput(signal);
+        protected void UpdateSignalImmediate(Signal signal)
+        {
+            if (signal.Object != null && !signal.Object.Equals(null))
+            {
+                // First remove any existing signal for this object to prevent lingering references
+                signalPipeline.RemoveInput(signal.Object);
+                // Then update with the new signal
+                signalPipeline.UpdateInput(signal);
+            }
         }
 
         protected void LostSignalImmediate(GameObject forObject) {
@@ -420,10 +427,13 @@ namespace Micosmo.SensorToolkit {
         List<GameObject> objectWorkList = new List<GameObject>();
         List<Component> componentWorkList = new List<Component>();
 
-        List<GameObject> SignalsToObjects(List<Signal> signals, List<GameObject> storeIn) {
+        List<GameObject> SignalsToObjects(List<Signal> signals, List<GameObject> storeIn)
+        {
             storeIn.Clear();
-            foreach (var signal in signals) {
-                if (signal.Object != null && signal.Object.activeInHierarchy)
+            foreach (var signal in signals)
+            {
+                // Add check for null and destroyed objects
+                if (signal.Object != null && !signal.Object.Equals(null) && signal.Object.activeInHierarchy)
                 {
                     storeIn.Add(signal.Object);
                 }
@@ -490,6 +500,8 @@ namespace Micosmo.SensorToolkit {
         }
         static Comparison<DistanceElement> DistanceElementComparison = new Comparison<DistanceElement>(CompareSignalElements);
         static int CompareSignalElements(DistanceElement x, DistanceElement y) {
+            //print("object is at " + x.Signal.Object.transform.position + " and " + y.Signal.Object.name + " is at " + y.Signal.Object.transform.position);
+            //print("distnce to " + x.Signal.Object.name + " is " + x.Distance + " and " + y.Signal.Object.name + " is " + y.Distance);
             if (x.Distance > y.Distance) {
                 return 1;
             } else if (x.Distance < y.Distance) {

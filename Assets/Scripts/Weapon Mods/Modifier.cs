@@ -19,6 +19,15 @@ public enum StatType
     Charge_Rate,
     Dash_Cooldown,
     Pulse_Range,
+    Invincible,
+    Range,
+    Spread,
+    Extra_Shot,
+    Pierce,
+    Bounce,
+    Force,
+    Split,
+    Chains
 
 }
 

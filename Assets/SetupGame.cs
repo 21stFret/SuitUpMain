@@ -44,21 +44,21 @@ public class SetupGame : MonoBehaviour
         gameManager = _gameManager;
         gameManager.endlessMode = endlessMode;
         gameManager.playOnAwake = true;
-
-        BattleManager.instance.Battles.Clear();
+        BattleManager battleManager = BattleManager.instance;
+        battleManager.Battles.Clear();
         switch (diffiulty)
         {
             case Difficulty.Easy:
-                BattleManager.instance.Battles.AddRange(roomwavesEasy);
+                battleManager.Battles.AddRange(roomwavesEasy);
                 break;
             case Difficulty.Mid:
-                BattleManager.instance.Battles.AddRange(roomwavesMid);
+                battleManager.Battles.AddRange(roomwavesMid);
                 break;
             case Difficulty.Hard:
-                BattleManager.instance.Battles.AddRange(roomwavesHard);
+                battleManager.Battles.AddRange(roomwavesHard);
                 break;
         }
-
+        battleManager.dificultyMultiplier = diffiulty == Difficulty.Easy ? 1f : diffiulty == Difficulty.Mid ? 1.5f : 2f;
         gameManager.DelayedStart();
     }
 }
