@@ -2,21 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CrateType
-{
-    Repair,
-    Weapon,
-}
-
 public class AirDropCrate : MonoBehaviour
 {
-    public CrateType crateType;
+    public DroneType crateType;
     public ParticleSystem _particleSystem;
     public bool active;
     public MeshRenderer _meshRenderer;
+    public MeshRenderer _boxLightRenderer;
+    Material _boxLightMaterial;
     private BoxCollider _collider;
     public Rigidbody rb;
     public GameObject _object;
+
+    public Light _light;
 
     private void Awake()
     {
@@ -26,6 +24,19 @@ public class AirDropCrate : MonoBehaviour
 
     public void Init()
     {
+        _boxLightMaterial = _boxLightRenderer.sharedMaterial;
+        Color color = new Color(0, 0, 0, 0);
+        if(crateType == DroneType.Repair)
+        {
+            color = Color.green;
+        }
+        else
+        {
+            color = Color.cyan;
+        }
+        _boxLightMaterial.SetColor("_EmissionColor", color);
+        _light.color = color;
+
         active = true;
         _meshRenderer.enabled = active;
         _collider.enabled = !active;
@@ -71,11 +82,11 @@ public class AirDropCrate : MonoBehaviour
     {
         switch (crateType)
         {
-            case CrateType.Repair:
+            case DroneType.Repair:
                 BattleMech.instance.RepairArmour();
                 break;
-            case CrateType.Weapon:
-                //swap weapon
+            case DroneType.Shield:
+                BattleMech.instance.Shield();
                 break;
             default:
                 break;

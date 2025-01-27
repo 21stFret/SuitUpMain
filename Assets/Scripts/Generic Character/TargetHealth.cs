@@ -54,6 +54,11 @@ public class TargetHealth : MonoBehaviour
         return health >= maxHealth;
     }
 
+    public void SetDamageNumbers(bool value)
+    {
+        damageNumbersOn = value;
+    }
+
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
     {
@@ -187,7 +192,7 @@ public class TargetHealth : MonoBehaviour
             return 0;
         }
 
-        float damageMultiplier = damage;
+        float damageMultiplier = 0;
         int multiplierType = AscertainMultiplier(weaponType);
 
         if (multiplierType == 1)

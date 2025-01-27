@@ -86,13 +86,37 @@ namespace Micosmo.SensorToolkit
             }
         }
 
-        void OnTriggerEnter(Collider other) {
+        void OnTriggerEnter(Collider other)
+        {
+            if (!other.enabled || !other.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             int currCount;
-            if (!colliderCount.TryGetValue(other, out currCount)) {
+            if (!colliderCount.TryGetValue(other, out currCount))
+            {
                 AddCollider(other, true);
                 currCount = 0;
             }
             colliderCount[other] = currCount + 1;
+        }
+
+        public void TriggerExit(Collider other)
+        {
+            int currCount;
+            if (colliderCount.TryGetValue(other, out currCount))
+            {
+                if (currCount == 1)
+                {
+                    colliderCount.Remove(other);
+                    RemoveCollider(other, true);
+                }
+                else
+                {
+                    colliderCount[other] = currCount - 1;
+                }
+            }
         }
 
         void OnTriggerExit(Collider other) {

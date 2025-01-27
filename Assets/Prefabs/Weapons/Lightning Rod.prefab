@@ -19563,7 +19563,7 @@ LineRenderer:
     shadowBias: 0
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 0
 --- !u!114 &4312708514350305399
@@ -19751,7 +19751,7 @@ LineRenderer:
     shadowBias: 0
     generateLightingData: 0
   m_MaskInteraction: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 0
 --- !u!114 &4312708514350305397
@@ -19780,12 +19780,12 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 207b8cff01af2f74491a053388be8c9b, type: 3}
   FrameStep: 0.035
   RandomizeFrames: 1
-  Points: 5
+  Points: 2
   MaxBeamLength: 30
   beamScale: 1
   AnimateUV: 1
   UVTime: -3
-  Oscillate: 1
+  Oscillate: 0
   Amplitude: 0.3
   OscillateTime: 0.05
   rayImpact: {fileID: 4312708514340207037}
@@ -39036,6 +39036,7 @@ MonoBehaviour:
     weaponLoop: {fileID: 8300000, guid: 206809617a9f6dc4e813dfc96abc1da3, type: 3}
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 4312708514340103555}
+  weaponType: 0
   damage: 1
   force: 0
   fireRate: 0
@@ -39043,13 +39044,13 @@ MonoBehaviour:
   weaponRechargeRate: 0.6
   weaponFuelUseRate: 1
   isFiring: 0
-  isFiringAlt: 0
   rangeSensor: {fileID: 0}
   sensor: {fileID: 0}
   aimOffest: {x: 0, y: 0, z: 0}
   laserSight: {fileID: 0}
   weaponMod: {fileID: 0}
   weaponOverride: 0
+  bounces: 0
   targets: []
   crawlerIndex: 0
   chainAmount: 5
@@ -39065,13 +39066,14 @@ MonoBehaviour:
   timer: 0
   crawlerLayer:
     serializedVersion: 2
-    m_Bits: 384
-  lightningGO: {fileID: 0}
-  lightning: {fileID: 4312708514350305399}
+    m_Bits: 266624
+  lightningGO: {fileID: 4312708514340103573}
+  lightning: {fileID: 4312708514350305397}
   crawlerHit: {fileID: 0}
   hitOffset: {x: 0, y: 1.5, z: 0}
   raycastOffset: {x: 0, y: 0, z: 0}
   arcOverride: 0
+  aimAssit: 2
 --- !u!1 &8798862022505103536
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4945943575072641206}
-  m_Layer: 1
+  m_Layer: 2
   m_Name: Props
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 1457956940862661911}
   - component: {fileID: 7640655538686159802}
   - component: {fileID: 3871067646787360464}
-  m_Layer: 1
+  m_Layer: 2
   m_Name: Mud Patch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,6 +129,10 @@ PrefabInstance:
     - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_Name
       value: SM_Env_Reeds_01 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4929139034583846, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_LocalScale.x
@@ -205,6 +209,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Reeds_02 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1739337692955466, guid: b94828a970874884ea230c66242edc74, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4241647474889420, guid: b94828a970874884ea230c66242edc74, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.3976995
@@ -279,6 +287,10 @@ PrefabInstance:
     - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_Name
       value: SM_Env_Reeds_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4929139034583846, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_LocalScale.x
@@ -355,6 +367,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Plant_Reeds_02
       objectReference: {fileID: 0}
+    - target: {fileID: 1180880902778204, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4252078742019236, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -425,6 +441,10 @@ PrefabInstance:
     - target: {fileID: 1123647286156312, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
       propertyPath: m_Name
       value: SM_Generic_Small_Rocks_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123647286156312, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4095755442109032, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
       propertyPath: m_LocalScale.x
@@ -573,6 +593,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: skull
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 40d8e1dbe0a3e09469dabc0aa0aa88c8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -662,6 +687,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton_Ribcage_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 366298eb3e6a2c44cbd7583f0b35fb12,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -684,6 +714,10 @@ PrefabInstance:
     - target: {fileID: 113194, guid: c14b2a441bcbe1a4f94f3ec4db969ba7, type: 3}
       propertyPath: m_Name
       value: SM_Env_Flat_Sand_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 113194, guid: c14b2a441bcbe1a4f94f3ec4db969ba7, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 438176, guid: c14b2a441bcbe1a4f94f3ec4db969ba7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -751,6 +785,10 @@ PrefabInstance:
     - target: {fileID: 1330193041299404, guid: 8ec29696c3f5cc04faf6c4c6a5ffb0ea, type: 3}
       propertyPath: m_Name
       value: SM_Prop_Skeleton_Ground_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1330193041299404, guid: 8ec29696c3f5cc04faf6c4c6a5ffb0ea, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4165618951862630, guid: 8ec29696c3f5cc04faf6c4c6a5ffb0ea, type: 3}
       propertyPath: m_LocalScale.x
@@ -829,6 +867,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Reeds_02
       objectReference: {fileID: 0}
+    - target: {fileID: 1739337692955466, guid: b94828a970874884ea230c66242edc74, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4241647474889420, guid: b94828a970874884ea230c66242edc74, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.3976995
@@ -904,6 +946,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Reeds_03
       objectReference: {fileID: 0}
+    - target: {fileID: 1102902797332232, guid: 4333369e02419114a88beb9339228332, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4172217614515548, guid: 4333369e02419114a88beb9339228332, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -975,6 +1021,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Plant_Reeds_02 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1180880902778204, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4252078742019236, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -1045,6 +1095,10 @@ PrefabInstance:
     - target: {fileID: 1180880902778204, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
       propertyPath: m_Name
       value: SM_Plant_Reeds_02 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1180880902778204, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4252078742019236, guid: 37b4d0f08c9f4f642ae9708a310cac0c, type: 3}
       propertyPath: m_LocalScale.x
@@ -1120,6 +1174,10 @@ PrefabInstance:
     - target: {fileID: 1123647286156312, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
       propertyPath: m_Name
       value: SM_Generic_Small_Rocks_03 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123647286156312, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4095755442109032, guid: 553d403ff0ec5ce478490475bbc5123b, type: 3}
       propertyPath: m_LocalScale.x
@@ -1197,6 +1255,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Reeds_03 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1102902797332232, guid: 4333369e02419114a88beb9339228332, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4172217614515548, guid: 4333369e02419114a88beb9339228332, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8408998
@@ -1271,6 +1333,10 @@ PrefabInstance:
     - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_Name
       value: SM_Env_Reeds_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1079482479157098, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4929139034583846, guid: 02c424bec73aad84caf6289c21e490f0, type: 3}
       propertyPath: m_LocalScale.x
@@ -1413,6 +1479,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skeleton_Ribcage_01
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 366298eb3e6a2c44cbd7583f0b35fb12,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1435,6 +1506,10 @@ PrefabInstance:
     - target: {fileID: 1102902797332232, guid: 4333369e02419114a88beb9339228332, type: 3}
       propertyPath: m_Name
       value: SM_Env_Reeds_03 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102902797332232, guid: 4333369e02419114a88beb9339228332, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4172217614515548, guid: 4333369e02419114a88beb9339228332, type: 3}
       propertyPath: m_LocalScale.x
@@ -1510,6 +1585,10 @@ PrefabInstance:
     - target: {fileID: 1739337692955466, guid: b94828a970874884ea230c66242edc74, type: 3}
       propertyPath: m_Name
       value: SM_Env_Reeds_02 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1739337692955466, guid: b94828a970874884ea230c66242edc74, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4241647474889420, guid: b94828a970874884ea230c66242edc74, type: 3}
       propertyPath: m_LocalScale.x

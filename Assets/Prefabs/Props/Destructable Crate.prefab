@@ -44,7 +44,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -54,9 +54,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 40
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -89,7 +89,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -5071,7 +5071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brokenPartPrefabs:
-  - {fileID: 6296899399759599893, guid: 128c31f61912b664e9e538bc4548f8bd, type: 3}
+  - {fileID: 6312826964341748093, guid: d5efbcca66890a745a8a94676f1d1f1e, type: 3}
   - {fileID: 5695476102392798198, guid: 128a7205728c042498f9310f391b6baf, type: 3}
   - {fileID: 6497966034188460754, guid: 075e9f5696701184ca0a4af95f8ed622, type: 3}
   - {fileID: 6736140673423395377, guid: f15f9c90ea393074cb350ae52d1c35c8, type: 3}
@@ -5195,14 +5195,12 @@ MonoBehaviour:
   loot:
   - {fileID: 6074910426733548213, guid: c566ed7d5e9c419408524045a480981c, type: 3}
   - {fileID: 1185663265785343880, guid: 84b3fa5a8e55d9a478bb7698605eb74b, type: 3}
-  - {fileID: 1063215421460110891, guid: 6c0906e1711730247ad7b32540ce95b5, type: 3}
-  - {fileID: 1063215421460110891, guid: 6c0906e1711730247ad7b32540ce95b5, type: 3}
   - {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280, type: 3}
   lootChance: 20
   explosionEffect: {fileID: 3626257442838290167}
   audioClips:
-  - {fileID: 8300000, guid: 64940a920327a3144ae897d6c0851778, type: 3}
-  - {fileID: 8300000, guid: e3b3bcb0c1b72144289c7db4fdb0ce82, type: 3}
+  - {fileID: 8300000, guid: 2596acfa278f3b547b9749096e5ed9b0, type: 3}
+  - {fileID: 8300000, guid: 62aa1d994870c744d990830162403891, type: 3}
   explosionSound: {fileID: 4065374063667555708}
   breakableObject: {fileID: 8040077153962667836}
 --- !u!54 &3775797509818405515

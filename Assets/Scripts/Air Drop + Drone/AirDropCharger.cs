@@ -13,6 +13,8 @@ public class AirDropCharger : MonoBehaviour
     public Image cover;
     public bool charged;
     public TMP_Text airDropText;
+    public AudioSource audioSource;
+    public AudioClip airDropSound;
 
     void Start()
     {
@@ -73,6 +75,10 @@ public class AirDropCharger : MonoBehaviour
         DroneCharge = value ? DroneMaxCharge:0;
         cover.fillAmount = value ? 1 : 0;
         airDropText.enabled = value;
+        if (value)
+        {
+            audioSource.PlayOneShot(airDropSound);
+        }
     }
 
     public void ResetAirDrop()

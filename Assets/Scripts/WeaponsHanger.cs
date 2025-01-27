@@ -24,4 +24,13 @@ public class WeaponsHanger : MonoBehaviour
         weapon.gameObject.transform.rotation = AltWeaponSlots[(int)weapon.weaponData.weaponIndex].rotation;
         weapon.gameObject.transform.localScale = Vector3.one;
     }
+
+    public void SetWeaponToLoadoutMenu(MechWeapon weapon, Transform location)
+    {
+        Transform weaponT = weapon.gameObject.transform;
+        weaponT.SetParent(location);
+        weaponT.localPosition = Vector3.zero;
+        weaponT.localRotation = Quaternion.identity;
+        weaponT.localScale = Vector3.one;
+    }
 }

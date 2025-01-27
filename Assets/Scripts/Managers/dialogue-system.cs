@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -21,6 +21,7 @@ public class DialogueManager : MonoBehaviour
     private int typeIndex = 0;
 
     public InteractableObject interactableObject;
+    public Image buttonPrompt;
 
     [System.Serializable]
     public class DialogueEntry
@@ -37,6 +38,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     public List<DialogueSequence> dialogueSequences;
+    public int currentDialogueSequenceIndex = 0;
 
     private void Start()
     {
@@ -51,7 +53,16 @@ public class DialogueManager : MonoBehaviour
     {
         if (!isDialogueActive)
         {
-            StartCoroutine(StartDialogue(dialogueSequences[0]));
+            int newIndex = Random.Range(0, dialogueSequences.Count);
+            if (newIndex == currentDialogueSequenceIndex)
+            {
+                currentDialogueSequenceIndex = (currentDialogueSequenceIndex + 1) % dialogueSequences.Count;
+            }
+            else
+            {
+                currentDialogueSequenceIndex = newIndex;
+            }
+            StartCoroutine(StartDialogue(dialogueSequences[currentDialogueSequenceIndex]));
         }
         else if (!isTyping)
         {
@@ -82,10 +93,18 @@ public class DialogueManager : MonoBehaviour
                 }
             }
         }
+        ShowButtonPrompt();
+    }
+
+    private void ShowButtonPrompt()
+    {
+        buttonPrompt.enabled = !isTyping;
+        buttonPrompt.sprite = InputTracker.instance.usingMouse ? interactableObject.controlPC : interactableObject.controlGamepad;
     }
 
     public IEnumerator StartDialogue(DialogueSequence sequence)
     {
+        buttonPrompt.enabled = false;
         dialogueText.text = "";
         currentDialogue = sequence.dialogue;
         currentDialogueIndex = 0;
@@ -150,6 +169,7 @@ public class DialogueManager : MonoBehaviour
 
     public void CloseDialougeBox()
     {
+        buttonPrompt.enabled = false;
         dialoguePanel.SetBool("Open", false);
     }
 }

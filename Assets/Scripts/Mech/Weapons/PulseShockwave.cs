@@ -41,23 +41,34 @@ public class PulseShockwave : MonoBehaviour
 
     public void ApplyMod(StatType type, float value)
     {
-        ResetMods();
+        float percent = (Mathf.Abs(value) / 100);
         switch (type)
         {
             case StatType.Health:
                 canHeal = true;
-                healAmount =  value;
+                float maxHealth = BattleMech.instance.targetHealth.maxHealth;
+                healAmount =  maxHealth * percent;
                 break;
-            case StatType.Assault_Damage:
+            case StatType.Assault:
                 canDamage = true;
-                damage = value;
+                float dam = BattleMech.instance.weaponController.mainWeaponEquiped.damage;
+                damage = dam *percent;
                 break;
             case StatType.Fuel_Tank:
                 canRegenFuel = true;
-                regenAmount = value;
+                float tankSize = BattleMech.instance.weaponFuelManager.weaponFuelMax;
+                regenAmount = tankSize * percent;
                 break;
             case StatType.Pulse_Range:
-                range = value;
+                float toRemove = range * percent;
+                if(value < 0)
+                {
+                    range = range - toRemove;
+                }
+                else
+                {                     
+                    range = range + toRemove;
+                }
                 break;
             case StatType.Stun_Time:
                 stunTime = value;
@@ -72,6 +83,7 @@ public class PulseShockwave : MonoBehaviour
         canDamage = false;
         canRegenFuel = false;
         canStun = false;
+        range = 7;
     }
 
     private void PulseWave()
@@ -104,8 +116,6 @@ public class PulseShockwave : MonoBehaviour
     {
         float crawlerCount = 0;
         Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
-        float baseDam = BattleMech.instance.weaponController.mainWeaponEquiped.damage;
-        float dam = baseDam * (damage/100);
         foreach (Collider collider in colliders)
         {
             Crawler crawler = collider.GetComponent<Crawler>();
@@ -129,7 +139,7 @@ public class PulseShockwave : MonoBehaviour
                 TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(dam, WeaponType.AoE);
+                    targetHealth.TakeDamage(damage, WeaponType.AoE);
                 }
             }
         }

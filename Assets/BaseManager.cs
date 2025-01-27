@@ -9,6 +9,7 @@ public class BaseManager : MonoBehaviour
     public ConnectWeaponHolderToManager weaponHolder;
     public StatsUI statsUI;
     public SceneLoader sceneLoader;
+    public TestPlayerData playerData;
 
     private void Awake()
     {
@@ -27,6 +28,10 @@ public class BaseManager : MonoBehaviour
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
         weaponHolder.SetupWeaponsManager();
+        if(PlayerSavedData.instance._mainWeaponData == null)
+        {
+            playerData.InittestData();
+        }
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         AudioManager.instance.Init();
@@ -39,6 +44,7 @@ public class BaseManager : MonoBehaviour
 
     public void StartGame(int value)
     {
+        Time.timeScale = 1;
         sceneLoader.LoadScene(value, true);
     }
 }

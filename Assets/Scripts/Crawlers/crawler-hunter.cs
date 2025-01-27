@@ -160,7 +160,7 @@ public class CrawlerHunter : Crawler
         base.TakeDamage(damage, killedBy, stunTime);
     }
 
-    public override void Spawn()
+    public override void Spawn(bool daddy = false)
     {
         base.Spawn();
         isStealthed = false;

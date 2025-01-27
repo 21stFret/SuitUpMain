@@ -6,6 +6,7 @@ public class EnvironmentArea : MonoBehaviour
 {
     public List<Transform> spawnPoints;
     public GameObject refreshingObjectsParent;
+    public bool insideArea = false;
 
     public void RefreshArea()
     {
@@ -18,6 +19,7 @@ public class EnvironmentArea : MonoBehaviour
         foreach (Prop child in props)
         {
             child.RefreshProp();
+
         }
     }
 }

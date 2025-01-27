@@ -35,6 +35,7 @@ public class AudioManager : MonoBehaviour
     public float sfxVolume = 1f;   // Volume for sound effects
 
     private int currentClipIndex;
+    private AudioClip currentClip;
 
     public EventSystem eventSystem;
     private GameObject lastSelectedObject;
@@ -63,6 +64,10 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
+        if(eventSystem == null)
+        {
+            eventSystem = EventSystem.current;
+        }
         if (eventSystem.currentSelectedGameObject != lastSelectedObject)
         {
             lastSelectedObject = eventSystem.currentSelectedGameObject;
@@ -94,30 +99,33 @@ public class AudioManager : MonoBehaviour
     }
 
     // Play a music clip
-    public void PlayMusic(int clipIndex)
+    public void PlayMusic(int clipIndex, bool battlemusic = false)
     {
         DOVirtual.Float(musicVolume, 0.0001f, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20)).OnComplete(FadeMusicIn);
         currentClipIndex = clipIndex;
+        if (battlemusic)
+        {
+            currentClip = battleClips[clipIndex];
+        }
+        else
+        {
+            currentClip = musicClips[clipIndex];
+        }
     }
 
     public void PlayBattleMusic(int trackID = -1)
     {
         if (trackID == -1)
         {
-            backgroundMusic.clip = battleClips[Random.Range(0, battleClips.Length)];
-        }
-        else
-        {
-            backgroundMusic.clip = battleClips[trackID];
+            trackID = Random.Range(0, battleClips.Length);
         }
 
-        backgroundMusic.clip = battleClips[Random.Range(0, battleClips.Length)];
-        backgroundMusic.Play();
+        PlayMusic(trackID, true);
     }
 
     private void FadeMusicIn()
     {
-        backgroundMusic.clip = musicClips[currentClipIndex];
+        backgroundMusic.clip = currentClip;
         backgroundMusic.Play();
         DOVirtual.Float(0.0001f, musicVolume, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20));
     }

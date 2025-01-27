@@ -168,32 +168,52 @@ namespace UnityEngine.UI.Extensions
             }
         }
 
-        
+        private float GetScrollOffset(float position, float listAnchorPosition, float targetLength, float maskLength)
+        {
+            if (position < listAnchorPosition)
+            {
+                return position - listAnchorPosition;
+            }
+            else if (position + targetLength > listAnchorPosition + maskLength)
+            {
+                return (position + targetLength) - (listAnchorPosition + maskLength);
+            }
+            return 0;
+        }
+
         private void UpdateVerticalScrollPosition(RectTransform selection)
         {
-            // move the current scroll rect to correct position
-            float selectionPosition = -selection.anchoredPosition.y - (selection.rect.height * (1 - selection.pivot.y) - YPadding);
-
+            float viewportHeight = ScrollWindow.rect.height;
+            float contentHeight = LayoutListGroup.rect.height;
             float elementHeight = selection.rect.height;
-            float maskHeight = ScrollWindow.rect.height;
-            float listAnchorPosition = LayoutListGroup.anchoredPosition.y;
 
-            // get the element offset value depending on the cursor move direction
-            float offlimitsValue = GetScrollOffset(selectionPosition, listAnchorPosition, elementHeight, maskHeight);
+            // Get element's position relative to content
+            float elementTopPosition = -selection.anchoredPosition.y;
+            float elementBottomPosition = elementTopPosition + elementHeight;
 
-            float normalpos = TargetScrollRect.verticalNormalizedPosition + (offlimitsValue / LayoutListGroup.rect.height);
+            // Get current viewport bounds
+            float viewportTop = -LayoutListGroup.anchoredPosition.y;
+            float viewportBottom = viewportTop + viewportHeight;
 
-            float Speed = scrollSpeed;
-            if (offlimitsValue < 0)
+            float targetPosition = TargetScrollRect.verticalNormalizedPosition;
+
+            // Only scroll if element is out of view
+            if (elementTopPosition < viewportTop)
             {
-
+                // Align to top with padding
+                targetPosition = 1 - (elementTopPosition / (contentHeight - viewportHeight));
             }
-            else if (offlimitsValue > 0)
+            else if (elementBottomPosition > viewportBottom)
             {
-                Speed = scrollSpeed / 2;
+                // Align to bottom with padding
+                targetPosition = 1 - ((elementBottomPosition - viewportHeight) / (contentHeight - viewportHeight));
             }
 
-            TargetScrollRect.verticalNormalizedPosition = Mathf.SmoothStep(TargetScrollRect.verticalNormalizedPosition, normalpos, Time.unscaledDeltaTime * Speed);
+            TargetScrollRect.verticalNormalizedPosition = Mathf.SmoothStep(
+                TargetScrollRect.verticalNormalizedPosition,
+                Mathf.Clamp01(targetPosition),
+                Time.unscaledDeltaTime * scrollSpeed
+            );
         }
 
         private void UpdateHorizontalScrollPosition(RectTransform selection)
@@ -211,20 +231,6 @@ namespace UnityEngine.UI.Extensions
             // move the target scroll rect
             TargetScrollRect.horizontalNormalizedPosition +=
                 (offlimitsValue / LayoutListGroup.rect.width) * Time.unscaledDeltaTime * scrollSpeed;
-        }
-
-        private float GetScrollOffset(float position, float listAnchorPosition, float targetLength, float maskLength)
-        {
-            if (position < listAnchorPosition + (targetLength / 2))
-            {
-                return (listAnchorPosition + maskLength) - (position - targetLength);
-            }
-            else if (position + targetLength > listAnchorPosition + maskLength)
-            {
-                return (listAnchorPosition + maskLength) - (position + targetLength);
-            }
-
-            return 0;
         }
 
         //*** ENUMS ***//

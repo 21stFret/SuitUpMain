@@ -1,4 +1,5 @@
 using DamageNumbersPro;
+using Micosmo.SensorToolkit;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,6 @@ public class Prop : MonoBehaviour
 
     public virtual void Init()
     {
-
         if (_targetHealth == null)
         {
             print("No target health found on " + gameObject.name);
@@ -91,7 +91,6 @@ public class Prop : MonoBehaviour
 
     public virtual void Die()
     {
-        
         _targetHealth.alive = false;
         _collider.enabled = false;
         print(gameObject.name + " has died");
@@ -99,9 +98,19 @@ public class Prop : MonoBehaviour
 
     public virtual void RefreshProp()
     {
-        _targetHealth.health = _targetHealth.maxHealth;
-        _targetHealth.alive = true;
         _collider.enabled = true;
         gameObject.SetActive(true);
+        Init();
+    }
+
+    // Add this to the object with the collider
+    void OnDisable()
+    {
+        // Force trigger exit when disabled
+        var sensors = FindObjectsOfType<TriggerSensor>();
+        foreach (var sensor in sensors)
+        {
+            sensor.TriggerExit(GetComponent<Collider>());
+        }
     }
 }

@@ -528,6 +528,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "ff7eeb97-e418-4044-90c0-0916a5958f7c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -654,17 +663,6 @@
                 },
                 {
                     "name": "",
-                    "id": "9484055b-3521-496f-bd4c-678faf913059",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Close Pause Menu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8d2b76c4-b23b-4419-bd55-8521dfdd7a41",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -748,17 +746,6 @@
                     "processors": "",
                     "groups": "Default",
                     "action": "ReturntoMainMenu",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1a15c231-41a0-4df5-9d65-34c34726fe3c",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Default",
-                    "action": "Close Pause Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -924,6 +911,28 @@
                     "processors": "",
                     "groups": "Default",
                     "action": "Upgrade",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1f47102d-b265-47a1-bc12-2f963a8cc4c6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7c525b89-06d8-4c5e-a03e-d682139c79cd",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

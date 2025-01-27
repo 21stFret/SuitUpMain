@@ -6,15 +6,16 @@ public class PlasmaGun : MechWeapon
 {
     public bool hasTarget;
     public GameObject gunturret;
-    private Animator _animator;
     public ProjectileWeapon weaponController;
     private float _timer;
     public int pierceCount;
     public ParticleSystem muzzlecharge;
+    public bool mirrorRounds;
+    public int splitCount;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        mirrorRounds = false;
     }
 
     void Update()
@@ -41,7 +42,7 @@ public class PlasmaGun : MechWeapon
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                weaponController.Laser(damage, pierceCount);
+                weaponController.Laser(damage, pierceCount, mirrorRounds, splitCount);
                 _timer = 0.0f;
             }
         }

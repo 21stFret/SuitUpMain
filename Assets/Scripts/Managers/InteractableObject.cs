@@ -10,7 +10,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
     [SerializeField] private UnityEvent onEnd;
     [SerializeField] private bool isInteractable = true;
     [SerializeField] private Image interactPrompt;
-    [SerializeField] private Sprite controlPC, controlGamepad;
+    [SerializeField] public Sprite controlPC, controlGamepad;
 
     public void Interact()
     {

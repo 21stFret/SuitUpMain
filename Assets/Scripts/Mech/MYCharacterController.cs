@@ -6,9 +6,9 @@ using UnityEngine.UIElements;
 
 public class MYCharacterController : MonoBehaviour
 {
-
     public Vector2 _moveInputVector;
     public AudioSource runAudio;
+    public AudioClip dodgeClip;
     private bool isRunning;
     private Rigidbody _rigidbody;
     public Animator CharacterAnimator;
@@ -40,18 +40,38 @@ public class MYCharacterController : MonoBehaviour
     private bool isSlowed;
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
+    [HideInInspector]
+    public DashModsManager dashModsManager;
 
     public bool onIce;
     public float iceDrift = 0.8f;
 
     public float weaponFiringSlowAmount;
-
+    [HideInInspector]
+    public BattleMech battleMech;
     private bool canMove;
+    private float savedDodgeDuration;
+    private float savedDodgeCooldown;
+    private float savedDodgeForce;
 
     private void Awake()
     {
+        savedDodgeForce = dashForce;
+        savedDodgeDuration = dashDuration;
+        savedDodgeCooldown = dashCooldown;
         _rigidbody = GetComponent<Rigidbody>();
         lastPos = transform.position;
+        dashModsManager = GetComponent<DashModsManager>();
+        Invoke("CacheBattleManager", 0.1f);
+        if(dashModsManager!=null)
+        {
+            dashModsManager.Init();
+        }
+    }
+
+    private void CacheBattleManager()
+    {
+        battleMech = BattleMech.instance;
     }
 
     private void PlayRunningFSX()
@@ -106,15 +126,42 @@ public class MYCharacterController : MonoBehaviour
         dashShoes2.enabled = false;
         dashEffect.Play();
         dashEffect2.Play();
+        runAudio.PlayOneShot(dodgeClip);
         isDodging = true;
+        if(dashModsManager!=null)
+        {
+            dashModsManager.UseMod();
+        }
         _rigidbody.AddForce(direction * dashForce, ForceMode.Impulse);
         StartCoroutine(DashCooldown());
+    }
+
+    public void ResetStats()
+    {
+        dashDuration = savedDodgeDuration;
+        dashCooldown = savedDodgeCooldown;
+        dashForce = savedDodgeForce;
     }
 
     private IEnumerator DashCooldown()
     {
         yield return new WaitForSeconds(dashDuration);
         isDodging = false;
+        if(dashModsManager!=null)
+        {
+            if (dashModsManager.invincible)
+            {
+                if (battleMech.mechHealth.shieldHealth == 0)
+                {
+                    battleMech.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0f);
+                }
+                else
+                {
+                    battleMech.mechHealth.shieldMaterial.SetColor("_Flash_Color", battleMech.mechHealth.shieldColor);
+                }
+                battleMech.targetHealth.invincible = false;
+            }
+        }
         yield return new WaitForSeconds(dashCooldown);
         candodge = true;
         dashShoes.enabled = true;

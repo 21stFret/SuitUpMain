@@ -252,18 +252,17 @@ public class PlayerProgressManager : MonoBehaviour
             PlayerAchievements.instance.SetAchievement("KILL_100");
     }
 
-    public void EndGamePlayerProgress( bool won)
+    public void EndGamePlayerProgress(bool won, int difficultyLevel)
     {
-
         playTime = Time.timeSinceLevelLoad;
         if (won)
         {
-            rewardMultiplier = 1.5f;
+            rewardMultiplier = GetRewardMultiplierByDifficulty(difficultyLevel);
             cashCount = Mathf.CeilToInt(cashCount * rewardMultiplier);
         }
         else
         {
-            rewardMultiplier = 1;
+            rewardMultiplier = 0.5f;
         }
         UpdatePlayerStats();
         if (PlayerAchievements.instance != null)
@@ -271,5 +270,16 @@ public class PlayerProgressManager : MonoBehaviour
             EndGameAchievements();
         }
         playerSavedData.SavePlayerData();
+    }
+
+    private float GetRewardMultiplierByDifficulty(int difficultyLevel)
+    {
+        switch (difficultyLevel)
+        {
+            case 1: return 1.0f; // Easy
+            case 2: return 1.5f; // Medium
+            case 3: return 2.0f; // Hard
+            default: return 1.0f; // Default to Easy
+        }
     }
 }

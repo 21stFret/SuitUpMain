@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using static UnityEditor.PlayerSettings;
+using DG.Tweening.Core.Easing;
 
 namespace FORGE3D
 {
@@ -38,6 +38,12 @@ namespace FORGE3D
         public bool shockRounds;
         public float shockDamage;
 
+        public bool splitRounds;
+        public int splitCount;
+
+        private float _distance;
+        public float range;
+
         void Awake()
         {
             // Cache transform and get all particle systems attached
@@ -52,13 +58,17 @@ namespace FORGE3D
             isHit = false;
             isFXSpawned = false;
             timer = 0f;
+            _distance = 0;
             hitPoint = new RaycastHit();
             hitObjects.Clear();
+            UnParentParticleSystem(true);
+            gameObject.SetActive(true);
         }
 
         // OnDespawned called by pool manager 
         public void OnDespawned()
         {
+            gameObject.SetActive(false);
         }
 
         // Stop attached particle systems emission and allow them to fade out before despawning
@@ -87,7 +97,40 @@ namespace FORGE3D
         // OnDespawned called by pool manager 
         void OnProjectileDestroy()
         {
+            //Delay();
+            UnParentParticleSystem(false);
             F3DPoolManager.Pools["GeneratedPool"].Despawn(transform);
+        }
+
+        public void UnParentParticleSystem(bool value)
+        {
+            for (int i = 0; i < delayedParticles.Length; i++)
+            {
+                delayedParticles[i].gameObject.SetActive(false);
+            }
+            if (value)
+            {
+                StartCoroutine(DelayedParticle());
+            }
+            else
+            {
+                for (int i = 0; i < delayedParticles.Length; i++)
+                {
+                    delayedParticles[i].transform.SetParent(null);
+                }
+            }       
+        }
+
+        private IEnumerator DelayedParticle()
+        {
+            yield return new WaitForSeconds(0.1f);
+            for (int i = 0; i < delayedParticles.Length; i++)
+            {
+                delayedParticles[i].transform.SetParent(transform);
+                delayedParticles[i].transform.localPosition = Vector3.zero;
+                delayedParticles[i].transform.localRotation = Quaternion.identity;
+                delayedParticles[i].gameObject.SetActive(true);
+            }
         }
 
         // Apply hit force on impact
@@ -95,9 +138,18 @@ namespace FORGE3D
         {
             TargetHealth targetHealth = hitPoint.collider.GetComponent<TargetHealth>();
 
+            float damage = impactDamage;
+            if(weaponType == WeaponType.Shotgun)
+            {
+                float perceentage = (1f-(_distance / range))+0.1f;
+                perceentage = Mathf.Clamp(perceentage, 0.1f, 1f);
+                damage = damage * perceentage;
+                force = force * perceentage;
+            }
+
             if(targetHealth != null)
             {
-                targetHealth.TakeDamage(impactDamage, weaponType, stunTime);
+                targetHealth.TakeDamage(damage, weaponType, stunTime);
                 if (hitPoint.rigidbody != null)
                 {
                     hitPoint.rigidbody.AddForceAtPosition(transform.forward * force, hitPoint.point, ForceMode.Impulse);
@@ -120,6 +172,32 @@ namespace FORGE3D
             _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
         }
 
+        private void PlasmaSplitRounds()
+        {
+            Transform newDir = transform;
+            newDir.forward = Vector3.Cross(newDir.forward, hitPoint.normal);
+            Vector3 newDirection = new Vector3(newDir.forward.x, 0, newDir.forward.z).normalized;
+
+            for (int i = 0; i < splitCount; i++)
+            {
+                newDir.forward = i==0 ? newDirection:-newDirection;
+                var newGO =
+                    F3DPoolManager.Pools["GeneratedPool"].Spawn(_weaponController.vulcanProjectile,
+                                       null, newDir.position,
+                                                         newDir.rotation).gameObject;
+
+                var proj = newGO.gameObject.GetComponent<F3DProjectile>();
+                if (proj)
+                {
+                    proj.impactDamage = impactDamage / 2;
+                    proj._weaponController = _weaponController;
+                    proj.weaponType = WeaponType.Plasma;
+                    proj.impactForce = impactForce;
+                    proj.splitCount = splitCount - 1;
+                }
+            }
+        }
+
         void Update()
         {
             // If something was hit
@@ -140,6 +218,10 @@ namespace FORGE3D
                     if (shockRounds)
                     {
                         Invoke("ShockRounds", 0.2f);
+                    }
+                    if (splitRounds)
+                    {
+                        PlasmaSplitRounds();
                     }
 
                 }
@@ -173,6 +255,7 @@ namespace FORGE3D
 
                 // Advances projectile forward
                 transform.position += step;
+                _distance += RaycastAdvance;
             }
 
             // Updates projectile timer

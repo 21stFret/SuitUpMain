@@ -32,7 +32,7 @@ public class CrawlerSpitter : Crawler
         }
     }
 
-    public override void Spawn()
+    public override void Spawn(bool daddy = false)
     {
         base.Spawn();
         spitTimer = spitSpeed;

@@ -30,7 +30,7 @@ public class WeaponModManager : MonoBehaviour
 
     public WeaponMod FindModByName(string name)
     {
-        var mod = mods.Find(x => x.RunMod.modName == name);
+        var mod = mods.Find(x => x.runMod.modName == name);
         return mod;
     }
 
@@ -41,21 +41,19 @@ public class WeaponModManager : MonoBehaviour
             print("No mod found");
             return;
         }
-        if(currentAssaultMod != null)
+        if(currentTechMod != null)
         {
-            currentAssaultMod.RemoveMods();
+            currentTechMod.RemoveMods();
         }
 
         currentTechMod = mod;
         techWeapon.weaponMod = currentTechMod;
         currentTechMod.baseWeapon = techWeapon;
-        currentTechMod.transform.SetParent(assualtWeapon.transform);
+        currentTechMod.transform.SetParent(techWeapon.transform);
         currentTechMod.transform.localPosition = Vector3.zero;
         currentTechMod.transform.localRotation = Quaternion.identity;
         currentTechMod.enabled = true;
         currentTechMod.Init();
-        //altWeapon.SetAltWeaponInputs();
-        GameUI.instance.CloseModUI();
     }
 
     public void EquipAssaultMod(WeaponMod mod)

@@ -163,7 +163,7 @@ public class CrawlerMovement : MonoBehaviour
         foreach (CrawlerMovement crawler in nearbySwarmMembers)
         {
             crawler.SetTarget(movementTarget, true);
-            print("Set target for: " + crawler.name);
+            //print("Set target for: " + crawler.name);
         }
     }
 

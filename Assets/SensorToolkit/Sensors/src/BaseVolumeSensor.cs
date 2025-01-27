@@ -63,7 +63,10 @@ namespace Micosmo.SensorToolkit {
             foreach (var cols in gameObjectColliders) {
                 Signal signal;
                 if (CalculateSignal(cols.Value, out signal)) {
-                    workList.Add(signal);
+                    if (signal.Object.activeInHierarchy)
+                    {
+                        workList.Add(signal);
+                    }
                 }
             }
             mapToRB.IsRigidBodyMode = DetectionMode == DetectionModes.RigidBodies;
@@ -83,23 +86,33 @@ namespace Micosmo.SensorToolkit {
             }
         }
 
-        protected void RemoveCollider(Collider c, bool updateSignal) {
-            if (c == null) {
+        protected void RemoveCollider(Collider c, bool updateSignal)
+        {
+            if (c == null)
+            {
                 ClearDestroyedGameObjects();
                 return;
             }
 
             var cols = RemoveColliderFromMap(c, c.gameObject, gameObjectColliders);
 
-            if (!updateSignal) {
+            if (!updateSignal)
+            {
                 return;
             }
+
             mapToRB.IsRigidBodyMode = DetectionMode == DetectionModes.RigidBodies;
-            if (cols == null) {
+
+            // If there are no more colliders or the object is inactive, remove the signal
+            if (cols == null || !c.gameObject.activeInHierarchy)
+            {
                 LostSignalImmediate(c.gameObject);
-            } else {
+            }
+            else
+            {
                 Signal signal;
-                if (CalculateSignal(cols, out signal)) {
+                if (CalculateSignal(cols, out signal))
+                {
                     UpdateSignalImmediate(signal);
                 }
             }

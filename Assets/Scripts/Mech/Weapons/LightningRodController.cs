@@ -25,12 +25,13 @@ public class LightningRodController : MechWeapon
     public Vector3 hitOffset;
     public Vector3 raycastOffset;
     public bool arcOverride;
+    public float aimAssit;
 
     public override void Init()
     {
         base.Init();
         lightningGO.SetActive(false);
-        lightning = lightningGO.GetComponent<F3DLightning>();
+        lightning.layerMask = crawlerLayer;
         arcOverride = false;
         weaponType = WeaponType.Lightning;
         for (int i = 0; i < lightningChains.Count; i++)
@@ -86,10 +87,15 @@ public class LightningRodController : MechWeapon
         {
             if (targets[i] == null)
             {
-                UnlinkAllLightning();
-                return;
+                targets.RemoveAt(i);
+                continue;
             }
-            targets[i].TakeDamage(damage, WeaponType.Lightning, stunTime);
+            float dam = damage;
+            if(i>0)
+            {
+                dam = damage / 2;
+            }
+            targets[i].TakeDamage(dam, WeaponType.Lightning, stunTime);
         }
     }
 
@@ -117,7 +123,13 @@ public class LightningRodController : MechWeapon
 
         if(!hitSwitch)
         {
-            targets.Add(crawlerHit.GetComponent<TargetHealth>());
+            TargetHealth target = crawlerHit.GetComponent<TargetHealth>();
+            if(target == null)
+            {
+                UnlinkAllLightning();
+                return;
+            }
+            targets.Add(target);
             hitSwitch = true;
         }
         if(arcOverride)
@@ -130,6 +142,10 @@ public class LightningRodController : MechWeapon
     public void LightningArc(Transform nextHit)
     {
         if(targets.Count == 0)
+        {
+            return;
+        }
+        if (nextHit == null)
         {
             return;
         }

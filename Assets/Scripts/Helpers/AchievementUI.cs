@@ -17,7 +17,7 @@ public class AchievementUI : MonoBehaviour
     public EventSystem eventSystem;
     private GameObject _selected;
 
-    private void Awake()
+    private void Init()
     {
         playerAchievements = PlayerAchievements.instance;
         playerSavedData = PlayerSavedData.instance;
@@ -26,6 +26,7 @@ public class AchievementUI : MonoBehaviour
 
     private void OnEnable()
     {
+        Init();
         UpdateAchievements();
         UpdateStats();
     }
@@ -42,9 +43,14 @@ public class AchievementUI : MonoBehaviour
             return;
         }
 
-        var selected = eventSystem.currentSelectedGameObject.GetComponent<AchievementUIElement>();
-        if (selected != null)
+        var selectedObject = eventSystem.currentSelectedGameObject;
+        if (selectedObject != null)
         {
+            var selected = selectedObject.GetComponent<AchievementUIElement>();
+            if (selected == null)
+            {
+                return;
+            }
             _selected = selected.gameObject;
             descriptionText.text = eventSystem.currentSelectedGameObject.GetComponent<AchievementUIElement>().description;
         }
@@ -52,6 +58,11 @@ public class AchievementUI : MonoBehaviour
 
     public void UpdateAchievements()
     {
+        if (playerAchievements == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < achievementPrefabs.Count; i++)
         {
             achievementPrefabs[i].gameObject.SetActive(false);

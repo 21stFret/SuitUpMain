@@ -157,9 +157,6 @@ public class StatMultiplierManager : MonoBehaviour
                 Debug.Log($"Speed Increased by {percentageIncrease}");
                 BattleMech.instance.myCharacterController.SetDashCooldown();
                 break;
-            case StatType.Unique:
-                Debug.Log("Unique");
-                break;
             case StatType.Charge_Rate:
                 Debug.Log($"Charge Rate Increased by {percentageIncrease}");
                 BattleMech.instance.droneController.airDropTimer.SetChargeRate(GetCurrentValue(StatType.Charge_Rate));

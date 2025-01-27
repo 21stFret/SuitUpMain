@@ -18,8 +18,7 @@ public class GameManager : MonoBehaviour
     public int currentRoomIndex;
     public bool endlessMode;
     public bool gameActive;
-    public GameObject dayLight;
-    public GameObject nightLight;
+
     public ModBuildType nextBuildtoLoad;
     public AreaType currentAreaType;
     public StatMultiplierManager statMultiplierManager;
@@ -41,17 +40,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         if (SetupGame.instance != null) SetupGame.instance.LinkGameManager(this);
-        else Invoke("DelayedStart", 0.1f);
-    }
-
-    public void DelayedStart()
-    {
-        if(SetupGame.instance != null) SetupGame.instance.LinkGameManager(this);
         else
         {
             Debug.Log("No Setup Game Instance Found using test data.");
             TESTplayerData.InittestData();
+            Invoke("DelayedStart", 0.1f);
         }
+    }
+
+    public void DelayedStart()
+    {
         _myCharacterController = BattleMech.instance.myCharacterController;
         _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
@@ -65,14 +63,11 @@ public class GameManager : MonoBehaviour
 
         nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
         currentRoomIndex = -1;
-        areaManager.LoadRoom(currentAreaType);
         gameActive = true;
-        BattleManager.instance.SetBattleType();
         BattleManager.instance.currentBattleIndex = 0;
         BattleManager.instance.crawlerSpawner.Init();
-        BattleManager.instance.UpdateCrawlerSpawner();
-        gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
         runUpgradeManager.LoadData();
+        LoadNextRoom(0);
     }
 
     public void InitializeStats()
@@ -93,16 +88,6 @@ public class GameManager : MonoBehaviour
         statMultiplierManager.LoadBaseValues(baseStats);
     }
 
-    private IEnumerator ShowControls()
-    {
-        yield return new WaitForSeconds(1);
-        gameUI.pauseMenu.PauseGame();
-        gameUI.pauseMenu.menu.SetActive(false);
-        gameUI.pauseMenu.controlsMenu.SetActive(true);
-        gameUI.eventSystem.SetSelectedGameObject(gameUI.pauseMenu.controlsSelectedButton);
-        gameUI.pauseMenu.SwapControlsMenu();
-    }
-
     public void SwapPlayerInput(string inputMap)
     {
         playerInput.SwitchCurrentActionMap(inputMap);
@@ -110,32 +95,35 @@ public class GameManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        CrawlerSpawner.instance.EndBattle();
+        gameActive = false;
         altWeaponController.ClearWeaponInputs();
+        Time.timeScale = 1;
         SceneLoader.instance.LoadScene(2);
     }
 
-    public void LoadNextRoom()
+    public void LoadNextRoom(float delay = 2)
     {
-        StartCoroutine(DelayedLoadNextRoom());
+        StartCoroutine(DelayedLoadNextRoom(delay));
     }
 
-    public IEnumerator DelayedLoadNextRoom()
+    public IEnumerator DelayedLoadNextRoom(float delay)
     {
         gameUI.gameUIFade.FadeOut();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(delay);
         CashCollector.instance.DestroyParts();
-        areaManager.LoadRoom(currentAreaType);
         BattleManager.instance.SetBattleType();
-        BattleManager.instance.UpdateCrawlerSpawner();
-        DayNightCycle();
-        playerInput.transform.position = Vector3.zero;
         BattleManager.instance.roomDrop.gameObject.SetActive(false);
-        yield return new WaitForSeconds(1);
+        areaManager.LoadRoom(currentAreaType);
+        BattleManager.instance.UpdateCrawlerSpawner();
+        playerInput.transform.position = Vector3.zero;
+        yield return new WaitForSeconds(delay/2);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
         _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
         gameActive = true;
+        AudioManager.instance.PlayBattleMusic();
 
     }
 
@@ -146,7 +134,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
         voidAreaManager.InitVoidArea();
-        DayNightCycle(true);
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
         RoomPortal.visualPortalEffect.StopFirstPersonEffect();
@@ -161,18 +148,6 @@ public class GameManager : MonoBehaviour
         //TODO: Add Void Room Completion interaction
         currentAreaType++;
         SpawnPortalsToNextRoom(true);
-    }
-
-    private void DayNightCycle(bool night = false)
-    {
-        bool dayTime = Random.Range(0, 100) < 50;
-        dayLight.SetActive(dayTime);
-        nightLight.SetActive(!dayTime);
-        if (night)
-        {
-            dayLight.SetActive(false);
-            nightLight.SetActive(true);
-        }
     }
 
     public void SpawnPortalsToNextRoom(bool voidRoom = false)
@@ -198,7 +173,7 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
-        PlayerProgressManager.instance.EndGamePlayerProgress(won);
+        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty) ;
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
     }

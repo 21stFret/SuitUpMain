@@ -6,6 +6,7 @@ public class MenuMech : MonoBehaviour
 {
     public Material LightsMat;
     public Animator MechAnim;
+    public AudioClip LoadUpSound;
 
     public void Start()
     {
@@ -16,6 +17,7 @@ public class MenuMech : MonoBehaviour
     {
         MechAnim.SetTrigger("LoadUp");
         StartCoroutine(FadeLights(true));
+        AudioManager.instance.PlaySFXFromClip(LoadUpSound);
     }
 
     public void LoadDownMech()
@@ -27,15 +29,6 @@ public class MenuMech : MonoBehaviour
     public IEnumerator FadeLights(bool on)
     {
 
-        // for demo purposes
-        if (on)
-        {
-            yield return new WaitForSeconds(2);
-            SceneLoader.instance.LoadScene(2);
-            yield return null;
-        }
-
-        /*
         if (on)
         {
             float alpha = 0;
@@ -56,8 +49,7 @@ public class MenuMech : MonoBehaviour
                 yield return null;
             }
         }
-        */
 
-
+        SceneLoader.instance.LoadScene(2);
     }
 }

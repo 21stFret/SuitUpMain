@@ -7,6 +7,7 @@ public class VoidPortalManager : MonoBehaviour
 {
     public PortalEffect[] portalEffects;
     public PortalEffect voidPortalEffect;
+    public PortalEffect hordePortalEffect;
     public int MaxPortalEffects = 3;
     public RunUpgradeManager runUpgradeManager;
     public Transform voidPortalLocation;

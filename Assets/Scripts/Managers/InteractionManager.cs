@@ -23,6 +23,7 @@ public class InteractionManager : MonoBehaviour
         }
         if (currentInteractable != null && currentInteractable.CanInteract())
         {
+            interactEndAction.action.performed += OnEndInteraction;
             BattleMech.instance.myCharacterController.ToggleCanMove(false);
             canInteract = false;
             currentInteractable.ShowPrompt(false);
@@ -44,7 +45,6 @@ public class InteractionManager : MonoBehaviour
         interactUIAction.action.Enable();
         interactAction.action.performed += OnInteract;
         interactUIAction.action.performed += OnInteract;
-        interactEndAction.action.performed += OnEndInteraction;
     }
 
     private void OnDestroy()
@@ -85,6 +85,8 @@ public class InteractionManager : MonoBehaviour
             currentInteractable.ShowPrompt(true);
             currentInteractable.EndInteraction();
             BattleMech.instance.myCharacterController.ToggleCanMove(true);
+            interactEndAction.action.performed -= OnEndInteraction;
+            interactEndAction.action.Disable();
         }
     }
 }

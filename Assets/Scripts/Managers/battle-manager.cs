@@ -14,9 +14,15 @@ public class BattleManager : MonoBehaviour
     public LayerMask dropLayer;
     public string objectiveMessage;
     public float dificultyMultiplier = 1;
+    public float surviveTime=60;
+    private float surviveTimeT;
+    public LightningController lightningController;
+    public BattleType _usingBattleType;
 
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
+
+    private GameManager _gameManager;
 
     private void Awake()
     {
@@ -25,41 +31,81 @@ public class BattleManager : MonoBehaviour
 
     public void SetBattleType()
     {
+        _gameManager = GameManager.instance;
         GenerateNewBattle(Battles[currentBattleIndex].battleType);
+        _usingBattleType = currentBattle.battleType;
 
-        Color color = Color.white;
+        //Color color = Color.white;
         float fillAmount = 0;
         bool showBar = false;
+        bool showpercent = false;
         var type = Battles[currentBattleIndex].battleType;
         switch (type)
         {
             case BattleType.Hunt:
                 objectiveMessage = "Hunt down and kill the target";
-                color = Color.red;
+                //color = Color.red;
                 fillAmount = 1;
                 SpawnRunner();
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
-                color = Color.cyan;
+                //color = Color.cyan;
                 fillAmount = 0;
                 showBar = true;
+                showpercent = true;
                 SpawnCapturePoint();
                 break;
             case BattleType.Survive:
-                objectiveMessage = "Survive all waves!";
-                color = Color.green;
+                objectiveMessage = "Survive the horde!";
+                //color = Color.green;
                 fillAmount = 0;
+                surviveTimeT = surviveTime;
+                showBar = true;
+                StartCoroutine(SurviveBattle());
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
-                color = Color.white;
+                //color = Color.white;
                 fillAmount = 0;
                 break;
         }
-        GameManager.instance.gameUI.objectiveUI.Init(showBar);
-        GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
-        GameManager.instance.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+        _gameManager.gameUI.objectiveUI.Init(showBar, showpercent);
+        //GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
+        _gameManager.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+    }
+
+    private IEnumerator SurviveBattle()
+    {
+        lightningController.active = true;
+        while (surviveTimeT > 0)
+        {
+            if (BattleMech.instance.isDead)
+            {
+                yield break;
+            }
+            surviveTimeT -= Time.deltaTime;
+            _gameManager.gameUI.objectiveUI.UpdateBar(surviveTimeT / surviveTime);
+            yield return null;
+        }
+        if(!_gameManager.gameActive)
+        {
+            yield break;
+        }
+        if (crawlerSpawner.activeCrawlerCount == 0)
+        {
+            ObjectiveComplete();
+            GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
+        }
+        else
+        {
+            GameUI.instance.objectiveUI.UpdateObjective("Finish them off!");
+            _usingBattleType = BattleType.Exterminate;
+        }
+        crawlerSpawner.EndBattle();
+        lightningController.active = false;
+        _gameManager.areaManager.DayNightCycle(false);
+        GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
     private void SpawnRunner()
@@ -72,9 +118,9 @@ public class BattleManager : MonoBehaviour
     {
         Vector3 pos = Random.insideUnitSphere * 20;
         pos.y = 1;
-        pos += GameManager.instance.playerInput.transform.position;
+        pos += _gameManager.playerInput.transform.position;
         capturePoint.transform.position = pos;
-        Invoke("InitCapturePoint", 2);
+        Invoke("InitCapturePoint", 1);
     }
 
     public void ResetOnNewArea()
@@ -84,25 +130,35 @@ public class BattleManager : MonoBehaviour
 
     private void InitCapturePoint()
     {
+        //  called by invoke in spawnCapturePoint
         capturePoint.Init();
     }
 
     public void ObjectiveComplete()
     {
-        StartCoroutine(GameManager.instance.gameUI.objectiveUI.ObjectiveComplete());
+        StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
+        lightningController.active = false;
         currentBattleIndex++;
 
-        if (currentBattleIndex >= Battles.Count - 1 && GameManager.instance.currentAreaType==AreaType.Jungle)
+        if (currentBattleIndex >= Battles.Count - 1 && _gameManager.currentAreaType==AreaType.Jungle)
         {
-            GameManager.instance.EndGame(true);
+            _gameManager.EndGame(true);
             return;
         }
-        GameManager.instance.gameActive = false;
+        _gameManager.gameActive = false;
         AudioManager.instance.PlayMusic(5);
         SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
-        roomDrop.Init(GameManager.instance.nextBuildtoLoad);
+        if(currentBattle.battleType == BattleType.Survive)
+        {
+            roomDrop.Init(ModBuildType.UPGRADE);
+        }
+        else
+        {
+            roomDrop.Init(_gameManager.nextBuildtoLoad);
+        }
+
     }
 
     public void ObjectiveFailed()
@@ -130,7 +186,7 @@ public class BattleManager : MonoBehaviour
             if(Vector3.Distance(Vector3.zero, pos) > 50) continue;
 
             // Check if the position is valid (not obstructed)
-            Collider[] colliders = Physics.OverlapSphere(pos, 1, dropLayer);
+            Collider[] colliders = Physics.OverlapSphere(pos, 4, dropLayer);
 
             if (colliders.Length==0)
             {
@@ -152,7 +208,6 @@ public class BattleManager : MonoBehaviour
         crawlerSpawner.waveText.text = "Here they come...";
         EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
         crawlerSpawner.spawnPoints = area.spawnPoints;
-        area.RefreshArea();
         crawlerSpawner.LoadBattle();
         if (currentBattle.battleType == BattleType.Exterminate)
         {

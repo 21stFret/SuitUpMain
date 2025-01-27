@@ -12,6 +12,7 @@ public class PortalEffect : MonoBehaviour
     public float portalEffectDuration = 1f;
     public bool infinite;
     public bool isActive;
+    public Light _light;
 
     [InspectorButton("StartEffect")]
     public bool startEffect;
@@ -45,6 +46,10 @@ public class PortalEffect : MonoBehaviour
     public void StartEffect()
     {
         isActive = true;
+        if(_light != null)
+        {
+            _light.enabled = true;
+        }
         for(int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {
             f3DWarpJumpTunnel[i].FadeDelay = portalEffectDuration;
@@ -89,7 +94,11 @@ public class PortalEffect : MonoBehaviour
     public void StopEffect()
     {
         isActive = false;
-        for(int i = 0; i < f3DWarpJumpTunnel.Length; i++)
+        if (_light != null)
+        {
+            _light.enabled = false;
+        }
+        for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {
             f3DWarpJumpTunnel[i].ToggleGrow();
         }

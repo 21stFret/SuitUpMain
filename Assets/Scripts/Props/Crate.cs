@@ -38,7 +38,8 @@ public class Crate : Prop
             GameObject randomLoot = loot[Random.Range(0, loot.Length)];
             Vector3 pos = transform.position;
             pos.y += 0.5f;
-            Instantiate(randomLoot, pos, Quaternion.identity);
+            GameObject go = Instantiate(randomLoot, pos, Quaternion.identity);
+            go.transform.SetParent(CashCollector.instance.crawlerPartParent.transform);
         }
         breakableObject.transform.parent = null;
         breakableObject.Break();
@@ -46,6 +47,12 @@ public class Crate : Prop
         explosionSound.Play();
         explosionEffect.Play();
         rend.enabled = false;
+        Invoke("DelaySetActive", 1f);
+    }
+
+    private void DelaySetActive()
+    {
+        gameObject.SetActive(false);
     }
 
     public override void RefreshProp()

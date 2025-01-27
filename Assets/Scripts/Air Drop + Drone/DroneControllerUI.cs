@@ -6,9 +6,20 @@ using UnityEngine.InputSystem;
 using FORGE3D;
 using UnityEngine.EventSystems;
 
-public class DroneController : MonoBehaviour
+public enum DroneType
 {
-    public AirDropDrone drone;
+    Repair,
+    Airstrike,
+    Orbital,
+    FatMan,
+    Shield,
+    Companion
+}
+
+
+public class DroneControllerUI : MonoBehaviour
+{
+    public DroneSystem drone;
     public AirDropCrate crate;
     public AirDropCharger airDropTimer;
     public GameObject airdropMenu;
@@ -23,12 +34,14 @@ public class DroneController : MonoBehaviour
     private bool inputDelay;
     public int airstikes;
     public bool tutorial;
-    public SequenceInputController[] sequenceInputController;
+    public List<DroneInputUI> droneInputs;
+    public List<GameObject> uiObjects;
 
     [InspectorButton("FullyChargeDrone")]
     public bool chargeDrone;
 
-
+    [InspectorButton("TestActiveate")]
+    public bool testActiveate;
 
     private void Start()
     {
@@ -37,12 +50,54 @@ public class DroneController : MonoBehaviour
         SetupSequencers();
     }
 
-    private void SetupSequencers()
+    public void TestActiveate()
     {
-        for (int i = 0; i < sequenceInputController.Length; i++)
+        ActivateDroneInput(DroneType.Companion);
+    }
+
+    public void ActivateDroneInput(DroneType type)
+    {
+        DroneInputUI droneInput = null;
+        foreach (DroneInputUI sequence in droneInputs)
         {
-            int currentIndex = i;  // Create a local copy of the index
-            sequenceInputController[i].OnSequenceComplete += () => InitAirSupport(currentIndex);
+            if (!sequence.isActive)
+            {
+                droneInput = sequence;
+                break;
+            }
+        }
+        if (droneInput == null)
+        {
+            print("No more drone inputs available");
+            return;
+        }
+        droneInput.droneType = type;
+        droneInput.isActive = true;
+    }
+
+     private void SetupSequencers()
+    {
+        for (int i = 0; i < droneInputs.Count; i++)
+        {
+            DroneInputUI droneInput = droneInputs[i];
+            droneInput.gameObject.SetActive(false);
+            droneInput.UIObject.SetActive(false);
+            if (!droneInput.isActive)
+            {
+                continue;
+            }
+            droneInput.gameObject.SetActive(true);
+            GameObject uiObject = uiObjects[(int)droneInput.droneType];
+            uiObject.transform.SetParent(droneInput.UIObject.transform);
+            uiObject.transform.localPosition = Vector3.zero;
+            uiObject.SetActive(true);
+            droneInput.UIObject.SetActive(true);
+            droneInput.droneAbilityName.text = droneInput.droneType.ToString();
+
+
+            // Clear existing event handlers
+            droneInput.sequenceInputController.RemoveAllListeners();
+            droneInput.sequenceInputController.OnSequenceComplete += () => InitAirSupport(droneInput.droneType);
         }
     }
 
@@ -61,11 +116,13 @@ public class DroneController : MonoBehaviour
 
         if (!tutorial)
         {
-            if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
+            if (gameUI.pauseMenu.isPaused || gameUI.modUI.modUI.activeSelf || !GameManager.instance.gameActive)
             {
                 return;
             }
         }
+
+        SetupSequencers();
 
         AudioManager.instance.PlaySFX(SFX.Select);
         Time.timeScale = 0.3f;
@@ -73,9 +130,13 @@ public class DroneController : MonoBehaviour
         if(!tutorial)
         {
             InputTracker.instance.SetLastSelectedGameObject(firstSelected);
-            foreach (SequenceInputController sequence in sequenceInputController)
+            foreach (DroneInputUI sequence in droneInputs)
             {
-                sequence.StartNewSequence();
+                if (!sequence.isActive)
+                {
+                    continue;
+                }
+                sequence.sequenceInputController.StartNewSequence();
             }
         }
         playerInput.SwitchCurrentActionMap("UI");
@@ -87,7 +148,7 @@ public class DroneController : MonoBehaviour
         {
             return;
         }
-        if (gameUI.pauseMenu.isPaused || gameUI.modOpen || !GameManager.instance.gameActive)
+        if (gameUI.pauseMenu.isPaused || gameUI.modUI.modUI.activeSelf || !GameManager.instance.gameActive)
         {
             return;
         }
@@ -101,7 +162,7 @@ public class DroneController : MonoBehaviour
         playerInput.SwitchCurrentActionMap("Gameplay");
     }
 
-    public void InitAirSupport(int type)
+    public void InitAirSupport(DroneType type)
     {
         if(inputDelay)
         {
@@ -109,18 +170,7 @@ public class DroneController : MonoBehaviour
         }
 
         StartCoroutine(InputDelay());
-        switch (type)
-        {
-            case 0:
-                InitDrone(0);
-                break;
-            case 1:
-                MissileStrike();
-                break;
-            case 3:
-
-                break;
-        }
+        drone.Init(type);
 
         AudioManager.instance.PlaySFX(SFX.Confirm);
 
@@ -136,17 +186,16 @@ public class DroneController : MonoBehaviour
         inputDelay = false;
     }
 
-    private void InitDrone(int type)
-    {
-        crate.transform.position = drone.transform.position;
-        crate.crateType = (CrateType)type;
-        drone.Init();
-    }
-
     public void MissileStrike()
     {
+        missileLauncher.FatMan = false;
         missileLauncher.LaunchMissiles(missileAmount);
         airstikes++;
+
+        if(PlayerAchievements.instance == null)
+        {
+            return;
+        }
         if(airstikes == 2)
         {
             PlayerAchievements.instance.SetAchievement("AIRSTRIKE_2");
@@ -156,6 +205,13 @@ public class DroneController : MonoBehaviour
             PlayerAchievements.instance.SetAchievement("AIRSTRIKE_5");
         }
     }
+
+    public void FatManLaunch()
+    {
+        missileLauncher.FatMan = true;
+        missileLauncher.LaunchMissiles(1);
+    }
+
 
     public void FullyChargeDrone()
     {

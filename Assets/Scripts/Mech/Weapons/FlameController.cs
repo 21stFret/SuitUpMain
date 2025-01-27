@@ -10,6 +10,8 @@ public class FlameController : MechWeapon
         base.Init();
         weaponType = WeaponType.Flame;
         flameTrigger.InitFlameTrigger(damage, fireRate,range);
+        var effect = weaponEffects.weaponEffect.main;
+        effect.startSpeed = range * 2;
     }
 
     // Fire Weapon

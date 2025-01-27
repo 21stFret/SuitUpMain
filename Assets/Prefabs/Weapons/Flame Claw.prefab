@@ -207,13 +207,13 @@ MonoBehaviour:
     weaponLoop: {fileID: 8300000, guid: 51b29026a14d387498c8a7e8df09f1ab, type: 3}
     weaponEffect: {fileID: 1946771559557481415}
     weaponLights: {fileID: 876022053645517812}
-  weaponType: 0
-  damage: 324207740
+  weaponType: 3
+  damage: 0
   force: 0
   fireRate: 0
   range: 0
-  weaponRechargeRate: 0.5
-  weaponFuelUseRate: 1.2
+  weaponRechargeRate: 10
+  weaponFuelUseRate: 20
   isFiring: 0
   rangeSensor: {fileID: 0}
   sensor: {fileID: 0}
@@ -221,6 +221,7 @@ MonoBehaviour:
   laserSight: {fileID: 0}
   weaponMod: {fileID: 0}
   weaponOverride: 0
+  bounces: 0
   flameTrigger: {fileID: 7967985738750339073}
 --- !u!1 &7645689449987436957
 GameObject:
@@ -236,7 +237,7 @@ GameObject:
   - component: {fileID: 4853203289921099970}
   - component: {fileID: 2160886105775468284}
   - component: {fileID: 673267167746708413}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Flame Tirgger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,7 +253,7 @@ Transform:
   m_GameObject: {fileID: 7645689449987436957}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.88}
+  m_LocalPosition: {x: 0, y: -0, z: -0.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -336,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e307e64634ea457bab5dca4083c71e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Length: 11
+  Length: 8
   NearDistance: 0.1
   FOVAngle: 20
   ElevationAngle: 25.6

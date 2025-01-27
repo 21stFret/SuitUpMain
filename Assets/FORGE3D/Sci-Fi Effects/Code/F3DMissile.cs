@@ -72,7 +72,6 @@ namespace FORGE3D
             step = Vector3.zero;
             meshRenderer.enabled = true;
             transform.forward = Vector3.up;
-            randomOffset = Random.insideUnitSphere * randomOffsetStrength;
         }
 
         // OnDespawned called by pool manager 
@@ -190,7 +189,7 @@ namespace FORGE3D
                         if (missileType == MissileType.Guided)
                         {
                             transform.rotation = Quaternion.Lerp(transform.rotation,
-                                Quaternion.LookRotation((target.position + randomOffset)  - transform.position), Time.deltaTime * alignSpeed);
+                                Quaternion.LookRotation(target.position  - transform.position), Time.deltaTime * alignSpeed);
                         }
                     }
 

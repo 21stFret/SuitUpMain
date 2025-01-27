@@ -16,19 +16,26 @@ public class BeamMod : WeaponMod
     private bool loaded;
     private bool firing;
     private bool canfire;
+    private bool shutdown;
     private PlasmaGun gun;
 
     public GameObject beamReadyLight;
+    public AudioSource beamSound;
+    public AudioClip beamLoop, beamopen, beamClose;
 
     public override void Init()
     {
         base.Init();
         gun = baseWeapon as PlasmaGun;
         baseWeapon.weaponOverride = true;
-        runUpgradeManager.ApplyStatModifiers(RunMod);
+        runUpgradeManager.ApplyStatModifiers(runMod);
         beam.enabled = true;
         beam.beamDamage = baseWeapon.damage;
         beamReadyLight.SetActive(true);
+        loaded = true;
+        beamTimer = beamTime;
+        chargeTimer = chargeTime;
+        reloadTimer = reloadTime;
     }
 
     public void Update()
@@ -37,8 +44,16 @@ public class BeamMod : WeaponMod
         {
             if (firing)
             {
+                shutdown = false;
+                if(chargeTimer == chargeTime)
+                {
+                    beamSound.clip = beamopen;
+                    beamSound.loop = false;
+                    beamSound.Play();
+                }
                 if (chargeTimer > 0)
                 {
+
                     chargeTimer -= Time.deltaTime;
                     if (chargeTimer <= 0)
                     {
@@ -49,6 +64,12 @@ public class BeamMod : WeaponMod
                 {
                     return;
                 }
+                if(beamTimer == beamTime)
+                {
+                    beamSound.clip = beamLoop;
+                    beamSound.loop = true;
+                    beamSound.Play();
+                }
                 if (beamTimer > 0)
                 {
                     beamTimer -= Time.deltaTime;
@@ -56,10 +77,7 @@ public class BeamMod : WeaponMod
                     beamReadyLight.SetActive(false);
                     if (beamTimer <= 0)
                     {
-                        beam.gameObject.SetActive(false);
-                        chargeTimer = chargeTime;
-                        loaded = false;
-                        canfire = false;
+                        KillBeam();
                     }
                 }
             }
@@ -79,6 +97,10 @@ public class BeamMod : WeaponMod
 
     public override void Fire()
     {
+        if (!loaded)
+        {
+            return;
+        }
         base.Fire();
         firing = true;
         gun.muzzlecharge.Play();
@@ -88,10 +110,25 @@ public class BeamMod : WeaponMod
     {
         base.Stop();
         firing = false;
+        KillBeam();
+    }
+
+    private void KillBeam()
+    {
+        if(shutdown)
+        {
+            return;
+        }
         beam.gameObject.SetActive(false);
         chargeTimer = chargeTime;
         beamTimer = beamTime;
+        loaded = false;
+        canfire = false;
         gun.muzzlecharge.Stop();
+        beamSound.clip = beamClose;
+        beamSound.loop = false;
+        beamSound.Play();
+        shutdown = true;
     }
 }
 

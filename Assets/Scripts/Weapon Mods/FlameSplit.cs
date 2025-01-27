@@ -12,6 +12,8 @@ public class FlameSplit : WeaponMod
         for (int i = 0; i < flameTrigger.Length; i++)
         {
             flameTrigger[i].InitFlameTrigger(baseWeapon.damage, baseWeapon.fireRate, baseWeapon.range);
+            var effect = flameEffects[i].main;
+            effect.startSpeed = range * 2;
         }
     }
 

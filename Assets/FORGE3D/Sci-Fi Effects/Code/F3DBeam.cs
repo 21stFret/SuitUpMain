@@ -85,6 +85,7 @@ namespace FORGE3D
             {
                 damageTimer = 0;
                 hitPoint.collider.gameObject.GetComponent<TargetHealth>().TakeDamage(beamDamage, WeaponType.Plasma);
+                F3DAudioController.instance.PlasmaGunHit(hitPoint.point);
             }
         }
 

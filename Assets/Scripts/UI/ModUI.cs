@@ -20,9 +20,11 @@ public class ModUI : MonoBehaviour
     public EventSystem eventSystem;
     public RunUpgradeManager runUpgradeManager;
     public Pickup pickup;
+    public TMP_Text RerollCost;
 
     public void OpenModUI(ModBuildType type)
     {
+        GameUI.instance.droneController.CloseMenu();
         GameManager.instance.SwapPlayerInput("UI");
         SetBuildImages(type);
         modUI.SetActive(true);
@@ -38,12 +40,24 @@ public class ModUI : MonoBehaviour
         }
         DisplayAllMods();
         eventSystem.SetSelectedGameObject(modButtons[0].gameObject);
+        SetRerollCost(runUpgradeManager.RerollCost);
+    }
 
+    public void SetRerollCost(int cost)
+    {
+        RerollCost.text = "x" + cost.ToString();
+    }
+
+    public void SHowHiddenMenu()
+    {
+        GameManager.instance.SwapPlayerInput("UI");
+        modUI.SetActive(true);
+        eventSystem.SetSelectedGameObject(modButtons[0].gameObject);
     }
 
     private void SetBuildImages(ModBuildType type)
     {
-        BG.material.color = pickup.pickupColor;
+        //BG.material.color = pickup.pickupColor;
         buildImage.sprite = buildImages[(int)type];
         buildImage2.sprite = buildImages[(int)type];
         buildName.text = type.ToString();
@@ -117,7 +131,7 @@ public class ModUI : MonoBehaviour
 
             if (modifier.statType == StatType.Unique)
             {
-                return;
+                continue;
             }
             stat.modStatValue.text += "%";
         }

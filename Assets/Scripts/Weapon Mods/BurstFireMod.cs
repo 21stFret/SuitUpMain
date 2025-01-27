@@ -16,7 +16,7 @@ public class BurtFireMod : WeaponMod
     {
         base.Init();
         burstTime = 0.1f +(baseWeapon.fireRate * 3);
-        runUpgradeManager.ApplyStatModifiers(RunMod);
+        runUpgradeManager.ApplyStatModifiers(runMod);
     }
 
     // Fire Weapon

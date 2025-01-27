@@ -37,6 +37,7 @@ namespace FORGE3D
         public float seekerHitDelay;
 
         [Header("Rail gun")] public AudioClip[] railgunHit;
+        public AudioClip[] railgunExplosion;
         public AudioClip railgunShot;
         public float railgunDelay;
         public float railgunHitDelay;
@@ -352,6 +353,29 @@ namespace FORGE3D
             }
         }
 
+
+        // Play railgun hit audio at specific position
+        public void RailGunExplosion(Vector3 pos)
+        {
+            if (timer_02 >= railgunHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        railgunExplosion[Random.Range(0, railgunExplosion.Length)], pos, null)
+                        .gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.8f, 1f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 20f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_02 = 0f;
+                }
+            }
+        }
+
         // Play plasma gun shot audio at specific position
         public void PlasmaGunShot(Vector3 pos)
         {
@@ -445,9 +469,11 @@ namespace FORGE3D
         // Play heavy plasma beam shot and loop audio at specific position
         public void PlasmaBeamHeavyLoop(Vector3 pos, Transform loopParent)
         {
+            
             AudioSource aOpen =
                 F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, plasmabeamHeavyOpen, pos, null)
                     .gameObject.GetComponent<AudioSource>();
+            
             AudioSource aLoop =
                 F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, plasmabeamHeavyLoop, pos, loopParent)
                     .gameObject.GetComponent<AudioSource>();
@@ -475,6 +501,23 @@ namespace FORGE3D
         {
             AudioSource aClose =
                 F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, plasmabeamHeavyClose, pos, null)
+                    .gameObject.GetComponent<AudioSource>();
+
+            if (aClose != null)
+            {
+                aClose.pitch = Random.Range(0.8f, 1f);
+                aClose.volume = Random.Range(0.8f, 1f);
+                aClose.minDistance = 50f;
+                aClose.loop = false;
+                aClose.Play();
+            }
+        }
+
+        // Play heavy plasma beam closing audio at specific position
+        public void PlasmaBeamHeavyOpen(Vector3 pos)
+        {
+            AudioSource aClose =
+                F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, plasmabeamHeavyOpen, pos, null)
                     .gameObject.GetComponent<AudioSource>();
 
             if (aClose != null)

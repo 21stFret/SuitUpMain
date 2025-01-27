@@ -70,7 +70,7 @@ public class Crawler : MonoBehaviour
 
     public CrawlerBehavior _crawlerBehavior;
     public Vector3 spawnLocation;
-
+    public float SpawnForce;
 
     public bool dummy;
 
@@ -105,7 +105,8 @@ public class Crawler : MonoBehaviour
             crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
             Init();
             meshRenderer.enabled = false;
-            Invoke("Spawn", 0.1f);
+            gameObject.SetActive(true);
+            Spawn();
         }
     }
 
@@ -156,9 +157,9 @@ public class Crawler : MonoBehaviour
         }
     }
 
-    public void FindClosestTarget(bool trueFind = false)
+    public void FindClosestTarget(float trueFind = 0)
     {
-        float range = trueFind? 100 : seekRange;
+        float range = trueFind>0? trueFind : seekRange;
         rangeSensor.SetSphereShape(range);
         target = null;
         rangeSensor.Pulse();
@@ -168,6 +169,12 @@ public class Crawler : MonoBehaviour
             return;
         }
         target = _targets.transform;
+        crawlerMovement.SetTarget(target);
+    }
+
+    public void SetTarget(Transform _target)
+    {
+        target = _target;
         crawlerMovement.SetTarget(target);
     }
 
@@ -197,12 +204,12 @@ public class Crawler : MonoBehaviour
         rb.AddForce(transform.forward * 50, ForceMode.Impulse);
         Vector3 attackloc = transform.position + (transform.forward * (transform.localScale.x*2));
 
-        print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
+        //print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
 
         if (Vector3.Distance(attackloc, target.transform.position) >= attackRange)
         {
             animator.SetBool("InRange", false);
-            print("Target out of range");
+            //print("Target out of range");
             return;
         }
 
@@ -217,7 +224,7 @@ public class Crawler : MonoBehaviour
     private IEnumerator SpawnImmunity()
     {
         immune = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         immune = false;
     }
 
@@ -229,21 +236,19 @@ public class Crawler : MonoBehaviour
     
     public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0,bool invincible = false)
     {
-
+        if(dead)
+        {
+            return;
+        }
 
         if (stunTime > 0)
         {
             StartCoroutine(StunCralwer(stunTime));
         }
 
-        if(dead)
+        if (target == null)
         {
-            return;
-        }
-
-        if(target == null)
-        {
-            FindClosestTarget(true);
+            FindClosestTarget(100);
         }
 
         FlashRed();
@@ -306,26 +311,14 @@ public class Crawler : MonoBehaviour
         DeathBlood.Play();
         _crawlerBehavior.OnDeath();
 
-        if(weapon == WeaponType.Plasma)
-        {
-            RunMod selectMod = GameManager.instance.runUpgradeManager.HasModByName("Energy Blast");
-            if (selectMod != null)
-            {
-                var burningPatch = BurningPatchPooler.Instance.GetBurningPatch();
-                burningPatch.SetActive(true);
-                burningPatch.transform.position = transform.position;
-                var burningPatchScript = burningPatch.GetComponent<BurningPatch>();
-                burningPatchScript.damageArea.damageAmount = 0.5f;
-                burningPatchScript.burnDuration = selectMod.modifiers[0].statValue;
-                burningPatchScript.EnableDamageArea();
-
-            }
-        }
+        CheckForModsOnDeath(weapon);
 
         if(crawlerSpawner != null)
         {
             crawlerSpawner.AddtoRespawnList(this, crawlerType);
         }
+
+        gameObject.SetActive(false);
 
         var BM = BattleManager.instance;
 
@@ -334,7 +327,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-        if (BM.Battles[BM.currentBattleIndex].battleType == BattleType.Exterminate)
+        if (BM._usingBattleType == BattleType.Exterminate)
         {
             BM.StartCoroutine(BM.CheckActiveEnemies());
         }
@@ -363,13 +356,61 @@ public class Crawler : MonoBehaviour
         }
     }
 
+    private void CheckForModsOnDeath(WeaponType weapon)
+    {
+        switch (weapon)
+        {
+            case WeaponType.Plasma:
+                RunMod selectMod = GameManager.instance.runUpgradeManager.HasModByName("Energy Blast");
+                if (selectMod != null)
+                {
+                    var burningPatch = MyPooler.Instance.GetBurningPatch();
+                    burningPatch.transform.position = transform.position;
+                    burningPatch.SetActive(true);
+                    var burningPatchScript = burningPatch.GetComponent<BurningPatch>();
+                    burningPatchScript.damageArea.damageAmount = 0.5f;
+                    burningPatchScript.burnDuration = selectMod.modifiers[0].statValue;
+                    burningPatchScript.EnableDamageArea();
+
+                }
+            break;
+            case WeaponType.Cryo:
+                RunMod _selectMod = GameManager.instance.runUpgradeManager.HasModByName("Fracture");
+                if (_selectMod != null)
+                {
+                    var fractureEffect = MyPooler.Instance.GetFractureEffect();
+                    fractureEffect.transform.position = transform.position;
+                    fractureEffect.SetActive(true);
+                    var particleSystem = fractureEffect.GetComponent<ParticleSystem>();
+                    particleSystem.Play();
+                    var colliders = Physics.OverlapSphere(transform.position, 5f);
+                    float damage = (_selectMod.modifiers[0].statValue /100) * BattleMech.instance.weaponController.altWeaponEquiped.damage;
+                    foreach (var col in colliders)
+                    {
+                        var health = col.GetComponent<TargetHealth>();
+                        var rb = col.GetComponent<Rigidbody>();
+                        if (health)
+                        {
+                            health.TakeDamage(damage, WeaponType.Cryo);
+                        }
+                        if (rb)
+                        {
+                            rb.AddForce((col.transform.position - transform.position).normalized * 50, ForceMode.Impulse);
+                        }
+                    }
+                }
+                break;
+
+        }        
+    }
+
     public void PlayDeathNoise()
     {
         deathNoise.pitch = Random.Range(0.8f, 1.2f);
         deathNoise.Play();
     }
 
-    public virtual void Spawn()
+    public virtual void Spawn(bool daddy = false)
     {
         meshRenderer.material.SetFloat("_FlashOn", 0);
         dead = false;
@@ -382,18 +423,23 @@ public class Crawler : MonoBehaviour
         SetSpeed();
         crawlerMovement.speedFinal = _finalSpeed;
         transform.localScale = Vector3.zero;
-        StartCoroutine(SpawnEffect());
+        StartCoroutine(SpawnEffect(daddy));
         StartCoroutine(SpawnImmunity());
         DeathBlood.transform.SetParent(transform);
     }
 
-    private IEnumerator SpawnEffect()
+    private IEnumerator SpawnEffect(bool daddy)
     {
         _spawnEffect.Play();
         SetCrawlerScale();
         yield return new WaitForSeconds(0.1f);
-        rb.AddForce(transform.forward * 10, ForceMode.Impulse);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
+        float force =SpawnForce;
+        if(daddy)
+        {
+            force = SpawnForce / 2;
+        }
+        rb.AddForce(transform.forward * force, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
         tag = "Enemy";
         animator.speed = 1;
