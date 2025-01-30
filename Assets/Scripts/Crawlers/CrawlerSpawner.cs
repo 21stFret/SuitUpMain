@@ -364,7 +364,7 @@ public class CrawlerSpawner : MonoBehaviour
         bug.gameObject.SetActive(true);
         bug.Spawn(daddy);
         // bugs have a bigger search range at the start of a horde
-        bug.FindClosestTarget(50);
+        bug.FindClosestTarget(70);
         if(BattleManager.instance.currentBattle.battleType == BattleType.Upload)
         {
             bug.target = BattleManager.instance.capturePoint.transform;

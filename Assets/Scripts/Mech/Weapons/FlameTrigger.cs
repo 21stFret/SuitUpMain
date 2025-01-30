@@ -26,10 +26,6 @@ public class FlameTrigger : MonoBehaviour
     public void SetCol(bool value)
     {
         isOn = value;
-        if(!isOn)
-        {
-            //triggerSensor.Clear();
-        }
     }
 
     private void Update()
@@ -56,7 +52,7 @@ public class FlameTrigger : MonoBehaviour
                 if (targetHealth != null)
                 {
                     if(!targetHealth.alive)
-                    {                
+                    {
                         continue;
                     }
                     targetHealth.TakeDamage(shotDamage, weaponType);

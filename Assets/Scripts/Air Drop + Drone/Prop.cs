@@ -31,8 +31,12 @@ public class Prop : MonoBehaviour
     {
         if (_targetHealth == null)
         {
-            print("No target health found on " + gameObject.name);
-            return;
+            _targetHealth = GetComponent<TargetHealth>();
+            if(_targetHealth == null)
+            {
+                print("No target health found on " + gameObject.name);
+                return;
+            }
         }
         _targetHealth.Init(null, null, this);
         healthMax = _targetHealth.maxHealth;

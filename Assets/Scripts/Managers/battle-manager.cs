@@ -140,25 +140,25 @@ public class BattleManager : MonoBehaviour
         crawlerSpawner.EndBattle();
         lightningController.active = false;
         currentBattleIndex++;
-
-        if (currentBattleIndex >= Battles.Count - 1 && _gameManager.currentAreaType==AreaType.Jungle)
-        {
-            _gameManager.EndGame(true);
-            return;
-        }
         _gameManager.gameActive = false;
         AudioManager.instance.PlayMusic(5);
-        SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
-        if(currentBattle.battleType == BattleType.Survive)
+        SetPickUpPosition();
+
+        if (currentBattleIndex >= Battles.Count - 1)
         {
+            if (_gameManager.currentAreaType == AreaType.Jungle)
+            {
+                _gameManager.EndGame(true);
+                return;
+            }
+
             roomDrop.Init(ModBuildType.UPGRADE);
         }
         else
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-
     }
 
     public void ObjectiveFailed()
@@ -217,7 +217,7 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator CheckActiveEnemies()
     {
-        if (BattleMech.instance.isDead)
+        if(!crawlerSpawner.isActive)
         {
             yield break;
         }

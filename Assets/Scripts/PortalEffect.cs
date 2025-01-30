@@ -20,7 +20,6 @@ public class PortalEffect : MonoBehaviour
     [InspectorButton("StopEffect")]
     public bool stopEffect;
 
-
     public void DealyedEffect(float delay)
     {         
         StartCoroutine(StartEffectWithDelay(delay));
@@ -88,7 +87,6 @@ public class PortalEffect : MonoBehaviour
         doTweenFade.FadeOut();
         _particleSystem.Stop();
         _particleSystem2.Stop();
-
     }
 
     public void StopEffect()

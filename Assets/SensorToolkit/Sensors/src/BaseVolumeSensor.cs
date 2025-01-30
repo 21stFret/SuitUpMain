@@ -67,6 +67,10 @@ namespace Micosmo.SensorToolkit {
                     {
                         workList.Add(signal);
                     }
+                    else
+                    {
+                        RemoveCollider(cols.Value[0], true);
+                    }
                 }
             }
             mapToRB.IsRigidBodyMode = DetectionMode == DetectionModes.RigidBodies;

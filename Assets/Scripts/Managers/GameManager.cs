@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public AreaManager areaManager;
     public VoidPortalManager voidPortalManager;
     public VoidAreaManager voidAreaManager;
-    public RoomPortal RoomPortal;
     public int currentRoomIndex;
     public bool endlessMode;
     public bool gameActive;
@@ -118,7 +117,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(delay/2);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        voidPortalManager.StopFirstPersonEffect();
         _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
@@ -130,13 +129,13 @@ public class GameManager : MonoBehaviour
     public IEnumerator LoadVoidRoom()
     {
         gameUI.gameUIFade.FadeOut();
-        RoomPortal.portalEffect.StopEffect();
+
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
         voidAreaManager.InitVoidArea();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        voidPortalManager.StopFirstPersonEffect();
         yield return new WaitForSeconds(1);
         _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
@@ -161,7 +160,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            voidPortalManager.StartEffect();
+            voidPortalManager.StartAllEffects();
         }
         BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
     }

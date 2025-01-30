@@ -46,6 +46,8 @@ public class RunUpgradeManager : MonoBehaviour
     [HideInInspector]
     public List<ModBuildType> randomlySelectedBuilds = new List<ModBuildType>();
 
+    private BattleMech BattleMech;
+
     [InspectorButton("OnButtonClicked")]
     public bool ReadData;
 
@@ -79,6 +81,7 @@ public class RunUpgradeManager : MonoBehaviour
     {
         ResetAllData();
         runModifierDataReader.LoadFromExcell(this);
+        BattleMech = BattleMech.instance;
     }
 
     private void ResetAllData()
@@ -296,7 +299,6 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
-
     public void EnableModSelection(RunMod mod)
     {
         if(mod.modCategory != ModCategory.STATS)
@@ -331,16 +333,20 @@ public class RunUpgradeManager : MonoBehaviour
                 switch (mod.modName)
                 {
                     case "Orbital Strike":
-                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Orbital);
+                        BattleMech.droneController.ActivateDroneInput(DroneType.Orbital);
+                        BattleMech.droneController.drone.orbitalStrike.beamDamage = mod.modifiers[0].statValue;
+                        BattleMech.droneController.drone.orbitalStrike.beamDuration = mod.modifiers[1].statValue;
                         break;
                     case "Fat Man":
-                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.FatMan);
+                        BattleMech.droneController.ActivateDroneInput(DroneType.FatMan);
                         break;
                     case "Shield":
-                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Shield);
+                        BattleMech.droneController.ActivateDroneInput(DroneType.Shield);
                         break;
                     case "Companion":
-                        BattleMech.instance.droneController.ActivateDroneInput(DroneType.Companion);
+                        BattleMech.droneController.ActivateDroneInput(DroneType.Companion);
+                        BattleMech.droneController.drone.companionDamage = mod.modifiers[0].statValue;
+                        BattleMech.droneController.drone.companionTime = mod.modifiers[1].statValue;                
                         break;
                 }
                 break;
@@ -356,7 +362,7 @@ public class RunUpgradeManager : MonoBehaviour
                 for (int i = 0; i < mod.modifiers.Count; i++)
                 {
                     var modifier = mod.modifiers[i];
-                    BattleMech.instance.myCharacterController.dashModsManager.ApplyMod(modifier.statType, modifier.statValue);
+                    BattleMech.myCharacterController.dashModsManager.ApplyMod(modifier.statType, modifier.statValue);
                 }
                 break;
             case ModCategory.STATS:

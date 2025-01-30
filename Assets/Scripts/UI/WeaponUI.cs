@@ -17,6 +17,7 @@ public class WeaponUI : MonoBehaviour
         if(fuel < 100)
         {
             fuelBar.fillAmount = fuel / 100;
+            bonusFuelBar.fillAmount = 0;
         }
         if(fuel > 100)
         {

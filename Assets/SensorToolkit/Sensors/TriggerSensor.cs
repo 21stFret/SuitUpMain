@@ -88,9 +88,21 @@ namespace Micosmo.SensorToolkit
 
         void OnTriggerEnter(Collider other)
         {
+            // Keep the active check to prevent adding inactive objects
             if (!other.enabled || !other.gameObject.activeInHierarchy)
             {
                 return;
+            }
+
+            // Add an event listener to the object to detect when it becomes inactive
+            if (other.gameObject.TryGetComponent<ObjectStateHandler>(out var handler))
+            {
+                handler.OnObjectDisabled += () => TriggerExit(other);
+            }
+            else
+            {
+                var newHandler = other.gameObject.AddComponent<ObjectStateHandler>();
+                newHandler.OnObjectDisabled += () => TriggerExit(other);
             }
 
             int currCount;
@@ -100,6 +112,17 @@ namespace Micosmo.SensorToolkit
                 currCount = 0;
             }
             colliderCount[other] = currCount + 1;
+        }
+
+        // Helper component to detect object state changes
+        public class ObjectStateHandler : MonoBehaviour
+        {
+            public event System.Action OnObjectDisabled;
+
+            void OnDisable()
+            {
+                OnObjectDisabled?.Invoke();
+            }
         }
 
         public void TriggerExit(Collider other)

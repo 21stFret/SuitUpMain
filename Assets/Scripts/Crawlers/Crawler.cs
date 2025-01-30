@@ -57,6 +57,8 @@ public class Crawler : MonoBehaviour
     public int expWorth;
     public int dropRate;
 
+    public TriggerSensor.ObjectStateHandler objectStateHandler;
+
 
     public CrawlerType crawlerType;
 
@@ -74,8 +76,17 @@ public class Crawler : MonoBehaviour
 
     public bool dummy;
 
+    [InspectorButton("TestSpawn")]
+    public bool spawn;
+
+    private void TestSpawn()
+    {
+        Spawn();
+    }
+
     public virtual void Init()
     {
+        objectStateHandler = new TriggerSensor.ObjectStateHandler();
         dead = false;
         _targetHealth = GetComponent<TargetHealth>();
         _targetHealth.Init(this);
@@ -104,8 +115,6 @@ public class Crawler : MonoBehaviour
         {
             crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
             Init();
-            meshRenderer.enabled = false;
-            gameObject.SetActive(true);
             Spawn();
         }
     }
