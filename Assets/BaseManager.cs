@@ -10,6 +10,7 @@ public class BaseManager : MonoBehaviour
     public StatsUI statsUI;
     public SceneLoader sceneLoader;
     public TestPlayerData playerData;
+    public DirectionalDaylight daylight;
 
     private void Awake()
     {
@@ -38,6 +39,7 @@ public class BaseManager : MonoBehaviour
         AudioManager.instance.PlayMusic(3);
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
+        daylight.startTime = Random.Range(0, 1f);
 
         Debug.Log("Base Initialized");
     }

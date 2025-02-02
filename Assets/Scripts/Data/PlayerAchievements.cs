@@ -70,4 +70,14 @@ public class PlayerAchievements : MonoBehaviour
         steamAchievements.UnlockAchievement(id);
     }
 
+    public bool IsAchieved(string id)
+    {
+        Achievement achievement = achievements.Find(x => x.id == id);
+        if (achievement.achieved)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

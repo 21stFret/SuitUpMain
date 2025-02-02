@@ -185,7 +185,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   LimitViewAngle: 1
-  MaxHorizAngle: 75
+  MaxHorizAngle: 50
   VisibilityByHorizAngle:
     Mode: 0
     Curve:
@@ -322,6 +322,7 @@ MonoBehaviour:
   weaponController: {fileID: 0}
   bonusDamage: 0
   meshRenderer: {fileID: 0}
+  autoTurret: 0
 --- !u!114 &8005139676509938886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,6 +343,7 @@ MonoBehaviour:
   vulcanProjectile: {fileID: 400000, guid: e496166a742ada640b89650ebebbd052, type: 3}
   vulcanMuzzle: {fileID: 400002, guid: ca6dec307275d294ba519247d04b6733, type: 3}
   vulcanImpact: {fileID: 400000, guid: bfa7781c328a236468eda51a8ae2be55, type: 3}
+  range: 0
 --- !u!1 &3055774610300258995
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +766,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LaserSight
+      objectReference: {fileID: 0}
+    - target: {fileID: 6817453800255596364, guid: ce1534329d396104dbf8dd7d2bbf6378,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

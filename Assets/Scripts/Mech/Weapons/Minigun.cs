@@ -37,7 +37,6 @@ public class Minigun : MechWeapon
         {
             location = transform.forward;
             hasTarget = false;
-            //_timer = 0.0f;
         }
 
         gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);

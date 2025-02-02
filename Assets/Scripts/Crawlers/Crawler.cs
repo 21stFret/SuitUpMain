@@ -52,6 +52,7 @@ public class Crawler : MonoBehaviour
     protected bool inRange;
     [SerializeField]
     private bool immune;
+    public float immuneTime = 1;
     public float crawlerScale;
     public int cashWorth;
     public int expWorth;
@@ -86,7 +87,6 @@ public class Crawler : MonoBehaviour
 
     public virtual void Init()
     {
-        objectStateHandler = new TriggerSensor.ObjectStateHandler();
         dead = false;
         _targetHealth = GetComponent<TargetHealth>();
         _targetHealth.Init(this);
@@ -222,7 +222,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-         target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
+         target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer, 0, this);
     }
 
     public void EndAttack()
@@ -232,9 +232,12 @@ public class Crawler : MonoBehaviour
 
     private IEnumerator SpawnImmunity()
     {
-        immune = true;
-        yield return new WaitForSeconds(1);
-        immune = false;
+        _targetHealth.invincible = true;
+        meshRenderer.material.SetColor("_Flash_Color", Color.green);
+        meshRenderer.material.SetFloat("_FlashOn", 1);
+        yield return new WaitForSeconds(immuneTime);
+        meshRenderer.material.SetFloat("_FlashOn", 0);
+        _targetHealth.invincible = false;
     }
 
     public virtual void TakeDamageOveride()
@@ -295,11 +298,16 @@ public class Crawler : MonoBehaviour
 
     private void FlashRed()
     {
+        if(_targetHealth.invincible)
+        {
+            return;
+        }
         StartCoroutine(FlashRedCoroutine());
     }
 
     private IEnumerator FlashRedCoroutine()
     {
+        meshRenderer.material.SetColor("_Flash_Color", Color.red);
         meshRenderer.material.SetFloat("_FlashOn", 1);
         yield return new WaitForSeconds(0.1f);
         meshRenderer.material.SetFloat("_FlashOn", 0);
@@ -309,6 +317,7 @@ public class Crawler : MonoBehaviour
     {
         dead = true;
         _targetHealth.health = 0;
+        _targetHealth.alive = false;
         PlayDeathNoise();
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
@@ -367,6 +376,15 @@ public class Crawler : MonoBehaviour
 
     private void CheckForModsOnDeath(WeaponType weapon)
     {
+        if(GameManager.instance.runUpgradeManager == null)
+        {
+            return;
+        }
+        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Nano Bots");
+        if (__selectMod != null)
+        {
+            BattleMech.instance.mechHealth.Heal(BattleMech.instance.targetHealth.maxHealth * (__selectMod.modifiers[0].statValue/100));
+        }
         switch (weapon)
         {
             case WeaponType.Plasma:
@@ -429,6 +447,7 @@ public class Crawler : MonoBehaviour
         _collider.enabled = true;
         rb.velocity = Vector3.zero;
         _targetHealth.health = _targetHealth.maxHealth;
+        _targetHealth.alive = true;
         SetSpeed();
         crawlerMovement.speedFinal = _finalSpeed;
         transform.localScale = Vector3.zero;

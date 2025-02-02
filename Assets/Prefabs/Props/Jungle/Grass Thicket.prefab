@@ -53,6 +53,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 6849771450873759248}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  init: 0
   spreadRadius: 0
   ignitionDelay: 1
   burnDuration: 5
@@ -77,7 +78,9 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
-  immuneWeapons: 0000000001000000020000000700000005000000
+  immuneWeapons: 00000000010000000700000005000000
+  damageNumbersOn: 0
+  damageNumberPrefab: {fileID: 0}
 --- !u!136 &6543697546441132215
 CapsuleCollider:
   m_ObjectHideFlags: 0

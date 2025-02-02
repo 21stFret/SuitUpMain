@@ -115,11 +115,20 @@ public class BreakableObject : MonoBehaviour
         yield return new WaitForSeconds(hideDelay);
         foreach (GameObject part in activeparts)
         {
-            Renderer renderer = part.GetComponent<Renderer>();
+            MeshRenderer renderer = part.GetComponent<MeshRenderer>();
             if (renderer == null)
             {
+                print("No renderer found on broken part");
                 continue;
             }
+            Collider collider = part.GetComponent<Collider>();
+            if (collider == null)
+            {
+                print("No collider found on broken part");
+                continue;
+            }
+            part.GetComponent<Rigidbody>().isKinematic = true;
+            collider.enabled = false;
             renderer.material.DOFade(0, 1f);
         }
         yield return new WaitForSeconds(1);

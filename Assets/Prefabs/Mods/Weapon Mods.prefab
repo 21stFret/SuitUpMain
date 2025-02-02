@@ -5333,7 +5333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1820950172559430573
 Transform:
   m_ObjectHideFlags: 0
@@ -16366,10 +16366,11 @@ MonoBehaviour:
   assualtWeapon: {fileID: 0}
   techWeapon: {fileID: 0}
   weaponController: {fileID: 0}
-  currentTechMod: {fileID: 0}
-  currentAssaultMod: {fileID: 7733466205737613336}
+  currentTechMod: {fileID: 7891416407525204436}
+  currentAssaultMod: {fileID: 0}
   currentMods: []
-  equipMod: 0
+  equipAssMod: 0
+  equipTEchMod: 0
 --- !u!1001 &29261571884511636
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16476,7 +16477,7 @@ PrefabInstance:
     - target: {fileID: 1999870710279080396, guid: 72dde529fe570c74da8dc4329adf5c22,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20.721664
+      value: -19.57
       objectReference: {fileID: 0}
     - target: {fileID: 1999870710279080396, guid: 72dde529fe570c74da8dc4329adf5c22,
         type: 3}
@@ -16523,46 +16524,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Iced Wall
       objectReference: {fileID: 0}
-    - target: {fileID: 5084934637909217271, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: moveWithTransform
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6033971646827220868, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8959773920908471239, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: modType
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8959773920908471239, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: runMod.modName
-      value: Frozen Shield
-      objectReference: {fileID: 0}
-    - target: {fileID: 9082795530756065672, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: m_CastShadows
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9082795530756065672, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: m_LightProbeUsage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9082795530756065672, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: m_StaticShadowCaster
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9082795530756065672, guid: 72dde529fe570c74da8dc4329adf5c22,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f88229fee5966d84f89af192f1da249e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16662,7 +16623,7 @@ PrefabInstance:
     - target: {fileID: 9116288620543908144, guid: ef2901e1655d5b44388e131c4b7fe293,
         type: 3}
       propertyPath: modType
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9116288620543908144, guid: ef2901e1655d5b44388e131c4b7fe293,
         type: 3}
@@ -16673,6 +16634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: runMod.modName
       value: Grenade
+      objectReference: {fileID: 0}
+    - target: {fileID: 9116288620543908144, guid: ef2901e1655d5b44388e131c4b7fe293,
+        type: 3}
+      propertyPath: modFuelCostOveride
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 9116288620543908144, guid: ef2901e1655d5b44388e131c4b7fe293,
         type: 3}

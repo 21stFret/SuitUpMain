@@ -128,8 +128,17 @@ public class LoadOutPanel : MonoBehaviour
             }
         }
 
-        SetupGame.instance.diffiulty = (Difficulty)currentDifficulty;
+
         DifficultyButtonImage.sprite = DifficultyButtonSprites[currentDifficulty];
+
+        if(PlayerSavedData.instance.highestDifficulty < currentDifficulty)
+        {
+            DifficultyButtonText.text = "Locked";
+            DifficultyDecription.text = "Complete the previous difficulty to unlock!";
+            return;
+        }
+
+        SetupGame.instance.diffiulty = (Difficulty)currentDifficulty;
 
         switch (currentDifficulty)
         {
@@ -143,7 +152,11 @@ public class LoadOutPanel : MonoBehaviour
                 break;
             case 2:
                 DifficultyButtonText.text = "Hard";
-                DifficultyDecription.text = "A terrifying horde of every bug. \r\n Make it back alive!";
+                DifficultyDecription.text = "A challenging horde of every bug. \r\n Make it back alive!";
+                break;
+            case 3:
+                DifficultyButtonText.text = "Insane";
+                DifficultyDecription.text = "A terrifying horde of elite bugs. \r\n Unleash chaos!";
                 break;
         }
     }

@@ -145,7 +145,7 @@ public class BattleManager : MonoBehaviour
         roomDrop.gameObject.SetActive(true);
         SetPickUpPosition();
 
-        if (currentBattleIndex >= Battles.Count - 1)
+        if (currentBattleIndex >= Battles.Count)
         {
             if (_gameManager.currentAreaType == AreaType.Jungle)
             {
@@ -159,6 +159,7 @@ public class BattleManager : MonoBehaviour
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
+        // add secondary room drop for upgrade when doing mini boss as to not break flow of the player chosen portal
     }
 
     public void ObjectiveFailed()
@@ -217,10 +218,6 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator CheckActiveEnemies()
     {
-        if(!crawlerSpawner.isActive)
-        {
-            yield break;
-        }
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
             yield return new WaitForSeconds(1);

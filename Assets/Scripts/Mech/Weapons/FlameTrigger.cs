@@ -21,11 +21,13 @@ public class FlameTrigger : MonoBehaviour
         isOn = false;
         weaponType = type;
         fovCollider.CreateCollider();
+        fovCollider.enabled = false;
     }
 
     public void SetCol(bool value)
     {
         isOn = value;
+        fovCollider.enabled = value;
     }
 
     private void Update()

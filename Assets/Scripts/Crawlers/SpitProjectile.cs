@@ -79,7 +79,9 @@ public class SpitProjectile : MonoBehaviour
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
                 if (rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(_damage, WeaponType.Cralwer);
+                    float distance = Vector3.Distance(transform.position, collider.transform.position);
+                    float damage = _damage * (1.2f - (distance / explosionRadius));
+                    rb.GetComponent<TargetHealth>().TakeDamage(damage, WeaponType.Cralwer);
                 }
             }
         }

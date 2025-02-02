@@ -116,12 +116,17 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Fire()
     {
+        if(!weaponData.mainWeapon)
+        {
+            weaponFuelManager.weaponInUse = true;
+        }
 
         if (weaponMod != null && weaponOverride)
         {
             FireMod();
             return;
         }
+
         isFiring = true;
 
         if (weaponEffects.weaponEffect != null)
@@ -150,12 +155,16 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Stop()
     {
+        if (!weaponData.mainWeapon)
+        {
+            weaponFuelManager.weaponInUse = false;
+        }
         if (weaponMod != null && weaponOverride)
         {
             StopMod();
             return;
         }
-        if(!isFiring)
+        if (!isFiring)
         {
             return;
         }

@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
         InitializeStats();
         AudioManager.instance.Init();
         AudioManager.instance.PlayBattleMusic();
+        runUpgradeManager.LoadData();
 
         if (!playOnAwake) return;
 
@@ -65,7 +66,6 @@ public class GameManager : MonoBehaviour
         gameActive = true;
         BattleManager.instance.currentBattleIndex = 0;
         BattleManager.instance.crawlerSpawner.Init();
-        runUpgradeManager.LoadData();
         LoadNextRoom(0);
     }
 
@@ -129,15 +129,14 @@ public class GameManager : MonoBehaviour
     public IEnumerator LoadVoidRoom()
     {
         gameUI.gameUIFade.FadeOut();
-
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
         voidAreaManager.InitVoidArea();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
         voidPortalManager.StopFirstPersonEffect();
-        yield return new WaitForSeconds(1);
         _myCharacterController.ToggleCanMove(true);
+        yield return new WaitForSeconds(1);
         gameUI.gameUIFade.FadeIn();
 
     }
@@ -172,7 +171,9 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
-        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty) ;
+        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
+        PlayerSavedData.instance.highestDifficulty = (int)SetupGame.instance.diffiulty;
+        PlayerSavedData.instance.SavePlayerData();
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
     }

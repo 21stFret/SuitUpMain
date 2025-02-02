@@ -14,7 +14,7 @@ public class WeaponMod : MonoBehaviour
     public RunUpgradeManager runUpgradeManager;
 
 
-    public virtual void GetBaseWeapon(MechWeapon weapon)
+    public virtual void SetBaseWeapon(MechWeapon weapon)
     {
         baseWeapon = weapon;
     }
@@ -23,43 +23,22 @@ public class WeaponMod : MonoBehaviour
     {
         runUpgradeManager = FindObjectOfType<RunUpgradeManager>();
         assaultMod = baseWeapon.weaponFuelManager == null;
-        damage = baseWeapon.damage;
         range = baseWeapon.range;
         baseWeapon.weaponOverride = false;
-        if(!assaultMod)
+        damage = baseWeapon.damage;
+        if (!assaultMod)
         {
             baseWeapon.weaponFuelManager.constantUse = true;
             modFuelCost = baseWeapon.weaponFuelManager.weaponFuelRate;
-        }
-        ApplyMods();
-    }
-
-    private void ApplyMods()
-    {
-        foreach(Modifier mod in runMod.modifiers)
-        {
-            var value = mod.statValue / 100; 
-
-            switch(mod.statType)
-            {
-                case StatType.Assault_Damage:     
-                    damage += value * damage;
-                    break;
-                case StatType.Fire_Rate:
-                    baseWeapon.fireRate -= value * baseWeapon.fireRate;
-                    break;
-                case StatType.Fuel_Tank:
-                    modFuelCost -= value * modFuelCost;
-                    break;
-            }
         }
     }
 
     public void RemoveMods()
     {
+        /*
         damage = baseWeapon.damage;
         range = baseWeapon.range;
-        modFuelCost = baseWeapon.weaponFuelManager.weaponFuelRate;
+        */
     }
 
     public virtual void Fire()

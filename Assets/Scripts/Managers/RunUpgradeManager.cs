@@ -116,6 +116,7 @@ public class RunUpgradeManager : MonoBehaviour
                 break;
             case ModBuildType.UPGRADE:
                 selectedMods = new List<RunMod>(runModsWeaponUpgrades);
+                selectedMods= RandomiseModType(selectedMods);
                 break;
             default:
                 break;
@@ -209,6 +210,35 @@ public class RunUpgradeManager : MonoBehaviour
         ModUI.OpenModUI(build);
     }
 
+    private List<RunMod> RandomiseModType(List<RunMod> mods)
+    {
+        ModCategory category = (ModCategory)Random.Range(0, 5);
+        int _maxAttempts = 10; // Prevent infinite loop
+
+        // Check if we already have a mod of this category and hard set a new one
+        if(currentEquipedMods.Count > 0 && _maxAttempts>0)
+        {
+            foreach (var _mod in currentEquipedMods)
+            {
+                if (_mod.modCategory == category)
+                {
+                    RandomiseModType(mods);
+                    _maxAttempts--;
+                }
+            }
+        }
+        print("Selected Category: " + category);
+        List<RunMod> mod = mods.FindAll(mod => mod.modCategory == category);
+        if (mod.Count != 0)
+        {
+            return mod;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     private List<RunMod> GetModsForBuild(ModBuildType build, ModCategory category)
     {
         switch (build)
@@ -252,6 +282,19 @@ public class RunUpgradeManager : MonoBehaviour
             _mod.weaponType = WeaponsManager.instance.currentMainWeapon.weaponType;
             _mod.modCategory = ModCategory.MAIN;
             return _mod;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private RunMod FilterDroneMods(List<RunMod> mods)
+    {
+        List<RunMod> mod = mods.FindAll(mod => mod.modCategory == ModCategory.DRONE);
+        if (mod.Count != 0)
+        {
+            return mod[Random.Range(0, mod.Count)];
         }
         else
         {
@@ -334,7 +377,7 @@ public class RunUpgradeManager : MonoBehaviour
                 {
                     case "Orbital Strike":
                         BattleMech.droneController.ActivateDroneInput(DroneType.Orbital);
-                        BattleMech.droneController.drone.orbitalStrike.beamDamage = mod.modifiers[0].statValue;
+                        BattleMech.droneController.drone.orbitalStrike.beamDamage = BattleMech.weaponController.altWeaponEquiped.damage *(mod.modifiers[0].statValue/100);
                         BattleMech.droneController.drone.orbitalStrike.beamDuration = mod.modifiers[1].statValue;
                         break;
                     case "Fat Man":
@@ -345,7 +388,7 @@ public class RunUpgradeManager : MonoBehaviour
                         break;
                     case "Companion":
                         BattleMech.droneController.ActivateDroneInput(DroneType.Companion);
-                        BattleMech.droneController.drone.companionDamage = mod.modifiers[0].statValue;
+                        BattleMech.droneController.drone.companionDamage = BattleMech.weaponController.altWeaponEquiped.damage * (mod.modifiers[0].statValue / 100);
                         BattleMech.droneController.drone.companionTime = mod.modifiers[1].statValue;                
                         break;
                 }

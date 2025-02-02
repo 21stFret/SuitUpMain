@@ -14,6 +14,7 @@ public class WeaponFuelManager : MonoBehaviour
     public float weaponFuelRate;
     public bool canRecharge = true;
     public bool constantUse = false;
+    public bool weaponInUse;
 
     public void Init(MechWeapon mechWeapon)
     {
@@ -90,7 +91,7 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void BurstFuel()
     {
-        if (weapon.isFiring)
+        if (weaponInUse)
         {
             if (weaponFuel <= 0)
             {
@@ -112,7 +113,7 @@ public class WeaponFuelManager : MonoBehaviour
             return;
         }
                 
-        if (weapon.isFiring)
+        if (weaponInUse)
         {
             if (weaponFuel <= 0)
             {

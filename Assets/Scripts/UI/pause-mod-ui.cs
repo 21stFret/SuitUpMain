@@ -85,6 +85,8 @@ public class PauseModUI : MonoBehaviour
     {
         if (pauseModPanel != null)
             pauseModPanel.SetActive(false);
+        if (infoPopup != null)
+            infoPopup.SetActive(false);
     }
 
     private void OnDisable()
@@ -145,6 +147,14 @@ public class PauseModUI : MonoBehaviour
             Modifier modifier = mod.modifiers[i];
             stat.modStat.text = ModUI.ReplaceUnderscoreWithSpace(modifier.statType.ToString());
             stat.modStatValue.text = modifier.statValue.ToString("F2");
+            if (modifier.statValue >= 0)
+            {
+                stat.modStatValue.color = Color.green;
+            }
+            else
+            {
+                stat.modStatValue.color = Color.red;
+            }
             stat.gameObject.SetActive(true);
         }
     }

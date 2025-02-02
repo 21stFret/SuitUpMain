@@ -146,6 +146,10 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void BeginSpawningSquads()
     {
+        if(!isActive)
+        {
+            return;
+        }
         IncrementSpawnRound();
         SpawnCheck();
     }
@@ -206,7 +210,15 @@ public class CrawlerSpawner : MonoBehaviour
         for (int j = 0; j < currentSquad.crawlerGroups.Length; j++)
         {
             var list = GetCrawlerList(currentSquad.crawlerGroups[j].type);
-            float amount = currentSquad.crawlerGroups[j].amount * BattleManager.instance.dificultyMultiplier;
+            float difficulty = BattleManager.instance.dificultyMultiplier;
+            float amount = currentSquad.crawlerGroups[j].amount * difficulty;
+            if(difficulty > 1)
+            {
+                if (currentSquad.crawlerGroups[j].type == CrawlerType.Crawler)
+                {
+                    amount *= 1.2f;
+                }
+            }
             for (int k = 0; k < amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
             {
                 _spawnList.Add(list[k]);
@@ -364,7 +376,10 @@ public class CrawlerSpawner : MonoBehaviour
         bug.gameObject.SetActive(true);
         bug.Spawn(daddy);
         // bugs have a bigger search range at the start of a horde
-        bug.FindClosestTarget(70);
+        if (hordeBattle)
+        {
+            bug.FindClosestTarget(70);
+        }
         if(BattleManager.instance.currentBattle.battleType == BattleType.Upload)
         {
             bug.target = BattleManager.instance.capturePoint.transform;

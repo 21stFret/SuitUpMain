@@ -7,19 +7,22 @@ public class FlameGrenadeMod : WeaponMod
 {
     public GameObject[] flameGrenades;
     private int currentGrenade;
-    public float shotTimer;
+    private float shotTimer;
+    public float grenadeShotTime;
     private bool overideFire;
+    public float modFuelCostOveride;
 
     public override void Init()
     {
         base.Init();
         baseWeapon.weaponOverride = true;
         baseWeapon.weaponFuelManager.constantUse = false;
+        modFuelCost = modFuelCostOveride;
+        damage = baseWeapon.damage * (runMod.modifiers[0].statValue/100);
     }
 
     public void Update()
     {
-        shotTimer += Time.deltaTime;
         if (!overideFire)
         {
             return;
@@ -30,11 +33,13 @@ public class FlameGrenadeMod : WeaponMod
             return;
         }
 
+        shotTimer += Time.deltaTime;
 
-        if (shotTimer <= baseWeapon.fireRate)
+        if (shotTimer <= grenadeShotTime)
         {
             return;
         }
+
         flameGrenades[currentGrenade].SetActive(true);
         flameGrenades[currentGrenade].transform.position = transform.position + transform.forward;
         flameGrenades[currentGrenade].transform.rotation = transform.rotation;

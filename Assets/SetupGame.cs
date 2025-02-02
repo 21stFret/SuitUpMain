@@ -6,7 +6,8 @@ public enum Difficulty
 {
     Easy,
     Mid,
-    Hard
+    Hard,
+    Insane
 }
 
 public class SetupGame : MonoBehaviour

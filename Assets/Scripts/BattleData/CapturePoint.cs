@@ -16,6 +16,7 @@ public class CapturePoint : MonoBehaviour
 
     public void Init()
     {
+        isCaptured = false;
         captureProgress = 0;
         gameObject.SetActive(true);
         _enabled = true;

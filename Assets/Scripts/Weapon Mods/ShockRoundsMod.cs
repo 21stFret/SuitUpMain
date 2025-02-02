@@ -9,7 +9,7 @@ public class ShockRoundsMod : WeaponMod
     {
         base.Init();
         float StunTime = runMod.modifiers[0].statValue;
-        float shockDamage = runMod.modifiers[1].statValue;
+        float shockDamage = baseWeapon.damage * (runMod.modifiers[1].statValue/100);
         Shotgun gun = baseWeapon as Shotgun;
         gun.stunTime = StunTime;
         gun.shockRounds = true;
