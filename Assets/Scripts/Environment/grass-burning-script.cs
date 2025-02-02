@@ -92,7 +92,7 @@ public class GrassBurning : Prop
         yield return new WaitForSeconds(burnDuration);
         isOnFire = false;
         isBurned = true;
-
+        fireLight.DOIntensity(0, 0.5f);
         // Replace with burned grass
         if (burnedGrassPrefab != null)
         {

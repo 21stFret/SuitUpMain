@@ -12,13 +12,33 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Glass
+    second: {fileID: 2100000, guid: 61d193e1cf9e8e74e9ef8f5abe1244ce, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glow
+    second: {fileID: 2100000, guid: aa1f745bfdb74044fa2f1e0fdb0b4c5f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Ice
     second: {fileID: 2100000, guid: 64ebc804c1018a84daa65b0b37c7d60a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: IceBall.001
+    second: {fileID: 2100000, guid: 6c648f0bf2d57bf4bb7e0ddfe7507e1f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: IceBarrel
     second: {fileID: 2100000, guid: 86ed63386f30b63499b2bdc3167c9eca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pyramid
+    second: {fileID: 2100000, guid: d0fe27e1c736f904d9747ecc64c55dbe, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -110,7 +130,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 100
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

@@ -13,7 +13,10 @@ public class WeaponModManager : MonoBehaviour
     public List<WeaponMod> currentMods = new List<WeaponMod>();
 
     [InspectorButton("EquipAssaultModTEst")]
-    public bool equipMod;
+    public bool equipAssMod;
+
+    [InspectorButton("EquipTechModTEst")]
+    public bool equipTEchMod;
 
     public void LoadCurrentWeaponMods(WeaponType type)
     {
@@ -86,5 +89,20 @@ public class WeaponModManager : MonoBehaviour
         currentAssaultMod.transform.localPosition = Vector3.zero;
         currentAssaultMod.transform.localRotation = Quaternion.identity;
         currentAssaultMod.Init();
+    }
+
+    public void EquipTechModTEst()
+    {
+        if (currentTechMod == null)
+        {
+            return;
+        }
+        techWeapon.weaponMod = currentTechMod;
+        currentTechMod.baseWeapon = techWeapon;
+        currentTechMod.transform.SetParent(techWeapon.transform);
+        currentTechMod.transform.localPosition = Vector3.zero;
+        currentTechMod.transform.localRotation = Quaternion.identity;
+        currentTechMod.enabled = true;
+        currentTechMod.Init();
     }
 }

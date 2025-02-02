@@ -21,15 +21,13 @@ public class FlameTrigger : MonoBehaviour
         isOn = false;
         weaponType = type;
         fovCollider.CreateCollider();
+        fovCollider.enabled = false;
     }
 
     public void SetCol(bool value)
     {
         isOn = value;
-        if(!isOn)
-        {
-            //triggerSensor.Clear();
-        }
+        fovCollider.enabled = value;
     }
 
     private void Update()
@@ -56,7 +54,7 @@ public class FlameTrigger : MonoBehaviour
                 if (targetHealth != null)
                 {
                     if(!targetHealth.alive)
-                    {                
+                    {
                         continue;
                     }
                     targetHealth.TakeDamage(shotDamage, weaponType);

@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public AreaManager areaManager;
     public VoidPortalManager voidPortalManager;
     public VoidAreaManager voidAreaManager;
-    public RoomPortal RoomPortal;
     public int currentRoomIndex;
     public bool endlessMode;
     public bool gameActive;
@@ -58,6 +57,7 @@ public class GameManager : MonoBehaviour
         InitializeStats();
         AudioManager.instance.Init();
         AudioManager.instance.PlayBattleMusic();
+        runUpgradeManager.LoadData();
 
         if (!playOnAwake) return;
 
@@ -66,7 +66,6 @@ public class GameManager : MonoBehaviour
         gameActive = true;
         BattleManager.instance.currentBattleIndex = 0;
         BattleManager.instance.crawlerSpawner.Init();
-        runUpgradeManager.LoadData();
         LoadNextRoom(0);
     }
 
@@ -118,7 +117,7 @@ public class GameManager : MonoBehaviour
         BattleManager.instance.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(delay/2);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
+        voidPortalManager.StopFirstPersonEffect();
         _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
@@ -130,15 +129,14 @@ public class GameManager : MonoBehaviour
     public IEnumerator LoadVoidRoom()
     {
         gameUI.gameUIFade.FadeOut();
-        RoomPortal.portalEffect.StopEffect();
         yield return new WaitForSeconds(2);
         areaManager.LoadVoidArea();
         voidAreaManager.InitVoidArea();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(1);
-        RoomPortal.visualPortalEffect.StopFirstPersonEffect();
-        yield return new WaitForSeconds(1);
+        voidPortalManager.StopFirstPersonEffect();
         _myCharacterController.ToggleCanMove(true);
+        yield return new WaitForSeconds(1);
         gameUI.gameUIFade.FadeIn();
 
     }
@@ -161,7 +159,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            voidPortalManager.StartEffect();
+            voidPortalManager.StartAllEffects();
         }
         BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
     }
@@ -173,7 +171,9 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
-        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty) ;
+        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
+        PlayerSavedData.instance.highestDifficulty = (int)SetupGame.instance.diffiulty;
+        PlayerSavedData.instance.SavePlayerData();
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
     }

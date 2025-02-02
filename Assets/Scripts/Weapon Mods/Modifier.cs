@@ -27,7 +27,9 @@ public enum StatType
     Bounce,
     Force,
     Split,
-    Chains
+    Chains,
+    Reload_Time,
+    Shield_Health,
 
 }
 

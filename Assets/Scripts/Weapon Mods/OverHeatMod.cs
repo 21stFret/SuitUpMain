@@ -34,6 +34,7 @@ public class OverHeatMod : WeaponMod
 
         }
         overHeatMaterial = minigun.meshRenderer.material;
+        overHeatMaterial.SetFloat("_FlashOn", 1);
     }
 
     // Fire Weapon

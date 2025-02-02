@@ -18,14 +18,14 @@ public class FlameController : MechWeapon
     public override void Fire()
     {
         base.Fire();
-        flameTrigger.SetCol(true);
+        flameTrigger.SetCol(isFiring);
     }
 
     // Stop firing 
     public override void Stop()
     {
         base.Stop();
-        flameTrigger.SetCol(false);
+        flameTrigger.SetCol(isFiring);
     }
 
 }

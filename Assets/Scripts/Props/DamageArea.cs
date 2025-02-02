@@ -76,6 +76,11 @@ public class DamageArea : MonoBehaviour
             {
                 if (targetsInRange[i] != null)
                 {
+                    if(Vector3.Distance(transform.position, targetsInRange[i].transform.position) > damageRadius)
+                    {
+                        targetsInRange.RemoveAt(i);
+                        continue;
+                    }
                     targetsInRange[i].TakeDamage(damageAmount, damageType);
                 }
                 else

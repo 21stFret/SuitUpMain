@@ -16,7 +16,7 @@ public class Pickup : MonoBehaviour
 
     public RunUpgradeManager runUpgradeManager;
     public ParticleSystem pickupParticles;
-    public GameObject pickupModel;
+    public GameObject pickupModel, upgradeModel;
 
     public ParticleSystem pickupUpgrade;
     public bool upgrade;
@@ -38,6 +38,7 @@ public class Pickup : MonoBehaviour
         if(pickupType == ModBuildType.UPGRADE)
         {
             upgrade = true;
+            upgradeModel.SetActive(true);
         }
         pickupModel.SetActive(false);
         StartCoroutine(SetupPickup());
@@ -121,5 +122,6 @@ public class Pickup : MonoBehaviour
         pickupLight.enabled = false;
         pickupParticles.Clear();
         pickupModel.SetActive(false);
+        upgradeModel.SetActive(false);
     }
 }

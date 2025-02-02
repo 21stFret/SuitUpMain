@@ -21,7 +21,9 @@ public class PlayerSavedData : MonoBehaviour
     public Vector2 _playerLoadout       {get; private set;} 
     public bool _firstLoad              {get; private set;}
     public bool _triggeredEasterEgg;     
-    public GameStats _gameStats         {get; private set;} 
+    public GameStats _gameStats         {get; private set;}
+
+    public int highestDifficulty;
 
     private void Awake()
     {

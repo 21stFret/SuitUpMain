@@ -278,17 +278,21 @@ public class MYCharacterController : MonoBehaviour
         {
             direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
             direction.Normalize();
-            float inputedSpeed = _moveInputVector.magnitude * Speed;
 
-            if (bonusSpeed > Speed)
+            float adjustedSpeed = Speed;
+
+            if (bonusSpeed != 0)
             {
-                //print("Speed Bonus: " + bonusSpeed);
-                inputedSpeed = bonusSpeed;
-                if (inputedSpeed <= 0)
+                adjustedSpeed = bonusSpeed;
+                if (adjustedSpeed <= 0)
                 {
-                    inputedSpeed = minSpeed;
+                    adjustedSpeed = minSpeed;
                 }
             }
+
+            float inputedSpeed = _moveInputVector.magnitude * adjustedSpeed;
+
+  
 
             float weaponFiringSlow = weaponFiringSlowAmount * weaponController.WeaponsFiring();
             if(weaponFiringSlow !=0) 
@@ -319,6 +323,7 @@ public class MYCharacterController : MonoBehaviour
     public void SetBonusSpeed()
     {
         bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
+        print("Base Speed: " + Speed + " and Bonus Speed: " + bonusSpeed);
     }
 
     public void SetDashCooldown()

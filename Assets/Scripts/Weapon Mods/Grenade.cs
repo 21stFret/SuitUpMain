@@ -48,7 +48,7 @@ public class Grenade : MonoBehaviour
         col.enabled = true;
         damage = _damage;
         range = _range;
-        rb.AddForce(transform.forward * range, ForceMode.Impulse);
+        rb.AddForce(transform.forward * range, ForceMode.VelocityChange);
         if (!explodeOnImpact)
         {
             StartCoroutine(ExplodeDelay());

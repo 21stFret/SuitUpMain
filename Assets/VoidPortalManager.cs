@@ -8,6 +8,7 @@ public class VoidPortalManager : MonoBehaviour
     public PortalEffect[] portalEffects;
     public PortalEffect voidPortalEffect;
     public PortalEffect hordePortalEffect;
+    public PortalEffect FPSPortalEffect;
     public int MaxPortalEffects = 3;
     public RunUpgradeManager runUpgradeManager;
     public Transform voidPortalLocation;
@@ -15,7 +16,7 @@ public class VoidPortalManager : MonoBehaviour
     [InspectorButton("StartEffect")]
     public bool startEffect;
 
-    public void StartEffect()
+    public void StartAllEffects()
     {
         runUpgradeManager.SelectNextBuilds();
         for (int i = 0; i < portalEffects.Length; i++)
@@ -29,15 +30,34 @@ public class VoidPortalManager : MonoBehaviour
         }
     }
 
+    public void StartFirstPersonEffect(ModBuildType type)
+    {
+        FPSPortalEffect.gameObject.SetActive(true);
+        SetPortalColor(FPSPortalEffect, type);
+        FPSPortalEffect.StartFirstPersonEffect();
+    }
+
+    public void StopFirstPersonEffect()
+    {
+        FPSPortalEffect.StopFirstPersonEffect();
+    }
+
     public void StartVoidEffect()
     {
         voidPortalEffect.StartEffect();
+        SetPortalColor(voidPortalEffect, ModBuildType.UPGRADE);
         RoomPortal portal = voidPortalEffect.GetComponent<RoomPortal>();
-        portal.voidPortal = true;
+        portal.portalType = ModBuildType.UPGRADE;
         portal._active = true;
     }
 
-    public void StopEffect()
+    public void StopVoidEffect()
+    {
+        voidPortalEffect.StopEffect();
+        voidPortalEffect.GetComponent<RoomPortal>()._active = false;
+    }
+
+    public void StopAllEffects()
     {
         for (int i = 0; i < portalEffects.Length; i++)
         {
@@ -65,6 +85,9 @@ public class VoidPortalManager : MonoBehaviour
                 break;
             case ModBuildType.AGILITY:
                 color = Color.yellow;
+                break;
+            case ModBuildType.UPGRADE:
+                color = Color.magenta;
                 break;
         }
         for (int i = 0; i < portal.f3DWarpJumpTunnel.Length; i++)

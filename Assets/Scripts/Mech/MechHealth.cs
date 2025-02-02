@@ -41,7 +41,7 @@ public class MechHealth : MonoBehaviour
     public bool TakeDam;
 
     [InspectorButton("HealTest")]
-    public bool Heal;
+    public bool heal;
 
     private float cachedFillamount;
     private Image flash;
@@ -104,10 +104,21 @@ public class MechHealth : MonoBehaviour
         }
 
         // Achievement check
-        if (Time.time > 180f && !hit && GameManager.instance != null && GameManager.instance.gameActive)
+        if(GameManager.instance != null)
         {
-            PlayerAchievements.instance?.SetAchievement("DODGE_1");
+            if(PlayerAchievements.instance != null)
+            {
+                if(PlayerAchievements.instance.IsAchieved("DODGE_1") || !GameManager.instance.gameActive)
+                {
+                    return;
+                }
+                if (Time.time > 180f && !hit)
+                {
+                    PlayerAchievements.instance?.SetAchievement("DODGE_1");
+                }
+            }
         }
+
     }
 
     private void TakeDamage1()
@@ -120,7 +131,12 @@ public class MechHealth : MonoBehaviour
         targetHealth.TakeDamage(-10);
     }
 
-    public void TakeDamage(float damage)
+    public void Heal(float amount)
+    {
+        targetHealth.TakeDamage(-amount);
+    }
+
+    public void TakeDamage(float damage, Crawler crawler = null)
     {
         if (isDead) return;
 
@@ -174,6 +190,11 @@ public class MechHealth : MonoBehaviour
             rb.velocity = rb.velocity/2;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
+            RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
+            if (__selectMod != null)
+            {
+                crawler?.TakeDamage(__selectMod.modifiers[0].statValue, WeaponType.Lightning);
+            }
         }
         else
         {

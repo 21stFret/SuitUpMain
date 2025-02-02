@@ -140,25 +140,26 @@ public class BattleManager : MonoBehaviour
         crawlerSpawner.EndBattle();
         lightningController.active = false;
         currentBattleIndex++;
-
-        if (currentBattleIndex >= Battles.Count - 1 && _gameManager.currentAreaType==AreaType.Jungle)
-        {
-            _gameManager.EndGame(true);
-            return;
-        }
         _gameManager.gameActive = false;
         AudioManager.instance.PlayMusic(5);
-        SetPickUpPosition();
         roomDrop.gameObject.SetActive(true);
-        if(currentBattle.battleType == BattleType.Survive)
+        SetPickUpPosition();
+
+        if (currentBattleIndex >= Battles.Count)
         {
+            if (_gameManager.currentAreaType == AreaType.Jungle)
+            {
+                _gameManager.EndGame(true);
+                return;
+            }
+
             roomDrop.Init(ModBuildType.UPGRADE);
         }
         else
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-
+        // add secondary room drop for upgrade when doing mini boss as to not break flow of the player chosen portal
     }
 
     public void ObjectiveFailed()
@@ -217,10 +218,6 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator CheckActiveEnemies()
     {
-        if (BattleMech.instance.isDead)
-        {
-            yield break;
-        }
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
             yield return new WaitForSeconds(1);

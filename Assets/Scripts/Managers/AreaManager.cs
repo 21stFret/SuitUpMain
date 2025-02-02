@@ -39,7 +39,7 @@ public class AreaManager : MonoBehaviour
         dayLight.SetActive(!night);
         nightLight.SetActive(night);
         directionalDaylight.enabled = !night;
-        directionalDaylight.startTime = Random.Range(0f, 1f);
+        directionalDaylight.startTime = Random.Range(0.2f, 0.7f);
         directionalDaylight.Init();
     }
 
@@ -109,6 +109,7 @@ public class AreaManager : MonoBehaviour
         }
         voidArea.SetActive(true);
         currentRoom = voidArea;
+        DayNightCycle(true);
     }
 
 }

@@ -17,15 +17,19 @@ public class MeasterMegg : MonoBehaviour
             count++;
         }
 
-        if (count >= 3)
+        if (count == 3)
         {
             if(PlayerSavedData.instance != null)
             {
                 if(!PlayerSavedData.instance._triggeredEasterEgg)
                 {
-                    PlayerSavedData.instance.UpdatePlayerCash(5000);
+                    PlayerSavedData.instance.UpdatePlayerCash(3000);
                     PlayerSavedData.instance._triggeredEasterEgg = true;
-                    text.text = "You collected 3 crates! Well done loser haha! Just kidding your'e awesome :P Have 1000 cash!";
+                    BaseManager.instance.statsUI.UpdateCash(PlayerSavedData.instance._Cash);
+                    PlayerSavedData.instance.SavePlayerData();
+                    text.text = "You collected 3 crates! Well done loser! Just kidding you're awesome! Have 3000 cash!";
+                    GetComponent<Collider>().enabled = false;
+                    count = 10;
                 }
                 else
                 {
@@ -33,12 +37,13 @@ public class MeasterMegg : MonoBehaviour
                 }
 
             }
-            menu.SetBool("Open", true);
+            StartCoroutine(CloseMenu());
         }
     }
 
     private IEnumerator CloseMenu()
     {
+        menu.SetBool("Open", true);
         yield return new WaitForSeconds(5);
         menu.SetBool("Open", false);
     }

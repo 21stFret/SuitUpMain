@@ -4913,8 +4913,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageRadius: 2
-  damageInterval: 1
-  damageAmount: 10
+  damageInterval: 0.3
+  damageAmount: 0.5
   damageDuration: 0
   damageType: 3
   damageActive: 1
@@ -5066,6 +5066,8 @@ MonoBehaviour:
   invincible: 0
   alive: 0
   immuneWeapons: 
+  damageNumbersOn: 0
+  damageNumberPrefab: {fileID: 0}
 --- !u!114 &9070506646060645443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5081,10 +5083,12 @@ MonoBehaviour:
   _targetHealth: {fileID: 4587334985747962520}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  init: 0
   onFire: 0
   fire: {fileID: 6425605506159916930}
   fireDamage: {fileID: 2637198881970538479}
   burnTime: 5
+  oilPatch: {fileID: 3491209642080967607}
 --- !u!1 &6842724519499372624
 GameObject:
   m_ObjectHideFlags: 0

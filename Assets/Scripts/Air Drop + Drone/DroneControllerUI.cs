@@ -42,6 +42,7 @@ public class DroneControllerUI : MonoBehaviour
 
     [InspectorButton("TestActiveate")]
     public bool testActiveate;
+    public DroneType testDrone;
 
     private void Start()
     {
@@ -52,7 +53,7 @@ public class DroneControllerUI : MonoBehaviour
 
     public void TestActiveate()
     {
-        ActivateDroneInput(DroneType.Companion);
+        ActivateDroneInput(testDrone);
     }
 
     public void ActivateDroneInput(DroneType type)

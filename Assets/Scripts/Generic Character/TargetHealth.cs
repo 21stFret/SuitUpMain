@@ -60,7 +60,7 @@ public class TargetHealth : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0)
+    public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0, Crawler crawler = null)
     {
         if (!alive)
         {
@@ -92,7 +92,7 @@ public class TargetHealth : MonoBehaviour
                 DamageNumbers(damage, weaponType);
             }
 
-            _mech.TakeDamage(damage);
+            _mech.TakeDamage(damage, crawler);
             return;
         }
 

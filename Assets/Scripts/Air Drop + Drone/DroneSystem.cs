@@ -79,13 +79,12 @@ public class DroneSystem : MonoBehaviour
             case DroneType.Companion:
                 PingClosestEnemy();
                 minigun.gameObject.SetActive(true);
-                stoppingDistance = 10;
+                stoppingDistance = 5;
                 break;
         }
         int droneTypeInt = (int)droneType;
         if(droneTypeInt < droneIncomingSounds.Count)
         {
-
             _incomingAudioSource.PlayOneShot(droneIncomingSounds[droneTypeInt]);
         }
 
@@ -153,7 +152,11 @@ public class DroneSystem : MonoBehaviour
                     crawler = collider.GetComponent<Crawler>();
                 }
             }
-        }   
+        }
+        else
+        {
+            target = player.transform;
+        }
     }
 
     // Update is called once per frame

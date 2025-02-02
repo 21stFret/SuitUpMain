@@ -51,7 +51,7 @@ MonoBehaviour:
   damage: 0
   range: 0
   explosionForce: 200
-  explosionRadius: 15
+  explosionRadius: 8
   explosionUpward: 2
   fuseTime: 1.5
   explodeOnImpact: 0
@@ -74,8 +74,8 @@ Rigidbody:
   m_GameObject: {fileID: 3971642524197423859}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.2
+  m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
