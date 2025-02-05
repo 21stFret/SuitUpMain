@@ -49,6 +49,7 @@ public class Crawler : MonoBehaviour
     public Animator animator;
     public bool dead;
     public AudioSource deathNoise;
+    public bool overrideDeathNoise;
     protected bool inRange;
     [SerializeField]
     private bool immune;
@@ -57,6 +58,7 @@ public class Crawler : MonoBehaviour
     public int cashWorth;
     public int expWorth;
     public int dropRate;
+    public float ScreamChance;
 
     public TriggerSensor.ObjectStateHandler objectStateHandler;
 
@@ -88,6 +90,7 @@ public class Crawler : MonoBehaviour
     public virtual void Init()
     {
         dead = false;
+        overrideDeathNoise = false;
         _targetHealth = GetComponent<TargetHealth>();
         _targetHealth.Init(this);
         _collider = GetComponent<Collider>();
@@ -318,7 +321,7 @@ public class Crawler : MonoBehaviour
         dead = true;
         _targetHealth.health = 0;
         _targetHealth.alive = false;
-        PlayDeathNoise();
+        PlayDeathNoise(overrideDeathNoise);
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
@@ -376,7 +379,7 @@ public class Crawler : MonoBehaviour
 
     private void CheckForModsOnDeath(WeaponType weapon)
     {
-        if(GameManager.instance.runUpgradeManager == null)
+        if(GameManager.instance?.runUpgradeManager == null)
         {
             return;
         }
@@ -431,8 +434,15 @@ public class Crawler : MonoBehaviour
         }        
     }
 
-    public void PlayDeathNoise()
+    public void PlayDeathNoise(bool overrideDeathNoise)
     {
+        if(!overrideDeathNoise)
+        {
+            deathNoise.clip = AudioManager.instance.GetRandomDeathNoise();
+        }
+        deathNoise.transform.SetParent(null);
+        deathNoise.gameObject.SetActive(true);
+        deathNoise.transform.position = transform.position;
         deathNoise.pitch = Random.Range(0.8f, 1.2f);
         deathNoise.Play();
     }
@@ -460,6 +470,7 @@ public class Crawler : MonoBehaviour
     {
         _spawnEffect.Play();
         SetCrawlerScale();
+        RandomSpawnScream();
         yield return new WaitForSeconds(0.1f);
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         float force =SpawnForce;
@@ -480,6 +491,23 @@ public class Crawler : MonoBehaviour
         float min = crawlerScale - scaleFActor;
         float max = crawlerScale + scaleFActor;
         transform.DOScale(Random.Range(min, max), 0.4f);
+    }
+
+    public void RandomSpawnScream()
+    {
+        if(Random.Range(0, 100) > ScreamChance)
+        {
+            return;
+        }
+        if (!overrideDeathNoise)
+        {
+            deathNoise.clip = AudioManager.instance.GetRandomSpawnNoise();
+        }
+        deathNoise.transform.SetParent(null);
+        deathNoise.gameObject.SetActive(true);
+        deathNoise.transform.position = transform.position;
+        deathNoise.pitch = Random.Range(0.8f, 1.2f);
+        deathNoise.Play();
     }
 }
 

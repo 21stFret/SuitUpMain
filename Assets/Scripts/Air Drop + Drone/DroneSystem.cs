@@ -66,11 +66,11 @@ public class DroneSystem : MonoBehaviour
                 break;
             case DroneType.Airstrike:
                 BattleMech.instance.droneController.MissileStrike();
-                active =! active;
+                active = true;
                 break;
             case DroneType.FatMan:
                 BattleMech.instance.droneController.FatManLaunch();
-                active = !active;
+                active = true;
                 break;
             case DroneType.Orbital:
                 PingClosestEnemy();

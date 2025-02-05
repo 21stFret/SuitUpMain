@@ -36,7 +36,7 @@ public class BaseManager : MonoBehaviour
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         mechLoadOut.Init();
         AudioManager.instance.Init();
-        AudioManager.instance.PlayMusic(3);
+        AudioManager.instance.PlayBGMusic(3);
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
         daylight.startTime = Random.Range(0, 1f);
@@ -46,6 +46,7 @@ public class BaseManager : MonoBehaviour
 
     public void StartGame(int value)
     {
+        AudioManager.instance.PlayButtonSFX((int)SFX.Confirm);
         Time.timeScale = 1;
         sceneLoader.LoadScene(value, true);
     }

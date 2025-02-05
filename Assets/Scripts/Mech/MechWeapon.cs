@@ -92,6 +92,7 @@ public class MechWeapon : MonoBehaviour
         fireRate = baseWeaponInfo._fireRate[weaponData.level];
         range = baseWeaponInfo._range[weaponData.level];
         weaponFuelUseRate = baseWeaponInfo._weaponFuelUseRate[weaponData.level];
+        force = baseWeaponInfo._uniqueValue[weaponData.level];
     }
 
     public void FireMod()

@@ -42,12 +42,13 @@ public class VoidPortalManager : MonoBehaviour
         FPSPortalEffect.StopFirstPersonEffect();
     }
 
-    public void StartVoidEffect()
+    public void StartVoidEffect(bool voidTrue)
     {
         voidPortalEffect.StartEffect();
         SetPortalColor(voidPortalEffect, ModBuildType.UPGRADE);
         RoomPortal portal = voidPortalEffect.GetComponent<RoomPortal>();
         portal.portalType = ModBuildType.UPGRADE;
+        portal.voidPortal = voidTrue;
         portal._active = true;
     }
 
@@ -67,6 +68,7 @@ public class VoidPortalManager : MonoBehaviour
                 portalEffects[i].GetComponent<RoomPortal>()._active = false;
             }
         }
+        StopVoidEffect();
     }
 
     public static void SetPortalColor(PortalEffect portal, ModBuildType type)    

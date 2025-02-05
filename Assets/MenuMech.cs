@@ -7,6 +7,7 @@ public class MenuMech : MonoBehaviour
     public Material LightsMat;
     public Animator MechAnim;
     public AudioClip LoadUpSound;
+    public MainMenu mainMenu;
 
     public void Start()
     {
@@ -50,6 +51,7 @@ public class MenuMech : MonoBehaviour
             }
         }
 
-        SceneLoader.instance.LoadScene(2);
+        mainMenu.StartGame(2);
+
     }
 }

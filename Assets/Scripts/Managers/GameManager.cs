@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour
     {
         gameUI.gameUIFade.FadeOut();
         yield return new WaitForSeconds(delay);
+        AudioManager.instance.PlayBattleMusic();
         CashCollector.instance.DestroyParts();
         BattleManager.instance.SetBattleType();
         BattleManager.instance.roomDrop.gameObject.SetActive(false);
@@ -122,8 +123,6 @@ public class GameManager : MonoBehaviour
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
         gameActive = true;
-        AudioManager.instance.PlayBattleMusic();
-
     }
 
     public IEnumerator LoadVoidRoom()
@@ -151,24 +150,29 @@ public class GameManager : MonoBehaviour
     public void SpawnPortalsToNextRoom(bool voidRoom = false)
     {
         voidPortalManager.transform.position = voidRoom ? voidPortalManager.voidPortalLocation.position : playerInput.transform.position;
+        BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
 
         if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 1)
         {
-            voidPortalManager.StartVoidEffect();
+            voidPortalManager.StartVoidEffect(true);
             BattleManager.instance.ResetOnNewArea();
+            return;
+        }
+        if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 2)
+        {
+            voidPortalManager.StartVoidEffect(false);
         }
         else
         {
             voidPortalManager.StartAllEffects();
         }
-        BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
     }
 
 
 
     public void EndGame(bool won)
     {
-        AudioManager.instance.PlayMusic(4);
+        AudioManager.instance.PlayBGMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
         PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);

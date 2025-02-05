@@ -24,7 +24,6 @@ public class DroneControllerUI : MonoBehaviour
     public AirDropCharger airDropTimer;
     public GameObject airdropMenu;
     public PlayerInput playerInput;
-    public DoTweenFade fade;
     public EventSystem eventSystem;
     public GameObject firstSelected;
     public F3DMissileLauncher missileLauncher;
@@ -33,6 +32,7 @@ public class DroneControllerUI : MonoBehaviour
     public int timesUsed;
     private bool inputDelay;
     public int airstikes;
+    public int crates;
     public bool tutorial;
     public List<DroneInputUI> droneInputs;
     public List<GameObject> uiObjects;
@@ -77,7 +77,7 @@ public class DroneControllerUI : MonoBehaviour
     }
 
      private void SetupSequencers()
-    {
+     {
         for (int i = 0; i < droneInputs.Count; i++)
         {
             DroneInputUI droneInput = droneInputs[i];
@@ -100,7 +100,7 @@ public class DroneControllerUI : MonoBehaviour
             droneInput.sequenceInputController.RemoveAllListeners();
             droneInput.sequenceInputController.OnSequenceComplete += () => InitAirSupport(droneInput.droneType);
         }
-    }
+     }
 
     public void OnOpenMenu(InputAction.CallbackContext context)
     {
@@ -128,17 +128,13 @@ public class DroneControllerUI : MonoBehaviour
         AudioManager.instance.PlaySFX(SFX.Select);
         Time.timeScale = 0.3f;
         airdropMenu.SetActive(true);
-        if(!tutorial)
+        foreach (DroneInputUI sequence in droneInputs)
         {
-            InputTracker.instance.SetLastSelectedGameObject(firstSelected);
-            foreach (DroneInputUI sequence in droneInputs)
+            if (!sequence.isActive)
             {
-                if (!sequence.isActive)
-                {
-                    continue;
-                }
-                sequence.sequenceInputController.StartNewSequence();
+                continue;
             }
+            sequence.sequenceInputController.StartNewSequence();
         }
         playerInput.SwitchCurrentActionMap("UI");
     }
@@ -161,6 +157,10 @@ public class DroneControllerUI : MonoBehaviour
         Time.timeScale = 1;
         airdropMenu.SetActive(false);
         playerInput.SwitchCurrentActionMap("Gameplay");
+        if(tutorial)
+        {
+            FullyChargeDrone();
+        }
     }
 
     public void InitAirSupport(DroneType type)
@@ -172,6 +172,11 @@ public class DroneControllerUI : MonoBehaviour
 
         StartCoroutine(InputDelay());
         drone.Init(type);
+
+        if(type == DroneType.Repair || type == DroneType.Shield)
+        {
+            crates++;
+        }
 
         AudioManager.instance.PlaySFX(SFX.Confirm);
 

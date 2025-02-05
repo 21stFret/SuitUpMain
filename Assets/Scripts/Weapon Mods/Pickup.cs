@@ -83,6 +83,7 @@ public class Pickup : MonoBehaviour
                     pickupColor = Color.yellow;
                     break;
             }
+            pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
             pickupParticles.Play();
             pickupModel.transform.localScale = Vector3.zero;
             float scale = 0.35f;
@@ -93,10 +94,9 @@ public class Pickup : MonoBehaviour
             pickupLight.enabled = true;
             pickupLight.color = pickupColor;
         }
-        pickupCollider.enabled = true;
-        pickupRenderer.material.SetColor("_EmissionColor", pickupColor * 5);
-        canpickup = true;
 
+        pickupCollider.enabled = true;
+        canpickup = true;
     }
 
     private void PickUp()

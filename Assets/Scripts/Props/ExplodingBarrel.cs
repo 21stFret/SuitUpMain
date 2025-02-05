@@ -91,8 +91,10 @@ public class ExplodingBarrel : Prop
         breakableObject.transform.parent = null;
         breakableObject.Break();
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
+        explosionSound.pitch = Random.Range(0.7f, 1.2f);
         explosionSound.Play();
         explosionEffect.transform.parent = null;
+        explosionEffect.transform.position = transform.position;
         explosionEffect.Play();
         prefab.SetActive(false);
         if (damageArea != null)

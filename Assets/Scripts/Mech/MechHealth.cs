@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class MechHealth : MonoBehaviour
 {
@@ -88,7 +89,7 @@ public class MechHealth : MonoBehaviour
         healthBar.fillAmount = 1;
         damageOverlay.fillAmount = 1;
         cachedFillamount = 1;
-        SetShieldBar(0);
+        SetShieldBar(100);
         flash = screenFlash.GetComponent<Image>();
     }
 
@@ -190,10 +191,17 @@ public class MechHealth : MonoBehaviour
             rb.velocity = rb.velocity/2;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
+            if(GameManager.instance == null)
+            {
+                return;
+            }
             RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
             if (__selectMod != null)
             {
-                crawler?.TakeDamage(__selectMod.modifiers[0].statValue, WeaponType.Lightning);
+                float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
+                float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
+                print("feedback damage is "+feedbackDamage);
+                crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
             }
         }
         else
@@ -252,6 +260,11 @@ public class MechHealth : MonoBehaviour
 
         cachedFillamount = healthBar.fillAmount;
         pendingDamage = 0;
+    }
+
+    public void SetHealthBar(float vlaaue)
+    {
+        healthBar.fillAmount = vlaaue / targetHealth.maxHealth;
     }
 
     private IEnumerator HealthBarFlash()
