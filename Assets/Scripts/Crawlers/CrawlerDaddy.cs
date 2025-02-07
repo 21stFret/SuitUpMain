@@ -10,9 +10,12 @@ public class CrawlerDaddy : Crawler
     public float explosionForce = 1000f;
     public LayerMask layerMask;
     public GameObject eggs;
+    public AudioClip deathSound;
 
     public override void Die(WeaponType killedBy)
     {
+        overrideDeathNoise = true;
+        deathNoise.clip = deathSound;
         if(killedBy != WeaponType.Default)
         {
             Vector3 pos = transform.position;

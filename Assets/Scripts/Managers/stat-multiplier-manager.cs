@@ -154,8 +154,8 @@ public class StatMultiplierManager : MonoBehaviour
                 break;
             case StatType.Dash_Cooldown:
                 // DOne in MYCharacterController
-                Debug.Log($"Speed Increased by {percentageIncrease}");
-                BattleMech.instance.myCharacterController.SetDashCooldown();
+                Debug.Log($"Dash time reduced by {percentageIncrease}");
+                BattleMech.instance.myCharacterController.SetDashCooldown(percentageIncrease);
                 break;
             case StatType.Charge_Rate:
                 Debug.Log($"Charge Rate Increased by {percentageIncrease}");

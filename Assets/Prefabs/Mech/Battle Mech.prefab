@@ -56927,7 +56927,7 @@ MonoBehaviour:
   targetHealth: {fileID: 5979783455418939766}
   deathClip: {fileID: 8300000, guid: 0e06c997f66813242af742395e3e0dc3, type: 3}
   TakeDam: 0
-  Heal: 0
+  heal: 0
   shieldHealth: 0
   shieldHealthMax: 0
   shieldBar: {fileID: 0}
@@ -57390,6 +57390,7 @@ MonoBehaviour:
   hologram: 0
   hologramPrefab: {fileID: 0}
   holoExplosion: {fileID: 0}
+  hologramExplode: {fileID: 0}
   speedBoost: 0
   time: 3
   layerMask:
@@ -57461,8 +57462,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pulsewave: {fileID: 2081187983803785084}
-  range: 7
-  forceMagnitude: 110
+  range: 8
+  forceMagnitude: 150
   crawlerLayer:
     serializedVersion: 2
     m_Bits: 20865
@@ -57525,6 +57526,7 @@ MonoBehaviour:
   weaponFuelRate: 0
   canRecharge: 1
   constantUse: 0
+  weaponInUse: 0
 --- !u!114 &2064643677528919111
 MonoBehaviour:
   m_ObjectHideFlags: 0

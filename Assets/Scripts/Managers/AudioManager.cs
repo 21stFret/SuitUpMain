@@ -22,10 +22,13 @@ public class AudioManager : MonoBehaviour
     [NamedArray(new string[] { "Main Menu", "Loading", "Tutorial", "Base", "Win Game", "DownTime" })]
     public AudioClip[] musicClips;
     public AudioClip[] battleClips;
+    public AudioClip[] bossTracks;
     [NamedArray(new string[] { "Move", "Select", "Back", "Confirm", "Error", "Unlock" })]
     public AudioClip[] effectClips;
     public AudioClip[] hurtClips;
     public AudioClip[] healClips;
+    public AudioClip[] crawalerDeathClips;
+    public AudioClip[] crawalerSpawnClips;
     public AudioMixer audioMixer;
     public AudioSource backgroundMusic;
     public AudioSource soundEffect;
@@ -99,18 +102,30 @@ public class AudioManager : MonoBehaviour
     }
 
     // Play a music clip
-    public void PlayMusic(int clipIndex, bool battlemusic = false)
+    public void PlayMusic(AudioClip clip)
     {
+        currentClip = clip;
         DOVirtual.Float(musicVolume, 0.0001f, 1f, v => audioMixer.SetFloat("BGMVolume", Mathf.Log10(v) * 20)).OnComplete(FadeMusicIn);
-        currentClipIndex = clipIndex;
-        if (battlemusic)
+    }
+
+    public AudioClip GetRandomDeathNoise()
+    {
+        return crawalerDeathClips[Random.Range(0, crawalerDeathClips.Length)];
+    }
+
+    public AudioClip GetRandomSpawnNoise()
+    {
+        return crawalerSpawnClips[Random.Range(0, crawalerSpawnClips.Length)];
+    }
+
+    public void PlayBossMusic(int trackID = -1)
+    {
+        if (trackID == -1)
         {
-            currentClip = battleClips[clipIndex];
+            trackID = Random.Range(0, bossTracks.Length);
         }
-        else
-        {
-            currentClip = musicClips[clipIndex];
-        }
+
+        PlayMusic(bossTracks[trackID]);
     }
 
     public void PlayBattleMusic(int trackID = -1)
@@ -119,8 +134,16 @@ public class AudioManager : MonoBehaviour
         {
             trackID = Random.Range(0, battleClips.Length);
         }
+        PlayMusic(battleClips[trackID]);
+    }
 
-        PlayMusic(trackID, true);
+    public void PlayBGMusic(int trackID = -1)
+    {
+        if(trackID == -1)
+        {
+            trackID = Random.Range(0, musicClips.Length);
+        }
+        PlayMusic(musicClips[trackID]);
     }
 
     private void FadeMusicIn()

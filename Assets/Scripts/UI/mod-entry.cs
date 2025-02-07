@@ -29,7 +29,7 @@ public class ModEntry : MonoBehaviour
             scale.x = -scale.x;
             conector.transform.localScale = scale;
             Vector2 pos = conector.transform.localPosition;
-            pos.x -= 35;
+            pos.x += 35;
             conector.transform.localPosition = pos;
         }
     }

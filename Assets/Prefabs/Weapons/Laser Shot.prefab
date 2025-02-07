@@ -51,15 +51,15 @@ MonoBehaviour:
     m_Bits: 4353
   lifeTime: 5
   despawnDelay: 0
-  velocity: 70
-  RaycastAdvance: 0.2
+  velocity: 200
+  RaycastAdvance: 0.3
   DelayDespawn: 0
   delayedParticles: []
   impactDamage: 0
   impactForce: 0
   pierceCount: 0
   stunTime: 0
-  sphereCastRadius: 1
+  sphereCastRadius: 1.2
   _weaponController: {fileID: 0}
   weaponType: 2
   hitObjects: []
@@ -68,6 +68,7 @@ MonoBehaviour:
   shockDamage: 0
   splitRounds: 0
   splitCount: 0
+  range: 0
 --- !u!1 &904917544813269207
 GameObject:
   m_ObjectHideFlags: 0

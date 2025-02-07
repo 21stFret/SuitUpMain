@@ -14808,6 +14808,9 @@ MonoBehaviour:
   explosionForce: 300
   explosionRadius: 1
   localScale: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &2696999600549941879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14834,7 +14837,7 @@ PrefabInstance:
     - target: {fileID: 664476203961752481, guid: 03474afe2432c2e42a6de8fede197706,
         type: 3}
       propertyPath: damageAmount
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 664476203961752481, guid: 03474afe2432c2e42a6de8fede197706,
         type: 3}
@@ -14850,6 +14853,11 @@ PrefabInstance:
         type: 3}
       propertyPath: damageInterval
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 664476203961752481, guid: 03474afe2432c2e42a6de8fede197706,
+        type: 3}
+      propertyPath: radiusExtender
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 836290640891325695, guid: 03474afe2432c2e42a6de8fede197706,
         type: 3}
@@ -15073,6 +15081,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 8818870570181923943}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  init: 0
   iceDamage: {fileID: 3194489535412128214}
   explosionEffect: {fileID: 6768388660930464330}
   audioClips:

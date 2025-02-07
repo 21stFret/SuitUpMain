@@ -54,7 +54,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 40
+  MaxDistance: 80
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -203,10 +203,12 @@ MonoBehaviour:
   dead: 0
   deathNoise: {fileID: 2977521352958846146}
   immune: 0
+  immuneTime: 1
   crawlerScale: 0.8
   cashWorth: 4
   expWorth: 7
   dropRate: 8
+  objectStateHandler: {fileID: 0}
   crawlerType: 3
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
@@ -217,6 +219,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
   dummy: 0
+  spawn: 0
   layerMask:
     serializedVersion: 2
     m_Bits: 64

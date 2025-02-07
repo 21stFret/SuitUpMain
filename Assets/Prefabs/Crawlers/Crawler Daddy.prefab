@@ -35537,7 +35537,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: ef7cb1973eb6b8f46ae579d0bb826849, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 8ca050efa28ea61408812da0a4a57928, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -35548,7 +35548,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 40
+  MaxDistance: 60
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -35583,7 +35583,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.7
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -45429,7 +45429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1179410220470338338
 Transform:
   m_ObjectHideFlags: 0
@@ -45521,11 +45521,15 @@ MonoBehaviour:
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 1945245659488322145}
+  overrideDeathNoise: 1
   immune: 0
+  immuneTime: 1
   crawlerScale: 1
   cashWorth: 5
   expWorth: 12
   dropRate: 5
+  ScreamChance: 50
+  objectStateHandler: {fileID: 0}
   crawlerType: 1
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
@@ -45536,6 +45540,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 40
   dummy: 0
+  spawn: 0
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 4
   explosionRadius: 10
@@ -45544,6 +45549,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   eggs: {fileID: 5004322386062337418}
+  deathSound: {fileID: 8300000, guid: 7d926e76de5b2524f8c9f49589e5d3d1, type: 3}
 --- !u!54 &4989875668414133667
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -45667,7 +45673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 5
+  maxHealth: 10
   invincible: 0
   alive: 0
   immuneWeapons: 07000000

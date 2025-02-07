@@ -9540,18 +9540,18 @@ MonoBehaviour:
   despawnDelay: 1
   velocity: 50
   alignSpeed: 4
-  RaycastAdvance: 1
+  RaycastAdvance: 0.5
   DelayDespawn: 1
   delayedParticles:
   - {fileID: 3203260690163003214}
   - {fileID: 8633114395340821836}
   launcher: {fileID: 0}
   upLaunchTimer: 0
-  upLaunchTime: 0.1
+  upLaunchTime: 0.2
   range: 4
   crawlerLayer:
     serializedVersion: 2
     m_Bits: 266496
-  forceStrength: 20
+  forceStrength: 180
   impactDamage: 5
   randomOffsetStrength: 5

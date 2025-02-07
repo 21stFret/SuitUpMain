@@ -33,7 +33,12 @@ public class LightningOrb : Grenade
 
     public override void Explode()
     {
-        base.Explode();
+        live = false;
+        meshRenderer.enabled = false;
+        col.enabled = false;
+        explosionEffect.Play();
+        explosionSound.clip = audioClips[UnityEngine.Random.Range(0, audioClips.Length)];
+        explosionSound.Play();
         explosionSound.loop = false;
         foreach (var item in targets)
         {

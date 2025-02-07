@@ -95,6 +95,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     // Modify audio source settings specific to it's type
                     aSrc.pitch = Random.Range(0.95f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
@@ -119,6 +120,7 @@ namespace FORGE3D
                         vulcanHit[Random.Range(0, vulcanHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.95f, 1f);
                     aSrc.volume = Random.Range(0.6f, 1f);
                     aSrc.minDistance = 7f;
@@ -141,6 +143,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.95f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 30f;
@@ -164,6 +167,7 @@ namespace FORGE3D
                         .gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.95f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 50f;
@@ -186,6 +190,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.9f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 6f;
@@ -208,6 +213,7 @@ namespace FORGE3D
                         sniperHit[Random.Range(0, sniperHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.9f, 1f);
                     aSrc.volume = 1f;
                     aSrc.minDistance = 20f;
@@ -230,6 +236,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.9f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 8f;
@@ -253,6 +260,7 @@ namespace FORGE3D
                         .gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.9f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 7f;
@@ -332,7 +340,7 @@ namespace FORGE3D
         }
 
         // Play railgun hit audio at specific position
-        public void RailGunHit(Vector3 pos)
+        public void RailGunHit(Vector3 pos, bool missie = false)
         {
             if (timer_02 >= railgunHitDelay)
             {
@@ -342,6 +350,10 @@ namespace FORGE3D
                         .gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
+                    if(missie)
+                    {
+                        aSrc.spatialBlend=0.5f;
+                    }
                     aSrc.pitch = Random.Range(0.8f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 20f;
@@ -387,6 +399,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.8f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 4f;
@@ -411,6 +424,7 @@ namespace FORGE3D
 
                 if (aSrc != null)
                 {
+                    aSrc.spatialBlend = 1;
                     aSrc.pitch = Random.Range(0.8f, 1f);
                     aSrc.volume = Random.Range(0.8f, 1f);
                     aSrc.minDistance = 50f;

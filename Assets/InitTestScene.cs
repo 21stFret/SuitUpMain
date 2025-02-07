@@ -26,6 +26,6 @@ public class InitTestScene : MonoBehaviour
         crawlerSpawner.Init();
         crawlerSpawner.isActive = spawnersActive;
         AudioManager.instance.Init();
-        AudioManager.instance.PlayMusic(1);
+        AudioManager.instance.PlayBGMusic(1);
     }
 }

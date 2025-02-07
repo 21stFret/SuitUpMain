@@ -27,7 +27,7 @@ public class FlameTrigger : MonoBehaviour
     public void SetCol(bool value)
     {
         isOn = value;
-        fovCollider.enabled = value;
+        //fovCollider.enabled = value;
     }
 
     private void Update()

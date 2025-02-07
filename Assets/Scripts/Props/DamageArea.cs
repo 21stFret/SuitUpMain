@@ -11,8 +11,10 @@ public class DamageArea : MonoBehaviour
     public WeaponType damageType = WeaponType.Flame; // Default to Fire, but can be changed
     public bool damageActive = true; // Control whether damage is being dealt
 
-    private List<TargetHealth> targetsInRange = new List<TargetHealth>();
+    public List<TargetHealth> targetsInRange = new List<TargetHealth>();
     private SphereCollider triggerCollider;
+
+    public float radiusExtender=1;
 
     private void Start()
     {
@@ -24,7 +26,10 @@ public class DamageArea : MonoBehaviour
         damageActive = false;
 
         triggerCollider = gameObject.GetComponent<SphereCollider>();
-        triggerCollider.radius = damageRadius;
+        float parentScale = transform.parent.localScale.x; // Assuming uniform scaling
+        float adjustedRadius = damageRadius / parentScale;
+        Debug.Log("Adjusted Radius: " + adjustedRadius);
+        triggerCollider.radius = adjustedRadius;
         triggerCollider.isTrigger = true;
 
         StartCoroutine(DealDamageRoutine());
@@ -76,7 +81,9 @@ public class DamageArea : MonoBehaviour
             {
                 if (targetsInRange[i] != null)
                 {
-                    if(Vector3.Distance(transform.position, targetsInRange[i].transform.position) > damageRadius)
+                    Vector3 yCancelled = targetsInRange[i].transform.position;
+                    yCancelled.y = transform.position.y;
+                    if(Vector3.Distance(transform.position, yCancelled) > damageRadius+radiusExtender)
                     {
                         targetsInRange.RemoveAt(i);
                         continue;

@@ -30,6 +30,9 @@ public class TutorialUI : MonoBehaviour
 
     private Dictionary<string, int> controlIndexMap; // Map control names to sprite indices
     private string[] curControls;
+
+    private float _fontsize;
+
     void Awake()
     {
         InitializeControlMap();
@@ -54,12 +57,19 @@ public class TutorialUI : MonoBehaviour
 
     public IEnumerator InitializeMech()
     {
+        _fontsize = instructionText.fontSize;
+        mechFuelObject.SetActive(false);
         mechHealthObject.SetActive(false);
         yield return StartCoroutine(PrintText("New user detected, running initialization protocols..."));
-        mechHealthObject.SetActive(true);
-        mechHealth.enabled = true;
-        mechHealth.targetHealth.health = mechHealth.targetHealth.maxHealth;
         StartCoroutine(PrintText("Health and Fuel systems loading..."));
+        yield return new WaitForSeconds(1f);
+        mechHealthObject.SetActive(true);
+        mechHealth.targetHealth.Init(null, mechHealth);
+        mechHealth.targetHealth.health = 1;
+        mechHealth.UpdateHealthUI(0);
+        mechHealth.SetHealthBar(0);
+        yield return new WaitForSeconds(0.5f);
+        mechHealth.Heal(100);
         mechFuelObject.SetActive(true);
         weaponFuelManager._enabled = true;
         weaponFuelManager.weaponRechargeRate = 35;
@@ -82,6 +92,7 @@ public class TutorialUI : MonoBehaviour
     public IEnumerator StartDroneTraining()
     {
         yield return StartCoroutine(PrintText("Well Done! Now simulating pain!"));
+        mechHealth.TakeDamage(10);
         instructionPanel.SetActive(false);
     }
 
@@ -89,7 +100,8 @@ public class TutorialUI : MonoBehaviour
     {
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
-        yield return StartCoroutine(PrintText("Systems check complete. Ready for live combat!"));
+        yield return StartCoroutine(PrintText("All systems check complete. Ready for live combat!"));
+        yield return StartCoroutine(PrintText("...Interesting...\n...record this time line...", true));
         yield return new WaitForSeconds(1f);
         SceneLoader.instance.LoadScene(2);
     }
@@ -141,16 +153,27 @@ public class TutorialUI : MonoBehaviour
         StartCoroutine(PrintText(instructions));
     }
 
-    public IEnumerator PrintText(string text)
+    public Coroutine currentTextCoroutine;
+
+    public IEnumerator PrintText(string text, bool small = false)
     {
+        if (currentTextCoroutine != null)
+        {
+            StopCoroutine(currentTextCoroutine);
+        }
+
+        instructionText.fontSize = small ? _fontsize * 0.75f : _fontsize;
+        instructionText.fontStyle = small ? FontStyles.Italic : FontStyles.Normal;
         instructionPanel.SetActive(true);
         instructionText.text = "";
+
         for (int i = 0; i < text.Length; i++)
         {
             instructionText.text += text[i];
             yield return new WaitForSeconds(textSpeed);
         }
         yield return new WaitForSeconds(1f);
+        currentTextCoroutine = null;
     }
 
     public void SetControlGreen(int control)

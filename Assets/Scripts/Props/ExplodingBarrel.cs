@@ -76,7 +76,8 @@ public class ExplodingBarrel : Prop
             TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
             if (targetHealth != null)
             {
-                targetHealth.TakeDamage(damage, weaponType);
+                float damageByDistance = Mathf.Clamp(1 - Vector3.Distance(transform.position, collider.transform.position) / explosionRadius, 0.5f, 1);
+                targetHealth.TakeDamage(damage * damageByDistance, weaponType);
             }
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
@@ -91,8 +92,10 @@ public class ExplodingBarrel : Prop
         breakableObject.transform.parent = null;
         breakableObject.Break();
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
+        explosionSound.pitch = Random.Range(0.7f, 1.2f);
         explosionSound.Play();
         explosionEffect.transform.parent = null;
+        explosionEffect.transform.position = transform.position;
         explosionEffect.Play();
         prefab.SetActive(false);
         if (damageArea != null)

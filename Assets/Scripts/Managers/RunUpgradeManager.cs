@@ -380,8 +380,8 @@ public class RunUpgradeManager : MonoBehaviour
                         BattleMech.droneController.drone.orbitalStrike.beamDamage = BattleMech.weaponController.altWeaponEquiped.damage *(mod.modifiers[0].statValue/100);
                         BattleMech.droneController.drone.orbitalStrike.beamDuration = mod.modifiers[1].statValue;
                         break;
-                    case "Fat Man":
-                        BattleMech.droneController.ActivateDroneInput(DroneType.FatMan);
+                    case "Element Bomb":
+                        BattleMech.droneController.ActivateDroneInput(DroneType.ElementBomb);
                         break;
                     case "Shield":
                         BattleMech.droneController.ActivateDroneInput(DroneType.Shield);
@@ -431,7 +431,7 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
-    private void RemoveMod(RunMod mod)
+    public void RemoveMod(RunMod mod)
     {
         currentEquipedMods.Remove(mod);
 

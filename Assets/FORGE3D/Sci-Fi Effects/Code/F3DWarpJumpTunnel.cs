@@ -38,9 +38,9 @@ namespace FORGE3D
             transform.localRotation = transform.localRotation * Quaternion.Euler(0, 0, Random.Range(-360, 360));
         }
 
-        public void ToggleGrow()
+        public void ToggleGrow(bool value)
         {
-            grow = !grow;
+            grow = value;
         }
 
         // Update is called once per frame

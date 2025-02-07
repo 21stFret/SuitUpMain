@@ -63,6 +63,7 @@ public class BattleManager : MonoBehaviour
                 surviveTimeT = surviveTime;
                 showBar = true;
                 StartCoroutine(SurviveBattle());
+                AudioManager.instance.PlayBossMusic(0);
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
@@ -141,7 +142,7 @@ public class BattleManager : MonoBehaviour
         lightningController.active = false;
         currentBattleIndex++;
         _gameManager.gameActive = false;
-        AudioManager.instance.PlayMusic(5);
+        AudioManager.instance.PlayBGMusic(5);
         roomDrop.gameObject.SetActive(true);
         SetPickUpPosition();
 

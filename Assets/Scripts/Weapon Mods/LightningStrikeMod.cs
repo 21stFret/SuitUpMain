@@ -18,6 +18,7 @@ public class LightningStrikeMod : WeaponMod
         base.Init();
         lightningRodController = baseWeapon.GetComponent<LightningRodController>();
         lightningRodController.arcOverride = true;
+        strike.damage = damage * (runMod.modifiers[0].statValue/100);
     }
 
     public void Update()
@@ -27,13 +28,15 @@ public class LightningStrikeMod : WeaponMod
             return;
         }
         timer += Time.deltaTime;
-        chargeEffect.transform.position = lightningRodController.lightning.rayImpact.position;
+        Vector3 pos = lightningRodController.lightning.rayImpact.position;
+        strike.transform.position = pos;
+        chargeEffect.transform.position = pos;
         if (timer <= shotTimer)
         {
             return;
         }
-        strike.damage = damage;
-        strike.Strike(lightningRodController.lightning.rayImpact);
+
+        strike.Strike(pos);
         //baseWeapon.weaponFuelManager.weaponFuel -= modFuelCost;
         timer = 0;
     }
@@ -47,6 +50,7 @@ public class LightningStrikeMod : WeaponMod
         {
             return;
         }
+        chargeEffect.transform.SetParent(this.transform);
         chargeEffect.Play();
     }
 

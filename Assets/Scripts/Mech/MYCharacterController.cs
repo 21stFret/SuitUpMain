@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class MYCharacterController : MonoBehaviour
 {
@@ -126,6 +127,7 @@ public class MYCharacterController : MonoBehaviour
         dashShoes2.enabled = false;
         dashEffect.Play();
         dashEffect2.Play();
+        runAudio.pitch = Random.Range(0.8f, 1.6f);
         runAudio.PlayOneShot(dodgeClip);
         isDodging = true;
         if(dashModsManager!=null)
@@ -145,6 +147,7 @@ public class MYCharacterController : MonoBehaviour
 
     private IEnumerator DashCooldown()
     {
+        runAudio.pitch = 1;
         yield return new WaitForSeconds(dashDuration);
         isDodging = false;
         if(dashModsManager!=null)
@@ -326,9 +329,12 @@ public class MYCharacterController : MonoBehaviour
         print("Base Speed: " + Speed + " and Bonus Speed: " + bonusSpeed);
     }
 
-    public void SetDashCooldown()
+    public void SetDashCooldown(float value)
     {
-        dashCooldown = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Dash_Cooldown);
+        float percent = (Mathf.Abs(value) / 100);
+        float cooldown = dashCooldown;
+        dashCooldown = cooldown * percent;
+        print("Base Dash Cooldown: " + savedDodgeCooldown + " and New Dash Cooldown: " + dashCooldown);
     }
 
     private void CheckDistance()

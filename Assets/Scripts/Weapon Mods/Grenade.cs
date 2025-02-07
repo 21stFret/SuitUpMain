@@ -15,8 +15,8 @@ public class Grenade : MonoBehaviour
     public LayerMask layerMask;
     public ParticleSystem explosionEffect;
     protected Rigidbody rb;
-    private MeshRenderer meshRenderer;
-    private Collider col;
+    protected MeshRenderer meshRenderer;
+    protected Collider col;
     private bool cashed;
     public AudioSource explosionSound;
     public AudioClip[] audioClips;

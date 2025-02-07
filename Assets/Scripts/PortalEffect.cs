@@ -82,7 +82,7 @@ public class PortalEffect : MonoBehaviour
     {
         for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {
-            f3DWarpJumpTunnel[i].ToggleGrow();
+            f3DWarpJumpTunnel[i].ToggleGrow(false);
         }
         doTweenFade.FadeOut();
         _particleSystem.Stop();
@@ -98,7 +98,7 @@ public class PortalEffect : MonoBehaviour
         }
         for (int i = 0; i < f3DWarpJumpTunnel.Length; i++)
         {
-            f3DWarpJumpTunnel[i].ToggleGrow();
+            f3DWarpJumpTunnel[i].ToggleGrow(false);
         }
         doTweenScale.ReverseTween();
         _particleSystem.Stop();

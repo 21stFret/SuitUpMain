@@ -280,11 +280,15 @@ MonoBehaviour:
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 418313318034436250}
+  overrideDeathNoise: 0
   immune: 0
+  immuneTime: 1
   crawlerScale: 0.5
   cashWorth: 2
   expWorth: 3
   dropRate: 5
+  ScreamChance: 20
+  objectStateHandler: {fileID: 0}
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
@@ -295,6 +299,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 100
   dummy: 0
+  spawn: 0
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1867,9 +1872,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 60
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1902,7 +1907,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.7
       inSlope: 0
       outSlope: 0
       tangentMode: 0

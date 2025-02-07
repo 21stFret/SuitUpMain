@@ -60,6 +60,7 @@ public class SetupGame : MonoBehaviour
                 break;
         }
         battleManager.dificultyMultiplier = diffiulty == Difficulty.Easy ? 1f : diffiulty == Difficulty.Mid ? 1.5f : 2f;
+        gameManager.currentAreaType = AreaType.Grass;
         gameManager.DelayedStart();
     }
 }

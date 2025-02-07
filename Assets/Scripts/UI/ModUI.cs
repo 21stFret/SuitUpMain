@@ -41,6 +41,7 @@ public class ModUI : MonoBehaviour
         DisplayAllMods();
         eventSystem.SetSelectedGameObject(modButtons[0].gameObject);
         SetRerollCost(runUpgradeManager.RerollCost);
+        CashCollector.instance.SetUI();
     }
 
     public void SetRerollCost(int cost)
@@ -66,6 +67,7 @@ public class ModUI : MonoBehaviour
     public void CloseModUI()
     {
         modUI.SetActive(false);
+        CashCollector.instance.HideUI();
         GameManager.instance.SwapPlayerInput("Gameplay");
     }
 
