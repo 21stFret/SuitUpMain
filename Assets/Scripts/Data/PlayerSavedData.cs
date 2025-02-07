@@ -173,6 +173,8 @@ public class PlayerSavedData : MonoBehaviour
         saveData.playerLoadout = _playerLoadout;
         saveData.firstLoad = _firstLoad;
         saveData.gameStats = _gameStats;
+        saveData.triggeredEasterEgg = _triggeredEasterEgg;
+        saveData.highestDifficulty = highestDifficulty;
 
         // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData, true);
@@ -282,4 +284,6 @@ public class SaveData
     public bool firstLoad;
     public float BGMVolume;
     public float SFXVolume;
+    public int highestDifficulty;
+    public bool triggeredEasterEgg;
 }

@@ -4960,7 +4960,7 @@ MonoBehaviour:
   init: 0
   weaponType: 6
   explosionForce: 10
-  explosionRadius: 7.5
+  explosionRadius: 10
   upwardsModifier: 3
   damage: 20
   explosionEffect: {fileID: 6132995402259027068}
@@ -19341,7 +19341,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.20499998, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6128232340146232128}
@@ -19473,8 +19473,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 30
-      minScalar: 20
+      scalar: 15
+      minScalar: 10
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -24393,7 +24393,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 12
-      minScalar: 3
+      minScalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -29252,8 +29252,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 10
-      minScalar: 4
+      scalar: 15
+      minScalar: 20
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -43629,7 +43629,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.0145430425, y: 0.032050215, z: 0.63655454, w: 0.77042824}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.5, y: 7.5, z: 7.5000005}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 183748689933658107}

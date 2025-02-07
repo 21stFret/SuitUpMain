@@ -24,6 +24,8 @@ public class CashCollector : MonoBehaviour
 
     private PlayerProgressManager playerProgressManager;
 
+    private bool autoHide;
+
     private void Awake()
     {
         instance = this;
@@ -39,14 +41,19 @@ public class CashCollector : MonoBehaviour
 
     private void Update()
     {
+
         if(UIshown)
         {
-            _timeToHide -= Time.deltaTime;
-            if(_timeToHide <= 0)
+            if (autoHide)
             {
-                HideUI();
+                _timeToHide -= Time.deltaTime;
+                if (_timeToHide <= 0)
+                {
+                    HideUI();
+                }
             }
         }
+
         if(ArtUIshown)
         {
             _timeToHideA -= Time.deltaTime;
@@ -92,9 +99,21 @@ public class CashCollector : MonoBehaviour
             _timeToHide = timeToHide;
             return;
         }
+        autoHide = true;
         _timeToHide = timeToHide;
         UIshown = true;
         DOVirtual.Float(panelTrans.anchoredPosition.x, posX, 0.5f, (float value) => panelTrans.anchoredPosition = new Vector2(value, panelTrans.anchoredPosition.y));
+    }
+
+    public void SetUI()
+    {
+        if (UIshown)
+        {
+            return;
+        }
+        autoHide = false;
+        UIshown = true;
+        panelTrans.anchoredPosition = new Vector2(posX, panelTrans.anchoredPosition.y);
     }
 
     public void HideUI()

@@ -5416,15 +5416,15 @@ MonoBehaviour:
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
   init: 0
-  weaponType: 4
-  explosionForce: 10
-  explosionRadius: 10
+  weaponType: 5
+  explosionForce: 50
+  explosionRadius: 5
   upwardsModifier: 1
-  damage: 3
+  damage: 30
   explosionEffect: {fileID: 3516814952771298000}
   layerMask:
     serializedVersion: 2
-    m_Bits: 4416
+    m_Bits: 4544
   prefab: {fileID: 4851435417605140484}
   fuseTime: 0
   fuseCount: 0
@@ -5437,7 +5437,7 @@ MonoBehaviour:
   explosionSound: {fileID: 7046335108619498683}
   warningNoise: {fileID: 8300000, guid: c02fc9340c68b6749b4004d00c17eddc, type: 3}
   breakableObject: {fileID: 2504114906847330476}
-  damageArea: {fileID: 0}
+  damageArea: {fileID: 8901824722606100669}
 --- !u!1 &6700867351801625480
 GameObject:
   m_ObjectHideFlags: 0
@@ -10538,7 +10538,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2005781628062666138}
   - component: {fileID: 8901824722606100669}
-  m_Layer: 12
+  - component: {fileID: 5179485077086157434}
+  m_Layer: 13
   m_Name: DamageArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10573,11 +10574,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageRadius: 4.5
-  damageInterval: 1
-  damageAmount: 10
+  damageInterval: 0.4
+  damageAmount: 1
   damageDuration: 5
-  damageType: 4
+  damageType: 5
   damageActive: 1
+  radiusExtender: 0.5
+--- !u!135 &5179485077086157434
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894514455265109641}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &7316597409737878574
 PrefabInstance:
   m_ObjectHideFlags: 0

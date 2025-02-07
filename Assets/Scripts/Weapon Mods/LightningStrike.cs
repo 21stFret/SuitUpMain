@@ -13,16 +13,16 @@ public class LightningStrike : MonoBehaviour
     public float explosionRadius;
     public float explosionUpward;
 
-    public void Strike(Transform strikeLoc)
+    public void Strike(Vector3 strikeLoc)
     {
         transform.parent = null;
-        Collider[] colliders = Physics.OverlapSphere(strikeLoc.position, explosionRadius, layerMask);
+        Collider[] colliders = Physics.OverlapSphere(strikeLoc, explosionRadius, layerMask);
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddExplosionForce(explosionForce, strikeLoc.position, explosionRadius, explosionUpward);
+                rb.AddExplosionForce(explosionForce, strikeLoc, explosionRadius, explosionUpward);
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
             TargetHealth targetHealth = hit.GetComponent<TargetHealth>();
@@ -31,10 +31,13 @@ public class LightningStrike : MonoBehaviour
                 targetHealth.TakeDamage(damage, WeaponType.Lightning);
             }
         }
-        strikeLoc.position = new Vector3(strikeLoc.position.x, strikeLoc.position.y + 10, strikeLoc.position.z);
-        strikeEffect.transform.position = strikeLoc.position;
+        strikeLoc = new Vector3(strikeLoc.x, strikeLoc.y + 10, strikeLoc.z);
+        strikeEffect.transform.parent = null;
+        strikeEffect.transform.position = strikeLoc;
         strikeEffect.Play();
         thunderSound.clip = audioClips[Random.Range(0, audioClips.Length)];
+        thunderSound.pitch = Random.Range(0.7f, 1.2f);
+        thunderSound.volume = Random.Range(0.8f, 1.2f);
         thunderSound.Play();
     }
 }

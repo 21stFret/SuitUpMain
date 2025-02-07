@@ -11,7 +11,7 @@ public enum DroneType
     Repair,
     Airstrike,
     Orbital,
-    FatMan,
+    ElementBomb,
     Shield,
     Companion
 }
@@ -159,7 +159,7 @@ public class DroneControllerUI : MonoBehaviour
         playerInput.SwitchCurrentActionMap("Gameplay");
         if(tutorial)
         {
-            FullyChargeDrone();
+            Invoke("FullyChargeDrone", 3f);
         }
     }
 

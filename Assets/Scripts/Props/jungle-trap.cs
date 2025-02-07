@@ -29,11 +29,11 @@ public class JungleTrap : MonoBehaviour
                     }
                 }
             }
-            ActivateTrap(other.gameObject);
+            ActivateTrap();
         }
     }
 
-    private void ActivateTrap(GameObject player)
+    private void ActivateTrap()
     {
         // Trigger the animation
         if (trapAnimator != null)
@@ -67,6 +67,10 @@ public class JungleTrap : MonoBehaviour
     {
         yield return new WaitForSeconds(resetTime);
         isActive = true;
+        if(damageArea.targetsInRange.Count>0)
+        {
+            ActivateTrap();
+        }
     }
 
 }

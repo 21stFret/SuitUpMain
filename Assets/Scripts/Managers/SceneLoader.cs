@@ -44,6 +44,7 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(int sceneID, bool delay = false)
     {
+        loadinBar.fillAmount = 0;
         StartCoroutine(LoadSceneAsync(sceneID, delay));
     }
 
@@ -62,16 +63,25 @@ public class SceneLoader : MonoBehaviour
 
         loadinBar.enabled = true;
 
+        float fakeProgress = 0;
+        float fakeTime = 0;
+
         if (delay)
         {
-            yield return new WaitForSeconds(minloadTime);
+            while (fakeTime < minloadTime)
+            {
+                fakeTime += Time.deltaTime;
+                fakeProgress = fakeTime / minloadTime;
+                loadinBar.fillAmount = fakeProgress;
+                yield return null;
+            }
         }
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneID);
 
         while (!operation.isDone)
         {
-            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            float progress = Mathf.Clamp01(operation.progress +fakeProgress);
             loadinBar.fillAmount = progress;
             yield return null;
         }

@@ -68,7 +68,7 @@ public class DroneSystem : MonoBehaviour
                 BattleMech.instance.droneController.MissileStrike();
                 active = true;
                 break;
-            case DroneType.FatMan:
+            case DroneType.ElementBomb:
                 BattleMech.instance.droneController.FatManLaunch();
                 active = true;
                 break;

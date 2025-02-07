@@ -35,10 +35,13 @@ public class WeaponMod : MonoBehaviour
 
     public void RemoveMods()
     {
-        /*
-        damage = baseWeapon.damage;
-        range = baseWeapon.range;
-        */
+        if(runMod != null)
+        {
+            if (runMod.modifiers.Count > 0)
+            {
+                runUpgradeManager.RemoveMod(runMod);
+            }
+        }
     }
 
     public virtual void Fire()

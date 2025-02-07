@@ -264,4 +264,9 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public void ShowBackImage(bool value)
+    {
+        backImage.SetActive(value);
+    }
+
 }

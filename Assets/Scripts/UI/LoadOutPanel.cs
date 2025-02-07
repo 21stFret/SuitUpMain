@@ -31,10 +31,14 @@ public class LoadOutPanel : MonoBehaviour
     public Image DifficultyButtonImage;
     public Sprite[] DifficultyButtonSprites;
     public int currentDifficulty;
-    public int maxDifficulty = 2;
+    public int maxDifficulty;
+    public bool playLocked;
 
     public void OnEnable()
     {
+        int difficulty = PlayerSavedData.instance.highestDifficulty;
+        currentDifficulty = difficulty-1;
+        ScrollDifficulties(true);
         weaponsManager = WeaponsManager.instance;
         currentMainIndex = weaponsManager.mainWeapon;
         currentAltIndex = weaponsManager.altWeapon;
@@ -135,8 +139,10 @@ public class LoadOutPanel : MonoBehaviour
         {
             DifficultyButtonText.text = "Locked";
             DifficultyDecription.text = "Complete the previous difficulty to unlock!";
+            playLocked = true;
             return;
         }
+        playLocked = false;
 
         SetupGame.instance.diffiulty = (Difficulty)currentDifficulty;
 

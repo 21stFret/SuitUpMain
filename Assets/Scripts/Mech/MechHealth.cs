@@ -242,6 +242,7 @@ public class MechHealth : MonoBehaviour
         shieldBar.fillAmount = shieldHealth / shieldHealthMax;
 
         int health = shieldHealth > 0 ? 1 : 0;
+        shieldMaterial.SetColor("_Flash_Color", shieldColor);
         shieldMaterial.SetFloat("_FlashOn", health);
         if(shieldHealth <= 0)
         {
@@ -301,7 +302,7 @@ public class MechHealth : MonoBehaviour
 
     public void UpdateHealthUI(float health)
     {
-        healthText.text = $"{Mathf.Round(health)}/{targetHealth.maxHealth}";
+        healthText.text = $"{Mathf.Round(health)}/{Mathf.Round(targetHealth.maxHealth)}";
     }
 
 

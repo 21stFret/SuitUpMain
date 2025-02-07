@@ -200,8 +200,6 @@ public class TutorialManager : MonoBehaviour
         currentStage = TutorialStage.Complete;
     }
 
-
-
     private void CheckTutorialProgress()
     {
         if (currentStage == TutorialStage.Complete) return;
