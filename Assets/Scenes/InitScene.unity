@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &216793495 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 551165726048682993, guid: f1ec082c8b1fee24e904568bbea7bd88,
+    type: 3}
+  m_PrefabInstance: {fileID: 1336432182247870686}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 989c823b4ccbdc44c81a53f6c3525da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &265765025
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -910,6 +922,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4409678717517388200, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4409678717517388200, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 5262138431177455774, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6693755388628791295, guid: f1ec082c8b1fee24e904568bbea7bd88,
         type: 3}
       propertyPath: m_Color.a
@@ -935,6 +962,16 @@ PrefabInstance:
       propertyPath: m_VertexColorAlwaysGammaSpace
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7655889781080371719, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8896411766131702640, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: hintManager
+      value: 
+      objectReference: {fileID: 216793495}
     - target: {fileID: 8896411766131702640, guid: f1ec082c8b1fee24e904568bbea7bd88,
         type: 3}
       propertyPath: minloadTime
@@ -964,6 +1001,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9196367762779241309, guid: f1ec082c8b1fee24e904568bbea7bd88,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -12,6 +12,7 @@ public class BaseManager : MonoBehaviour
     public TestPlayerData playerData;
     public DirectionalDaylight daylight;
     public LoadOutPanel loadOutPanel;
+    public GameObject thankYouPanel;
 
     private void Awake()
     {
@@ -25,6 +26,17 @@ public class BaseManager : MonoBehaviour
     }
 
     public void InitBaseArea()
+    {
+        if (ShouldShowThankYouPanel())
+        {
+            ShowThankYouPanel();
+            return;
+        }
+
+        InitializeBaseSystem();
+    }
+
+    private void InitializeBaseSystem()
     {
         BattleMech.instance.myCharacterController.ToggleCanMove(true);
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
@@ -43,6 +55,32 @@ public class BaseManager : MonoBehaviour
         daylight.startTime = Random.Range(0, 1f);
 
         Debug.Log("Base Initialized");
+    }
+
+    private bool ShouldShowThankYouPanel()
+    {
+        return PlayerSavedData.instance.HasCompletedEasyMode() && 
+               !PlayerSavedData.instance.hasSeenThankYouPanel;
+    }
+
+    private void ShowThankYouPanel()
+    {
+        BattleMech.instance.myCharacterController.ToggleCanMove(false);
+        BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
+        thankYouPanel.SetActive(true);
+    }
+
+    public void CloseThankYouPanel()
+    {
+        thankYouPanel.SetActive(false);
+        PlayerSavedData.instance.hasSeenThankYouPanel = true;
+        PlayerSavedData.instance.SavePlayerData();
+        InitializeBaseSystem();
+    }
+
+    public void OpenDiscordLink()
+    {
+        Application.OpenURL("https://discord.gg/tRwM2pdGyQ");
     }
 
     public void StartGame(int value)

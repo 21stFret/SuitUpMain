@@ -28,7 +28,7 @@ public class DamageArea : MonoBehaviour
         triggerCollider = gameObject.GetComponent<SphereCollider>();
         float parentScale = transform.parent.localScale.x; // Assuming uniform scaling
         float adjustedRadius = damageRadius / parentScale;
-        Debug.Log("Adjusted Radius: " + adjustedRadius);
+        //Debug.Log("Adjusted Radius: " + adjustedRadius);
         triggerCollider.radius = adjustedRadius;
         triggerCollider.isTrigger = true;
 

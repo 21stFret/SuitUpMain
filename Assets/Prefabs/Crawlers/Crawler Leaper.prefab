@@ -4997,7 +4997,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.161098, g: 1, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5525,7 +5525,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 1
+      value: 0.31
       mode: 0
       spread: 0
       speed:
@@ -9552,7 +9552,7 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 163c835e72c255442b750a19a9b56e89, type: 2}
-  - {fileID: 2100000, guid: 7a9f36487424b2448a2d31768948504f, type: 2}
+  - {fileID: 2100000, guid: 70b92b79ecfde464e9c4a6cfc2a97803, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -43420,13 +43420,14 @@ GameObject:
   - component: {fileID: 5463249324095984644}
   - component: {fileID: 6757468408072520722}
   - component: {fileID: 3848343404799448960}
+  - component: {fileID: 4113283992483026684}
   m_Layer: 8
   m_Name: Crawler Leaper
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7391302482856354956
 Transform:
   m_ObjectHideFlags: 0
@@ -43437,7 +43438,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.98185134, z: 0, w: -0.18965223}
   m_LocalPosition: {x: 0, y: 0, z: 11.1}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 683214691858131809}
@@ -43501,8 +43502,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8096128586986041836}
   serializedVersion: 4
-  m_Mass: 2
-  m_Drag: 1
+  m_Mass: 4
+  m_Drag: 3
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -43584,34 +43585,38 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  health: 0
-  healthMax: 25
-  attackDamage: 1
-  attackDistacne: 6
-  speed: 5
-  _randomSpeed: 1
-  randomScale: 1
+  attackDamage: 3
+  attackRange: 5
+  seekRange: 50
+  speed: 175
+  randomScale: 0.2
   DeathBlood: {fileID: 4409523461364834247}
   _spawnEffect: {fileID: 8160456980422531980}
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 437050901762565522}
+  overrideDeathNoise: 0
   immune: 0
-  randomLocationRadius: 0
+  immuneTime: 1
   crawlerScale: 0.8
   cashWorth: 0
   expWorth: 0
   dropRate: 0
+  ScreamChance: 0
+  objectStateHandler: {fileID: 0}
   crawlerType: 5
   partPrefab: {fileID: 0}
   forceSpawn: 1
-  damageNumberPrefab: {fileID: 0}
-  damageNumbersOn: 0
+  _targetHealth: {fileID: 0}
   triggeredAttack: 0
-  leapDistance: 15
-  leapForce: 80
-  leapCooldown: 10
-  leapDuration: 1
+  spawnLocation: {x: 0, y: 0, z: 0}
+  SpawnForce: 20
+  dummy: 0
+  spawn: 0
+  leapDistance: 8
+  leapForce: 250
+  leapCooldown: 3
+  leapDuration: 0.5
   damageCheckFrequency: 0.3
   leapEffect: {fileID: 6349856199175969759}
   fangsMat: {fileID: 0}
@@ -43627,10 +43632,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad473b26ffd16d499fb9d7c6d864494, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementTarget: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
   speedFinal: 0
-  steerSpeed: 6
-  lookSpeed: 300
+  steerSpeed: 50
+  lookSpeed: 400
   stoppingDistance: 5
   canMove: 1
   direction: {x: 0, y: 0, z: 0}
@@ -43641,17 +43647,22 @@ MonoBehaviour:
     m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
-  groundLevel: 0
-  groundCollider: {fileID: 409612031691819337}
   separationWeight: 1.5
-  alignmentWeight: 1
-  cohesionWeight: 1
   swarmRadius: 5
   desiredSeparation: 2
   icedEffect: {fileID: 0}
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
+  obstacleAvoidanceWeight: 2
+  wanderRadius: 10
+  wallStickPrevention: 2
+  wallCheckDistance: 1.5
+  stuckCheckInterval: 0.5
+  stuckThreshold: 0.1
+  maxStuckChecks: 3
+  unstuckForce: 15
+  upwardForce: 8
 --- !u!114 &3848343404799448960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43665,10 +43676,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 0
+  maxHealth: 4
   invincible: 0
   alive: 0
   immuneWeapons: 
+  damageNumbersOn: 1
+  damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
+    type: 3}
+--- !u!114 &4113283992483026684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8096128586986041836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseAggression: 0.5
+  healthAggressionModifier: 0.3
+  preferredEngageDistance: 3
+  maxEngageDistance: 4
+  fleeDistance: 15
+  fleeHealthThreshold: 0.3
+  cautionHealthThreshold: 0.5
 --- !u!1 &8808826113795019285
 GameObject:
   m_ObjectHideFlags: 0

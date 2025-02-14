@@ -151,16 +151,20 @@ public class RunUpgradeManager : MonoBehaviour
                     }
                 }
 
-                if (currentEquipedMods.Contains(mod))
+                if(mod.modCategory!=ModCategory.STATS)
                 {
-                    var _mod = currentEquipedMods.Find(m => m == mod);
-                    if (_mod.rarity >= mod.rarity)
+                    if (currentEquipedMods.Contains(mod))
                     {
-                        maxAttempts--;
-                        Debug.Log($"Already equipped a better or same rarity of this Mod. Load a new Mod instead.");
-                        continue;
+                        var _mod = currentEquipedMods.Find(m => m == mod);
+                        if (_mod.rarity >= mod.rarity)
+                        {
+                            maxAttempts--;
+                            Debug.Log($"Already equipped a better or same rarity of this Mod. Load a new Mod instead.");
+                            continue;
+                        }
                     }
                 }
+
                 
                 if (mod.modCategory == ModCategory.ALT)
                 {
@@ -479,11 +483,11 @@ public class RunUpgradeManager : MonoBehaviour
     {
         if(currentEquipedMods.Any(mod => mod.modName == ModName))
         {
-            Debug.Log("Mod is equipped");
+            //Debug.Log("Mod is equipped");
         }
         else
         {
-            Debug.Log("Mod is not equipped");
+            //Debug.Log("Mod is not equipped");
         }
         return currentEquipedMods.Find(mod => mod.modName == ModName);
     }

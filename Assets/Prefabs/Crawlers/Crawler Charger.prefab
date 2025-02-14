@@ -351,8 +351,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.8867924, g: 0.1694095, b: 0, a: 0.039215688}
-      maxColor: {r: 1, g: 0.33636326, b: 0, a: 0.039215688}
+      minColor: {r: 0, g: 0.8862745, b: 0.07778196, a: 0.039215688}
+      maxColor: {r: 0.20369065, g: 1, b: 0, a: 0.039215688}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9935,7 +9935,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.46450233, b: 0.20784312, a: 1}
+      maxColor: {r: 0.3962746, g: 1, b: 0.20784312, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14666,24 +14666,28 @@ MonoBehaviour:
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 4195929182837322614}
+  overrideDeathNoise: 0
   immune: 1
+  immuneTime: 1
   crawlerScale: 1.2
   cashWorth: 10
   expWorth: 20
   dropRate: 20
+  ScreamChance: 0
+  objectStateHandler: {fileID: 0}
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
     type: 3}
   forceSpawn: 1
   _targetHealth: {fileID: 0}
   triggeredAttack: 0
-  _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
   dummy: 0
+  spawn: 0
   chargeEffect: {fileID: 4823605491945663866}
-  chargeDistance: 21
-  chargeTime: 4
+  chargeDistance: 20
+  chargeTime: 3.5
   chargeRadius: 4
   chargeForce: 150
   chargeDamage: 15
@@ -14708,7 +14712,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898640269204868951}
   serializedVersion: 4
-  m_Mass: 5
+  m_Mass: 5.5
   m_Drag: 5
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -14781,7 +14785,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898640269204868951}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cad473b26ffd16d499fb9d7c6d864494, type: 3}
   m_Name: 
@@ -14810,6 +14814,13 @@ MonoBehaviour:
   m_crawler: {fileID: 0}
   obstacleAvoidanceWeight: 2
   wanderRadius: 10
+  wallStickPrevention: 2
+  wallCheckDistance: 1.5
+  stuckCheckInterval: 0.5
+  stuckThreshold: 0.1
+  maxStuckChecks: 3
+  unstuckForce: 15
+  upwardForce: 8
 --- !u!114 &6499886239188906295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14823,7 +14834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 20
+  maxHealth: 15
   invincible: 0
   alive: 0
   immuneWeapons: 07000000
@@ -14837,7 +14848,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898640269204868951}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4ff8810e624eb1498ff84a5796aca3c, type: 3}
   m_Name: 
@@ -35425,7 +35436,7 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 0.46450233, b: 0.20784312, a: 0}
-        key1: {r: 0.9339623, g: 0.14039499, b: 0, a: 1}
+        key1: {r: 0.106397405, g: 0.93333334, b: 0, a: 1}
         key2: {r: 0.008240849, g: 0.0016412586, b: 0.0008163098, a: 0.7411765}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -58403,7 +58414,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
+      objectReference: {fileID: 2100000, guid: 919ec49d5e024474b897076ee98f2cd0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

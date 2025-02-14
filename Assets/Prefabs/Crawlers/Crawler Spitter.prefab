@@ -195,19 +195,21 @@ MonoBehaviour:
   attackDamage: 7
   attackRange: 35
   seekRange: 40
-  speed: 200
+  speed: 250
   randomScale: 0.1
   DeathBlood: {fileID: 6372291188587022168}
   _spawnEffect: {fileID: 5054925395757251297}
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 2977521352958846146}
+  overrideDeathNoise: 0
   immune: 0
   immuneTime: 1
   crawlerScale: 0.8
   cashWorth: 4
   expWorth: 7
   dropRate: 8
+  ScreamChance: 0
   objectStateHandler: {fileID: 0}
   crawlerType: 3
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
@@ -215,10 +217,9 @@ MonoBehaviour:
   forceSpawn: 1
   _targetHealth: {fileID: 0}
   triggeredAttack: 0
-  _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
-  dummy: 0
+  dummy: 1
   spawn: 0
   layerMask:
     serializedVersion: 2
@@ -228,9 +229,7 @@ MonoBehaviour:
   - {fileID: 1243807694602955061}
   - {fileID: 6023322661558438585}
   spitSpeed: 3
-  escapeDistance: 16
-  Runner: 0
-  runnerTarget: {fileID: 0}
+  spitLocation: {fileID: 2317726255421150896}
 --- !u!114 &7559475773295116028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +266,13 @@ MonoBehaviour:
   m_crawler: {fileID: 0}
   obstacleAvoidanceWeight: 1.5
   wanderRadius: 20
+  wallStickPrevention: 2
+  wallCheckDistance: 1.5
+  stuckCheckInterval: 0.5
+  stuckThreshold: 0.1
+  maxStuckChecks: 3
+  unstuckForce: 15
+  upwardForce: 8
 --- !u!95 &1088147171486223594
 Animator:
   serializedVersion: 5
@@ -398,7 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 10
+  maxHealth: 3
   invincible: 0
   alive: 0
   immuneWeapons: 07000000
@@ -420,8 +426,8 @@ MonoBehaviour:
   baseAggression: 0.9
   healthAggressionModifier: 0.3
   preferredEngageDistance: 20
-  maxEngageDistance: 40
-  fleeDistance: 10
+  maxEngageDistance: 30
+  fleeDistance: 15
   fleeHealthThreshold: 0.3
   cautionHealthThreshold: 0.5
 --- !u!1001 &62135138584733998
@@ -900,6 +906,12 @@ PrefabInstance:
 --- !u!4 &1713225268596164391 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3066d58d557178a4e9fb47c49408a96c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1174349008338460876}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2317726255421150896 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3487500854202857084, guid: 3066d58d557178a4e9fb47c49408a96c,
     type: 3}
   m_PrefabInstance: {fileID: 1174349008338460876}
   m_PrefabAsset: {fileID: 0}
