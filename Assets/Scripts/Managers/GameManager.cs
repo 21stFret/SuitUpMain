@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
 
         if (!playOnAwake) return;
 
+        runUpgradeManager.weaponModManager.RemoveCurrentMods();
         nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
         currentRoomIndex = -1;
         gameActive = true;

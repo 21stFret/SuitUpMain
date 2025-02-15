@@ -20,9 +20,9 @@ public class PlayerSavedData : MonoBehaviour
     public int _Artifact                {get; private set;} 
     public Vector2 _playerLoadout       {get; private set;} 
     public bool _firstLoad              {get; private set;}
-    public bool _triggeredEasterEgg;     
+    public bool triggeredEasterEgg;
+    public bool hasSeenThankYouPanel = false;
     public GameStats _gameStats         {get; private set;}
-
     public int highestDifficulty;
 
     private void Awake()
@@ -60,6 +60,11 @@ public class PlayerSavedData : MonoBehaviour
     {
         _Exp += exp;
         CheckLevel();
+    }
+
+    public bool HasCompletedEasyMode()
+    {
+        return highestDifficulty>0;
     }
 
     private void CheckLevel()
@@ -123,7 +128,9 @@ public class PlayerSavedData : MonoBehaviour
         _Cash = 0;
         _Exp = 0;
         _Artifact = 0;
-        _triggeredEasterEgg = false;
+        triggeredEasterEgg = false;
+        highestDifficulty = 0;
+        hasSeenThankYouPanel = false;
         CreateWeaponData();
         _playerLoadout = new Vector2(0, 0);
         _gameStats = new GameStats();
@@ -173,8 +180,9 @@ public class PlayerSavedData : MonoBehaviour
         saveData.playerLoadout = _playerLoadout;
         saveData.firstLoad = _firstLoad;
         saveData.gameStats = _gameStats;
-        saveData.triggeredEasterEgg = _triggeredEasterEgg;
+        saveData.triggeredEasterEgg = triggeredEasterEgg;
         saveData.highestDifficulty = highestDifficulty;
+        saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
 
         // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData, true);
@@ -240,18 +248,21 @@ public class PlayerSavedData : MonoBehaviour
                 }
 
                 // deserialize the data from Json back into the C# object
-                SaveData saveData = JsonUtility.FromJson<SaveData>(dataToLoad);
-                _BGMVolume = saveData.BGMVolume;
-                _SFXVolume = saveData.SFXVolume;
-                _playerLevel = saveData.playerLevel;
-                _Cash = saveData.playerCash;
-                _Exp = saveData.playerExp;
-                _Artifact = saveData.playerArtifact;
-                _mainWeaponData = saveData.mainWeaponData;
-                _altWeaponData = saveData.altWeaponData;
-                _playerLoadout = saveData.playerLoadout;
-                _firstLoad = saveData.firstLoad;
-                _gameStats = saveData.gameStats;
+                SaveData savedData = JsonUtility.FromJson<SaveData>(dataToLoad);
+                _BGMVolume = savedData.BGMVolume;
+                _SFXVolume = savedData.SFXVolume;
+                _playerLevel = savedData.playerLevel;
+                _Cash = savedData.playerCash;
+                _Exp = savedData.playerExp;
+                _Artifact = savedData.playerArtifact;
+                _mainWeaponData = savedData.mainWeaponData;
+                _altWeaponData = savedData.altWeaponData;
+                _playerLoadout = savedData.playerLoadout;
+                _firstLoad = savedData.firstLoad;
+                _gameStats = savedData.gameStats;
+                triggeredEasterEgg = savedData.triggeredEasterEgg;
+                highestDifficulty = savedData.highestDifficulty;
+                hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
 
                 print("Loaded Data Complete" + dataToLoad);
             }
@@ -286,4 +297,5 @@ public class SaveData
     public float SFXVolume;
     public int highestDifficulty;
     public bool triggeredEasterEgg;
+    public bool hasSeenThankYouPanel;
 }

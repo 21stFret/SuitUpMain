@@ -24,7 +24,7 @@ public class ModEntry : MonoBehaviour
         _init = true;
         if (flipInfoWIndow)
         {
-            popupOffset.x = -540;
+            popupOffset.x = -470;
             Vector3 scale = conector.transform.localScale;
             scale.x = -scale.x;
             conector.transform.localScale = scale;

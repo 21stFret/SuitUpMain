@@ -49,7 +49,7 @@ public class CrawlerBehavior : MonoBehaviour
             { typeof(AttackState), new AttackState(crawler, movement, this) },
             { typeof(FleeState), new FleeState(crawler, movement, this) },
             { typeof(CautiousState), new CautiousState(crawler, movement, this) },
-            { typeof(ChargeState), new ChargeState(crawler, movement, this) }
+            { typeof(ChargeState), new ChargeState(crawler, movement, this) },
         };
 
         // Add specialized states for different crawler types
@@ -60,6 +60,10 @@ public class CrawlerBehavior : MonoBehaviour
         if (crawler is CrawlerSpitter)
         {
             availableStates.Add(typeof(RangedAttackState), new RangedAttackState(crawler, movement, this));
+        }
+        if (crawler is CrawlerLeaper)
+        {
+            availableStates.Add(typeof(LeapState), new LeapState(crawler, movement, this));
         }
         // Start in idle state
         TransitionToState(availableStates[typeof(SpawnedState)]);
@@ -96,6 +100,7 @@ public class CrawlerBehavior : MonoBehaviour
 
     public float GetEngagementRange()
     {
+        UpdateAggression();
         return Mathf.Lerp(preferredEngageDistance, maxEngageDistance, CurrentAggression);
     }
 
@@ -246,7 +251,7 @@ public class PursuitState : CrawlerState
         {
             case CrawlerSpitter _spitter:
                 otherBehavior = true;
-                if (movement.distanceToTarget <= _spitter.attackRange)
+                if (movement.distanceToTarget <= behavior.GetEngagementRange())
                 {
                     behavior.TransitionToState(typeof(RangedAttackState));
                 }
@@ -265,6 +270,14 @@ public class PursuitState : CrawlerState
                 {
                     otherBehavior = true;
                     behavior.TransitionToState(typeof(ChargeState));
+                }
+            break;
+
+            case CrawlerLeaper leaper:
+                if(leaper.CheckCanLeap())
+                {
+                    otherBehavior = true;
+                    behavior.TransitionToState(typeof(LeapState));
                 }
             break;
         }
@@ -409,6 +422,13 @@ public class ChargeState : CrawlerState
 public class FleeState : CrawlerState
 {
     private Vector3 fleePosition;
+    private bool isCornered;
+    private float corneredCheckInterval = 0.5f;
+    private float lastCorneredCheck;
+    private Vector3 lastPosition;
+    private float stuckThreshold = 0.1f; // Minimum distance that should be moved
+    private int stuckCounter = 0;
+    private int maxStuckChecks = 3; // How many checks before considering truly stuck
     
     public FleeState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
         : base(crawler, movement, behavior) { }
@@ -418,7 +438,113 @@ public class FleeState : CrawlerState
         base.Enter();
         movement.canMove = true;
         movement.tracking = false;
+        isCornered = false;
         CalculateFleePosition();
+    }
+
+    public override void Update()
+    {
+        if (Time.time - lastCorneredCheck > corneredCheckInterval)
+        {
+            CheckIfCornered();
+            lastCorneredCheck = Time.time;
+        }
+
+        if (isCornered)
+        {
+            HandleCorneredBehavior();
+            return;
+        }
+
+        float distanceToTarget = Vector3.Distance(crawler.transform.position, crawler.target.transform.position);
+
+        // Exit if target is too far away
+        if (distanceToTarget > behavior.fleeDistance)
+        {
+            behavior.TransitionToState(typeof(IdleState));
+            return;
+        }
+
+        movement.SetDestination(fleePosition);
+        
+        if (Vector3.Distance(crawler.transform.position, fleePosition) < 1f || 
+            !IsPositionReachable(fleePosition))
+        {
+            CalculateFleePosition();
+        }
+    }
+
+    private void CheckIfCornered()
+    {
+        float distanceMoved = Vector3.Distance(lastPosition, crawler.transform.position);
+        
+        if (distanceMoved < stuckThreshold)
+        {
+            stuckCounter++;
+            if (stuckCounter >= maxStuckChecks)
+            {
+                isCornered = true;
+                return;
+            }
+        }
+        else
+        {
+            stuckCounter = 0;
+        }
+
+        lastPosition = crawler.transform.position;
+    }
+
+    private void HandleCorneredBehavior()
+    {
+        // If cornered and health is lower than a certain threshold, fight back
+        float healthPercentage = crawler._targetHealth.health / crawler._targetHealth.maxHealth;
+        if (healthPercentage < 0.5f)
+        {
+            behavior.TransitionToState(typeof(AttackState));
+            return;
+        }
+
+        // Otherwise, try to find an escape route
+        Vector3 escapeDirection = FindBestEscapeDirection();
+        if (escapeDirection != Vector3.zero)
+        {
+            fleePosition = crawler.transform.position + escapeDirection * behavior.fleeDistance;
+            isCornered = false;
+        }
+    }
+
+    private Vector3 FindBestEscapeDirection()
+    {
+        float[] testAngles = new float[] { 0, 45, 90, 135, 180, 225, 270, 315 };
+        float bestDistance = 0;
+        Vector3 bestDirection = Vector3.zero;
+
+        foreach (float angle in testAngles)
+        {
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+            RaycastHit hit;
+            if (!Physics.Raycast(crawler.transform.position, direction, out hit, behavior.fleeDistance, movement.SteeringRaycast))
+            {
+                Vector3 potentialPosition = crawler.transform.position + direction * behavior.fleeDistance;
+                float distanceFromTarget = Vector3.Distance(potentialPosition, crawler.target.transform.position);
+                
+                if (distanceFromTarget > bestDistance)
+                {
+                    bestDistance = distanceFromTarget;
+                    bestDirection = direction;
+                }
+            }
+        }
+
+        return bestDirection;
+    }
+
+    private bool IsPositionReachable(Vector3 position)
+    {
+        Vector3 direction = (position - crawler.transform.position).normalized;
+        float distance = Vector3.Distance(crawler.transform.position, position);
+        return !Physics.Raycast(crawler.transform.position, direction, distance, movement.SteeringRaycast);
     }
 
     private void CalculateFleePosition()
@@ -483,23 +609,6 @@ public class FleeState : CrawlerState
 
         // If no good alternative is found, return the original direction
         return originalDirection;
-    }
-
-    public override void Update()
-    {
-        movement.SetDestination(fleePosition);
-        
-        if (Vector3.Distance(crawler.transform.position, fleePosition) < 1f)
-        {
-            if (behavior.CurrentAggression > 0.7f)
-            {
-                behavior.TransitionToState(typeof(PursuitState));
-            }
-            else
-            {
-                behavior.TransitionToState(typeof(CautiousState));
-            }
-        }
     }
 }
 
@@ -602,8 +711,8 @@ public class RangedAttackState : CrawlerState
 
         movement.SetDestination(crawler.target.transform.position);
 
-        spitterCrawler.Attack();
-        if (movement.distanceToTarget < spitterCrawler.escapeDistance)
+
+        if (movement.distanceToTarget < behavior.fleeDistance)
         {
             behavior.TransitionToState(typeof(FleeState));
         }
@@ -611,12 +720,54 @@ public class RangedAttackState : CrawlerState
         {
             behavior.TransitionToState(typeof(PursuitState));
         }
+
+        spitterCrawler.Attack();    
     }
 
     public override void Exit()
     {
         base.Exit();
         crawler.animator.SetBool("InRange", false);
+    }
+}
+
+public class LeapState : CrawlerState
+{
+    private CrawlerLeaper leaper;
+
+    public LeapState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
+        : base(crawler, movement, behavior)
+    {
+        leaper = crawler as CrawlerLeaper;
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        movement.canMove = false;
+        leaper.StartLeapPreparation();
+    }
+
+    public override void Update()
+    {
+        if (crawler.target == null)
+        {
+            behavior.TransitionToState(typeof(IdleState));
+            return;
+        }
+
+        // After leap completes
+        if (!leaper.IsLeaping)
+        {
+            // Return to pursuit if leap is done
+            behavior.TransitionToState(typeof(PursuitState));
+        }
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        movement.canMove = true;
     }
 }
 // Base state class for all crawler states
@@ -636,7 +787,7 @@ public abstract class CrawlerState
 
     public virtual void Enter() 
     {
-        //Debug.Log(crawler.name +" entering " + GetType().Name);
+        Debug.Log(crawler.name +" entering " + GetType().Name);
     }
     public virtual void Exit() 
     { 

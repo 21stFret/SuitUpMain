@@ -30,7 +30,7 @@ public class Crawler : MonoBehaviour
     public CrawlerMovement crawlerMovement;
     [HideInInspector]
     public SkinnedMeshRenderer meshRenderer;
-    //[HideInInspector]
+    [HideInInspector]
     public Transform target;
     private Collider _collider;
     [HideInInspector]
@@ -47,6 +47,7 @@ public class Crawler : MonoBehaviour
     public ParticleSystem DeathBlood;
     public ParticleSystem _spawnEffect;
     public Animator animator;
+    [HideInInspector]
     public bool dead;
     public AudioSource deathNoise;
     public bool overrideDeathNoise;
@@ -70,10 +71,11 @@ public class Crawler : MonoBehaviour
     public bool forceSpawn;
 
     public TargetHealth _targetHealth;
-
+    [HideInInspector]
     public bool triggeredAttack;
 
-    public CrawlerBehavior _crawlerBehavior;
+    private CrawlerBehavior _crawlerBehavior;
+    [HideInInspector]
     public Vector3 spawnLocation;
     public float SpawnForce;
 
@@ -109,6 +111,7 @@ public class Crawler : MonoBehaviour
     private void EnableBrain()
     {
         _crawlerBehavior = GetComponent<CrawlerBehavior>();
+        _crawlerBehavior.enabled = true;
         _crawlerBehavior.Init();
     }
 

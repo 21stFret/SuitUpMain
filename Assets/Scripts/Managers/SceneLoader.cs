@@ -12,6 +12,8 @@ public class SceneLoader : MonoBehaviour
     public float minloadTime = 2;
     public AudioManager audioManager;
 
+    public HintManager hintManager;
+
     private void Awake()
     {
         if(instance == null)
@@ -33,6 +35,7 @@ public class SceneLoader : MonoBehaviour
         {
             return;
         }
+        hintManager.HideHint();
         loadinBar.enabled = false;
         blackout.FadeOut();
     }
@@ -60,6 +63,7 @@ public class SceneLoader : MonoBehaviour
         audioManager.PlayBGMusic(1);
 
         yield return new WaitForSeconds(1);
+        hintManager.ShowRandomHint();
 
         loadinBar.enabled = true;
 

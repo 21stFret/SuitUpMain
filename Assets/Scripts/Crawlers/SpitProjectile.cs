@@ -80,7 +80,7 @@ public class SpitProjectile : MonoBehaviour
                 if (rb.GetComponent<TargetHealth>() != null)
                 {
                     float distance = Vector3.Distance(transform.position, collider.transform.position);
-                    float damage = _damage * (1.2f - (distance / explosionRadius));
+                    float damage = Mathf.Clamp(_damage * (1.2f - (distance / explosionRadius)), 0, _damage);
                     rb.GetComponent<TargetHealth>().TakeDamage(damage, WeaponType.Cralwer);
                 }
             }

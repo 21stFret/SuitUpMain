@@ -4,84 +4,88 @@ using System.Collections.Generic;
 
 public class CrawlerLeaper : Crawler
 {
-    public float leapDistance = 15f;        // Maximum distance to attempt a leap
-    public float leapForce = 20f;           // Force of the leap
-    public float leapCooldown = 3f;         // Time between leaps
-    public float leapDuration = 1f;         // How long the leap lasts
-    public float damageCheckFrequency = 0.1f; // How often to check for damage during leap
-    public ParticleSystem leapEffect;       // Visual effect for leaping
+    [Header("Leap Settings")]
+    public float leapDistance = 15f;
+    public float leapForce = 20f;
+    public float leapCooldown = 3f;
+    public float leapDuration = 1f;
+    public float damageCheckFrequency = 0.1f;
+    public ParticleSystem leapEffect;
     
-    private float leapTimer;                // Track cooldown
-    private bool isLeaping;                 // Track if currently in leap
-    private bool hasDealtDamage;           // Prevent multiple hits in one leap
-
-    public Material fangsMat;
-
+    private float leapTimer;
+    private bool isLeaping;
+    public bool IsLeaping => isLeaping;
+    private bool hasDealtDamage;
     private Vector3 leapDirection;
+    public Material fangsMat;
 
     public override void Init()
     {
         base.Init();
-        fangsMat = meshRenderer.materials[2];
+        fangsMat = GetComponentInChildren<SkinnedMeshRenderer>().materials[2];
     }
 
-    /*
-    public override void CheckDistance()
+    public bool CheckCanLeap()
     {
-        // Always count down leap timer
-        leapTimer += Time.deltaTime;
-        
         if (isLeaping)
-        {
+            return false;
+
+        if (leapTimer < leapCooldown)
+            return false;
+
+        if (target == null)
+            return false;
+
+        if (Vector3.Distance(target.position, transform.position) > leapDistance)
+            return false;
+
+        return true;
+    }
+
+    public  void Update()
+    {
+        if (isLeaping)
             return;
-        }
 
-        // Only attempt leap if in range AND cooldown is ready
-        if (crawlerMovement.distanceToTarget < leapDistance && leapTimer > leapCooldown)
+        if (leapTimer < leapCooldown)
         {
-            StartLeap();
-            leapTimer = 0;
-        }
-
-        // Use normal attack behavior when very close
-        if (!isLeaping)
-        {
-            base.CheckDistance();
+            leapTimer += Time.deltaTime;
         }
     }
-    */
 
-    private void StartLeap()
+    public void StartLeapPreparation()
     {
         isLeaping = true;
-        hasDealtDamage = false;
-        crawlerMovement.enabled = false;    // Disable normal movement
-        animator.SetTrigger("Leap");        // Trigger leap animation
+        animator.SetTrigger("Leap");
     }
 
+    // Called by animation event
+    public void FlashFangs()
+    {
+        fangsMat.EnableKeyword("_EMISSION");
+    }
+
+    // Called by animation event
     public void Leap()
     {
-        // Play leap effect
+
+        hasDealtDamage = false;
+        crawlerMovement.enabled = false;
+        leapTimer = 0;
+
         if (leapEffect != null)
         {
             leapEffect.Play();
         }
 
+        leapDirection = (target.position - transform.position).normalized;
+        leapDirection.y = 0;    // Prevent vertical leap
+        transform.forward = leapDirection;
         rb.AddForce(leapDirection * leapForce, ForceMode.Impulse);
-
-        // Start leap duration timer
         StartCoroutine(LeapDuration());
         StartCoroutine(LeapDamage());
     }
 
-    public void FlashFangs()
-    {
-        fangsMat.EnableKeyword("_EMISSION");
-        Invoke("UnflashFangs", 2f);
-        leapDirection = (target.position - transform.position).normalized;
-        leapDirection.y = 0;    // Prevent vertical leap
-        transform.forward = leapDirection;
-    }
 
     public IEnumerator LeapDuration()
     {
@@ -89,6 +93,8 @@ public class CrawlerLeaper : Crawler
         isLeaping = false;
         rb.velocity = Vector3.zero;
         crawlerMovement.enabled = true;
+        fangsMat.DisableKeyword("_EMISSION");
+        leapEffect.Stop();
     }
 
     private IEnumerator LeapDamage()
@@ -98,11 +104,6 @@ public class CrawlerLeaper : Crawler
             CheckForDamage();
             yield return new WaitForSeconds(damageCheckFrequency);
         }
-    }
-
-    public void UnflashFangs()
-    {
-        fangsMat.DisableKeyword("_EMISSION");
     }
 
     private void CheckForDamage()
@@ -118,7 +119,7 @@ public class CrawlerLeaper : Crawler
                 var targetHealth = col.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(attackDamage, WeaponType.Cralwer);
+                    targetHealth.TakeDamage(attackDamage*2, WeaponType.Cralwer);
                     //hasDealtDamage = true;  // Prevent multiple hits
                     break;
                 }
@@ -147,7 +148,7 @@ public class CrawlerLeaper : Crawler
     public override void Spawn(bool daddy = false)
     {
         base.Spawn();
-        leapTimer = leapCooldown;  // Start ready to leap
+        leapTimer = leapCooldown;
         isLeaping = false;
         hasDealtDamage = false;
     }
