@@ -22,6 +22,9 @@ public class BattleManager : MonoBehaviour
     [InspectorButton("ObjectiveComplete")]
     public bool setBattleType;
 
+    [InspectorButton ("SetBattleType")]
+    public bool updateBattle;
+
     private GameManager _gameManager;
 
     private void Awake()
@@ -31,22 +34,36 @@ public class BattleManager : MonoBehaviour
 
     public void SetBattleType()
     {
+        //testing 
         _gameManager = GameManager.instance;
-        GenerateNewBattle(Battles[currentBattleIndex].battleType);
+        //GenerateNewBattle(Battles[currentBattleIndex].battleType);
+        currentBattle = Battles[currentBattleIndex];
+
+        // Check if this is the final jungle battle
+        if (_gameManager.currentAreaType == AreaType.Jungle && 
+            currentBattleIndex == Battles.Count - 1)
+        {
+            currentBattle.battleType = BattleType.Hunt;
+        }
+
         _usingBattleType = currentBattle.battleType;
 
-        //Color color = Color.white;
+        Color color = Color.white;
         float fillAmount = 0;
         bool showBar = false;
         bool showpercent = false;
+        bool showSurvive = false;
+        string showDestroy = "";
         var type = Battles[currentBattleIndex].battleType;
+        GenerateNewBattle(type);
         switch (type)
         {
             case BattleType.Hunt:
-                objectiveMessage = "Hunt down and kill the target";
-                //color = Color.red;
+                objectiveMessage = "Take out the target!";
+                color = Color.red;
                 fillAmount = 1;
-                SpawnRunner();
+                AudioManager.instance.PlayBossMusic(1);
+                StartCoroutine(HuntBattle());
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
@@ -58,12 +75,13 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleType.Survive:
                 objectiveMessage = "Survive the horde!";
-                //color = Color.green;
+                color = Color.green;
                 fillAmount = 0;
                 surviveTimeT = surviveTime;
                 showBar = true;
                 StartCoroutine(SurviveBattle());
                 AudioManager.instance.PlayBossMusic(0);
+                showSurvive = true;
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
@@ -71,9 +89,33 @@ public class BattleManager : MonoBehaviour
                 fillAmount = 0;
                 break;
         }
-        _gameManager.gameUI.objectiveUI.Init(showBar, showpercent);
-        //GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
+        _gameManager.gameUI.objectiveUI.Init(showBar, showpercent, showSurvive, showDestroy);
+        GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         _gameManager.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+    }
+
+    private Crawler GetHuntedTarget()
+    {
+        return crawlerSpawner.huntedTarget;
+    }
+
+    private IEnumerator HuntBattle()
+    {
+        _gameManager.areaManager.DayNightCycle(true);
+        lightningController.active = true;
+        yield return new WaitForSeconds(1);
+        _gameManager.gameUI.objectiveUI.Init(true, false, false, GetHuntedTarget().name);
+        while (crawlerSpawner.activeCrawlerCount > 0)
+        {
+            _gameManager.gameUI.objectiveUI.UpdateBar(GetHuntedTarget()._targetHealth.health / GetHuntedTarget()._targetHealth.maxHealth);
+            yield return null;
+        }
+        ObjectiveComplete();
+        crawlerSpawner.KillAllCrawlers();
+        crawlerSpawner.EndBattle();
+        lightningController.active = false;
+        _gameManager.areaManager.DayNightCycle(false);
+        GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
     private IEnumerator SurviveBattle()
@@ -208,12 +250,20 @@ public class BattleManager : MonoBehaviour
     {
         crawlerSpawner.battleManager = this;
         crawlerSpawner.waveText.text = "Here they come...";
-        EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
-        crawlerSpawner.spawnPoints = area.spawnPoints;
+        
+        if(GameManager.instance.areaManager.currentRoom != null)
+        {
+            EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
+            crawlerSpawner.spawnPoints = area.spawnPoints;
+        }
         crawlerSpawner.LoadBattle();
         if (currentBattle.battleType == BattleType.Exterminate)
         {
             crawlerSpawner.BeginSpawningSquads();
+        }
+        if (currentBattle.battleType == BattleType.Hunt)
+        {
+            crawlerSpawner.SpawnBoss();
         }
     }
 

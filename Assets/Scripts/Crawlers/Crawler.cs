@@ -60,6 +60,8 @@ public class Crawler : MonoBehaviour
     public int expWorth;
     public int dropRate;
     public float ScreamChance;
+    public bool isStunned;
+    public bool canBeStunned = true;
 
     public TriggerSensor.ObjectStateHandler objectStateHandler;
 
@@ -74,7 +76,7 @@ public class Crawler : MonoBehaviour
     [HideInInspector]
     public bool triggeredAttack;
 
-    private CrawlerBehavior _crawlerBehavior;
+    protected CrawlerBehavior _crawlerBehavior;
     [HideInInspector]
     public Vector3 spawnLocation;
     public float SpawnForce;
@@ -83,6 +85,8 @@ public class Crawler : MonoBehaviour
 
     [InspectorButton("TestSpawn")]
     public bool spawn;
+
+    public AudioClip[] deathSounds;
 
     private void TestSpawn()
     {
@@ -127,6 +131,15 @@ public class Crawler : MonoBehaviour
 
     public IEnumerator StunCralwer(float stunTime)
     {
+        if(!canBeStunned)
+        {
+            yield break;
+        }
+        if(isStunned)
+        {
+            yield break;
+        }
+        isStunned = true;
         crawlerMovement.enabled = false;
         animator.speed = 0;
         yield return new WaitForSeconds(stunTime);
@@ -138,6 +151,9 @@ public class Crawler : MonoBehaviour
 
         crawlerMovement.enabled = true;
         animator.speed = 1;
+        // Stun immunity for 1 second
+        yield return new WaitForSeconds(1);
+        isStunned = false;
     }
 
     private void SetSpeed()
@@ -148,7 +164,7 @@ public class Crawler : MonoBehaviour
         _finalSpeed = Random.Range(min, max);
     }
 
-    void Update()
+    private void Update()
     {
         if(dead)
         {
@@ -217,9 +233,9 @@ public class Crawler : MonoBehaviour
             return;
         }
         rb.AddForce(transform.forward * 50, ForceMode.Impulse);
-        Vector3 attackloc = transform.position + (transform.forward * (transform.localScale.x*2));
+        Vector3 attackloc = transform.position + (transform.forward * transform.localScale.x);
 
-        //print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
+        print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
 
         if (Vector3.Distance(attackloc, target.transform.position) >= attackRange)
         {
@@ -467,6 +483,7 @@ public class Crawler : MonoBehaviour
         StartCoroutine(SpawnEffect(daddy));
         StartCoroutine(SpawnImmunity());
         DeathBlood.transform.SetParent(transform);
+        tag = "Enemy";      
     }
 
     private IEnumerator SpawnEffect(bool daddy)
@@ -483,7 +500,6 @@ public class Crawler : MonoBehaviour
         }
         rb.AddForce(transform.forward * force, ForceMode.Impulse);
         yield return new WaitForSeconds(0.2f);
-        tag = "Enemy";
         animator.speed = 1;
         spawnLocation = transform.position;
     }
@@ -505,6 +521,10 @@ public class Crawler : MonoBehaviour
         if (!overrideDeathNoise)
         {
             deathNoise.clip = AudioManager.instance.GetRandomSpawnNoise();
+        }
+        else
+        {
+            deathNoise.clip = deathSounds[Random.Range(0, deathSounds.Length)]; 
         }
         deathNoise.transform.SetParent(null);
         deathNoise.gameObject.SetActive(true);

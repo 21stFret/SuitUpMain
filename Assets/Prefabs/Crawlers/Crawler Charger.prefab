@@ -14674,6 +14674,8 @@ MonoBehaviour:
   expWorth: 20
   dropRate: 20
   ScreamChance: 0
+  isStunned: 0
+  canBeStunned: 1
   objectStateHandler: {fileID: 0}
   crawlerType: 0
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
@@ -14821,6 +14823,7 @@ MonoBehaviour:
   maxStuckChecks: 3
   unstuckForce: 15
   upwardForce: 8
+  canRotate: 1
 --- !u!114 &6499886239188906295
 MonoBehaviour:
   m_ObjectHideFlags: 0

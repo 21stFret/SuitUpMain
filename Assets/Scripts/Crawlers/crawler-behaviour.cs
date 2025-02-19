@@ -65,6 +65,14 @@ public class CrawlerBehavior : MonoBehaviour
         {
             availableStates.Add(typeof(LeapState), new LeapState(crawler, movement, this));
         }
+        if (crawler is CrawlerCharger)
+        {
+            availableStates.Add(typeof(ChargeState), new ChargeState(crawler, movement, this));
+        }
+        if (crawler is CrawlerAlbino)
+        {
+            availableStates.Add(typeof(AlbinoChargeState), new AlbinoChargeState(crawler, movement, this));
+        }
         // Start in idle state
         TransitionToState(availableStates[typeof(SpawnedState)]);
     }
@@ -107,7 +115,10 @@ public class CrawlerBehavior : MonoBehaviour
     public void OnDamageTaken()
     {
         currentState?.OnDamaged();
+
+        // Check for state transitions based on health
         
+        /*
         // Check for state transitions based on health
         float healthPercentage = crawler._targetHealth.health / crawler._targetHealth.maxHealth;
         
@@ -131,6 +142,7 @@ public class CrawlerBehavior : MonoBehaviour
         {
             TransitionToState(typeof(PursuitState));
         }
+        */
     }
 
     public void OnDeath()
@@ -258,10 +270,10 @@ public class PursuitState : CrawlerState
             break;
 
             case CrawlerHunter hunter:
-                otherBehavior = true;
-                if(behavior.CurrentAggression < 0.7f && movement.distanceToTarget <= hunter.stealthRange)
+                if(hunter.CheckCanStealth())
                 {
-                    behavior.TransitionToState(typeof(StealthState));
+                    //otherBehavior = true;
+                    hunter.EnterStealth();
                 }
             break;
 
@@ -300,6 +312,7 @@ public class PursuitState : CrawlerState
 
 public class AttackState : CrawlerState
 {
+    private float attackTimer;
     public AttackState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
         : base(crawler, movement, behavior) { }
     
@@ -308,6 +321,7 @@ public class AttackState : CrawlerState
         base.Enter();
         movement.canMove = false;
         crawler.Attack();
+        attackTimer = 0;
     }
     
     public override void Update()
@@ -320,6 +334,12 @@ public class AttackState : CrawlerState
 
         movement.SetDestination(crawler.target.transform.position);
 
+        attackTimer += Time.deltaTime;
+        if (attackTimer <= 1.5f)
+        {
+            //return;
+        }
+
         if (!crawler.triggeredAttack)
         {
             if (movement.distanceToTarget > behavior.GetEngagementRange())
@@ -329,13 +349,17 @@ public class AttackState : CrawlerState
             }
             crawler.Attack();
         }
+        else
+        {
+            behavior.TransitionToState(typeof(PursuitState));
+        }
     }
 
     public override void Exit()
     {
         base.Exit();
         crawler.animator.SetBool("InRange", false);
-        crawler.triggeredAttack = false;
+        //crawler.triggeredAttack = false;
     }
 }
 
@@ -455,6 +479,8 @@ public class FleeState : CrawlerState
             HandleCorneredBehavior();
             return;
         }
+        
+        movement.SetDestination(fleePosition);
 
         float distanceToTarget = Vector3.Distance(crawler.transform.position, crawler.target.transform.position);
 
@@ -464,8 +490,6 @@ public class FleeState : CrawlerState
             behavior.TransitionToState(typeof(IdleState));
             return;
         }
-
-        movement.SetDestination(fleePosition);
         
         if (Vector3.Distance(crawler.transform.position, fleePosition) < 1f || 
             !IsPositionReachable(fleePosition))
@@ -657,28 +681,28 @@ public class CautiousState : CrawlerState
 // Specialized States for Different Crawler Types
 public class StealthState : CrawlerState
 {
-    private CrawlerHunter hunterCrawler;
-    
+    private CrawlerHunter hunter;
     public StealthState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
         : base(crawler, movement, behavior)
     {
-        hunterCrawler = crawler as CrawlerHunter;
+        hunter = crawler as CrawlerHunter;
     }
     
     public override void Enter()
     {
-        if (hunterCrawler != null)
+        if (hunter != null)
         {
             movement.canMove = true;
-            hunterCrawler.SendMessage("EnterStealth", SendMessageOptions.DontRequireReceiver);
+
         }
     }
     
     public override void Update()
     {
-        if (movement.distanceToTarget <= hunterCrawler.stealthAttackRange)
+
+        if (movement.distanceToTarget <= behavior.GetEngagementRange())
         {
-            hunterCrawler.SendMessage("StealthAttack", SendMessageOptions.DontRequireReceiver);
+            //hunter.StealthAttack();
             behavior.TransitionToState(typeof(AttackState));
         }
     }
@@ -770,6 +794,126 @@ public class LeapState : CrawlerState
         movement.canMove = true;
     }
 }
+
+public class AlbinoChargeState : CrawlerState
+{
+    private CrawlerAlbino albino;
+    private float chargeTimer;
+    private bool _isCharging;
+
+    private float damageTickRate = 0.2f;
+
+    public AlbinoChargeState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
+        : base(crawler, movement, behavior)
+    {
+        albino = crawler as CrawlerAlbino;
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+        StartCharge();
+    }
+
+    private void StartCharge()
+    {
+        movement.canMove = false;
+        chargeTimer = 0;         
+        // Start charge animation
+        crawler.animator.SetBool("Charging", true);
+        crawler.animator.speed = 1.5f;
+    }
+
+    public void BuildCharge()
+    {
+        _isCharging = true;
+        movement.canRotate = false;
+        albino.buildChargeTimer = albino.buildChargeTime;
+        albino.chargeEffect.gameObject.SetActive(true);
+        albino.chargeEffect.Play();
+        Vector3 targetVelocity = crawler.target.GetComponent<Rigidbody>()?.velocity ?? Vector3.zero;
+        Vector3 predictedPosition = crawler.target.position + (targetVelocity * 0.5f);
+        movement.SetDestination(predictedPosition, true);
+    }
+    
+    public override void Update()
+    {
+        if(!_isCharging)
+        {
+            movement.SetDestination(crawler.target.transform.position);
+            albino.buildChargeTimer -= Time.deltaTime;
+            if (albino.buildChargeTimer <= 0)
+            {
+                BuildCharge();
+            }
+            return;
+        }
+
+        crawler.animator.SetBool("Charging", false);
+        crawler.animator.speed = 1.5f;
+        chargeTimer += Time.deltaTime;
+        
+        // Move forward at charge speed
+        movement.ChargeMovement(albino.chargeSpeed);
+
+        // Check for collision with player
+        if(damageTickRate <= 0)
+        {
+            Collider[] hits = Physics.OverlapSphere(crawler.transform.position, albino.chargeRadius);
+            foreach (Collider hit in hits)
+            {
+                var health = hit.GetComponent<TargetHealth>();
+                if (health != null)
+                {
+                    health.TakeDamage(albino.attackDamage * 1.5f, WeaponType.Cralwer);
+                }
+                if(hit.CompareTag("BigEnvironment"))
+                {
+                    hit.GetComponent<BreakableEnvironment>().Hit();
+                }
+            }
+            damageTickRate = 0.2f;
+        }
+        else
+        {
+            damageTickRate -= Time.deltaTime;
+        }
+
+        // End charge after duration
+        if (chargeTimer >= albino.chargeDuration)
+        {
+            EndCharge();
+        }
+    }
+
+    private void EndCharge()
+    {
+        _isCharging = false;
+        movement.canMove = true;
+        movement.canRotate = true;
+        crawler.animator.speed = 1f;
+        crawler.meshRenderer.material.SetColor("_Emmission", albino.originalColor);
+        crawler.animator.SetBool("Charging", false);
+        albino.chargeEffect.Stop();
+        albino.charged = false;
+        behavior.TransitionToState(typeof(PursuitState));
+
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _isCharging = false;
+        crawler.animator.speed = 1f;
+        crawler.meshRenderer.material.SetColor("_Emmission", albino.originalColor);
+        crawler.animator.SetBool("Charging", false);
+        albino.chargeEffect.Stop();
+        movement.canMove = true;
+        movement.canRotate = true;
+        albino.charged = false;
+    }
+}
+
 // Base state class for all crawler states
 [System.Serializable]
 public abstract class CrawlerState

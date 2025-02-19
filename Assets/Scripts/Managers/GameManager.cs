@@ -113,8 +113,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         AudioManager.instance.PlayBattleMusic();
         CashCollector.instance.DestroyParts();
-        BattleManager.instance.SetBattleType();
         BattleManager.instance.roomDrop.gameObject.SetActive(false);
+        BattleManager.instance.SetBattleType();
         areaManager.LoadRoom(currentAreaType);
         BattleManager.instance.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;

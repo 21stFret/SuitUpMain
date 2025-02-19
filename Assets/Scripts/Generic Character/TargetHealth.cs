@@ -102,24 +102,27 @@ public class TargetHealth : MonoBehaviour
             damage *= multiplier;
         }
 
-        if (damageNumbersOn)
-        {
-            DamageNumbers(damage, weaponType);
-        }
-
         if (_prop != null)
         {
             _prop.TakeDamage(damage, weaponType);
+            if (damageNumbersOn)
+            {
+                DamageNumbers(damage, weaponType);
+            }
             return;
         }
 
         if (_crawler != null)
         {
-            if (weaponType == WeaponType.Cralwer)
+            if (weaponType != WeaponType.Cralwer)
             {
-                return;
+                _crawler.TakeDamage(damage, weaponType, stunTime, invincible);
+
+                if (damageNumbersOn)
+                {
+                    DamageNumbers(damage, weaponType);
+                }
             }
-            _crawler.TakeDamage(damage, weaponType, stunTime, invincible);
         }
     }
 

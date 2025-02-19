@@ -49,6 +49,8 @@ public class CrawlerSpawner : MonoBehaviour
 
     private bool hordeBattle;
 
+    public Crawler huntedTarget;
+
     public void Init()
     {
         InitCrawlers();
@@ -70,7 +72,7 @@ public class CrawlerSpawner : MonoBehaviour
         }
         battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
-        GenerateArmyList();
+        spawnListArmy = GenerateArmyList();
         burstSpawnAmount = currentBattle.burstMin;
     }
 
@@ -89,7 +91,7 @@ public class CrawlerSpawner : MonoBehaviour
         {
             BurstTimer();
         }
-        ValidateActiveCrawlers();
+        //ValidateActiveCrawlers();
     }
 
     private void BurstTimer()
@@ -104,8 +106,8 @@ public class CrawlerSpawner : MonoBehaviour
             int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
             min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
             burstSpawnAmount = Random.Range(min, currentBattle.burstMax);
-            GenerateArmyList();
-            SpawnFromArmy();
+            spawnListArmy = GenerateArmyList();
+            SpawnFromArmy(spawnListArmy, Vector3.zero );
         }
         //UpdateTimerDisplay();
     }
@@ -188,7 +190,7 @@ public class CrawlerSpawner : MonoBehaviour
             }
         }
 
-        currentSquad = currentBattle.battleArmy[battleRound - 1];
+        currentSquad = currentBattle.battleArmy[Mathf.Clamp(battleRound - 1, 0, 10)];
         waveText.text = $"Wave {battleRound}/{currentBattle.battleArmy.Count}";
     }
 
@@ -228,14 +230,21 @@ public class CrawlerSpawner : MonoBehaviour
         StartCoroutine(SpawnCrawlerFromList(_spawnList));
     }
     
-    private void SpawnFromArmy()
+    public void SpawnFromArmy(List<Crawler> armyList, Vector3 loc)
     {
-        StartCoroutine(SpawnBurstCrawlerFromList(spawnListArmy));
+        if (loc != Vector3.zero)    
+        {
+            StartCoroutine(SpawnBurstCrawlerFromList(armyList, loc));
+        }
+        else
+        {
+            StartCoroutine(SpawnBurstCrawlerFromList(armyList));
+        }
     }
 
-    private void GenerateArmyList()
+    public List<Crawler> GenerateArmyList()
     {
-        spawnListArmy.Clear();
+        List<Crawler> _spawnListArmy = new List<Crawler>();
         foreach (CrawlerSquad squad in currentBattle.battleArmy)
         {
             for (int i = 0; i < squad.crawlerGroups.Length; i++)
@@ -245,11 +254,22 @@ public class CrawlerSpawner : MonoBehaviour
 
                 for (int j = 0; j < amount && j < GetCrawlerList(type).Count; j++)
                 {
-                    spawnListArmy.Add(GetCrawlerList(type)[j]);
+                    _spawnListArmy.Add(GetCrawlerList(type)[j]);
                 }
             }
         }
-        spawnListArmy.Shuffle();
+        _spawnListArmy.Shuffle();
+        return _spawnListArmy;
+    }
+
+    public List<Crawler> GenerateNewSquad(CrawlerType crawlerType, int amount)
+    {
+        List<Crawler> _spawnListArmy = new List<Crawler>();
+        for (int i = 0; i < amount && i < GetCrawlerList(crawlerType).Count; i++)
+        {
+            _spawnListArmy.Add(GetCrawlerList(crawlerType)[i]);
+        }
+        return _spawnListArmy;
     }
 
     private List<Crawler> GetCrawlerList(CrawlerType type)
@@ -267,18 +287,18 @@ public class CrawlerSpawner : MonoBehaviour
 
     private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs, bool FromDaddy = false)
     {
-
         int portalAllowed = 0;
-
         if (!FromDaddy)
         {
             if (!isActive) yield break;
+            foreach(Crawler crawler in bugs)
+            {
+                AddToActiveList(crawler);
+            }
             SelectSpawnPoint();
             PlaySpawnEffect();
             yield return new WaitForSeconds(0.5f);
         }
-
-
         for (int i = 0; i < bugs.Count; i++)
         {
             if (portalAllowed >= portalMaxAllowed)
@@ -321,11 +341,38 @@ public class CrawlerSpawner : MonoBehaviour
             portalAllowed++;
         }
     }
+    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Vector3 location)
+    {
+        
+        if (!isActive) yield break;
+        foreach(Crawler crawler in bugs)
+        {
+            AddToActiveList(crawler);
+        }
+        int portalAllowed = 0;
+        for (int i = 0; i < bugs.Count; i++)
+        {
+            Vector3 randomCircle = Random.insideUnitSphere * portalSize;
+            randomCircle.z = 0;
+            Vector3 randomPoint = randomCircle + location;
+            bugs[i].transform.position = randomPoint;
+            bugs[i].transform.rotation = Quaternion.Euler(0, randomCircle.y, 0);
+
+
+            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            portalAllowed++;
+        }
+        
+    }
 
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
     {
         if (!isActive) yield break;
         int portalAllowed = 0;
+        foreach(Crawler crawler in bugs)
+        {
+            AddToActiveList(crawler);
+        }
         if (!hordeBattle)
         {
             SelectSpawnPoint();
@@ -384,9 +431,6 @@ public class CrawlerSpawner : MonoBehaviour
         {
             bug.target = BattleManager.instance.capturePoint.transform;
         }
-        AddToActiveList(bug);
-
-        //Debug.Log($"Spawned and activated: {bug.name}");
     }
 
     private void PlaySpawnEffect()
@@ -446,8 +490,10 @@ public class CrawlerSpawner : MonoBehaviour
             if (!activeCrawlers.Contains(crawler))
             {
                 activeCrawlers.Add(crawler);
-                //crawler.gameObject.SetActive(true);
-                //Debug.Log($"Crawler {crawler.name} added to active list and activated.");
+                if(crawler.gameObject.CompareTag("Boss"))
+                {
+                    huntedTarget = crawler;
+                }
             }
         }
     }
@@ -468,5 +514,15 @@ public class CrawlerSpawner : MonoBehaviour
                 Debug.LogWarning($"Reactivated inactive crawler {crawler.name} at index {i}");
             }
         }
+    }
+
+    public void SpawnBoss()
+    {
+        //TODO add list of bosses to pick from depending on area
+        List<Crawler> spawnList = new List<Crawler>
+        {
+            albinos[0]
+        };
+        StartCoroutine(SpawnCrawlerFromList(spawnList));
     }
 }

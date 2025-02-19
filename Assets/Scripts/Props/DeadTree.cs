@@ -7,7 +7,7 @@ public class DeadTree : Crate
 {
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Boss")
         {
             Die();
         }
