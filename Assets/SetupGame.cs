@@ -20,6 +20,7 @@ public class SetupGame : MonoBehaviour
     public List<Battle> roomwavesEasy = new List<Battle>();
     public List<Battle> roomwavesMid = new List<Battle>();
     public List<Battle> roomwavesHard = new List<Battle>();
+    public List<Battle> roomwavesInsane = new List<Battle>();
 
     private void Awake()
     {
@@ -47,19 +48,28 @@ public class SetupGame : MonoBehaviour
         gameManager.playOnAwake = true;
         BattleManager battleManager = BattleManager.instance;
         battleManager.Battles.Clear();
+        float mulitpler = 1;
         switch (diffiulty)
         {
             case Difficulty.Easy:
                 battleManager.Battles.AddRange(roomwavesEasy);
+                mulitpler = 1;
                 break;
             case Difficulty.Mid:
                 battleManager.Battles.AddRange(roomwavesMid);
+                mulitpler = 1.5f;
                 break;
             case Difficulty.Hard:
                 battleManager.Battles.AddRange(roomwavesHard);
+                mulitpler = 2;
+                break;
+            case Difficulty.Insane:
+                battleManager.Battles.AddRange(roomwavesInsane);
+                mulitpler = 3;
                 break;
         }
-        battleManager.dificultyMultiplier = diffiulty == Difficulty.Easy ? 1f : diffiulty == Difficulty.Mid ? 1.5f : 2f;
+        battleManager.dificultyMultiplier = mulitpler;
+        battleManager.currentBattleIndex = 0;
         gameManager.currentAreaType = AreaType.Grass;
         gameManager.DelayedStart();
     }

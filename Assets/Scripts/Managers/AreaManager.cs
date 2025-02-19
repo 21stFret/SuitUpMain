@@ -77,25 +77,38 @@ public class AreaManager : MonoBehaviour
             return;
         }
 
-        int randomIndex = Random.Range(0, roomPrefabs.Count);
-        GameObject roomPrefab = roomPrefabs[randomIndex];
-        if (roomPrefab == currentRoom)
+        GameObject roomPrefab;
+        EnvironmentArea area;
+
+        if(BattleManager.instance.currentBattle.battleType == BattleType.Hunt)
         {
-            print("Room is the same as the current room");
-            randomIndex = (randomIndex + 1) % roomPrefabs.Count;
+            roomPrefab = roomPrefabs[roomPrefabs.Count - 1];
+            area = roomPrefab.GetComponent<EnvironmentArea>();
         }
-        EnvironmentArea area = roomPrefab.GetComponent<EnvironmentArea>();
-        if(directionalDaylight!=null)
+        else
         {
-            bool dark = area.insideArea;
-            if(BattleManager.instance.currentBattle.battleType == BattleType.Survive)
+            // leave the final room as the boss room
+            int randomIndex = Random.Range(0, roomPrefabs.Count-1);
+            roomPrefab = roomPrefabs[randomIndex];
+            if (roomPrefab == currentRoom)
             {
-                dark = true;
+                print("Room is the same as the current room");
+                randomIndex = (randomIndex + 1) % roomPrefabs.Count-1;
             }
-            DayNightCycle(dark);
+            area = roomPrefab.GetComponent<EnvironmentArea>();
+            if(directionalDaylight!=null)
+            {
+                bool dark = area.insideArea;
+                if(BattleManager.instance.currentBattle.battleType == BattleType.Survive)
+                {
+                    dark = true;
+                }
+                DayNightCycle(dark);
+            }
+            TreeClusterGeneration levelGen = roomPrefab.GetComponentInChildren<TreeClusterGeneration>();
+            if (levelGen != null) levelGen.GenerateTreeClusters();
         }
-        TreeClusterGeneration levelGen = roomPrefab.GetComponentInChildren<TreeClusterGeneration>();
-        if (levelGen != null) levelGen.GenerateTreeClusters();
+
         roomPrefab.SetActive(true);
         currentRoom = roomPrefab;
         area.RefreshArea();

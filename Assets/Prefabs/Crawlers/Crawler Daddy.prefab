@@ -45529,6 +45529,8 @@ MonoBehaviour:
   expWorth: 12
   dropRate: 5
   ScreamChance: 50
+  isStunned: 0
+  canBeStunned: 1
   objectStateHandler: {fileID: 0}
   crawlerType: 1
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
@@ -45536,7 +45538,6 @@ MonoBehaviour:
   forceSpawn: 1
   _targetHealth: {fileID: 0}
   triggeredAttack: 0
-  _crawlerBehavior: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 40
   dummy: 0
@@ -45660,6 +45661,14 @@ MonoBehaviour:
   m_crawler: {fileID: 0}
   obstacleAvoidanceWeight: 1
   wanderRadius: 20
+  wallStickPrevention: 2
+  wallCheckDistance: 1.5
+  stuckCheckInterval: 0.5
+  stuckThreshold: 0.1
+  maxStuckChecks: 3
+  unstuckForce: 50
+  upwardForce: 20
+  canRotate: 1
 --- !u!114 &2550985015025176912
 MonoBehaviour:
   m_ObjectHideFlags: 0

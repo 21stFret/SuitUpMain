@@ -10,6 +10,7 @@ public class DamageArea : MonoBehaviour
     public float damageDuration = 0f;
     public WeaponType damageType = WeaponType.Flame; // Default to Fire, but can be changed
     public bool damageActive = true; // Control whether damage is being dealt
+    public bool damageOnStart = false;
 
     public List<TargetHealth> targetsInRange = new List<TargetHealth>();
     private SphereCollider triggerCollider;
@@ -21,18 +22,28 @@ public class DamageArea : MonoBehaviour
         Init();
     }
 
-    private void Init()
+    public void Init()
     {
         damageActive = false;
-
         triggerCollider = gameObject.GetComponent<SphereCollider>();
-        float parentScale = transform.parent.localScale.x; // Assuming uniform scaling
+        float parentScale;
+        if(transform.parent == null)
+        {
+            parentScale = transform.localScale.x;
+        }
+        else
+        {
+            parentScale = transform.parent.localScale.x;
+        }
         float adjustedRadius = damageRadius / parentScale;
         //Debug.Log("Adjusted Radius: " + adjustedRadius);
         triggerCollider.radius = adjustedRadius;
         triggerCollider.isTrigger = true;
 
-        StartCoroutine(DealDamageRoutine());
+        if (damageOnStart)
+        {
+            EnableDamageArea();
+        }
     }
 
     public void EnableDamageArea()
@@ -79,7 +90,7 @@ public class DamageArea : MonoBehaviour
         {
             for (int i = targetsInRange.Count - 1; i >= 0; i--)
             {
-                if (targetsInRange[i] != null)
+                if (targetsInRange[i] != null && targetsInRange[i].gameObject.activeInHierarchy)
                 {
                     Vector3 yCancelled = targetsInRange[i].transform.position;
                     yCancelled.y = transform.position.y;

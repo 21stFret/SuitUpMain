@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Shotgun : MechWeapon
 {
-    public bool hasTarget;
     public GameObject gunturret;
     private Animator _animator;
     public ProjectileWeapon weaponController;
@@ -28,16 +27,30 @@ public class Shotgun : MechWeapon
     private void Update()
     {
         var target = sensor.GetNearestDetection("Enemy");
-        Vector3 location;
+        Vector3 location = transform.forward;
         if (target != null)
         {
-            hasTarget = true;
-            location = target.transform.position - gunturret.transform.position + aimOffest;
+            var hunter = target.GetComponent<CrawlerHunter>();
+            if(hunter != null)
+            {
+                if (hunter.isStealthed)
+                {
+                    location = transform.forward;
+                }
+                else
+                {
+                    location = target.transform.position - gunturret.transform.position + aimOffest;
+                }
+            }
+            else
+            {
+                location = target.transform.position - gunturret.transform.position + aimOffest;
+            }
+
         }
         else
         {
             location = transform.forward;
-            hasTarget = false;
         }
 
 

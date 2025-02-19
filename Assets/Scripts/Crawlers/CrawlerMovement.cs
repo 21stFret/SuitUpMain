@@ -53,6 +53,8 @@ public class CrawlerMovement : MonoBehaviour
     private Vector3 lastPosition;
     private int stuckCounter;
     private float lastStuckCheck;
+
+    public bool canRotate = true;
     
     private void Start()
     {
@@ -69,21 +71,7 @@ public class CrawlerMovement : MonoBehaviour
         Vector3 avoidanceDirection = RayCastSteering();
         Vector3 wallStickForce = CheckWallSticking();
 
-        if (avoidanceDirection != Vector3.zero || wallStickForce != Vector3.zero)
-        {
-            // Combine all avoidance forces
-            direction = (targetDirection + 
-                       avoidanceDirection * obstacleAvoidanceWeight +
-                       wallStickForce * wallStickPrevention).normalized;
-        }
-        else
-        {
-            if (!m_crawler.triggeredAttack)
-            {
-                Vector3 separationForce = CalculateSeparationForce();
-                direction = (direction + separationForce * separationWeight).normalized;
-            }        
-        }
+
 
         // Visualization
         Debug.DrawRay(transform.position, targetDirection * 5, Color.blue);
@@ -97,15 +85,42 @@ public class CrawlerMovement : MonoBehaviour
             direction = (movementTarget.position - transform.position).normalized;
         }
 
-        // Apply smooth rotation
-        var dir = Vector3.Lerp(transform.forward, direction, Time.deltaTime * steerSpeed);
-        dir.y = 0;
-        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
+        Vector3 dir;
+
+        if(!canRotate)
+        {
+            direction = transform.forward;
+            dir = transform.forward;
+        }
+        else
+        {
+            // Apply smooth rotation
+            dir = Vector3.Lerp(transform.forward, direction, Time.deltaTime * steerSpeed);
+            dir.y = 0;
+            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
+        }
+
 
         if (!canMove)
         {
             return;
+        }
+
+        if (avoidanceDirection != Vector3.zero || wallStickForce != Vector3.zero)
+        {
+            // Combine all avoidance forces
+            dir = (targetDirection + 
+                       avoidanceDirection * obstacleAvoidanceWeight +
+                       wallStickForce * wallStickPrevention).normalized;
+        }
+        else
+        {
+            if (!m_crawler.triggeredAttack)
+            {
+                Vector3 separationForce = CalculateSeparationForce();
+                dir = (direction + separationForce * separationWeight).normalized;
+            }        
         }
 
         if (Time.time - lastStuckCheck > stuckCheckInterval)
@@ -121,6 +136,16 @@ public class CrawlerMovement : MonoBehaviour
 
         rb.AddForce(dir.normalized * speed, ForceMode.Force);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, speed);
+    }
+
+    public void ChargeMovement(float _speed)
+    {
+
+        if (movementTarget == null) return;
+        
+        // Apply force towards predicted position
+        rb.AddForce(transform.forward * _speed, ForceMode.Force);
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, _speed);
     }
 
     private void CheckIfStuck()
@@ -257,11 +282,19 @@ public class CrawlerMovement : MonoBehaviour
         }
     }
 
-    public void SetDestination(Vector3 position)
+    public void SetDestination(Vector3 position, bool forceRotation=false)
     {
         destination = position;
         distanceToTarget = Vector3.Distance(destination, transform.position);
 
+        if(forceRotation)
+        {
+            direction = (destination - transform.position).normalized;
+            Vector3 dir = direction;
+            dir.y = 0;
+            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+            transform.rotation = rot;
+        }
     }
 
     private void FixedUpdate()
@@ -335,11 +368,14 @@ public class CrawlerMovement : MonoBehaviour
     }
 
 
-    public void ApplySlow(float amount)
+    public void ApplySlow(float amount, bool always = false)
     {
         slowedAmount = amount;
-        isSlowed = true;
-        StartCoroutine(WaitForSlow());
+        isSlowed = slowedAmount > 0;
+        if(!always)
+        {
+            StartCoroutine(WaitForSlow());
+        }
     }
 
     private IEnumerator WaitForSlow()

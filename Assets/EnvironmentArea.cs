@@ -21,5 +21,10 @@ public class EnvironmentArea : MonoBehaviour
             child.RefreshProp();
 
         }
+        DamageArea[] damageAreas = refreshingObjectsParent.GetComponentsInChildren<DamageArea>();
+        foreach (DamageArea child in damageAreas)
+        {
+            child.Init();
+        }
     }
 }

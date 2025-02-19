@@ -54,6 +54,7 @@ public struct CrawlerGroup
 public struct CrawlerSquad
 {
     public CrawlerGroup[] crawlerGroups;
+    
 
     public CrawlerSquad(CrawlerGroup[] crawlersInWave)
     {

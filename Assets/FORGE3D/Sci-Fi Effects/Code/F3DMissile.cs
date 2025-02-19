@@ -134,7 +134,6 @@ namespace FORGE3D
                 if (crawler != null)
                 {
                     crawler.DealyedDamage(impactDamage , 1f, WeaponType.AoE);
-                    crawler.StartCoroutine(crawler.StunCralwer(1f));
                     Rigidbody crawlerRigidbody = crawler.GetComponent<Rigidbody>();
                     if (crawlerRigidbody != null)
                     {
