@@ -191,18 +191,18 @@ public class MechHealth : MonoBehaviour
             rb.velocity = rb.velocity/2;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
-            if(GameManager.instance == null)
+            if(GameManager.instance != null)
             {
-                return;
+                RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
+                if (__selectMod != null)
+                {
+                    float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
+                    float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
+                    print("feedback damage is "+feedbackDamage);
+                    crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
+                }
             }
-            RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
-            if (__selectMod != null)
-            {
-                float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
-                float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
-                print("feedback damage is "+feedbackDamage);
-                crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
-            }
+
         }
         else
         {

@@ -38,7 +38,7 @@ public class Crawler : MonoBehaviour
 
 
     [SerializeField]
-    public int attackDamage;
+    public float attackDamage;
     public float attackRange;
     public float seekRange;
     public float speed;
@@ -88,6 +88,17 @@ public class Crawler : MonoBehaviour
 
     public AudioClip[] deathSounds;
 
+    [Header("Elite Settings")]
+    public bool isElite = false;
+    public bool becomeElite = false;
+    public Material eliteMaterial;
+    public float eliteDamageMultiplier = 2f;
+    public float eliteHealthMultiplier = 2f;
+    public float eliteSpeedMultiplier = 1.5f;
+    public float eliteSteerMultiplier = 1.25f;
+    protected Material originalMaterial;
+    public float eliteChance = 5;
+
     private void TestSpawn()
     {
         Spawn();
@@ -105,11 +116,61 @@ public class Crawler : MonoBehaviour
         crawlerMovement.m_crawler = this;
         rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        rb = GetComponent<Rigidbody>();
+        if (meshRenderer != null)
+        {
+            originalMaterial = meshRenderer.material;
+        }
         SetSpeed();
+        rb = GetComponent<Rigidbody>();
         _collider.enabled = false;
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
+    }
+
+    public virtual void MakeElite(bool _becomeElite)
+    {
+        if(isElite)
+        {
+            if (!_becomeElite)
+            {
+                meshRenderer.material = originalMaterial;
+                attackDamage /= eliteDamageMultiplier;
+                _targetHealth.maxHealth /= eliteHealthMultiplier;
+                _targetHealth.health = _targetHealth.maxHealth;
+                if (crawlerMovement != null)
+                {
+                    crawlerMovement.speedFinal /= eliteSpeedMultiplier;
+                    crawlerMovement.steerSpeed /= eliteSteerMultiplier;
+                }
+                crawlerScale /= 1.2f;
+                isElite = false;
+            }
+            return;
+        }
+        if(becomeElite)
+        {
+            // Apply material
+            if (meshRenderer != null && eliteMaterial != null)
+            {
+                meshRenderer.material = eliteMaterial;
+            }
+            
+            // Modify stats
+            attackDamage *= eliteDamageMultiplier;
+            _targetHealth.maxHealth *= eliteHealthMultiplier;
+            _targetHealth.health = _targetHealth.maxHealth;
+            
+            // Modify movement
+            if (crawlerMovement != null)
+            {
+                crawlerMovement.speedFinal *= eliteSpeedMultiplier;
+                crawlerMovement.steerSpeed *= eliteSteerMultiplier;
+            }
+            
+            crawlerScale *= 1.2f; // Make them slightly bigger
+            isElite = true;
+        }
+
     }
 
     private void EnableBrain()
@@ -488,6 +549,7 @@ public class Crawler : MonoBehaviour
 
     private IEnumerator SpawnEffect(bool daddy)
     {
+        MakeElite(becomeElite);
         _spawnEffect.Play();
         SetCrawlerScale();
         RandomSpawnScream();
