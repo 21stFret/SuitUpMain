@@ -346,6 +346,14 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
+    public void SkipModSelection()
+    {
+        AudioManager.instance.PlaySFX(SFX.Select);
+        CashCollector.instance.AddCrawlerPart(1);
+        ModUI.CloseModUI();
+        GameManager.instance.SpawnPortalsToNextRoom();
+    }
+
     public void EnableModSelection(RunMod mod)
     {
         if(mod.modCategory != ModCategory.STATS)

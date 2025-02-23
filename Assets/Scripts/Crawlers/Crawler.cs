@@ -152,7 +152,7 @@ public class Crawler : MonoBehaviour
             // Apply material
             if (meshRenderer != null && eliteMaterial != null)
             {
-                meshRenderer.material = eliteMaterial;
+                //meshRenderer.material = eliteMaterial;
             }
             
             // Modify stats
@@ -549,6 +549,7 @@ public class Crawler : MonoBehaviour
 
     private IEnumerator SpawnEffect(bool daddy)
     {
+        becomeElite = Random.Range(0, 100) < eliteChance;
         MakeElite(becomeElite);
         _spawnEffect.Play();
         SetCrawlerScale();

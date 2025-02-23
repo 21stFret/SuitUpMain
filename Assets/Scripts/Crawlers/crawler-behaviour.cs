@@ -65,10 +65,6 @@ public class CrawlerBehavior : MonoBehaviour
         {
             availableStates.Add(typeof(LeapState), new LeapState(crawler, movement, this));
         }
-        if (crawler is CrawlerCharger)
-        {
-            availableStates.Add(typeof(ChargeState), new ChargeState(crawler, movement, this));
-        }
         if (crawler is CrawlerAlbino)
         {
             availableStates.Add(typeof(AlbinoChargeState), new AlbinoChargeState(crawler, movement, this));
@@ -406,7 +402,8 @@ public class ChargeState : CrawlerState
 
     public CrawlerCharger charger;
 
-    private float chargePulseTime = 0.8f;
+    private float chargePulseTime = 0.1f;
+    private float chargeTargetresetTime = 1f;
     private float chargePulseTimer;
 
     public override void Enter()
@@ -423,11 +420,16 @@ public class ChargeState : CrawlerState
         movement.SetDestination(crawler.target.transform.position); 
         if (charger.charging)
         {
+            chargeTargetresetTime -= Time.deltaTime;
             chargePulseTimer += Time.deltaTime;
             if(chargePulseTimer >= chargePulseTime)
             {
                 charger.Charging();
                 chargePulseTimer = 0;
+            }
+            if (chargeTargetresetTime <= 0)
+            {
+                charger.collidersHit.Clear();
             }
         }
         else

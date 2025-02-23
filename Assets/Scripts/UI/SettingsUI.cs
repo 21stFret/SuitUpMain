@@ -8,6 +8,7 @@ public class SettingsUI : MonoBehaviour
 {
     public Slider BGM;
     public Slider SFX;
+    public Toggle damageNumbersToggle;
     public bool damageNumbersOn;
 
     private void OnEnable()
@@ -22,6 +23,7 @@ public class SettingsUI : MonoBehaviour
         {
             PlayerPrefs.SetInt("DamageNumbers", 1);
         }
+        damageNumbersToggle.isOn = damageNumbersOn;
     }
 
     public void SetDamageNumber(bool value)

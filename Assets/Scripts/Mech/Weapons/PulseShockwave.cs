@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class PulseShockwave : MonoBehaviour
 {
@@ -118,6 +119,12 @@ public class PulseShockwave : MonoBehaviour
         Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
         foreach (Collider collider in colliders)
         {
+            var spit = collider.GetComponent<SpitProjectile>();
+            if (spit != null)
+            {
+                spit.Reflected(transform.position);
+                continue;
+            }
             Crawler crawler = collider.GetComponent<Crawler>();
             if (crawler != null)
             {

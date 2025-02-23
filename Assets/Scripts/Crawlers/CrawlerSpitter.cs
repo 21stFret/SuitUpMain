@@ -6,7 +6,8 @@ using UnityEngine.AI;
 public class CrawlerSpitter : Crawler
 {
     public LayerMask layerMask;
-    public GameObject[] spitProjectiles = new GameObject[3];
+    public List<GameObject> spitProjectiles = new List<GameObject>();
+    public GameObject spitPrefab, eliteSpitPrefab;
     private int spitIndex;
     public float spitSpeed;
     private float spitTimer;
@@ -30,7 +31,7 @@ public class CrawlerSpitter : Crawler
     private void CycleProjectiles()
     {
         spitIndex++;
-        if (spitIndex >= spitProjectiles.Length)
+        if (spitIndex >= spitProjectiles.Count-1)
         {
             spitIndex = 0;
         }
@@ -46,7 +47,15 @@ public class CrawlerSpitter : Crawler
 
         if(target != null)
         {
-            spitProjectiles[spitIndex].GetComponent<SpitProjectile>().Init(attackDamage, target);
+            var projectile = spitProjectiles[spitIndex].GetComponent<SpitProjectile>();
+            if(projectile.inflight)
+            {
+                CycleProjectiles();
+            }
+            else
+            {
+                projectile.Init(attackDamage, target);
+            }
         }
     }
 
@@ -57,6 +66,26 @@ public class CrawlerSpitter : Crawler
         {
             StartCoroutine(Spit());
             spitTimer = 0;
+        }
+    }
+
+    public override void MakeElite(bool _becomeElite)
+    {
+        base.MakeElite(_becomeElite);
+        spitProjectiles.Clear();
+        if(isElite)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                spitProjectiles.Add(Instantiate(eliteSpitPrefab));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                spitProjectiles.Add(Instantiate(spitPrefab));
+            }
         }
     }
 }

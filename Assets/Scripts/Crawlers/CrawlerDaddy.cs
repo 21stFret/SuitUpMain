@@ -11,6 +11,11 @@ public class CrawlerDaddy : Crawler
     public LayerMask layerMask;
     public GameObject eggs;
     public AudioClip deathSound;
+    public SkinnedMeshRenderer[] eggsRenders;
+    public Material redEggMat, greenEggMat;
+    public Material redShell, greenShell;
+    public GameObject EliteDeathEffect;
+
 
     public override void Die(WeaponType killedBy)
     {
@@ -21,9 +26,18 @@ public class CrawlerDaddy : Crawler
             Vector3 pos = transform.position;
             pos.y += 3;
             spawnCount = Random.Range(2, 5);
+            spawnCount *= isElite ? 2 : 1;
             crawlerSpawner.SpawnAtPoint(transform, spawnCount);
-            DeathEffect.transform.SetParent(null);
-            DeathEffect.SetActive(true);
+            if(isElite)
+            {
+                EliteDeathEffect.transform.SetParent(null);
+                EliteDeathEffect.SetActive(true);
+            }
+            else
+            {
+                DeathEffect.transform.SetParent(null);
+                DeathEffect.SetActive(true);
+            }
             ExplodeIfInRange();
         }
         base.Die(killedBy);
@@ -54,6 +68,37 @@ public class CrawlerDaddy : Crawler
         eggs.SetActive(true);
         DeathEffect.transform.SetParent(transform);
         DeathEffect.SetActive(false);
+        EliteDeathEffect.transform.SetParent(transform);
+        EliteDeathEffect.SetActive(false);
+    }
+
+    public override void MakeElite(bool _becomeElite)
+    {
+        base.MakeElite(_becomeElite);
+        if (isElite)
+        {
+            Material[] mats = meshRenderer.materials;
+            mats[0] = eliteMaterial;
+            mats[1] = redShell;
+            meshRenderer.materials = mats;
+
+            foreach (SkinnedMeshRenderer render in eggsRenders)
+            {
+                render.material = redEggMat;
+            }
+        }
+        else
+        {
+            Material[] mats = meshRenderer.materials;
+            mats[0] = originalMaterial;
+            mats[1] = greenShell;
+            meshRenderer.materials = mats;
+            foreach (SkinnedMeshRenderer render in eggsRenders)
+            {
+                render.material = greenEggMat;
+            }
+        }
+        
     }
 }
 
@@ -65,3 +110,4 @@ public static class RandomUtils
         return randomPoint;
     }
 }
+

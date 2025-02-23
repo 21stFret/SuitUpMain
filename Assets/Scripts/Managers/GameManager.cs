@@ -31,6 +31,11 @@ public class GameManager : MonoBehaviour
 
     private MYCharacterController _myCharacterController;
 
+    public CreditsController creditsController;
+
+    [SerializeField]
+    private bool wonGame;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -58,6 +63,7 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.Init();
         AudioManager.instance.PlayBattleMusic();
         runUpgradeManager.LoadData();
+        wonGame = false;
 
         if (!playOnAwake) return;
 
@@ -91,15 +97,6 @@ public class GameManager : MonoBehaviour
     public void SwapPlayerInput(string inputMap)
     {
         playerInput.SwitchCurrentActionMap(inputMap);
-    }
-
-    public void LoadMainMenu()
-    {
-        CrawlerSpawner.instance.EndBattle();
-        gameActive = false;
-        altWeaponController.ClearWeaponInputs();
-        Time.timeScale = 1;
-        SceneLoader.instance.LoadScene(2);
     }
 
     public void LoadNextRoom(float delay = 2)
@@ -181,6 +178,7 @@ public class GameManager : MonoBehaviour
         PlayerSavedData.instance.SavePlayerData();
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
+        wonGame = won;
     }
 
     public void EndGameCall(bool win)
@@ -192,5 +190,29 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         EndGame(win);
+    }
+
+    public void LoadMainMenu()
+    {
+        CrawlerSpawner.instance.EndBattle();
+        gameActive = false;
+        altWeaponController.ClearWeaponInputs();
+        Time.timeScale = 1;
+        if(wonGame)
+        {
+            if (!PlayerSavedData.instance.hasSeenThankYouPanel)
+            {
+                ShowCredits();
+                return;
+            }
+        }
+
+        SceneLoader.instance.LoadScene(2);
+    }
+
+    public void ShowCredits()
+    {
+        creditsController.gameObject.SetActive(true);
+        playerInput.SwitchCurrentActionMap("Credits");
     }
 }

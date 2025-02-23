@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class SpitProjectile : MonoBehaviour
 {
-    public int _damage;
+    public float _damage;
     public float speed;
     public float explosionRadius = 10f;
     public float explosionForce = 1000f;
@@ -14,19 +14,18 @@ public class SpitProjectile : MonoBehaviour
     public ParticleSystem explosionEffect;
     private Rigidbody _rigidbody;
     private Collider _collider;
-    private Vector3 targetLocation;
+    public Vector3 targetLocation;
     public float aimSpeed = 5f;
-    private bool inflight;
+    public bool inflight;
     public GameObject trailEffect;
     private bool aiming;
     public float aimDealay = 0.2f;
 
-    public void Init(int damage, Transform target)
+    public void Init(float damage, Transform target)
     {
         trailEffect.SetActive(true);
         _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
-        _collider.enabled = true;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.constraints = RigidbodyConstraints.None;
         gameObject.SetActive(true);
@@ -36,11 +35,24 @@ public class SpitProjectile : MonoBehaviour
         inflight = true;
         aiming = false;
         Invoke("DelayedAiming", aimDealay);
+        trailEffect.GetComponent<ParticleSystem>().Play();
     }
 
     private void DelayedAiming()
     {
         aiming = true;
+        _collider.enabled = true;
+    }
+
+    public void Reflected(Vector3 reflectPos)
+    {
+        Vector3 dir = reflectPos - transform.position;
+        dir.y =0;
+        targetLocation = reflectPos - dir.normalized * 2;
+        targetLocation.y = 0;
+        aiming = false;
+        transform.forward = -transform.forward;
+        Invoke("DelayedAiming", aimDealay * 0.3f);
     }
 
     private void Update()
@@ -63,6 +75,7 @@ public class SpitProjectile : MonoBehaviour
     {
         print("Hit " + other.name);
         Explode();
+
     }
 
     private void Explode()

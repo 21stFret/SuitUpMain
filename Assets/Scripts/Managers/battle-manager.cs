@@ -39,6 +39,7 @@ public class BattleManager : MonoBehaviour
         //GenerateNewBattle(Battles[currentBattleIndex].battleType);
         currentBattle = Battles[currentBattleIndex];
 
+
         // Check if this is the final jungle battle
         if (_gameManager.currentAreaType == AreaType.Jungle && 
             currentBattleIndex == Battles.Count - 1)
