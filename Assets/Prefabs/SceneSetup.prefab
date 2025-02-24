@@ -27219,6 +27219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGM: {fileID: 1934973022092257526}
   SFX: {fileID: 6370317059721850430}
+  damageNumbersToggle: {fileID: 0}
   damageNumbersOn: 0
 --- !u!1 &6655004246182777746
 GameObject:
@@ -31483,6 +31484,11 @@ MonoBehaviour:
   runUpgradeManager: {fileID: 0}
   pickup: {fileID: 0}
   RerollCost: {fileID: 0}
+  replacePanel: {fileID: 0}
+  modStats: []
+  modNameText: {fileID: 0}
+  descriptionText: {fileID: 0}
+  rarityText: {fileID: 0}
 --- !u!1 &9116373839218845197
 GameObject:
   m_ObjectHideFlags: 0

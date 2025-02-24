@@ -17,11 +17,13 @@ public class CrawlerLeaper : Crawler
     public bool IsLeaping => isLeaping;
     private bool hasDealtDamage;
     private Vector3 leapDirection;
-    public Material fangsMat;
+    private Material fangsMat;
+    private Material legsMat;
 
     public override void Init()
     {
         base.Init();
+        legsMat = GetComponentInChildren<SkinnedMeshRenderer>().materials[1];
         fangsMat = GetComponentInChildren<SkinnedMeshRenderer>().materials[2];
     }
 
@@ -151,5 +153,26 @@ public class CrawlerLeaper : Crawler
         leapTimer = leapCooldown;
         isLeaping = false;
         hasDealtDamage = false;
+    }
+
+    public override void MakeElite(bool _becomeElite)
+    {
+        base.MakeElite(_becomeElite);
+        Color color = Color.red;
+        if (isElite)
+        {
+            color = Color.red;
+            leapForce = 350;
+        }
+        else
+        {
+            color = Color.green;
+            leapForce = 250;
+        }
+        fangsMat.SetColor("_EmissionColor", color * 2);
+        fangsMat.DisableKeyword("_EMISSION");
+        legsMat.SetColor("_BaseColor", color);
+        var main = leapEffect.main;
+        main.startColor = color;
     }
 }

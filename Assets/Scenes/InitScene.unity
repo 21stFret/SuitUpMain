@@ -785,12 +785,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1469880304}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47912c98503243e40a3d5f6a3bc39236, type: 3}
+  m_Script: {fileID: 11500000, guid: bfd78bbc29a066b4393d03e552bcf2fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screenSize: {x: 1920, y: 1080}
-  aspectRatio: {x: 16, y: 9}
-  targetAspectRatio: 0
+  resolutionDropdown: {fileID: 0}
+  fullscreenToggle: {fileID: 0}
+  confirmationPopup: {fileID: 0}
+  confirmButton: {fileID: 0}
+  cancelButton: {fileID: 0}
+  FirstMenuLoad: 1
 --- !u!1 &1563507369
 GameObject:
   m_ObjectHideFlags: 0

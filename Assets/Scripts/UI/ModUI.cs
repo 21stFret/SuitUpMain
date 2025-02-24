@@ -21,9 +21,22 @@ public class ModUI : MonoBehaviour
     public RunUpgradeManager runUpgradeManager;
     public Pickup pickup;
     public TMP_Text RerollCost;
+    [Header("Replace Info")]
+    public GameObject replacePanel;
+    public List<ModStats> modStats;
+    public TMP_Text modNameText;
+    public TMP_Text descriptionText;
+    public TMP_Text rarityText;
+
 
     public void OpenModUI(ModBuildType type)
     {
+        modStats = new List<ModStats>();
+        modStats.AddRange(replacePanel.GetComponentsInChildren<ModStats>(true));
+        for (int i = 0; i < modButtons.Length; i++)
+        {
+            modButtons[i].modUI = this;
+        }
         GameUI.instance.droneController.CloseMenu();
         GameManager.instance.SwapPlayerInput("UI");
         SetBuildImages(type);
@@ -46,7 +59,7 @@ public class ModUI : MonoBehaviour
 
     public void SetRerollCost(int cost)
     {
-        RerollCost.text = "x" + cost.ToString();
+        RerollCost.text = "-" + cost.ToString();
     }
 
     public void SHowHiddenMenu()
@@ -92,6 +105,7 @@ public class ModUI : MonoBehaviour
         button.modImage.sprite = mod.sprite;
         button.modDescription.text = mod.modDescription;
         button.modType.text = mod.modCategory.ToString();
+        button.CheckIfModEquipped(mod.modCategory);
         string rarity = "";
         Color color = Color.white;
         switch(mod.rarity)
@@ -143,5 +157,80 @@ public class ModUI : MonoBehaviour
     public static string ReplaceUnderscoreWithSpace(string input)
     {
         return input.Replace("_", " ");
+    }
+
+    public void SetupText(RunMod mod)
+    {
+        foreach (ModStats stat in modStats)
+        {
+            stat.gameObject.SetActive(false);
+        }
+        if (mod.modName == "")
+        {
+            modNameText.text = "Empty Slot";
+            descriptionText.text = "Collect mods as you go!";
+            rarityText.text = "";
+            return;
+        }
+
+        if (modNameText != null)
+            modNameText.text = mod.modName;
+
+        if (descriptionText != null)
+        {
+            descriptionText.text = mod.modDescription;
+        }
+
+        if (rarityText != null)
+        {
+            string rarityString = mod.rarity switch
+            {
+                0 => "Common",
+                1 => "Rare",
+                2 => "Epic",
+                _ => "Unknown"
+            };
+            rarityText.text = rarityString;
+        }
+        if (rarityText != null)
+        {
+            Color rarityColor = mod.rarity switch
+            {
+                0 => Color.white,
+                1 => Color.cyan,
+                2 => Color.magenta,
+                _ => Color.white
+            };
+            rarityText.color = rarityColor;
+        }
+
+        for (int i = 0; i < mod.modifiers.Count; i++)
+        {
+            ModStats stat = modStats[i];
+            Modifier modifier = mod.modifiers[i];
+            stat.modStat.text = ModUI.ReplaceUnderscoreWithSpace(modifier.statType.ToString());
+            stat.modStatValue.text = modifier.statValue.ToString("F2");
+            if (modifier.statValue >= 0)
+            {
+                stat.modStatValue.color = Color.green;
+            }
+            else
+            {
+                stat.modStatValue.color = Color.red;
+            }
+            stat.gameObject.SetActive(true);
+        }
+    }
+
+    public void SetPopupPosition(Vector3 position)
+    {
+        if (replacePanel == null)
+        {
+            return;
+        }
+        position.x -= 750;
+        position.y -= 200;
+        replacePanel.GetComponent<RectTransform>().localPosition = position;
+        replacePanel.SetActive(true);
     }
 }

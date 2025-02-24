@@ -61,7 +61,9 @@ public class CrawlerSpawner : MonoBehaviour
         currentBattle = battleManager.currentBattle;
         battleRound = 0;
         totalTimeElapsesd = 0;
+        MultiplyBurstByDifficulty();
         burstTimer = currentBattle.burstTimer;
+        burstSpawnAmount = currentBattle.burstMin;       
         timeElapsed = burstTimer;
         standardBattle = currentBattle.battleType == BattleType.Exterminate;
         endless = !standardBattle;
@@ -73,7 +75,14 @@ public class CrawlerSpawner : MonoBehaviour
         battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
         spawnListArmy = GenerateArmyList();
-        burstSpawnAmount = currentBattle.burstMin;
+
+    }
+
+    private void MultiplyBurstByDifficulty()
+    {
+        float difficulty = BattleManager.instance.dificultyMultiplier;
+        currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
+        currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax * difficulty);
     }
 
     private void Awake()
@@ -143,6 +152,16 @@ public class CrawlerSpawner : MonoBehaviour
             crawler.crawlerSpawner = this;
             crawler.crawlerType = type;
             crawler.gameObject.SetActive(false);
+
+            float difficulty = BattleManager.instance.dificultyMultiplier;
+            if (difficulty > 1)
+            {
+                crawler.eliteChance *= difficulty;
+            }
+            else
+            {
+                crawler.eliteChance = 0;
+            }
         }
     }
 

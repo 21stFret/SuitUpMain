@@ -9,12 +9,14 @@ public class MeasterMegg : MonoBehaviour
     private int count = 0;
     public TMP_Text text;
     public Animator menu;
+    public AudioClip clip;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("SpecialCrate"))
         {
             count++;
+            AudioManager.instance.PlaySFXFromClip(clip);
         }
 
         if (count == 3)

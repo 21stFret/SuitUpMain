@@ -392,10 +392,12 @@ public class MYCharacterController : MonoBehaviour
             CharacterAnimator.SetFloat("InputMag", 0);
             CharacterAnimator.SetFloat("Forward", 0);
             CharacterAnimator.SetFloat("Turn", 0);
+            CharacterAnimator.speed = 0;
         }
         else
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            CharacterAnimator.speed = 1;
         }
     }
 

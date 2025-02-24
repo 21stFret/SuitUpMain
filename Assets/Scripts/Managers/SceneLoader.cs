@@ -37,6 +37,12 @@ public class SceneLoader : MonoBehaviour
         }
         hintManager.HideHint();
         loadinBar.enabled = false;
+        StartCoroutine(DelayFade());
+    }
+
+    private IEnumerator DelayFade()
+    {
+        yield return new WaitForSeconds(0.5f);
         blackout.FadeOut();
     }
 

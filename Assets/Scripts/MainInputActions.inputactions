@@ -1421,6 +1421,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Credits",
+            "id": "ef5b2096-948a-4521-a59f-a138ba160636",
+            "actions": [
+                {
+                    "name": "SkipCredits",
+                    "type": "Button",
+                    "id": "32f9e4dd-2458-40a6-9fae-d67e4e321b00",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6df51e84-d1a0-4609-81f0-d50be685d32a",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "SkipCredits",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d7b132b8-9498-4877-9850-22bc9a0fc23e",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Default",
+                    "action": "SkipCredits",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

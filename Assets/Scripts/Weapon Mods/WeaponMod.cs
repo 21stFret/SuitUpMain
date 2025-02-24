@@ -35,6 +35,10 @@ public class WeaponMod : MonoBehaviour
 
     public void RemoveMods()
     {
+        if(runUpgradeManager == null)
+        {
+            runUpgradeManager = FindObjectOfType<RunUpgradeManager>();
+        }
         if(runMod != null)
         {
             if (runMod.modifiers.Count > 0)

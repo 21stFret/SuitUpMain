@@ -4824,7 +4824,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4997,7 +4997,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.161098, g: 1, b: 0, a: 1}
+      maxColor: {r: 1, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -43615,13 +43615,21 @@ MonoBehaviour:
   SpawnForce: 20
   dummy: 0
   spawn: 0
-  leapDistance: 8
-  leapForce: 250
-  leapCooldown: 3
+  deathSounds: []
+  isElite: 0
+  becomeElite: 0
+  eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
+  eliteDamageMultiplier: 2
+  eliteHealthMultiplier: 2
+  eliteSpeedMultiplier: 1.5
+  eliteSteerMultiplier: 1.25
+  eliteChance: 100
+  leapDistance: 10
+  leapForce: 300
+  leapCooldown: 1
   leapDuration: 0.5
   damageCheckFrequency: 0.3
   leapEffect: {fileID: 6349856199175969759}
-  fangsMat: {fileID: 0}
 --- !u!114 &6757468408072520722
 MonoBehaviour:
   m_ObjectHideFlags: 0

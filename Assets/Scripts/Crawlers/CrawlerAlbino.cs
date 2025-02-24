@@ -44,9 +44,6 @@ public class CrawlerAlbino : Crawler
         base.Init();
         chargeEnabled = false;
         overrideDeathNoise = true;
-        // testing purposes
-        chargeEnabled = true;
-
     }
 
     public void Update()

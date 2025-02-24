@@ -212,7 +212,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3944224738408491638
 Transform:
   m_ObjectHideFlags: 0
@@ -301,6 +301,15 @@ MonoBehaviour:
   SpawnForce: 100
   dummy: 0
   spawn: 0
+  deathSounds: []
+  isElite: 0
+  becomeElite: 0
+  eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
+  eliteDamageMultiplier: 2
+  eliteHealthMultiplier: 2
+  eliteSpeedMultiplier: 1.5
+  eliteSteerMultiplier: 1.25
+  eliteChance: 5
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0

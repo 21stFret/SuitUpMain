@@ -17,6 +17,7 @@ public class CrawlerCharger : Crawler
     public float chargeCooldown;
     public bool charging;
     public float chargeSpeed;
+    public List<Collider> collidersHit;
     
     public bool CheckCanCharge()
     {
@@ -38,12 +39,19 @@ public class CrawlerCharger : Crawler
         Collider[] colliders = Physics.OverlapSphere(transform.position, chargeRadius, chargeLayerMask);
         foreach (Collider collider in colliders)
         {
+            if (collidersHit.Contains(collider))
+            {
+                continue;
+            }
+
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 Vector3 direction = collider.transform.position - transform.position;
-                rb.AddForce(direction.normalized, ForceMode.Impulse);
+                rb.AddForce(direction.normalized * chargeForce, ForceMode.Impulse);
             }
+
+            collidersHit.Add(collider);
 
             TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
             if (targetHealth == null)
@@ -65,14 +73,14 @@ public class CrawlerCharger : Crawler
         crawlerMovement.steerSpeed = cachedSteer/2;
         crawlerMovement.lookSpeed = cachedLook/2;
         animator.speed = 2;
-        chargeEffect.gameObject.SetActive(true);
+        chargeEffect.Play();
         yield return new WaitForSeconds(chargeTime);
         charging = false;
         animator.speed = 1;
         crawlerMovement.speedFinal = cachedSpeed;
         crawlerMovement.steerSpeed = cachedSteer;
         crawlerMovement.lookSpeed = cachedLook;
-        chargeEffect.gameObject.SetActive(false);
+        chargeEffect.Stop();
     }
 
     public override void Die(WeaponType weapon)
