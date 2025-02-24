@@ -296,7 +296,7 @@ public class Crawler : MonoBehaviour
         rb.AddForce(transform.forward * 50, ForceMode.Impulse);
         Vector3 attackloc = transform.position + (transform.forward * transform.localScale.x);
 
-        print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
+        //print("Crawler position is " + transform.position + ". Attack hit at " + attackloc + " for target location " + target.transform.position);
 
         if (Vector3.Distance(attackloc, target.transform.position) >= attackRange)
         {
@@ -398,6 +398,7 @@ public class Crawler : MonoBehaviour
 
     public virtual void Die(WeaponType weapon)
     {
+        crawlerSpawner.AddtoRespawnList(this, crawlerType);
         dead = true;
         _targetHealth.health = 0;
         _targetHealth.alive = false;
@@ -413,12 +414,6 @@ public class Crawler : MonoBehaviour
         _crawlerBehavior.OnDeath();
 
         CheckForModsOnDeath(weapon);
-
-        if(crawlerSpawner != null)
-        {
-            crawlerSpawner.AddtoRespawnList(this, crawlerType);
-        }
-
         gameObject.SetActive(false);
 
         var BM = BattleManager.instance;

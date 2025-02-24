@@ -98,7 +98,7 @@ public class PlayerProgressManager : MonoBehaviour
     {
         if (PlayerAchievements.instance == null)
         {
-            Debug.Log("No Achievements");
+            //Debug.Log("No Achievements");
             return;
         }
 

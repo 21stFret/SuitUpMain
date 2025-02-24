@@ -57,6 +57,7 @@ public class FlameGrenadeMod : WeaponMod
     {
         base.Fire();
         overideFire = true;
+        shotTimer = grenadeShotTime;
     }
 
     public override void Stop()

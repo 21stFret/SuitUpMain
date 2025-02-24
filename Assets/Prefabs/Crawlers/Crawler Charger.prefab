@@ -19586,10 +19586,10 @@ MonoBehaviour:
   eliteSteerMultiplier: 1.25
   eliteChance: 5
   chargeEffect: {fileID: 4823605491945663866}
-  chargeDistance: 20
+  chargeDistance: 30
   chargeTime: 2
-  chargeRadius: 4
-  chargeForce: 400
+  chargeRadius: 5
+  chargeForce: 300
   chargeDamage: 10
   chargeLayerMask:
     serializedVersion: 2
@@ -19600,10 +19600,10 @@ MonoBehaviour:
   normalLookLayerMask:
     serializedVersion: 2
     m_Bits: 135169
-  chargeTimer: 0
+  chargeTimer: 2
   chargeCooldown: 5
   charging: 0
-  chargeSpeed: 700
+  chargeSpeed: 600
   collidersHit: []
 --- !u!54 &6614920390643891118
 Rigidbody:
