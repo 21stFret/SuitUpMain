@@ -213,8 +213,8 @@ public class PlayerSavedData : MonoBehaviour
                     writer.Write(jsonData);
                 }
             }
-            print("Saved Data Complete" + jsonData);
-            print("Saved Data Path" + fullPath);
+            //print("Saved Data Complete" + jsonData);
+            //print("Saved Data Path" + fullPath);
         }
         catch (Exception e)
         {

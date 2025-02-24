@@ -54,6 +54,7 @@ public class CrawlerSpawner : MonoBehaviour
     public void Init()
     {
         InitCrawlers();
+        StartCoroutine(PulseCheckCrawlersAlive());
     }
 
     public void LoadBattle()
@@ -318,6 +319,13 @@ public class CrawlerSpawner : MonoBehaviour
             PlaySpawnEffect();
             yield return new WaitForSeconds(0.5f);
         }
+        else
+        {
+            foreach(Crawler crawler in bugs)
+            {
+                AddToActiveList(crawler);
+            }
+        }
         for (int i = 0; i < bugs.Count; i++)
         {
             if (portalAllowed >= portalMaxAllowed)
@@ -406,7 +414,7 @@ public class CrawlerSpawner : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
-        for (int i = 0; i < burstSpawnAmount; i++)
+        for (int i = 0; i < burstSpawnAmount && i<bugs.Count-1; i++)
         {
             if(!hordeBattle)
             {
@@ -514,6 +522,15 @@ public class CrawlerSpawner : MonoBehaviour
                     huntedTarget = crawler;
                 }
             }
+        }
+    }
+
+    private IEnumerator PulseCheckCrawlersAlive()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            ValidateActiveCrawlers();
         }
     }
 

@@ -89,6 +89,9 @@ public class CapturePoint : MonoBehaviour
         _enabled = false;
         captureProgress = 0;
         ball.SetActive(false);
+        CrawlerSpawner.instance.KillAllCrawlers();
+        BattleManager.instance.ObjectiveComplete();
+        GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
         if(CrawlerSpawner.instance.activeCrawlerCount==0)
         {
             BattleManager.instance.ObjectiveComplete();
