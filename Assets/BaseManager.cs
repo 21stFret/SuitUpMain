@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BaseManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class BaseManager : MonoBehaviour
     public DirectionalDaylight daylight;
     public LoadOutPanel loadOutPanel;
     public GameObject thankYouPanel;
+    public GameObject ThankyouButton;
 
     private void Awake()
     {
@@ -68,6 +70,7 @@ public class BaseManager : MonoBehaviour
         BattleMech.instance.myCharacterController.ToggleCanMove(false);
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         thankYouPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(ThankyouButton);
     }
 
     public void CloseThankYouPanel()

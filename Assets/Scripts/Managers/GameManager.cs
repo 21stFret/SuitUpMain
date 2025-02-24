@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviour
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
         PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
-        PlayerSavedData.instance.highestDifficulty = (int)SetupGame.instance.diffiulty+1;
+        PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
         PlayerSavedData.instance.SavePlayerData();
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");

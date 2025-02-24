@@ -241,7 +241,7 @@ public class BattleManager : MonoBehaviour
         } while (attempts < maxAttempts);
 
         // If we've exceeded max attempts, fall back to a position at minDistance
-        print("Failed to find a valid drop position, falling back to map centre");
+        //print("Failed to find a valid drop position, falling back to map centre");
         pos = Vector3.zero;
         pos.y = 3;
         roomDrop.transform.position = pos;

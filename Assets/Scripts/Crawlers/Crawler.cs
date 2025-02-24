@@ -213,7 +213,7 @@ public class Crawler : MonoBehaviour
         crawlerMovement.enabled = true;
         animator.speed = 1;
         // Stun immunity for 1 second
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         isStunned = false;
     }
 
@@ -585,7 +585,7 @@ public class Crawler : MonoBehaviour
         {
             deathNoise.clip = AudioManager.instance.GetRandomSpawnNoise();
         }
-        else
+        else if(deathSounds.Length > 0)
         {
             deathNoise.clip = deathSounds[Random.Range(0, deathSounds.Length)]; 
         }

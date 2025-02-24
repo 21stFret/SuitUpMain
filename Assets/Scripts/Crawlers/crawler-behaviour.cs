@@ -187,7 +187,7 @@ public class IdleState : CrawlerState
             }
             attempts++;
         }
-        Debug.Log("couldn't find a random position, stayed still");
+        //Debug.Log("couldn't find a random position, stayed still");
         return crawler.transform.position;
     }
     
@@ -195,7 +195,7 @@ public class IdleState : CrawlerState
     {
         if (crawler.target != null)
         {
-            Debug.Log(crawler.name + " found target during Idle Update, transitioning to pursuit");
+            //Debug.Log(crawler.name + " found target during Idle Update, transitioning to pursuit");
             behavior.TransitionToState(typeof(PursuitState));
             return;
         }
@@ -933,7 +933,7 @@ public abstract class CrawlerState
 
     public virtual void Enter() 
     {
-        Debug.Log(crawler.name +" entering " + GetType().Name);
+        //Debug.Log(crawler.name +" entering " + GetType().Name);
     }
     public virtual void Exit() 
     { 

@@ -53,6 +53,7 @@ public class CreditsController : MonoBehaviour
             if (scrollRect.verticalNormalizedPosition <= 0f)
             {
                 isScrolling = false;
+                Invoke("LoadNextScene", 10f);
             }
         }
 
