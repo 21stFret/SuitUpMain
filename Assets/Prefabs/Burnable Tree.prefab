@@ -54,6 +54,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 7396964501526564436}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  init: 0
   normalRoot: {fileID: 7355829478871752319}
   fireRoot: {fileID: 1364791370041341960}
   deadRoot: {fileID: 1922824021851515869}
@@ -100,7 +101,8 @@ MonoBehaviour:
   alive: 0
   immuneWeapons: 050000000000000001000000
   damageNumbersOn: 0
-  damageNumberPrefab: {fileID: 0}
+  damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
+    type: 3}
 --- !u!1 &3282872125539568643
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,6 +154,9 @@ MonoBehaviour:
   damageDuration: 0
   damageType: 3
   damageActive: 1
+  damageOnStart: 0
+  targetsInRange: []
+  radiusExtender: 1
 --- !u!135 &6663836997353849800
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -231,7 +231,7 @@ public class PursuitState : CrawlerState
     public override void Enter()
     {
         base.Enter();
-        movement.tracking = false;
+        movement.tracking = true;
         movement.canMove = true;
     }
     

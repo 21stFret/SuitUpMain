@@ -44,6 +44,11 @@ public class AirDropCharger : MonoBehaviour
         chargeRate = rate;
     }
 
+    public void ChargeDrone(float value)
+    {
+        DroneCharge += value;
+    }
+
     private void ChargeOverTime()
     {
         if (GameManager.instance != null)
@@ -66,7 +71,7 @@ public class AirDropCharger : MonoBehaviour
         {
             return;
         }
-        DroneCharge += chargeRate * Time.deltaTime;
+        ChargeDrone(chargeRate * Time.deltaTime);
     }
 
     public void ActivateButton(bool value)

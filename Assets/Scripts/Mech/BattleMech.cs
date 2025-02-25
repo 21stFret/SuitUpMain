@@ -42,10 +42,9 @@ public class BattleMech : MonoBehaviour
         gameObject.layer = 1;
     }
 
-    public void RepairArmour(float amount =  -50)
+    public void RepairArmour(float amount = 50)
     {
-        targetHealth.TakeDamage(amount, WeaponType.Default);
-        print("Repaired Amrour");
+        targetHealth.TakeDamage(-amount, WeaponType.Default);
     }
 
     public void Shield()

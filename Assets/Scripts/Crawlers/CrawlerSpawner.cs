@@ -12,6 +12,8 @@ public class CrawlerSpawner : MonoBehaviour
     [SerializeField] private List<Crawler> albinos = new List<Crawler>();
     [SerializeField] private List<Crawler> spitters = new List<Crawler>();
     [SerializeField] private List<Crawler> chargers = new List<Crawler>();
+    [SerializeField] private List<Crawler> leapers = new List<Crawler>();
+    [SerializeField] private List<Crawler> hunters = new List<Crawler>();
     [SerializeField] private List<Crawler> activeCrawlers = new List<Crawler>();
     public int activeCrawlerCount { get { return activeCrawlers.Count; } }
     public List<Transform> spawnPoints;
@@ -45,7 +47,7 @@ public class CrawlerSpawner : MonoBehaviour
 
     public Battle currentBattle;
     private bool standardBattle;
-    private int burstSpawnAmount;
+    public int burstSpawnAmount;
 
     private bool hordeBattle;
 
@@ -83,7 +85,7 @@ public class CrawlerSpawner : MonoBehaviour
     private void MultiplyBurstByDifficulty()
     {
         float difficulty = BattleManager.instance.dificultyMultiplier;
-        currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
+        //currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
         currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax * difficulty);
     }
 
@@ -116,11 +118,11 @@ public class CrawlerSpawner : MonoBehaviour
             totalTimeElapsesd += 0.1f;
             int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
             min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
-            burstSpawnAmount = Random.Range(min, currentBattle.burstMax);
+            burstSpawnAmount = Random.Range(min, min+2);
             spawnListArmy.Clear();
             spawnListArmy = GenerateArmyList();
             List<Crawler> spawnList = new List<Crawler>();
-            for (int i = 0; i < burstSpawnAmount && i < spawnListArmy.Count-1; i++)
+            for (int i = 0; i < burstSpawnAmount && i < spawnListArmy.Count; i++)
             {
                 spawnList.Add(spawnListArmy[i]);
             }
@@ -135,6 +137,8 @@ public class CrawlerSpawner : MonoBehaviour
         InitCrawlerList(albinos, CrawlerType.Albino);
         InitCrawlerList(spitters, CrawlerType.Spitter);
         InitCrawlerList(chargers, CrawlerType.Charger);
+        InitCrawlerList(leapers, CrawlerType.Leaper);
+        InitCrawlerList(hunters, CrawlerType.Hunter);
     }
 
     private void InitCrawlerList(List<Crawler> crawlerList, CrawlerType type)
@@ -293,6 +297,8 @@ public class CrawlerSpawner : MonoBehaviour
             case CrawlerType.Albino: return albinos;
             case CrawlerType.Spitter: return spitters;
             case CrawlerType.Charger: return chargers;
+            case CrawlerType.Leaper: return leapers;
+            case CrawlerType.Hunter: return hunters;
             default: return new List<Crawler>();
         }
     }
@@ -462,7 +468,7 @@ public class CrawlerSpawner : MonoBehaviour
         {
             bug.FindClosestTarget(70);
         }
-        if(BattleManager.instance.currentBattle.battleType == BattleType.Upload)
+        if(BattleManager.instance._usingBattleType == BattleType.Upload)
         {
             bug.target = BattleManager.instance.capturePoint.transform;
         }
@@ -529,7 +535,7 @@ public class CrawlerSpawner : MonoBehaviour
             }
             
             // Debug logging
-            Debug.Log($"{crawler.name} removed from active list. Active count: {activeCrawlers.Count}");
+            //Debug.Log($"{crawler.name} removed from active list. Active count: {activeCrawlers.Count}");
         }
         else
         {
@@ -544,7 +550,7 @@ public class CrawlerSpawner : MonoBehaviour
             if (!activeCrawlers.Contains(crawler))
             {
                 activeCrawlers.Add(crawler);
-                Debug.Log($"{crawler.name} added to active list. Active count: {activeCrawlers.Count}");
+                //Debug.Log($"{crawler.name} added to active list. Active count: {activeCrawlers.Count}");
                 if(crawler.gameObject.CompareTag("Boss"))
                 {
                     huntedTarget = crawler;

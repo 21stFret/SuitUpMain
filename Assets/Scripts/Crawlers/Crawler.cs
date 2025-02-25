@@ -83,6 +83,8 @@ public class Crawler : MonoBehaviour
 
     public bool dummy;
 
+    public bool overkill;
+
     [InspectorButton("TestSpawn")]
     public bool spawn;
 
@@ -152,7 +154,7 @@ public class Crawler : MonoBehaviour
             // Apply material
             if (meshRenderer != null && eliteMaterial != null)
             {
-                //meshRenderer.material = eliteMaterial;
+                meshRenderer.material = eliteMaterial;
             }
             
             // Modify stats
@@ -328,7 +330,6 @@ public class Crawler : MonoBehaviour
         
     }
 
-    
     public virtual void TakeDamage(float damage, WeaponType killedBy, float stunTime = 0,bool invincible = false)
     {
         if(dead)
@@ -357,7 +358,11 @@ public class Crawler : MonoBehaviour
         if(!dummy)
         {
             _targetHealth.health -= damage;
-        }   
+        }
+        if(damage>= _targetHealth.maxHealth)
+        {
+            overkill =true;
+        }
 
         _crawlerBehavior.OnDamageTaken();
 
@@ -398,7 +403,10 @@ public class Crawler : MonoBehaviour
 
     public virtual void Die(WeaponType weapon)
     {
-        crawlerSpawner.AddtoRespawnList(this, crawlerType);
+        if(crawlerSpawner != null)
+        {
+            crawlerSpawner.AddtoRespawnList(this, crawlerType);
+        }
         dead = true;
         _targetHealth.health = 0;
         _targetHealth.alive = false;
@@ -458,10 +466,15 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
-        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Nano Bots");
-        if (__selectMod != null)
+        var __selectMod = GameManager.instance.runUpgradeManager.HasModsByName("Nano Bots");
+        if (__selectMod.Count > 0)
         {
-            BattleMech.instance.mechHealth.Heal(BattleMech.instance.targetHealth.maxHealth * (__selectMod.modifiers[0].statValue/100));
+            float mofValue = 0;
+            foreach (var mod in __selectMod)
+            {
+                mofValue += mod.modifiers[0].statValue;
+            }
+            BattleMech.instance.mechHealth.Heal(BattleMech.instance.targetHealth.maxHealth * (mofValue/100));
         }
         switch (weapon)
         {
@@ -539,7 +552,8 @@ public class Crawler : MonoBehaviour
         StartCoroutine(SpawnEffect(daddy));
         StartCoroutine(SpawnImmunity());
         DeathBlood.transform.SetParent(transform);
-        tag = "Enemy";      
+        tag = "Enemy";
+        overkill = false;
     }
 
     private IEnumerator SpawnEffect(bool daddy)

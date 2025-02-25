@@ -19575,6 +19575,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
@@ -19586,7 +19587,7 @@ MonoBehaviour:
   eliteSteerMultiplier: 1.25
   eliteChance: 5
   chargeEffect: {fileID: 4823605491945663866}
-  chargeDistance: 30
+  chargeDistance: 40
   chargeTime: 2
   chargeRadius: 5
   chargeForce: 300
@@ -19600,7 +19601,7 @@ MonoBehaviour:
   normalLookLayerMask:
     serializedVersion: 2
     m_Bits: 135169
-  chargeTimer: 2
+  chargeTimer: 3
   chargeCooldown: 5
   charging: 0
   chargeSpeed: 600
@@ -19736,7 +19737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 15
+  maxHealth: 25
   invincible: 0
   alive: 0
   immuneWeapons: 07000000

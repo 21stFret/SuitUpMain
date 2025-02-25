@@ -52,6 +52,5 @@ public class ArmyGenerator : MonoBehaviour
     public void SetCurrentAreaType(AreaType areaType)
     {
         currentAreaType = areaType;
-        Debug.Log($"Current area type set to: {currentAreaType}");
     }
 }

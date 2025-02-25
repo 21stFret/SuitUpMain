@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BaseManager : MonoBehaviour
 {
@@ -15,6 +13,9 @@ public class BaseManager : MonoBehaviour
     public LoadOutPanel loadOutPanel;
     public GameObject thankYouPanel;
     public GameObject ThankyouButton;
+
+    public Image globalBackButton;
+    public Sprite button, key;
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class BaseManager : MonoBehaviour
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
         daylight.startTime = Random.Range(0, 1f);
+        globalBackButton.sprite = InputTracker.instance.usingMouse ? button : key;
 
         Debug.Log("Base Initialized");
     }
@@ -70,7 +72,7 @@ public class BaseManager : MonoBehaviour
         BattleMech.instance.myCharacterController.ToggleCanMove(false);
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         thankYouPanel.SetActive(true);
-        EventSystem.current.SetSelectedGameObject(ThankyouButton);
+        InputTracker.instance.eventSystem.SetSelectedGameObject(ThankyouButton);
     }
 
     public void CloseThankYouPanel()

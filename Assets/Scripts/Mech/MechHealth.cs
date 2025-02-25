@@ -109,7 +109,7 @@ public class MechHealth : MonoBehaviour
         {
             if(PlayerAchievements.instance != null)
             {
-                if(PlayerAchievements.instance.IsAchieved("DODGE_1") || !GameManager.instance.gameActive)
+                if(PlayerAchievements.instance.IsAchieved("DODGE_1"))
                 {
                     return;
                 }
@@ -188,7 +188,7 @@ public class MechHealth : MonoBehaviour
             hit = true;
             lastDamageTime = Time.time;
             AudioManager.instance.PlayHurt();
-            rb.velocity = rb.velocity/2;
+            rb.velocity = rb.velocity*0.75f;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
             if(GameManager.instance != null)

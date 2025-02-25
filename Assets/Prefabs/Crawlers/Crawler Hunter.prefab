@@ -24430,8 +24430,17 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 50
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
+  isElite: 0
+  becomeElite: 0
+  eliteMaterial: {fileID: 0}
+  eliteDamageMultiplier: 2
+  eliteHealthMultiplier: 2
+  eliteSpeedMultiplier: 1.5
+  eliteSteerMultiplier: 1.25
+  eliteChance: 5
   stealthAttackDamage: 8
   stealthRange: 15
   stealthAttackRange: 10
@@ -24441,6 +24450,12 @@ MonoBehaviour:
   revealEffect: {fileID: 681496944255723969}
   minAlpha: 0.2
   isStealthed: 0
+  hidenLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  visibleLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &7714319356076603988
 MonoBehaviour:
   m_ObjectHideFlags: 0

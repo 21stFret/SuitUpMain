@@ -12,6 +12,8 @@ public class HealthPickup : MonoBehaviour
     public bool Fuel;
     public bool Drone;
 
+    private BattleMech battleMech;
+
     private void Awake()
     {
         col = GetComponent<Collider>();
@@ -30,6 +32,10 @@ public class HealthPickup : MonoBehaviour
 
     private void PickUp()
     {
+        if (battleMech == null)
+        {
+            battleMech = BattleMech.instance;
+        }
         bool meterFull = false;
         if (GameManager.instance == null)
         {
@@ -37,43 +43,48 @@ public class HealthPickup : MonoBehaviour
         }
         if(Drone)
         {
-            if(BattleMech.instance.droneController.CanUseDrone())
+            if(battleMech.droneController.CanUseDrone())
             {
                 meterFull = true;
             }
             else
             {
-                BattleMech.instance.droneController.ChargeDroneOnHit(amount);
+                battleMech.droneController.ChargeDroneOnHit(amount);
             }
 
         }
         else if(Fuel)
         {
-            if(BattleMech.instance.weaponFuelManager.isFull())
+            if(battleMech.weaponFuelManager.isFull())
             {
                 meterFull = true;
             }
             else
             {
-                BattleMech.instance.weaponFuelManager.RefillFuel(amount);
+                battleMech.weaponFuelManager.RefillFuel(amount);
             }
 
         }
         else
         {
-
-            if (BattleMech.instance.targetHealth.isFull())
-            {
-                meterFull = true;
-            }
-            else
-            {
-                BattleMech.instance.targetHealth.TakeDamage(-amount);
-            }
             if (voidPickUp)
             {
                 GameManager.instance.CompleteVoidRoom();
                 meterFull = false;
+                // 25% of max health
+                float amount = battleMech.targetHealth.maxHealth * 0.25f;
+                battleMech.RepairArmour(amount);
+            }
+            else
+            {
+                if (battleMech.targetHealth.isFull())
+                {
+                    meterFull = true;
+                }
+                else
+                {
+                    battleMech.RepairArmour(amount);
+                }
             }
 
         }

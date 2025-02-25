@@ -500,6 +500,11 @@ public class RunUpgradeManager : MonoBehaviour
         return currentEquipedMods.Find(mod => mod.modName == ModName);
     }
 
+    public List<RunMod> HasModsByName(string ModName)
+    {
+        return currentEquipedMods.FindAll(mod => mod.modName == ModName);
+    }
+
 }
 
 [System.Serializable]

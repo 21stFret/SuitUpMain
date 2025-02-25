@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlowerPatch : MonoBehaviour
+public class FlowerPatch : Prop
 {
     public ParticleSystem particleEffect;
     private bool triggerd = false;
@@ -23,6 +23,12 @@ public class FlowerPatch : MonoBehaviour
                 Debug.LogWarning("Particle effect is not assigned.");
             }
         }
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        triggerd = false;
     }
 
 }

@@ -4812,8 +4812,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.5831287, y: 0.89, z: -12.122715}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1625763026862385017}
   m_Father: {fileID: 0}
@@ -4923,7 +4923,7 @@ Light:
   m_BounceIntensity: 0
   m_ColorTemperature: 1791
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 0, y: NaN, z: 1e-45, w: 0}
+  m_BoundingSphereOverride: {x: 4.591775e-39, y: 9.1835e-41, z: 0, w: 4.8651088e-36}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -4998,11 +4998,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageRadius: 1
-  damageInterval: 0.2
-  damageAmount: 1
+  damageInterval: 0.1
+  damageAmount: 0.5
   damageDuration: 1
   damageType: 3
   damageActive: 1
+  damageOnStart: 0
+  targetsInRange: []
+  radiusExtender: 1
 --- !u!135 &3015314917604967900
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5132,7 +5135,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3

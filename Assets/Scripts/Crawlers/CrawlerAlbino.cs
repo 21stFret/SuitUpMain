@@ -123,7 +123,8 @@ public class CrawlerAlbino : Crawler
             }
         }
         triggeredAttack = false;
-        impulseSource.GenerateImpulse(dam);
+        float damagePercent = Mathf.Clamp(dam / 10f, 0.5f,1f);
+        impulseSource.GenerateImpulse(damagePercent);
         deathNoise.clip = smashSound;
         deathNoise.Play();
         smashed = false;

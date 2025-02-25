@@ -26,7 +26,7 @@ public class Minigun : MechWeapon
 
     void Update()
     {
-        var target = sensor.GetNearestDetection("Enemy");
+        var target = sensor.GetNearestDetection();
         Vector3 location;
         if (target != null)
         {

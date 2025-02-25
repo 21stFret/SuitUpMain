@@ -44,6 +44,11 @@ public class CrawlerCharger : Crawler
                 continue;
             }
 
+            if(collider.CompareTag("Enemy"))
+            {
+                continue;
+            }
+
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -60,6 +65,12 @@ public class CrawlerCharger : Crawler
             }
 
             targetHealth.TakeDamage(chargeDamage, WeaponType.Cralwer);
+
+            if(collider.CompareTag("Player"))
+            {
+                _crawlerBehavior.TransitionToState(typeof(PursuitState));
+            }
+
         }
     }
 

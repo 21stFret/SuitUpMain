@@ -43598,7 +43598,7 @@ MonoBehaviour:
   overrideDeathNoise: 0
   immune: 0
   immuneTime: 1
-  crawlerScale: 0.8
+  crawlerScale: 0.7
   cashWorth: 0
   expWorth: 0
   dropRate: 0
@@ -43614,6 +43614,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 20
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
@@ -43621,9 +43622,9 @@ MonoBehaviour:
   eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
   eliteDamageMultiplier: 2
   eliteHealthMultiplier: 2
-  eliteSpeedMultiplier: 1.5
+  eliteSpeedMultiplier: 1.25
   eliteSteerMultiplier: 1.25
-  eliteChance: 100
+  eliteChance: 10
   leapDistance: 10
   leapForce: 300
   leapCooldown: 1

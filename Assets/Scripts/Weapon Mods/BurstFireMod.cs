@@ -15,6 +15,7 @@ public class BurtFireMod : WeaponMod
     public override void Init()
     {
         base.Init();
+        
         burstTime = 0.1f +(baseWeapon.fireRate * 3);
         runUpgradeManager.ApplyStatModifiers(runMod);
     }

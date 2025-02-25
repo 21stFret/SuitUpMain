@@ -20,7 +20,7 @@ public class ModButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (isModEquipped)
+         if (isModEquipped)
         {
             modUI.SetupText(currentlyEquipedMod);
             modUI.SetPopupPosition(transform.localPosition);
@@ -36,6 +36,7 @@ public class ModButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     { 
         if(mod == ModCategory.STATS)
         {
+            isModEquipped = false;
             return;
         }
         isModEquipped = PlayerHasModEquipped(mod);

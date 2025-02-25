@@ -105,6 +105,7 @@ public class PauseMenu : MonoBehaviour
         menu.SetActive(true);
         SetOnBackAction(ResumeGame);
         backImage.SetActive(false);
+        SwapBackIcon();
         if (lastSelectedButton != null)
         {
             eventSystem.SetSelectedGameObject(lastSelectedButton);
