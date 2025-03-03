@@ -24,6 +24,7 @@ public class SplashScreen : MonoBehaviour
     {
         blackout.FadeOut();
         yield return new WaitForSeconds(3);
+        skipped = true;
         blackout.PlayTween();
         yield return new WaitForSeconds(1);
         doTweenFade.FadeOut();

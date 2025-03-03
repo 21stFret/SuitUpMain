@@ -26,7 +26,7 @@ public class Shotgun : MechWeapon
 
     private void Update()
     {
-        var target = sensor.GetNearestDetection("Enemy");
+        var target = sensor.GetNearestDetection();
         Vector3 location = transform.forward;
         if (target != null)
         {

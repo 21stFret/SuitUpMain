@@ -27,27 +27,27 @@ public class BattleManager : MonoBehaviour
 
     private GameManager _gameManager;
 
+    private bool _objectiveComplete;
+
     private void Awake()
     {
         if (instance == null) instance = this;
+        surviveTime *= dificultyMultiplier;
     }
 
     public void SetBattleType()
     {
-        //testing 
         _gameManager = GameManager.instance;
-        //GenerateNewBattle(Battles[currentBattleIndex].battleType);
         currentBattle = Battles[currentBattleIndex];
+        _usingBattleType = currentBattle.battleType;
 
+        _objectiveComplete = false;
 
-        // Check if this is the final jungle battle
         if (_gameManager.currentAreaType == AreaType.Jungle && 
             currentBattleIndex == Battles.Count - 1)
         {
-            currentBattle.battleType = BattleType.Hunt;
+            _usingBattleType = BattleType.Hunt;
         }
-
-        _usingBattleType = currentBattle.battleType;
 
         Color color = Color.white;
         float fillAmount = 0;
@@ -55,7 +55,7 @@ public class BattleManager : MonoBehaviour
         bool showpercent = false;
         bool showSurvive = false;
         string showDestroy = "";
-        var type = Battles[currentBattleIndex].battleType;
+        var type = _usingBattleType;
         GenerateNewBattle(type);
         switch (type)
         {
@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
-                //color = Color.cyan;
+                color = Color.cyan;
                 fillAmount = 0;
                 showBar = true;
                 showpercent = true;
@@ -104,9 +104,9 @@ public class BattleManager : MonoBehaviour
     {
         _gameManager.areaManager.DayNightCycle(true);
         lightningController.active = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         _gameManager.gameUI.objectiveUI.Init(true, false, false, GetHuntedTarget().name);
-        while (crawlerSpawner.activeCrawlerCount > 0)
+        while (crawlerSpawner.huntedTarget != null && GetHuntedTarget()._targetHealth.health > 0)
         {
             _gameManager.gameUI.objectiveUI.UpdateBar(GetHuntedTarget()._targetHealth.health / GetHuntedTarget()._targetHealth.maxHealth);
             yield return null;
@@ -180,6 +180,12 @@ public class BattleManager : MonoBehaviour
 
     public void ObjectiveComplete()
     {
+
+        if(_objectiveComplete)
+        {
+            return;
+        }
+        _objectiveComplete = true;
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
         lightningController.active = false;
@@ -213,8 +219,14 @@ public class BattleManager : MonoBehaviour
 
     private void SetPickUpPosition(float minDistance = 5f, float maxDistance = 15f, int maxAttempts = 10)
     {
-        Vector3 playerPos = GameManager.instance.playerInput.transform.position;
         Vector3 pos;
+        pos = Vector3.zero;
+        pos.y = 3;
+        roomDrop.transform.position = pos;
+        return;
+        
+        /*
+        Vector3 playerPos = GameManager.instance.playerInput.transform.position;
         int attempts = 0;
 
         do
@@ -245,6 +257,7 @@ public class BattleManager : MonoBehaviour
         pos = Vector3.zero;
         pos.y = 3;
         roomDrop.transform.position = pos;
+        */
     }
 
     public void UpdateCrawlerSpawner()
@@ -258,11 +271,11 @@ public class BattleManager : MonoBehaviour
             crawlerSpawner.spawnPoints = area.spawnPoints;
         }
         crawlerSpawner.LoadBattle();
-        if (currentBattle.battleType == BattleType.Exterminate)
+        if (_usingBattleType == BattleType.Exterminate)
         {
             crawlerSpawner.BeginSpawningSquads();
         }
-        if (currentBattle.battleType == BattleType.Hunt)
+        if (_usingBattleType == BattleType.Hunt)
         {
             crawlerSpawner.SpawnBoss();
         }
@@ -291,16 +304,16 @@ public class BattleManager : MonoBehaviour
         }   
     }
 
-    [SerializeField] private ArmyGenerator ArmyGen;
+    [SerializeField] public ArmyGenerator armyGen;
     private void GenerateNewBattle(BattleType type)
     {
-        if (ArmyGen == null)
+        if (armyGen == null)
         {
             Debug.LogError("WaveGenerator is not assigned!");
             return;
         }
         currentBattle = Battles[currentBattleIndex];
-        ArmyGen.LoadAllSquadsFromExcel();
-        currentBattle.battleArmy = ArmyGen.BuildArmy();
+        armyGen.LoadAllSquadsFromExcel();
+        currentBattle.battleArmy = armyGen.BuildArmy();
     }
 }

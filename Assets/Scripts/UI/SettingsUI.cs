@@ -11,10 +11,8 @@ public class SettingsUI : MonoBehaviour
     public Toggle damageNumbersToggle;
     public bool damageNumbersOn;
 
-    private void OnEnable()
+    public void SetupDamageNumbers()
     {
-        BGM.value = AudioManager.instance.musicVolume;
-        SFX.value = AudioManager.instance.sfxVolume;
         if (PlayerPrefs.HasKey("DamageNumbers"))
         {
             damageNumbersOn = PlayerPrefs.GetInt("DamageNumbers", 1) == 1;
@@ -24,13 +22,22 @@ public class SettingsUI : MonoBehaviour
             PlayerPrefs.SetInt("DamageNumbers", 1);
         }
         damageNumbersToggle.isOn = damageNumbersOn;
+        SetDamageNumber(damageNumbersOn);
+        damageNumbersToggle.onValueChanged.AddListener(SetDamageNumber);
+    }
+
+    private void OnEnable()
+    {
+        BGM.value = AudioManager.instance.musicVolume;
+        SFX.value = AudioManager.instance.sfxVolume;
+        SetupDamageNumbers();
     }
 
     public void SetDamageNumber(bool value)
     {
         damageNumbersOn = value;
         PlayerPrefs.SetInt("DamageNumbers", damageNumbersOn ? 1 : 0);
-        var targets = FindObjectsOfType<TargetHealth>();
+        var targets = FindObjectsOfType<TargetHealth>(true);
         foreach (var target in targets)
         {
             target.SetDamageNumbers(damageNumbersOn);

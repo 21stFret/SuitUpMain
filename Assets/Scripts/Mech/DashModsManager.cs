@@ -98,32 +98,40 @@ public class DashModsManager : MonoBehaviour
 
     private IEnumerator DoDamage()
     {
-        BattleMech.instance.mechHealth.shieldMaterial.SetColor("_Flash_Color", attackColor);
-        BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 1f);
-        while (characterController.isDodging)
+        try
         {
-            var colliders = Physics.OverlapSphere(transform.position, 5f, layerMask);
-            foreach (var col in colliders)
+            BattleMech.instance.mechHealth.shieldMaterial.SetColor("_Flash_Color", attackColor);
+            BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 1f);
+            
+            while (characterController.isDodging)
             {
-                if (hitTargets.Contains(col.gameObject))
+                var colliders = Physics.OverlapSphere(transform.position, 5f, layerMask);
+                foreach (var col in colliders)
                 {
-                    continue;
+                    if (hitTargets.Contains(col.gameObject))
+                    {
+                        continue;
+                    }
+                    var health = col.GetComponent<TargetHealth>();
+                    var rb = col.GetComponent<Rigidbody>();
+                    if (health)
+                    {
+                        health.TakeDamage(damage, WeaponType.AoE);
+                        hitTargets.Add(col.gameObject);
+                    }
+                    if(rb)
+                    {
+                        rb.AddExplosionForce(chargeForce, transform.position, 7f, 0.5f, ForceMode.Impulse);
+                    }
                 }
-                var health = col.GetComponent<TargetHealth>();
-                var rb = col.GetComponent<Rigidbody>();
-                if (health)
-                {
-                    health.TakeDamage(damage, WeaponType.AoE);
-                    hitTargets.Add(col.gameObject);
-                }
-                if(rb)
-                {
-                    rb.AddExplosionForce(chargeForce, transform.position, 7f, 0.5f, ForceMode.Impulse);
-                }
+                yield return new WaitForSeconds(0.2f);
             }
-            yield return new WaitForSeconds(0.2f);
         }
-        BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0);
+        finally
+        {
+            // This will always execute, even if the coroutine is stopped
+            BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0);
+        }
     }
 
     public IEnumerator Hologram()

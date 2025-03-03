@@ -215,7 +215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageArea: {fileID: 3163867962148973931}
   canTriggerMultipleTimes: 1
-  resetTime: 1
+  resetTime: 5
   trapAnimator: {fileID: 2395091577428625486}
   triggerAnimationParameter: Spike
   trapSoundEffect: {fileID: 0}
@@ -259,6 +259,8 @@ MonoBehaviour:
   damageDuration: 0.1
   damageType: 6
   damageActive: 1
+  damageOnStart: 0
+  targetsInRange: []
   radiusExtender: 1
 --- !u!1 &4859966924368833861
 GameObject:

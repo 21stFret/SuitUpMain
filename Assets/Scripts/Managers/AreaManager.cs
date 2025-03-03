@@ -80,7 +80,7 @@ public class AreaManager : MonoBehaviour
         GameObject roomPrefab;
         EnvironmentArea area;
 
-        if(BattleManager.instance.currentBattle.battleType == BattleType.Hunt)
+        if(BattleManager.instance._usingBattleType == BattleType.Hunt)
         {
             roomPrefab = roomPrefabs[roomPrefabs.Count - 1];
             area = roomPrefab.GetComponent<EnvironmentArea>();
@@ -99,7 +99,7 @@ public class AreaManager : MonoBehaviour
             if(directionalDaylight!=null)
             {
                 bool dark = area.insideArea;
-                if(BattleManager.instance.currentBattle.battleType == BattleType.Survive)
+                if(BattleManager.instance._usingBattleType == BattleType.Survive)
                 {
                     dark = true;
                 }

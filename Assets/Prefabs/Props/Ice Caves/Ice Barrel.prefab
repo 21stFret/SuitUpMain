@@ -41,7 +41,8 @@ AudioSource:
   m_GameObject: {fileID: 3427692730128058801}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.793
@@ -10579,6 +10580,7 @@ MonoBehaviour:
   damageDuration: 5
   damageType: 5
   damageActive: 1
+  damageOnStart: 0
   targetsInRange: []
   radiusExtender: 0.5
 --- !u!135 &5179485077086157434

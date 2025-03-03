@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 public class ArmyGenerator : MonoBehaviour
 {
-    public Dictionary<AreaType, List<CrawlerSquad>> areaSquads = new Dictionary<AreaType, List<CrawlerSquad>>();
+    public SerializedDictionary<AreaType, List<CrawlerSquad>> areaSquads = new SerializedDictionary<AreaType, List<CrawlerSquad>>();
     public List<CrawlerSquad> battleArmy = new List<CrawlerSquad>();
     public int MaxSquads = 3;
     public BattleDataReader battleDataReader;
@@ -17,7 +18,12 @@ public class ArmyGenerator : MonoBehaviour
             return;
         }
 
-        areaSquads = battleDataReader.LoadSquadsFromExcel();
+        var loadedSquads = battleDataReader.LoadSquadsFromExcel();
+        areaSquads.Clear();
+        foreach (var kvp in loadedSquads)
+        {
+            areaSquads.Add(kvp.Key, kvp.Value);
+        }
         Debug.Log($"Loaded squads for {areaSquads.Count} area types.");
     }
 
@@ -46,6 +52,5 @@ public class ArmyGenerator : MonoBehaviour
     public void SetCurrentAreaType(AreaType areaType)
     {
         currentAreaType = areaType;
-        Debug.Log($"Current area type set to: {currentAreaType}");
     }
 }

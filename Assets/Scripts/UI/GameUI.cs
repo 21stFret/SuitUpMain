@@ -23,6 +23,8 @@ public class GameUI : MonoBehaviour
     public GameObject blackout;
     public GameObject gameplayUI;
 
+    public SettingsUI settingsUI;
+
     private void Awake()
     {
         // Create a singleton instance
@@ -40,6 +42,10 @@ public class GameUI : MonoBehaviour
     {
         AudioManager.instance.eventSystem = eventSystem;
         killCountText.text = "0";
+        if(settingsUI != null)
+        {
+            settingsUI.SetupDamageNumbers();
+        }
     }
 
     public void CloseAll()

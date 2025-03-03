@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private bool wonGame;
+    private BattleManager battleManager;
 
     private void Awake()
     {
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     public void DelayedStart()
     {
+        battleManager = BattleManager.instance;
         _myCharacterController = BattleMech.instance.myCharacterController;
         _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
@@ -71,8 +73,8 @@ public class GameManager : MonoBehaviour
         nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
         currentRoomIndex = -1;
         gameActive = true;
-        BattleManager.instance.currentBattleIndex = 0;
-        BattleManager.instance.crawlerSpawner.Init();
+        battleManager.currentBattleIndex = 0;
+        battleManager.crawlerSpawner.Init();
         LoadNextRoom(0);
     }
 
@@ -110,16 +112,16 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         AudioManager.instance.PlayBattleMusic();
         CashCollector.instance.DestroyParts();
-        BattleManager.instance.roomDrop.gameObject.SetActive(false);
-        BattleManager.instance.SetBattleType();
+        battleManager.roomDrop.gameObject.SetActive(false);
+        battleManager.SetBattleType();
         areaManager.LoadRoom(currentAreaType);
-        BattleManager.instance.UpdateCrawlerSpawner();
+        battleManager.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(delay/2);
         voidPortalManager.StopFirstPersonEffect();
         _myCharacterController.ToggleCanMove(true);
         gameUI.gameUIFade.FadeIn();
-        gameUI.objectiveUI.UpdateObjective(BattleManager.instance.objectiveMessage);
+        gameUI.objectiveUI.UpdateObjective(battleManager.objectiveMessage);
         gameActive = true;
     }
 
@@ -142,21 +144,22 @@ public class GameManager : MonoBehaviour
     {
         //TODO: Add Void Room Completion interaction
         currentAreaType++;
+        battleManager.armyGen.SetCurrentAreaType(currentAreaType);
         SpawnPortalsToNextRoom(true);
     }
 
     public void SpawnPortalsToNextRoom(bool voidRoom = false)
     {
         voidPortalManager.transform.position = voidRoom ? voidPortalManager.voidPortalLocation.position : playerInput.transform.position;
-        BattleManager.instance.crawlerSpawner.waveText.text = "Head through the Portal!";
+        battleManager.crawlerSpawner.waveText.text = "Head through the Portal!";
 
-        if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 1)
+        if (battleManager.currentBattleIndex > battleManager.Battles.Count - 1)
         {
             voidPortalManager.StartVoidEffect(true);
-            BattleManager.instance.ResetOnNewArea();
+            battleManager.ResetOnNewArea();
             return;
         }
-        if (BattleManager.instance.currentBattleIndex > BattleManager.instance.Battles.Count - 2)
+        if (battleManager.currentBattleIndex > battleManager.Battles.Count - 2)
         {
             voidPortalManager.StartVoidEffect(false);
         }
@@ -173,12 +176,24 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBGMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
-        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
-        PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
-        PlayerSavedData.instance.SavePlayerData();
+        if(PlayerProgressManager.instance != null && SetupGame.instance != null)
+        {
+            PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
+        }
+        if(PlayerSavedData.instance != null && SetupGame.instance != null)
+        {
+            PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
+            PlayerSavedData.instance.SavePlayerData();
+        }
+        wonGame = won;
+        StartCoroutine(DelayedEndGame(won));
+    }
+
+    private IEnumerator DelayedEndGame(bool won)
+    {
+        yield return new WaitForSeconds(2);
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
-        wonGame = won;
     }
 
     public void EndGameCall(bool win)
@@ -213,6 +228,5 @@ public class GameManager : MonoBehaviour
     public void ShowCredits()
     {
         creditsController.gameObject.SetActive(true);
-        playerInput.SwitchCurrentActionMap("Credits");
     }
 }

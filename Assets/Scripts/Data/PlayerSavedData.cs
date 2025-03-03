@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Profiling;
+using Steamworks;
 
 public class PlayerSavedData : MonoBehaviour
 {
@@ -165,9 +166,7 @@ public class PlayerSavedData : MonoBehaviour
 
     public void SavePlayerData()
     {
-        // Create a new instance of the SaveData class
         SaveData saveData = new SaveData();
-
         // Assign the values from the PlayerSavedData instance to the SaveData instance
         saveData.BGMVolume = _BGMVolume;
         saveData.SFXVolume = _SFXVolume;
@@ -184,71 +183,101 @@ public class PlayerSavedData : MonoBehaviour
         saveData.highestDifficulty = highestDifficulty;
         saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
 
-        // Convert the SaveData instance to JSON
         string jsonData = JsonUtility.ToJson(saveData, true);
+        byte[] byteData = Encoding.UTF8.GetBytes(jsonData); // Changed from ASCII to UTF8
 
-        byte[] byteData;
-
-        byteData = Encoding.ASCII.GetBytes(jsonData);
-
-        string dataPath = Application.persistentDataPath.ToString();
-        string dataFileName = "saveData.sav";
-        string fullPath = Path.Combine(dataPath, dataFileName);
-
-        // create the file in the path if it doesn't exist
-        // if the file path or name does not exist, return the default SO
-        if (!Directory.Exists(Path.GetDirectoryName(fullPath)))
+        if (SteamManager.Initialized)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-        }
-
-        // attempt to save here data
-        try
-        {
-            // save datahere
-            using (FileStream stream = new FileStream(fullPath, FileMode.Create))
+            string cloudFileName = "saveData.sav";
+            
+            // Check if we have enough cloud storage
+            if (SteamRemoteStorage.GetQuota(out ulong totalBytes, out ulong availableBytes))
             {
-                using (StreamWriter writer = new StreamWriter(stream))
+                if ((ulong)byteData.Length <= availableBytes)
                 {
-                    writer.Write(jsonData);
+                    bool success = SteamRemoteStorage.FileWrite(cloudFileName, byteData, byteData.Length);
+                    if (success)
+                    {
+                        Debug.Log($"Successfully saved to Steam Cloud: {cloudFileName} ({byteData.Length} bytes)");
+                        return; // Only return if Steam save was successful
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Not enough Steam Cloud storage. Need: {byteData.Length}, Available: {availableBytes}");
                 }
             }
-            //print("Saved Data Complete" + jsonData);
-            //print("Saved Data Path" + fullPath);
+            
+            Debug.LogWarning("Falling back to local save");
         }
-        catch (Exception e)
-        {
-            // write out error here
-            Debug.LogError("Failed to save data to: " + fullPath);
-            Debug.LogError("Error " + e.Message);
-            return;
-        }
+        
+        // Local save as fallback
+        SaveLocalFile(jsonData);
+    }
 
-
+    private void SaveLocalFile(string jsonData)
+    {
+        string fullPath = Path.Combine(Application.persistentDataPath, "saveData.sav");
+        
+        Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+        
+        File.WriteAllText(fullPath, jsonData);
+        Debug.Log($"Saved locally to: {fullPath}");
     }
 
     public void LoadPlayerData()
     {
-        string dataPath = Application.persistentDataPath.ToString();
-        string dataFileName = "saveData.sav";
-        string fullPath = Path.Combine(dataPath, dataFileName);
+        string jsonData = null;
+        bool loadedSuccessfully = false;
 
-        if (File.Exists(fullPath))
+        if (SteamManager.Initialized)
+        {
+            string cloudFileName = "saveData.sav";
+            
+            if (SteamRemoteStorage.FileExists(cloudFileName))
+            {
+                int fileSize = SteamRemoteStorage.GetFileSize(cloudFileName);
+                if (fileSize > 0)
+                {
+                    byte[] data = new byte[fileSize];
+                    int bytesRead = SteamRemoteStorage.FileRead(cloudFileName, data, fileSize);
+                    
+                    if (bytesRead == fileSize)
+                    {
+                        try
+                        {
+                            jsonData = Encoding.UTF8.GetString(data);
+                            // Validate JSON before marking as successful
+                            JsonUtility.FromJson<SaveData>(jsonData);
+                            loadedSuccessfully = true;
+                            Debug.Log($"Successfully loaded {bytesRead} bytes from Steam Cloud");
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError($"Error parsing Steam Cloud save: {e.Message}");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Fall back to local file if Steam load failed or Steam isn't initialized
+        if (!loadedSuccessfully)
+        {
+            string localPath = Path.Combine(Application.persistentDataPath, "saveData.sav");
+            if (File.Exists(localPath))
+            {
+                jsonData = File.ReadAllText(localPath);
+                loadedSuccessfully = true;
+                Debug.Log("Successfully loaded from local save");
+            }
+        }
+
+        if (loadedSuccessfully)
         {
             try
             {
-                // load the serialized data from the file
-                string dataToLoad = "";
-                using (FileStream stream = new FileStream(fullPath, FileMode.Open))
-                {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        dataToLoad = reader.ReadToEnd();
-                    }
-                }
-
-                // deserialize the data from Json back into the C# object
-                SaveData savedData = JsonUtility.FromJson<SaveData>(dataToLoad);
+                SaveData savedData = JsonUtility.FromJson<SaveData>(jsonData);
                 _BGMVolume = savedData.BGMVolume;
                 _SFXVolume = savedData.SFXVolume;
                 _playerLevel = savedData.playerLevel;
@@ -264,19 +293,17 @@ public class PlayerSavedData : MonoBehaviour
                 highestDifficulty = savedData.highestDifficulty;
                 hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
 
-                print("Loaded Data Complete" + dataToLoad);
+                Debug.Log("Save data parsed successfully");
             }
             catch (Exception e)
             {
-
-                Debug.LogError("Error occured when trying to load file at path: "
-                    + fullPath + " and backup did not work.\n" + e);
-
+                Debug.LogError($"Error parsing save data: {e.Message}");
+                CreateData();
             }
         }
         else
         {
-            print("No data found to load, creating data");
+            Debug.Log("No save data found, creating new data");
             CreateData();
         }
     }

@@ -45,20 +45,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseWeapon: {fileID: 0}
-  modType: 3
-  modName: 
-  modDescription: 
-  modifiers:
-  - modType: 1
-    modValue: -90
-  - modType: 0
-    modValue: 200
-  - modType: 3
-    modValue: -50
+  modType: 4
   modFuelCost: 0
-  sprite: {fileID: 21300000, guid: b281df926e6db7347b589d89b1d7a51e, type: 3}
   damage: 0
   range: 0
+  runMod:
+    modCategory: 1
+    modBuildType: 0
+    weaponType: 4
+    sprite: {fileID: 0}
+    modName: 
+    modDescription: 
+    modifiers: []
+    rarity: 0
+    modValues: []
+  assaultMod: 0
+  runUpgradeManager: {fileID: 0}
   lightningOrbs:
   - {fileID: 0}
-  shotTimer: 0
+  verrideshotTimer: 0
+  overrideFuelCost: 0

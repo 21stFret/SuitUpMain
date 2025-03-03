@@ -21,13 +21,21 @@ public class CrawlerDaddy : Crawler
     {
         overrideDeathNoise = true;
         deathNoise.clip = deathSound;
+        bool spawn = true;
+        if(overkill)
+        {
+            spawn = false;
+        }
         if(killedBy != WeaponType.Default)
         {
             Vector3 pos = transform.position;
             pos.y += 3;
             spawnCount = Random.Range(2, 5);
             spawnCount *= isElite ? 2 : 1;
-            crawlerSpawner.SpawnAtPoint(transform, spawnCount);
+            if(spawn)
+            {
+                crawlerSpawner.SpawnAtPoint(transform, spawnCount);
+            }
             if(isElite)
             {
                 EliteDeathEffect.transform.SetParent(null);

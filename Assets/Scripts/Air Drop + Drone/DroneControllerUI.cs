@@ -230,7 +230,7 @@ public class DroneControllerUI : MonoBehaviour
         {
             return;
         }
-        airDropTimer.DroneCharge += value;
+        airDropTimer.ChargeDrone(value);
     }
 
     public bool CanUseDrone()

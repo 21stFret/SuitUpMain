@@ -20,6 +20,9 @@ public class CrawlerHunter : Crawler
     private static readonly string FRESPOWER_PROPERTY = "_FresnelPower";  
     private bool stealthAttacked;
 
+    public LayerMask hidenLayer;
+    public LayerMask visibleLayer;
+
     public override void Init()
     {
         base.Init();
@@ -54,6 +57,7 @@ public class CrawlerHunter : Crawler
         crawlerMovement.ApplySlow(0.8f, true);
         isStealthed = true;
         stealthAttacked = false;
+        gameObject.layer = (int)Mathf.Log(hidenLayer.value, 2);
         StartCoroutine(FadeOut());
         if (stealthEffect != null)
         {
@@ -68,6 +72,7 @@ public class CrawlerHunter : Crawler
         crawlerMovement.ApplySlow(0, true);
         isStealthed = false;
         stealthTimer = stealthCooldown;
+        gameObject.layer = (int)Mathf.Log(visibleLayer.value, 2);   
         StartCoroutine(FadeIn());
         if (revealEffect != null)
         {

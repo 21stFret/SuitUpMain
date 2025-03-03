@@ -13,7 +13,8 @@ public class ObjectiveUI : MonoBehaviour
     public GameObject destoryText;
     public TMP_Text progressText;
     public TMP_Text percentageText;
-    public Animator objectiveAnimator;
+    public Animator hintAnimator;
+    public TMP_Text hintText;
     public float ObjectiveFlashTime = 2f;
     public GameObject objectivePanel;
 
@@ -25,7 +26,7 @@ public class ObjectiveUI : MonoBehaviour
         surviveText.SetActive(showSurvive);
         percentageText.text = "";
         percentageText.enabled = showPercent;
-        progressText.text = BattleManager.instance.currentBattle.battleType == BattleType.Survive ? "survive" : "upload";
+        progressText.text = BattleManager.instance._usingBattleType == BattleType.Survive ? "survive" : "upload";
         if(showDestroy != "")
         {
             destoryText.GetComponent<TMP_Text>().text = showDestroy;       
@@ -41,6 +42,8 @@ public class ObjectiveUI : MonoBehaviour
 
     public void UpdateObjective(string objective)
     {
+        // Update the objective text
+        hintText.text = objective;
         StartCoroutine(ShowObjective());
     }
 
@@ -62,7 +65,7 @@ public class ObjectiveUI : MonoBehaviour
 
     public void TogglePanel(bool open)
     {
-        objectiveAnimator.SetBool("Open", open);
+        hintAnimator.SetBool("Open", open);
     }
 
     public void HideObjectivePanel()
@@ -75,7 +78,7 @@ public class ObjectiveUI : MonoBehaviour
 
     public IEnumerator ObjectiveComplete()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
         progressText.text = "";

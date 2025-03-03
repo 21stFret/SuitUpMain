@@ -83,7 +83,7 @@ public class AirDropCrate : MonoBehaviour
         switch (crateType)
         {
             case DroneType.Repair:
-                BattleMech.instance.RepairArmour();
+                BattleMech.instance.RepairArmour(20);
                 break;
             case DroneType.Shield:
                 BattleMech.instance.Shield();

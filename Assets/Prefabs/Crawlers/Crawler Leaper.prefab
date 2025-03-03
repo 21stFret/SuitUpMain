@@ -19110,59 +19110,6 @@ Transform:
   - {fileID: 8842040932826390005}
   m_Father: {fileID: 7391302482856354956}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3952121847390141383
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 683214691858131809}
-  - component: {fileID: 409612031691819337}
-  m_Layer: 7
-  m_Name: GroundCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &683214691858131809
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3952121847390141383}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 7391302482856354956}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &409612031691819337
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3952121847390141383}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2
-  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &3995303746812037058
 GameObject:
   m_ObjectHideFlags: 0
@@ -43441,7 +43388,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 683214691858131809}
   - {fileID: 7446092041188603168}
   - {fileID: 4409523461346482823}
   - {fileID: 6686047687737128517}
@@ -43598,7 +43544,7 @@ MonoBehaviour:
   overrideDeathNoise: 0
   immune: 0
   immuneTime: 1
-  crawlerScale: 0.8
+  crawlerScale: 0.7
   cashWorth: 0
   expWorth: 0
   dropRate: 0
@@ -43614,16 +43560,17 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 20
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
   becomeElite: 0
   eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
-  eliteDamageMultiplier: 2
-  eliteHealthMultiplier: 2
+  eliteDamageMultiplier: 2.5
+  eliteHealthMultiplier: 2.5
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 100
+  eliteChance: 10
   leapDistance: 10
   leapForce: 300
   leapCooldown: 1
@@ -43687,7 +43634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 5
+  maxHealth: 10
   invincible: 0
   alive: 0
   immuneWeapons: 

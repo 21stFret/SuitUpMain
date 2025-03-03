@@ -87,15 +87,15 @@ public class SpitProjectile : MonoBehaviour
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                print("Explode hit " + rb.name);
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
-                if (rb.GetComponent<TargetHealth>() != null)
-                {
-                    float distance = Vector3.Distance(transform.position, collider.transform.position);
-                    float damage = Mathf.Clamp(_damage * (1.2f - (distance / explosionRadius)), 0, _damage);
-                    rb.GetComponent<TargetHealth>().TakeDamage(damage, WeaponType.Cralwer);
-                }
+            }
+            TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
+            if (targetHealth != null)
+            {
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
+                float damage = Mathf.Clamp(_damage * (1.2f - (distance / explosionRadius)), 0, _damage);
+                targetHealth.TakeDamage(damage, WeaponType.Cralwer);
             }
         }
         explosionEffect.Play();

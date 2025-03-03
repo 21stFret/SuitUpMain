@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Steamworks;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -35,6 +36,22 @@ public class PauseMenu : MonoBehaviour
     public ModUI _modUI;
     public DroneControllerUI droneControllerUI;
     private bool hiddenMenu;
+    private bool wasPreviouslyConnected = false;
+
+    private Callback<GameOverlayActivated_t> m_GameOverlayActivated;
+
+    private void OnEnable()
+    {
+        if (SteamManager.Initialized)
+        {
+            m_GameOverlayActivated = Callback<GameOverlayActivated_t>.Create(OnOverlayActivated);
+        }
+    }
+
+    private void OnDisable()
+    {
+        m_GameOverlayActivated = null;
+    }
 
     void Start()
     {
@@ -43,6 +60,39 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         menuOpen = false;
         lastSelectedButton = null;
+    }
+
+    void Update()
+    {
+        CheckControllerConnection();
+    }
+
+    private void CheckControllerConnection()
+    {
+        bool isConnected = Gamepad.current != null;
+
+        if (wasPreviouslyConnected && !isConnected)
+        {
+            PauseGame();
+        }
+
+        wasPreviouslyConnected = isConnected;
+    }
+
+    private void OnOverlayActivated(GameOverlayActivated_t callback)
+    {
+        bool isOverlayActive = callback.m_bActive == 1;
+        
+        if (isOverlayActive)
+        {
+            PauseGame();
+            playerInput.DeactivateInput();
+        }
+        else
+        {
+            ResumeGame();
+            playerInput.ActivateInput();
+        }
     }
 
     public void PauseGameInput(InputAction.CallbackContext context)
@@ -105,6 +155,7 @@ public class PauseMenu : MonoBehaviour
         menu.SetActive(true);
         SetOnBackAction(ResumeGame);
         backImage.SetActive(false);
+        SwapBackIcon();
         if (lastSelectedButton != null)
         {
             eventSystem.SetSelectedGameObject(lastSelectedButton);

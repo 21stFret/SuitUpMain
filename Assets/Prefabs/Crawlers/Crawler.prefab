@@ -273,7 +273,7 @@ MonoBehaviour:
   attackDamage: 2
   attackRange: 4
   seekRange: 25
-  speed: 200
+  speed: 170
   randomScale: 0.2
   DeathBlood: {fileID: 7485218815324124808}
   _spawnEffect: {fileID: 7966955931502245795}
@@ -298,18 +298,19 @@ MonoBehaviour:
   _targetHealth: {fileID: 0}
   triggeredAttack: 0
   spawnLocation: {x: 0, y: 0, z: 0}
-  SpawnForce: 100
+  SpawnForce: 50
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
   becomeElite: 0
   eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
   eliteDamageMultiplier: 2
-  eliteHealthMultiplier: 2
+  eliteHealthMultiplier: 3
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 5
+  eliteChance: 10
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -418,7 +419,7 @@ MonoBehaviour:
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
-  obstacleAvoidanceWeight: 1
+  obstacleAvoidanceWeight: 2
   wanderRadius: 15
   wallStickPrevention: 2
   wallCheckDistance: 1.5
@@ -1862,7 +1863,7 @@ Transform:
   m_GameObject: {fileID: 5735611911670001989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -37.853046, y: 0.9591221, z: 23.486189}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

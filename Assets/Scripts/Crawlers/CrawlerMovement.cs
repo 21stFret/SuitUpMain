@@ -55,86 +55,81 @@ public class CrawlerMovement : MonoBehaviour
     private float lastStuckCheck;
 
     public bool canRotate = true;
+
+    private Vector3 currentDirection; 
     
     private void Start()
     {
         lastPosition = transform.position;
+        currentDirection = transform.forward;
     }
 
     private void MoveCrawler()
     {
         // 1. Calculate base direction to target
         Vector3 targetDirection = (destination - transform.position).normalized;
-        direction = targetDirection;
+        Vector3 desiredDirection = targetDirection;
 
         // 2. Check for obstacles and wall sticking
         Vector3 avoidanceDirection = RayCastSteering();
         Vector3 wallStickForce = CheckWallSticking();
 
-
-
         // Visualization
         Debug.DrawRay(transform.position, targetDirection * 5, Color.blue);
-        if (avoidanceDirection != Vector3.zero)
+
+        // 3. Determine desired direction
+        if (avoidanceDirection != Vector3.zero || wallStickForce != Vector3.zero)
         {
+            // Combine all avoidance forces
+            desiredDirection = (targetDirection + 
+                avoidanceDirection * obstacleAvoidanceWeight +
+                wallStickForce * wallStickPrevention).normalized;
+            
             Debug.DrawRay(transform.position, avoidanceDirection * 3, Color.yellow);
         }
-
-        if (tracking)
+        else if (tracking && movementTarget != null)
         {
-            direction = (movementTarget.position - transform.position).normalized;
+            desiredDirection = (movementTarget.position - transform.position).normalized;
         }
 
-        Vector3 dir;
+        // 4. Smoothly lerp the current direction
+        currentDirection = Vector3.Lerp(currentDirection, desiredDirection, Time.deltaTime * steerSpeed);
+        direction = currentDirection;
 
-        if(!canRotate)
+        // 5. Handle rotation
+        if (!canRotate)
         {
             direction = transform.forward;
-            dir = transform.forward;
         }
         else
         {
             // Apply smooth rotation
-            dir = Vector3.Lerp(transform.forward, direction, Time.deltaTime * steerSpeed);
-            dir.y = 0;
-            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, lookSpeed * Time.deltaTime);
+            Vector3 rotationDirection = currentDirection;
+            rotationDirection.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(rotationDirection, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, lookSpeed * Time.deltaTime);
         }
 
+        if (!canMove) return;
 
-        if (!canMove)
-        {
-            return;
-        }
-
-        if (avoidanceDirection != Vector3.zero || wallStickForce != Vector3.zero)
-        {
-            // Combine all avoidance forces
-            dir = (targetDirection + 
-                       avoidanceDirection * obstacleAvoidanceWeight +
-                       wallStickForce * wallStickPrevention).normalized;
-        }
-        else
-        {
-            if (!m_crawler.triggeredAttack)
-            {
-                Vector3 separationForce = CalculateSeparationForce();
-                dir = (direction + separationForce * separationWeight).normalized;
-            }        
-        }
-
-        if (Time.time - lastStuckCheck > stuckCheckInterval)
-        {
-            CheckIfStuck();
-        }
-        
+        // 6. Apply movement forces
         float speed = speedFinal;
         if (isSlowed)
         {
             speed *= slowedAmount;
         }
 
-        rb.AddForce(dir.normalized * speed, ForceMode.Force);
+        // Apply separation if not attacking
+        if (!m_crawler.triggeredAttack)
+        {
+            Vector3 separationForce = CalculateSeparationForce();
+            currentDirection = Vector3.Lerp(currentDirection, 
+                (currentDirection + separationForce * separationWeight).normalized, 
+                Time.deltaTime * steerSpeed);
+        }
+
+        Debug.DrawRay(transform.position, currentDirection * 3, Color.magenta);
+        rb.AddForce(currentDirection * speed, ForceMode.Force);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, speed);
     }
 
@@ -144,7 +139,7 @@ public class CrawlerMovement : MonoBehaviour
         if (movementTarget == null) return;
         
         // Apply force towards predicted position
-        rb.AddForce(transform.forward * _speed, ForceMode.Force);
+        rb.AddForce(transform.forward * _speed, ForceMode.Acceleration);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, _speed);
     }
 
@@ -152,7 +147,7 @@ public class CrawlerMovement : MonoBehaviour
     {
         float distanceMoved = Vector3.Distance(lastPosition, transform.position);
         lastPosition = transform.position;
-        lastStuckCheck = Time.time;
+        lastStuckCheck = 0;
 
         if (distanceMoved < stuckThreshold)
         {
@@ -189,6 +184,7 @@ public class CrawlerMovement : MonoBehaviour
     {
         Vector3 avoidanceDirection = Vector3.zero;
         bool obstacleDetected = false;
+        int blockedRays = 0;
         var raycastPos = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
 
         for (int i = 0; i < rayAmount; i++)
@@ -226,6 +222,12 @@ public class CrawlerMovement : MonoBehaviour
             {
                 Debug.DrawRay(raycastPos, rayDirection * _rayDistance, Color.green);
             }
+        }
+
+            // If all rays are blocked, turn around
+        if (blockedRays >= rayAmount)
+        {
+            return -transform.forward;
         }
 
         return obstacleDetected ? avoidanceDirection.normalized : Vector3.zero;
@@ -313,7 +315,11 @@ public class CrawlerMovement : MonoBehaviour
             return;
         }
         MoveCrawler();
-
+        lastStuckCheck += Time.deltaTime;
+        if (lastStuckCheck >= stuckCheckInterval)
+        {
+            CheckIfStuck();
+        }
     }
 
     private void CheckGround()

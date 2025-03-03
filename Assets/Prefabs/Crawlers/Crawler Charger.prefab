@@ -19545,10 +19545,10 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  attackDamage: 7
+  attackDamage: 6
   attackRange: 7
   seekRange: 30
-  speed: 350
+  speed: 320
   randomScale: 0
   DeathBlood: {fileID: 3667496736432443897}
   _spawnEffect: {fileID: 9130449179126203357}
@@ -19575,35 +19575,36 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
   becomeElite: 0
   eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
-  eliteDamageMultiplier: 2
+  eliteDamageMultiplier: 1.5
   eliteHealthMultiplier: 2
-  eliteSpeedMultiplier: 1.5
+  eliteSpeedMultiplier: 1.3
   eliteSteerMultiplier: 1.25
   eliteChance: 5
   chargeEffect: {fileID: 4823605491945663866}
-  chargeDistance: 20
+  chargeDistance: 40
   chargeTime: 2
-  chargeRadius: 4
+  chargeRadius: 5
   chargeForce: 400
-  chargeDamage: 10
+  chargeDamage: 8
   chargeLayerMask:
     serializedVersion: 2
-    m_Bits: 4416
+    m_Bits: 266560
   chargeLookLayerMask:
     serializedVersion: 2
     m_Bits: 131073
   normalLookLayerMask:
     serializedVersion: 2
     m_Bits: 135169
-  chargeTimer: 0
+  chargeTimer: 3
   chargeCooldown: 5
   charging: 0
-  chargeSpeed: 700
+  chargeSpeed: 500
   collidersHit: []
 --- !u!54 &6614920390643891118
 Rigidbody:
@@ -19694,8 +19695,8 @@ MonoBehaviour:
   movementTarget: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
   speedFinal: 0
-  steerSpeed: 40
-  lookSpeed: 300
+  steerSpeed: 20
+  lookSpeed: 200
   stoppingDistance: 5
   canMove: 1
   direction: {x: 0, y: 0, z: 0}
@@ -19736,7 +19737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 15
+  maxHealth: 25
   invincible: 0
   alive: 0
   immuneWeapons: 07000000

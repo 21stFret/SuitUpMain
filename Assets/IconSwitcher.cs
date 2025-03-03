@@ -7,7 +7,7 @@ public class IconSwitcher : MonoBehaviour
 {
     public InputTracker inputTracker;
     public Image image;
-    public Sprite spriteA, spriteB;
+    public Sprite pcIcon, gamepadIcon;
 
     void Start()
     {
@@ -19,11 +19,11 @@ public class IconSwitcher : MonoBehaviour
     {
         if (inputTracker.usingMouse)
         {
-            image.sprite = spriteA;
+            image.sprite = pcIcon;
         }
         else
         {
-            image.sprite = spriteB;
+            image.sprite = gamepadIcon;
         }
         if (image.sprite == null)
         {

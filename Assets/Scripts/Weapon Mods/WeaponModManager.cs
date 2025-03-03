@@ -68,9 +68,9 @@ public class WeaponModManager : MonoBehaviour
 
     public void EquipAssaultMod(WeaponMod mod)
     {
-        if(currentAssaultMod == null)
+        if(currentAssaultMod != null)
         {
-            return;
+            currentAssaultMod.RemoveMods();
         }
         currentAssaultMod = mod;
         assualtWeapon.weaponMod = currentAssaultMod;

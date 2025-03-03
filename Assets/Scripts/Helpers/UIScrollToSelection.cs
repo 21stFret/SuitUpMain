@@ -20,7 +20,7 @@ namespace UnityEngine.UI.Extensions
         [SerializeField]
         private ScrollType scrollDirection = ScrollType.BOTH;
         [SerializeField]
-        private float scrollSpeed = 10f;
+        public float scrollSpeed = 10f;
         public float YPadding;
 
         [Header("[ Input ]")]
@@ -187,14 +187,15 @@ namespace UnityEngine.UI.Extensions
             float contentHeight = LayoutListGroup.rect.height;
             float elementHeight = selection.rect.height;
 
-            // Get element's position relative to content
-            float elementTopPosition = -selection.anchoredPosition.y;
-            float elementBottomPosition = elementTopPosition + elementHeight;
+            // Get element's position relative to content with padding
+            float elementTopPosition = -selection.anchoredPosition.y - YPadding;
+            float elementBottomPosition = elementTopPosition + elementHeight + (YPadding * 2);
 
             // Get current viewport bounds
             float viewportTop = -LayoutListGroup.anchoredPosition.y;
             float viewportBottom = viewportTop + viewportHeight;
 
+            // Calculate target position
             float targetPosition = TargetScrollRect.verticalNormalizedPosition;
 
             // Only scroll if element is out of view
@@ -209,11 +210,23 @@ namespace UnityEngine.UI.Extensions
                 targetPosition = 1 - ((elementBottomPosition - viewportHeight) / (contentHeight - viewportHeight));
             }
 
-            TargetScrollRect.verticalNormalizedPosition = Mathf.SmoothStep(
-                TargetScrollRect.verticalNormalizedPosition,
+            // Apply smooth scrolling with better damping
+            float currentPosition = TargetScrollRect.verticalNormalizedPosition;
+            float newPosition = Mathf.Lerp(
+                currentPosition,
                 Mathf.Clamp01(targetPosition),
                 Time.unscaledDeltaTime * scrollSpeed
             );
+
+            TargetScrollRect.verticalNormalizedPosition = newPosition;
+        }
+
+            // Add this new method to handle dropdown specific initialization
+        public void InitializeDropdown(ScrollRect dropdownScrollRect)
+        {
+            TargetScrollRect = dropdownScrollRect;
+            ScrollWindow = dropdownScrollRect.GetComponent<RectTransform>();
+            Canvas.ForceUpdateCanvases();
         }
 
         private void UpdateHorizontalScrollPosition(RectTransform selection)

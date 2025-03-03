@@ -15,6 +15,7 @@ public class FlameSplit : WeaponMod
             var effect = flameEffects[i].main;
             effect.startSpeed = range * 2;
         }
+        runUpgradeManager.ApplyStatModifiers(runMod);
     }
 
     // Fire Weapon
