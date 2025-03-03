@@ -48,6 +48,10 @@ public class InputTracker : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        if(playerInput == null)
+        {
+            playerInput = FindObjectOfType<PlayerInput>();
+        }
         lastControlScheme = playerInput.currentControlScheme;
         if (lastControlScheme == "PC")
         {
@@ -60,13 +64,21 @@ public class InputTracker : MonoBehaviour
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             usingMouse = false;
-            eventSystem.SetSelectedGameObject(LastSelectedGameObject);
+            if (LastSelectedGameObject != null)
+            {
+                eventSystem.SetSelectedGameObject(LastSelectedGameObject);
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(playerInput == null)
+        {
+            playerInput = FindObjectOfType<PlayerInput>();
+        }
+
         if(playerInput.currentControlScheme != lastControlScheme)
         {
             if(lastControlScheme == "PC")
@@ -92,6 +104,7 @@ public class InputTracker : MonoBehaviour
             }
             lastControlScheme = playerInput.currentControlScheme;
             OnInputChange?.Invoke();
+            print("Control Scheme Change, Invoke called");
         }
         if (usingMouse)
         {

@@ -30,13 +30,12 @@ public class BaseManager : MonoBehaviour
 
     public void InitBaseArea()
     {
+        InitializeBaseSystem();
         if (ShouldShowThankYouPanel())
         {
             ShowThankYouPanel();
             return;
         }
-
-        InitializeBaseSystem();
     }
 
     private void InitializeBaseSystem()
@@ -56,7 +55,7 @@ public class BaseManager : MonoBehaviour
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
         daylight.startTime = Random.Range(0, 1f);
-        globalBackButton.sprite = InputTracker.instance.usingMouse ? button : key;
+        globalBackButton.sprite = InputTracker.instance.usingMouse ? key : button;
 
         Debug.Log("Base Initialized");
     }

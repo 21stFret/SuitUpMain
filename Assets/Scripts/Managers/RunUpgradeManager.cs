@@ -151,6 +151,17 @@ public class RunUpgradeManager : MonoBehaviour
                     }
                 }
 
+                //can be extended to check for rare mods
+                if(mod.modName == "Nano Bots")
+                {
+                    //roll for chance to draw
+                    if(Random.Range(0,100) > 80)
+                    {
+                        maxAttempts--;
+                        continue;
+                    }
+                }
+
                 if(mod.modCategory!=ModCategory.STATS)
                 {
                     if (currentEquipedMods.Contains(mod))

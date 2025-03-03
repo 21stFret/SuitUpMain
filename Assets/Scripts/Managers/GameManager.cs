@@ -176,12 +176,24 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBGMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
-        PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
-        PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
-        PlayerSavedData.instance.SavePlayerData();
+        if(PlayerProgressManager.instance != null && SetupGame.instance != null)
+        {
+            PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
+        }
+        if(PlayerSavedData.instance != null && SetupGame.instance != null)
+        {
+            PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
+            PlayerSavedData.instance.SavePlayerData();
+        }
+        wonGame = won;
+        StartCoroutine(DelayedEndGame(won));
+    }
+
+    private IEnumerator DelayedEndGame(bool won)
+    {
+        yield return new WaitForSeconds(2);
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
-        wonGame = won;
     }
 
     public void EndGameCall(bool win)
@@ -216,6 +228,5 @@ public class GameManager : MonoBehaviour
     public void ShowCredits()
     {
         creditsController.gameObject.SetActive(true);
-        playerInput.SwitchCurrentActionMap("Credits");
     }
 }

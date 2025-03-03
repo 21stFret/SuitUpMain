@@ -15284,7 +15284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3101261175861027531
 Transform:
   m_ObjectHideFlags: 0
@@ -15396,24 +15396,24 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  attackDamage: 0
-  attackRange: 6
-  seekRange: 40
-  speed: 700
+  attackDamage: 6
+  attackRange: 12
+  seekRange: 10
+  speed: 500
   randomScale: 0
   DeathBlood: {fileID: 2826704839551399695}
   _spawnEffect: {fileID: 997474832806693610}
   animator: {fileID: 0}
   dead: 0
   deathNoise: {fileID: 1684373086875704436}
-  overrideDeathNoise: 0
+  overrideDeathNoise: 1
   immune: 0
   immuneTime: 1
   crawlerScale: 3
   cashWorth: 100
   expWorth: 50
   dropRate: 50
-  ScreamChance: 0
+  ScreamChance: 100
   isStunned: 0
   canBeStunned: 1
   objectStateHandler: {fileID: 0}
@@ -15426,16 +15426,31 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 0
   dummy: 0
+  overkill: 0
   spawn: 0
+  deathSounds:
+  - {fileID: 8300000, guid: b16a1212236496a45bbbbf3b92479ae9, type: 3}
+  - {fileID: 8300000, guid: 2763a10f05fe95940a4250643a460f48, type: 3}
+  - {fileID: 8300000, guid: eeb3c1339bc0da34f90d9717633d481e, type: 3}
+  isElite: 0
+  becomeElite: 0
+  eliteMaterial: {fileID: 0}
+  eliteDamageMultiplier: 2
+  eliteHealthMultiplier: 2
+  eliteSpeedMultiplier: 1.5
+  eliteSteerMultiplier: 1.25
+  eliteChance: 5
   smashEffect: {fileID: 1020282015054569457}
   smashRadius: 10
   smashDistance: 20
-  smashForce: 10
+  smashForce: 100
   smashLocation: {fileID: 20825722472486986}
   smashLayerMask:
     serializedVersion: 2
     m_Bits: 266560
   smashCooldown: 8
+  smashSound: {fileID: 8300000, guid: 42e2442fa1014924ab1063c6f84146b3, type: 3}
+  charged: 0
   burstSpawner: {fileID: 3208657932530357669}
   chargeCooldown: 6
   chargeDuration: 1
@@ -15444,8 +15459,10 @@ MonoBehaviour:
   buildChargeTime: 1.3
   buildChargeTimer: 1.3
   chargeEffect: {fileID: 4613485879700515375}
-  chargeColor: {r: 42.224255, g: 10.98844, b: 0, a: 1}
-  originalColor: {r: 5.9629602, g: 12.844469, b: 5.8769507, a: 1}
+  chargeSound: {fileID: 8300000, guid: f4f869a06d06cbe41a29c28e310f220c, type: 3}
+  chargeColor: {r: 2.9960787, g: 0.7796995, b: 0, a: 1}
+  originalColor: {r: 0.39943397, g: 0.8603977, b: 0.39367256, a: 1}
+  impulseSource: {fileID: 0}
 --- !u!114 &2406123097587197689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15550,7 +15567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 300
+  maxHealth: 200
   invincible: 0
   alive: 0
   immuneWeapons: 
@@ -15571,8 +15588,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseAggression: 1
   healthAggressionModifier: 0.3
-  preferredEngageDistance: 3
-  maxEngageDistance: 7
+  preferredEngageDistance: 5
+  maxEngageDistance: 9
   fleeDistance: 15
   fleeHealthThreshold: 0.3
   cautionHealthThreshold: 0.5
@@ -15605,7 +15622,7 @@ MonoBehaviour:
   crawlerSquad:
     crawlerGroups:
     - type: 0
-      amount: 0
+      amount: 3
   isActive: 0
   spawnPosition: {x: 2, y: 4, z: 2}
 --- !u!1 &5013036389789904594
@@ -25823,7 +25840,7 @@ GameObject:
   - component: {fileID: 5870324234061460570}
   - component: {fileID: 1684373086875704436}
   m_Layer: 8
-  m_Name: Audio Source
+  m_Name: DeathNoise
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25855,7 +25872,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 627371952805530920, guid: b5ecbaa5b9c376f4fa87ef13f374c38f,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: ef7cb1973eb6b8f46ae579d0bb826849, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b6defe9d4a7fd004ba7b0cb738aa9306, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -26292,6 +26309,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4212774416068582138, guid: 0b9ab3cef36fccb4aaaf63fc777dc7e5,
         type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212774416068582138, guid: 0b9ab3cef36fccb4aaaf63fc777dc7e5,
+        type: 3}
       propertyPath: InitialModule.startRotation.scalar
       value: -6.283185
       objectReference: {fileID: 0}
@@ -26314,6 +26336,11 @@ PrefabInstance:
         type: 3}
       propertyPath: InitialModule.startRotationY.minMaxState
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4212774416068582138, guid: 0b9ab3cef36fccb4aaaf63fc777dc7e5,
+        type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4620378790314903708, guid: 0b9ab3cef36fccb4aaaf63fc777dc7e5,
         type: 3}

@@ -36,7 +36,12 @@ public class TargetHealth : MonoBehaviour
     public void SetNewMaxHealth()
     {
         float curtentHealthPercent = health / maxHealth;
+        float oldMaxhealth = maxHealth;
         maxHealth = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Health);
+        if (oldMaxhealth < maxHealth)
+        {
+            health = maxHealth * curtentHealthPercent;
+        }
         if(maxHealth<=0)
         {
             maxHealth = 1;
@@ -45,7 +50,7 @@ public class TargetHealth : MonoBehaviour
         {
             health = maxHealth;
         }
-        health = maxHealth * curtentHealthPercent;
+
         _mech.UpdateHealthUI(health);
     }
 
@@ -117,11 +122,11 @@ public class TargetHealth : MonoBehaviour
             if (weaponType != WeaponType.Cralwer)
             {
                 _crawler.TakeDamage(damage, weaponType, stunTime, invincible);
-
                 if (damageNumbersOn)
                 {
                     DamageNumbers(damage, weaponType);
                 }
+                BattleMech.instance.droneController.ChargeDroneOnHit(damage/5);
             }
         }
     }

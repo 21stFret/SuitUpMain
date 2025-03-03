@@ -25,8 +25,14 @@ public class CreditsController : MonoBehaviour
 
     private bool pressed;
 
-    private void Start()
+    public PlayerInput playerInput;
+
+    public bool loadScene;
+
+    private void OnEnable()
     {
+        playerInput = FindObjectOfType<PlayerInput>();
+        playerInput.SwitchCurrentActionMap("Credits");
         isScrolling = false;
         pressed = false;
         // Ensure scroll position starts at top
@@ -39,6 +45,11 @@ public class CreditsController : MonoBehaviour
             StartCoroutine(ShowCreditsDelayed());
             StartCoroutine(ShowSkipButtonDelayed());
         }
+    }
+
+    private void OnDisable()
+    {
+        playerInput.SwitchCurrentActionMap("UI");
     }
 
     private void Update()
@@ -65,7 +76,15 @@ public class CreditsController : MonoBehaviour
             {
                 canSkip = false;
                 isScrolling = false;
-                LoadNextScene();
+                if (loadScene)
+                {
+                    LoadNextScene();
+                }
+                else
+                {
+                    doTweenFade.FadeOut();
+                    this.gameObject.SetActive(false);
+                }
             }
         }
     }

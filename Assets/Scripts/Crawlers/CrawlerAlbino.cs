@@ -38,6 +38,10 @@ public class CrawlerAlbino : Crawler
     public Color originalColor;
 
     public Cinemachine.CinemachineImpulseSource impulseSource;
+
+    private float checkTimer;
+
+    public float teleportDistance = 50f;
     
     public override void Init()
     {
@@ -57,6 +61,17 @@ public class CrawlerAlbino : Crawler
             smashTimer -= Time.deltaTime;
         }
         ChargeUpRushAttack();
+
+        // Quick fix for outside map
+
+        if (Vector3.Distance(transform.position, Vector3.zero) > teleportDistance)
+        {
+            checkTimer += Time.deltaTime;
+            if (checkTimer > 3)
+            {
+                transform.position = Vector3.zero;
+            }
+        }
     }
 
     private void ChargeUpRushAttack()
@@ -169,6 +184,8 @@ public class CrawlerAlbino : Crawler
     public override void Die(WeaponType weapon)
     {
         base.Die(weapon);
+        burstSpawner.isActive = false;
+        crawlerSpawner.huntedTarget = null;
         PlayerSavedData.instance._gameStats.totalBosses++;
         if (PlayerSavedData.instance._gameStats.totalBosses == 1)
         {

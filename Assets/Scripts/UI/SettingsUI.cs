@@ -23,6 +23,7 @@ public class SettingsUI : MonoBehaviour
         }
         damageNumbersToggle.isOn = damageNumbersOn;
         SetDamageNumber(damageNumbersOn);
+        damageNumbersToggle.onValueChanged.AddListener(SetDamageNumber);
     }
 
     private void OnEnable()
@@ -32,11 +33,11 @@ public class SettingsUI : MonoBehaviour
         SetupDamageNumbers();
     }
 
-    private void SetDamageNumber(bool value)
+    public void SetDamageNumber(bool value)
     {
         damageNumbersOn = value;
         PlayerPrefs.SetInt("DamageNumbers", damageNumbersOn ? 1 : 0);
-        var targets = FindObjectsOfType<TargetHealth>();
+        var targets = FindObjectsOfType<TargetHealth>(true);
         foreach (var target in targets)
         {
             target.SetDamageNumbers(damageNumbersOn);

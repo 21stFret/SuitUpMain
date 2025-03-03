@@ -14574,59 +14574,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!1 &3557560181781977175
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3950077248730028680}
-  - component: {fileID: 796735780080353582}
-  m_Layer: 7
-  m_Name: GroundCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3950077248730028680
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3557560181781977175}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1130561112155107868}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &796735780080353582
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3557560181781977175}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2
-  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &3734078846905331125
 GameObject:
   m_ObjectHideFlags: 0
@@ -24257,7 +24204,6 @@ Transform:
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 3950077248730028680}
   - {fileID: 5634037791903606428}
   - {fileID: 6390373829057460025}
   - {fileID: 5821926602512566071}
@@ -24437,10 +24383,10 @@ MonoBehaviour:
   becomeElite: 0
   eliteMaterial: {fileID: 0}
   eliteDamageMultiplier: 2
-  eliteHealthMultiplier: 2
-  eliteSpeedMultiplier: 1.5
+  eliteHealthMultiplier: 3
+  eliteSpeedMultiplier: 2
   eliteSteerMultiplier: 1.25
-  eliteChance: 5
+  eliteChance: 15
   stealthAttackDamage: 8
   stealthRange: 15
   stealthAttackRange: 10
@@ -24452,7 +24398,7 @@ MonoBehaviour:
   isStealthed: 0
   hidenLayer:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 128
   visibleLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -24532,7 +24478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 10
+  maxHealth: 15
   invincible: 0
   alive: 0
   immuneWeapons: 

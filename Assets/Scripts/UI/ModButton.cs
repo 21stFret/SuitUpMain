@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class ModButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ModButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     public TMP_Text modName;
     public TMP_Text modDescription;
@@ -20,14 +20,35 @@ public class ModButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-         if (isModEquipped)
+        ShowModInfo();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        HideModInfo();
+    }
+
+    // Add these new methods for gamepad support
+    public void OnSelect(BaseEventData eventData)
+    {
+        ShowModInfo();
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        HideModInfo();
+    }
+
+    private void ShowModInfo()
+    {
+        if (isModEquipped)
         {
             modUI.SetupText(currentlyEquipedMod);
             modUI.SetPopupPosition(transform.localPosition);
         }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    private void HideModInfo()
     {
         modUI.replacePanel.SetActive(false);
     }

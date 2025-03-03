@@ -139,7 +139,7 @@ public class CrawlerMovement : MonoBehaviour
         if (movementTarget == null) return;
         
         // Apply force towards predicted position
-        rb.AddForce(transform.forward * _speed, ForceMode.Force);
+        rb.AddForce(transform.forward * _speed, ForceMode.Acceleration);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, _speed);
     }
 
@@ -147,7 +147,7 @@ public class CrawlerMovement : MonoBehaviour
     {
         float distanceMoved = Vector3.Distance(lastPosition, transform.position);
         lastPosition = transform.position;
-        lastStuckCheck = Time.time;
+        lastStuckCheck = 0;
 
         if (distanceMoved < stuckThreshold)
         {
@@ -184,6 +184,7 @@ public class CrawlerMovement : MonoBehaviour
     {
         Vector3 avoidanceDirection = Vector3.zero;
         bool obstacleDetected = false;
+        int blockedRays = 0;
         var raycastPos = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
 
         for (int i = 0; i < rayAmount; i++)
@@ -221,6 +222,12 @@ public class CrawlerMovement : MonoBehaviour
             {
                 Debug.DrawRay(raycastPos, rayDirection * _rayDistance, Color.green);
             }
+        }
+
+            // If all rays are blocked, turn around
+        if (blockedRays >= rayAmount)
+        {
+            return -transform.forward;
         }
 
         return obstacleDetected ? avoidanceDirection.normalized : Vector3.zero;
@@ -308,7 +315,11 @@ public class CrawlerMovement : MonoBehaviour
             return;
         }
         MoveCrawler();
-
+        lastStuckCheck += Time.deltaTime;
+        if (lastStuckCheck >= stuckCheckInterval)
+        {
+            CheckIfStuck();
+        }
     }
 
     private void CheckGround()

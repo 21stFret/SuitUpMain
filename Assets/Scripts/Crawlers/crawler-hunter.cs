@@ -57,7 +57,7 @@ public class CrawlerHunter : Crawler
         crawlerMovement.ApplySlow(0.8f, true);
         isStealthed = true;
         stealthAttacked = false;
-        gameObject.layer = hidenLayer;
+        gameObject.layer = (int)Mathf.Log(hidenLayer.value, 2);
         StartCoroutine(FadeOut());
         if (stealthEffect != null)
         {
@@ -72,7 +72,7 @@ public class CrawlerHunter : Crawler
         crawlerMovement.ApplySlow(0, true);
         isStealthed = false;
         stealthTimer = stealthCooldown;
-        gameObject.layer = visibleLayer;
+        gameObject.layer = (int)Mathf.Log(visibleLayer.value, 2);   
         StartCoroutine(FadeIn());
         if (revealEffect != null)
         {

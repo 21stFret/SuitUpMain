@@ -300,16 +300,17 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 50
   dummy: 0
+  overkill: 0
   spawn: 0
   deathSounds: []
   isElite: 0
   becomeElite: 0
   eliteMaterial: {fileID: 2100000, guid: 1ad7f2adf53e08b45a7aed13a4764f38, type: 2}
   eliteDamageMultiplier: 2
-  eliteHealthMultiplier: 2
+  eliteHealthMultiplier: 3
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 5
+  eliteChance: 10
 --- !u!54 &4026478879676073532
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -11,9 +11,8 @@ public class SceneLoader : MonoBehaviour
     public Image loadinBar;
     public float minloadTime = 2;
     public AudioManager audioManager;
-
     public HintManager hintManager;
-
+    private bool isLoading = false;
     private void Awake()
     {
         if(instance == null)
@@ -24,6 +23,7 @@ public class SceneLoader : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -38,6 +38,7 @@ public class SceneLoader : MonoBehaviour
         hintManager.HideHint();
         loadinBar.enabled = false;
         StartCoroutine(DelayFade());
+        isLoading = false;
     }
 
     private IEnumerator DelayFade()
@@ -53,6 +54,13 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(int sceneID, bool delay = false)
     {
+        if (isLoading)
+        {
+            Debug.Log("Already loading a scene, ignoring request for scene ID: " + sceneID);
+            return;
+        }
+
+        isLoading = true;
         loadinBar.fillAmount = 0;
         StartCoroutine(LoadSceneAsync(sceneID, delay));
     }

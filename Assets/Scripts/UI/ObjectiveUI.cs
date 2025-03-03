@@ -78,7 +78,7 @@ public class ObjectiveUI : MonoBehaviour
 
     public IEnumerator ObjectiveComplete()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
         progressText.text = "";

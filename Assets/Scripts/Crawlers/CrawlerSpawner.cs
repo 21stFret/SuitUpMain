@@ -68,10 +68,10 @@ public class CrawlerSpawner : MonoBehaviour
         burstTimer = currentBattle.burstTimer;
         burstSpawnAmount = currentBattle.burstMin;       
         timeElapsed = burstTimer;
-        standardBattle = currentBattle.battleType == BattleType.Exterminate;
+        standardBattle = battleManager._usingBattleType == BattleType.Exterminate;
         endless = !standardBattle;
         hordeBattle = false;
-        if(currentBattle.battleType == BattleType.Survive)
+        if(battleManager._usingBattleType == BattleType.Survive)
         {
             hordeBattle = true;
         }
@@ -100,7 +100,7 @@ public class CrawlerSpawner : MonoBehaviour
         {
             return;
         }
-        if (hordeBattle || currentBattle.battleType == BattleType.Upload)
+        if (hordeBattle || battleManager._usingBattleType == BattleType.Upload)
         {
             BurstTimer();
         }
@@ -353,10 +353,7 @@ public class CrawlerSpawner : MonoBehaviour
             }
 
             Vector3 randomPoint = randomCircle + spawnPoint.position;
-            if(randomPoint.y < 1)
-            {
-                randomPoint.y = 2;
-            }
+            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
             bugs[i].transform.position = randomPoint;
             float randomY;
             if (FromDaddy)
@@ -389,10 +386,7 @@ public class CrawlerSpawner : MonoBehaviour
             Vector3 randomCircle = Random.insideUnitSphere * portalSize;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + location;
-            if(randomPoint.y < 1)
-            {
-                randomPoint.y = 2;
-            }
+            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
             bugs[i].transform.position = randomPoint;
             bugs[i].transform.rotation = Quaternion.Euler(0, randomCircle.y, 0);
 
@@ -444,10 +438,7 @@ public class CrawlerSpawner : MonoBehaviour
             Vector3 randomCircle = Random.insideUnitSphere * portalSize;
             randomCircle.z = 0;
             Vector3 randomPoint = randomCircle + spawnPoint.position;
-            if(randomPoint.y < 1)
-            {
-                randomPoint.y = 2;
-            }
+            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
             bugs[i].transform.position = randomPoint;
             bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
 
@@ -508,10 +499,34 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void KillAllCrawlers()
     {
-        foreach (var crawler in activeCrawlers)
+        // Create a copy of the list to avoid modification during iteration
+        List<Crawler> crawlersToKill = new List<Crawler>(activeCrawlers);
+        
+        foreach (var crawler in crawlersToKill)
         {
-            crawler.DealyedDamage(1000, 0.2f, WeaponType.AoE);
+            if (crawler != null && crawler.gameObject != null)
+            {
+                // Immediate death instead of delayed
+                crawler.Die(WeaponType.AoE);
+                
+                // Force remove from active list if still present
+                if (activeCrawlers.Contains(crawler))
+                {
+                    activeCrawlers.Remove(crawler);
+                }
+                
+                // Deactivate the game object
+                crawler.gameObject.SetActive(false);
+            }
         }
+        
+        // Clear any remaining crawlers
+        activeCrawlers.Clear();
+        
+        // Clear hunted target if it exists
+        huntedTarget = null;
+        
+        Debug.Log($"Killed all crawlers. Active count after cleanup: {activeCrawlers.Count}");
     }
 
     public void AddtoRespawnList(Crawler crawler, CrawlerType type)

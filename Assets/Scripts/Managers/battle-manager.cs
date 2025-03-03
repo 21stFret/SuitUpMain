@@ -104,9 +104,9 @@ public class BattleManager : MonoBehaviour
     {
         _gameManager.areaManager.DayNightCycle(true);
         lightningController.active = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.5f);
         _gameManager.gameUI.objectiveUI.Init(true, false, false, GetHuntedTarget().name);
-        while (crawlerSpawner.activeCrawlerCount > 0)
+        while (crawlerSpawner.huntedTarget != null && GetHuntedTarget()._targetHealth.health > 0)
         {
             _gameManager.gameUI.objectiveUI.UpdateBar(GetHuntedTarget()._targetHealth.health / GetHuntedTarget()._targetHealth.maxHealth);
             yield return null;
@@ -225,6 +225,7 @@ public class BattleManager : MonoBehaviour
         roomDrop.transform.position = pos;
         return;
         
+        /*
         Vector3 playerPos = GameManager.instance.playerInput.transform.position;
         int attempts = 0;
 
@@ -256,6 +257,7 @@ public class BattleManager : MonoBehaviour
         pos = Vector3.zero;
         pos.y = 3;
         roomDrop.transform.position = pos;
+        */
     }
 
     public void UpdateCrawlerSpawner()
