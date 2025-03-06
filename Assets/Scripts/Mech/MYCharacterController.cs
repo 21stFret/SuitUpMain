@@ -55,6 +55,10 @@ public class MYCharacterController : MonoBehaviour
     private float savedDodgeCooldown;
     private float savedDodgeForce;
 
+    [Header("Collision Prevention")]
+    [SerializeField] private float collisionCheckDistance = 1f;
+    [SerializeField] private LayerMask collisionMask;
+
     private void Awake()
     {
         savedDodgeForce = dashForce;
@@ -249,13 +253,8 @@ public class MYCharacterController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Movement()
     {
-        if(!canMove)
-        {
-            return;
-        }
-
         Vector3 icedPos = transform.position;
         icedPos.y += 2.6f;
         icedEffect.transform.position = icedPos;
@@ -305,8 +304,40 @@ public class MYCharacterController : MonoBehaviour
             {
                 inputedSpeed *= slowedAmount;
             }
+
+            direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
+            direction.Normalize();
+
+            bool canMoveInDirection = !Physics.Raycast(transform.position, direction, collisionCheckDistance, collisionMask);
+            if (!canMoveInDirection)
+            {
+                return;
+            }
+                   
             if(!isDodging)
             {
+                adjustedSpeed = Speed;
+                if (bonusSpeed != 0)
+                {
+                    adjustedSpeed = bonusSpeed;
+                    if (adjustedSpeed <= 0)
+                    {
+                        adjustedSpeed = minSpeed;
+                    }
+                }
+
+                inputedSpeed = _moveInputVector.magnitude * adjustedSpeed;
+
+                if (weaponFiringSlow != 0) 
+                { 
+                    inputedSpeed *= 1-weaponFiringSlow; 
+                }
+
+                if (isSlowed)
+                {
+                    inputedSpeed *= slowedAmount;
+                }
+
                 if (_rigidbody.velocity.magnitude < maxSpeed)
                 {
                     _rigidbody.AddForce(direction * inputedSpeed, ForceMode.Force);
@@ -315,9 +346,20 @@ public class MYCharacterController : MonoBehaviour
                 {
                     _rigidbody.velocity = direction * maxSpeed;
                 }
+                
             }
 
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if(!canMove)
+        {
+            return;
+        }
+
+        Movement();
         RotateMech();
         PlayRunningFSX();
         CheckDistance();

@@ -84,26 +84,32 @@ public class TutorialUI : MonoBehaviour
     {
         mainWeapon.SetActive(true);
         mainWeaponImage.SetActive(true);
-        yield return StartCoroutine(PrintText("Weapons have now been enabled. Please get ready for combat training."));
+        currentTextCoroutine = StartCoroutine(PrintText("Weapons have now been enabled. Please get ready for combat training."));
+        yield return currentTextCoroutine;
         yield return new WaitForSeconds(1f);
         instructionPanel.SetActive(false);
+        TutorialManager.instance.combatTextCheck = true;
     }
 
     public IEnumerator StartDroneTraining()
     {
-        yield return StartCoroutine(PrintText("Well Done! Now simulating pain!"));
+        currentTextCoroutine = StartCoroutine(PrintText("Well Done! Now simulating pain!"));
+        yield return currentTextCoroutine;
         mechHealth.TakeDamage(10);
         instructionPanel.SetActive(false);
+        TutorialManager.instance.droneTextCheck = true;
     }
 
     public IEnumerator EndTutorial()
     {
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
-        yield return StartCoroutine(PrintText("All systems check complete. Ready for live combat!"));
-        yield return StartCoroutine(PrintText("...Interesting...\n...record this time line...", true));
+        currentTextCoroutine = StartCoroutine(PrintText("All systems check complete. Ready for live combat!"));
+        yield return currentTextCoroutine;
+        currentTextCoroutine = StartCoroutine(PrintText("...Interesting...\n...record this time line...", true));
+        yield return currentTextCoroutine;
         yield return new WaitForSeconds(1f);
-        SceneLoader.instance.LoadScene(2);
+        TutorialManager.instance.SkipTutorial();
     }
 
     public void UpdateInputInstructions(string[] controls, string[] instructions)
@@ -146,11 +152,6 @@ public class TutorialUI : MonoBehaviour
         {
             inputUI.gameObject.SetActive(false);
         }
-    }
-
-    public void ShowInstructions(string instructions)
-    {
-        StartCoroutine(PrintText(instructions));
     }
 
     public Coroutine currentTextCoroutine;

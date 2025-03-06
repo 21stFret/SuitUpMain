@@ -17,6 +17,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject controlsPC;
     public GameObject controlsGamePad;
     public GameObject settingsMenu;
+    public GameObject settingsPopup;
     public GameObject quitMenu;
     public bool isPaused;
     public PlayerInput playerInput;
@@ -187,6 +188,7 @@ public class PauseMenu : MonoBehaviour
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         settingsMenu.SetActive(value);
+        settingsPopup.SetActive(false);
         menu.SetActive(false);
         backImage.SetActive(true);
         if (!value)
