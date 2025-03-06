@@ -342,7 +342,7 @@ public class Crawler : MonoBehaviour
             StartCoroutine(StunCralwer(stunTime));
         }
 
-        if (target == null)
+        if (target == null && killedBy != WeaponType.AoE)
         {
             FindClosestTarget(100);
         }

@@ -48,9 +48,6 @@ public class frozenGrass : Prop
 
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            Die();
-        }
+        Die();
     }
 }

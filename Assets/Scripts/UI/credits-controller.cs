@@ -64,7 +64,6 @@ public class CreditsController : MonoBehaviour
             if (scrollRect.verticalNormalizedPosition <= 0f)
             {
                 isScrolling = false;
-                Invoke("LoadNextScene", 10f);
             }
         }
 
@@ -83,7 +82,7 @@ public class CreditsController : MonoBehaviour
                 else
                 {
                     doTweenFade.FadeOut();
-                    this.gameObject.SetActive(false);
+                    gameObject.SetActive(false);
                 }
             }
         }

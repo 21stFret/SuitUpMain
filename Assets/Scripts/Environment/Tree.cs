@@ -55,4 +55,14 @@ public class Tree : Prop
         fireDamage.SetDamageActive(false);
         fireRoot.SetActive(false);
     }
+
+    public override void RefreshProp()
+    {
+        base.RefreshProp();
+        fireRoot.SetActive(false);
+        deadRoot.SetActive(false);
+        normalRoot.transform.localScale = Vector3.one;
+        burnt = false;
+        normalRoot.SetActive(true);
+    }
 }
