@@ -96,6 +96,14 @@ public class BaseManager : MonoBehaviour
         }
         AudioManager.instance.PlayButtonSFX((int)SFX.Confirm);
         Time.timeScale = 1;
-        sceneLoader.LoadScene(value, true);
+        if(sceneLoader == null) sceneLoader = SceneLoader.instance;
+        if (sceneLoader != null)
+        {
+            sceneLoader.LoadScene(value, true);
+        }
+        else
+        {             
+            Debug.LogError("SceneLoader is null");
+        }
     }
 }

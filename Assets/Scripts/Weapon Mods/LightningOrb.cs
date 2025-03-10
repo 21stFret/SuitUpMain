@@ -13,10 +13,12 @@ public class LightningOrb : Grenade
     public List<GameObject> lightningChains;
     private float timer;
     public AudioClip liveShock;
+    public ParticleSystem constantEffect;
 
     public override void Init(float _damage, float _range)
     {
         base.Init(_damage, _range);
+        constantEffect.Play();
         targets.Clear();
         foreach (var item in lightningChains)
         {
@@ -40,6 +42,7 @@ public class LightningOrb : Grenade
         explosionSound.clip = audioClips[UnityEngine.Random.Range(0, audioClips.Length)];
         explosionSound.Play();
         explosionSound.loop = false;
+        constantEffect.Stop();
         foreach (var item in targets)
         {
             item.TakeDamage(damage, WeaponType.Lightning, 1);

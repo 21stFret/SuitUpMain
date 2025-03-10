@@ -205,6 +205,7 @@ public class PauseMenu : MonoBehaviour
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         controlsMenu.SetActive(value);
+        SwapControlsMenu();
         backImage.SetActive(true);
         menu.SetActive(false);
         if (!value)

@@ -15439,7 +15439,7 @@ MonoBehaviour:
   eliteHealthMultiplier: 2
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 5
+  eliteChance: 0
   smashEffect: {fileID: 1020282015054569457}
   smashRadius: 10
   smashDistance: 20
@@ -15453,8 +15453,8 @@ MonoBehaviour:
   charged: 0
   burstSpawner: {fileID: 3208657932530357669}
   chargeCooldown: 6
-  chargeDuration: 1
-  chargeSpeed: 3000
+  chargeDuration: 1.2
+  chargeSpeed: 400
   chargeRadius: 6
   buildChargeTime: 1.3
   buildChargeTimer: 1.3
@@ -15463,6 +15463,7 @@ MonoBehaviour:
   chargeColor: {r: 2.9960787, g: 0.7796995, b: 0, a: 1}
   originalColor: {r: 0.39943397, g: 0.8603977, b: 0.39367256, a: 1}
   impulseSource: {fileID: 0}
+  teleportDistance: 50
 --- !u!114 &2406123097587197689
 MonoBehaviour:
   m_ObjectHideFlags: 0

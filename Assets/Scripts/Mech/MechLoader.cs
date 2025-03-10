@@ -46,6 +46,7 @@ public class MechLoader : MonoBehaviour
         assaultWeapon.transform.SetParent(mainWeaponMount);
         assaultWeapon.transform.localPosition = Vector3.zero;
         assaultWeapon.transform.localRotation = Quaternion.identity;
+        assaultWeapon.transform.localScale = Vector3.one;
 
         if(battleLoadout)
         {
@@ -65,6 +66,7 @@ public class MechLoader : MonoBehaviour
         techWeapon.transform.SetParent(altWeaponMount);
         techWeapon.transform.localPosition = Vector3.zero;
         techWeapon.transform.localRotation = Quaternion.identity;
+        techWeapon.transform.localScale = Vector3.one;
 
         if(battleLoadout)
         {
