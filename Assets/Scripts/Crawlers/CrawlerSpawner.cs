@@ -507,7 +507,7 @@ public class CrawlerSpawner : MonoBehaviour
             if (crawler != null && crawler.gameObject != null)
             {
                 // Immediate death instead of delayed
-                crawler.Die(WeaponType.AoE);
+                crawler.TakeDamage(100,WeaponType.AoE);
                 
                 // Force remove from active list if still present
                 if (activeCrawlers.Contains(crawler))

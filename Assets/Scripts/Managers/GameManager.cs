@@ -150,7 +150,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPortalsToNextRoom(bool voidRoom = false)
     {
-        voidPortalManager.transform.position = voidRoom ? voidPortalManager.voidPortalLocation.position : playerInput.transform.position;
+        voidPortalManager.transform.position = playerInput.transform.position;
         battleManager.crawlerSpawner.waveText.text = "Head through the Portal!";
 
         if (battleManager.currentBattleIndex > battleManager.Battles.Count - 1)

@@ -13,6 +13,7 @@ public class IconSwitcher : MonoBehaviour
     {
         inputTracker = InputTracker.instance;
         inputTracker.OnInputChange += SwitchIcon;
+        SwitchIcon();
     }
 
     public void SwitchIcon()

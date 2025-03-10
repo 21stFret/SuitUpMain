@@ -126,7 +126,11 @@ public class TargetHealth : MonoBehaviour
                 {
                     DamageNumbers(damage, weaponType);
                 }
-                BattleMech.instance.droneController.ChargeDroneOnHit(damage/5);
+                if(BattleMech.instance.droneController != null)
+                {
+                    BattleMech.instance.droneController.ChargeDroneOnHit(damage / 5);
+                }
+
             }
         }
     }

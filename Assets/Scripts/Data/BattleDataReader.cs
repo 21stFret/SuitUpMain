@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 public class BattleDataReader : MonoBehaviour
 {
@@ -24,15 +25,27 @@ public class BattleDataReader : MonoBehaviour
         {
             try
             {
-                if (!row.ContainsKey("AreaType") || string.IsNullOrEmpty(row["AreaType"].ToString()))
+                if (!row.ContainsKey("AreaType") || row["AreaType"] == null || string.IsNullOrEmpty(row["AreaType"].ToString()))
                 {
                     Debug.LogWarning($"Row missing AreaType. Skipping this row.");
                     continue;
                 }
 
-                if (!Enum.TryParse(row["AreaType"].ToString(), out AreaType areaType))
+                string areaTypeStr = row["AreaType"].ToString().Trim();
+                if (string.IsNullOrEmpty(areaTypeStr))
                 {
-                    Debug.LogWarning($"Invalid AreaType value '{row["AreaType"]}'. Skipping this row.");
+                    Debug.LogWarning("Empty AreaType value. Skipping this row.");
+                    continue;
+                }
+
+                AreaType areaType;
+                try
+                {
+                    areaType = (AreaType)Enum.Parse(typeof(AreaType), areaTypeStr, true); // Case-insensitive parsing
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"Invalid AreaType value '{areaTypeStr}'. Error: {ex.Message}. Skipping this row.");
                     continue;
                 }
 
@@ -85,12 +98,66 @@ public class BattleDataReader : MonoBehaviour
     private bool TryGetIntValue(Dictionary<string, object> row, string key, out int value)
     {
         value = 0;
-        if (!row.ContainsKey(key) || string.IsNullOrEmpty(row[key].ToString()))
+        if (!row.ContainsKey(key) || row[key] == null)
         {
             return false;
         }
 
-        return int.TryParse(row[key].ToString(), out value);
+        // Try direct conversion first if it's already a number type
+        try
+        {
+            value = Convert.ToInt32(row[key]);
+            return true;
+        }
+        catch
+        {
+            // Not directly convertible, try string parsing approaches
+        }
+
+        string strValue = row[key].ToString().Trim();
+        if (string.IsNullOrEmpty(strValue))
+        {
+            return false;
+        }
+
+        // Try parsing with invariant culture first
+        if (int.TryParse(strValue, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
+        {
+            return true;
+        }
+
+        // Try with current culture as fallback
+        if (int.TryParse(strValue, NumberStyles.Any, CultureInfo.CurrentCulture, out value))
+        {
+            Debug.Log($"Parsed '{strValue}' as {value} using current culture");
+            return true;
+        }
+
+        // Try replacing commas with periods and vice versa as last resort
+        string alteredValue = strValue.Replace(',', '.');
+        if (alteredValue != strValue)
+        {
+            if (float.TryParse(alteredValue, NumberStyles.Any, CultureInfo.InvariantCulture, out float floatVal))
+            {
+                value = Mathf.RoundToInt(floatVal);
+                Debug.Log($"Parsed '{strValue}' as {value} after replacing commas with periods");
+                return true;
+            }
+        }
+
+        alteredValue = strValue.Replace('.', ',');
+        if (alteredValue != strValue)
+        {
+            if (float.TryParse(alteredValue, NumberStyles.Any, CultureInfo.InvariantCulture, out float floatVal))
+            {
+                value = Mathf.RoundToInt(floatVal);
+                Debug.Log($"Parsed '{strValue}' as {value} after replacing periods with commas");
+                return true;
+            }
+        }
+
+        Debug.LogWarning($"Failed to parse integer value from '{strValue}' for key '{key}'");
+        return false;
     }
 
 #if UNITY_EDITOR

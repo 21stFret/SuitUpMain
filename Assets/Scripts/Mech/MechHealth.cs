@@ -58,6 +58,8 @@ public class MechHealth : MonoBehaviour
     private bool isFlashing;
     private Coroutine currentFlashRoutine;
 
+    private bool dodgeAchievement;
+
     public void OnDisable()
     {
         // Clean up any running flash
@@ -75,6 +77,7 @@ public class MechHealth : MonoBehaviour
 
     public void Init()
     {
+        dodgeAchievement = false;
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         shieldMaterial = meshRenderer.sharedMaterial;
         rb = GetComponent<Rigidbody>();
@@ -109,12 +112,18 @@ public class MechHealth : MonoBehaviour
         {
             if(PlayerAchievements.instance != null)
             {
+                if(dodgeAchievement) 
+                {
+                    return;
+                }
                 if(PlayerAchievements.instance.IsAchieved("DODGE_1"))
                 {
+                    dodgeAchievement = true;
                     return;
                 }
                 if (Time.time > 180f && !hit)
                 {
+                    dodgeAchievement = true;
                     PlayerAchievements.instance?.SetAchievement("DODGE_1");
                 }
             }

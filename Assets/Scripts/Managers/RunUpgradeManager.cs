@@ -161,21 +161,6 @@ public class RunUpgradeManager : MonoBehaviour
                         continue;
                     }
                 }
-
-                if(mod.modCategory!=ModCategory.STATS)
-                {
-                    if (currentEquipedMods.Contains(mod))
-                    {
-                        var _mod = currentEquipedMods.Find(m => m == mod);
-                        if (_mod.rarity >= mod.rarity)
-                        {
-                            maxAttempts--;
-                            Debug.Log($"Already equipped a better or same rarity of this Mod. Load a new Mod instead.");
-                            continue;
-                        }
-                    }
-                }
-
                 
                 if (mod.modCategory == ModCategory.ALT)
                 {
@@ -185,7 +170,23 @@ public class RunUpgradeManager : MonoBehaviour
                 {
                     mod = FilterMainWeaponMods(selectedMods);
                 }
-                
+
+                SetModRarity(mod);
+
+                if (mod.modCategory != ModCategory.STATS)
+                {
+                    if (currentEquipedMods.Contains(mod))
+                    {
+                        var _mod = currentEquipedMods.Find(m => m.modName == mod.modName);
+                        if (_mod.rarity >= mod.rarity)
+                        {
+                            maxAttempts--;
+                            Debug.Log($"Already equipped a better or same rarity of this Mod. Load a new Mod instead.");
+                            continue;
+                        }
+                    }
+                }
+
                 if (listMods.Contains(mod))
                 {
                     selectedMods.Remove(mod);
@@ -214,12 +215,6 @@ public class RunUpgradeManager : MonoBehaviour
         if (listMods.Count < 3)
         {
             Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
-        }
-
-        // Roll for rarity
-        foreach (var mod in listMods)
-        {
-            SetModRarity(mod);
         }
 
         ModUI.OpenModUI(build);
@@ -371,12 +366,7 @@ public class RunUpgradeManager : MonoBehaviour
         {
             if (currentEquipedMods.Contains(mod))
             {
-                var _mod = currentEquipedMods.Find(m => m == mod);
-                if (_mod.rarity >= mod.rarity)
-                {
-                    Debug.Log($"Already equipped a better rarity. Current: {_mod.rarity}, New: {mod.rarity}");
-                    return;
-                }
+                var _mod = currentEquipedMods.Find(m => m.modName == mod.modName);
                 Debug.Log($"Removing old mod: {_mod.modName}");
                 // Remove the old mod if we're upgrading
                 RemoveMod(_mod);
