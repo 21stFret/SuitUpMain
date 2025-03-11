@@ -30,6 +30,10 @@ public class SettingsUI : MonoBehaviour
     {
         BGM.value = AudioManager.instance.musicVolume;
         SFX.value = AudioManager.instance.sfxVolume;
+        BGM.onValueChanged.RemoveAllListeners();
+        SFX.onValueChanged.RemoveAllListeners();
+        BGM.onValueChanged.AddListener(SetBGMVolume);
+        SFX.onValueChanged.AddListener(SetSFXVolume);
         SetupDamageNumbers();
     }
 
@@ -57,5 +61,12 @@ public class SettingsUI : MonoBehaviour
     public void PlayTestSFX()
     {
         AudioManager.instance.PlayButtonSFX(0);
+    }
+
+    private void OnDisable()
+    {
+        BGM.onValueChanged.RemoveListener(SetBGMVolume);
+        SFX.onValueChanged.RemoveListener(SetSFXVolume);
+        damageNumbersToggle.onValueChanged.RemoveListener(SetDamageNumber);
     }
 }
