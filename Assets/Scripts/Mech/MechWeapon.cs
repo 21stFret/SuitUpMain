@@ -66,6 +66,7 @@ public class MechWeapon : MonoBehaviour
     public WeaponMod weaponMod;
     public bool weaponOverride;
     public int bounces;
+    private float bonusDamage;
 
     public virtual void Init()
     {
@@ -83,6 +84,16 @@ public class MechWeapon : MonoBehaviour
         {
             weaponFuelManager.Init(this);
         }
+    }
+
+    public void ApplyDamageModifier(float modifier)
+    {
+        damage *= modifier;
+    }
+
+    public void RemoveDamageModifier(float modifier)
+    {
+        damage /= modifier;
     }
 
     private void SetValues()

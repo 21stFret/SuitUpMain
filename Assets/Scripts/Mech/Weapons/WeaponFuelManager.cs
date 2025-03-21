@@ -16,6 +16,9 @@ public class WeaponFuelManager : MonoBehaviour
     public bool constantUse = false;
     public bool weaponInUse;
 
+    private bool lowFuelMod;
+    private bool fullFuelMod;
+
     public void Init(MechWeapon mechWeapon)
     {
         constantUse = true;
@@ -72,6 +75,41 @@ public class WeaponFuelManager : MonoBehaviour
             return;
         }
         FuelManagement();
+        HandleOnUpdateMods();
+    }
+
+        private void HandleOnUpdateMods()
+    {
+        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Final Reserves");
+        if (__selectMod != null)
+        {
+            if (weaponFuel<= weaponFuelMax * 0.2 && !lowFuelMod)
+            {
+                lowFuelMod = true;
+                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            else if (weaponFuel >= weaponFuelMax * 0.2 && lowFuelMod)
+            {
+                lowFuelMod = false;
+                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            return;
+        }
+        __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Conservation");
+        if (__selectMod != null)
+        {
+            if (weaponFuel> weaponFuelMax * 0.8  && !fullFuelMod)
+            {
+                fullFuelMod = true;
+                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            else if (weaponFuel <= weaponFuelMax * 0.8 && fullFuelMod)
+            {
+                fullFuelMod = false;
+                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            return;
+        }
     }
 
     public void SetBonus()

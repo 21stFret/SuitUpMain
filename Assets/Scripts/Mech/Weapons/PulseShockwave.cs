@@ -42,7 +42,7 @@ public class PulseShockwave : MonoBehaviour
 
     public void ApplyMod(StatType type, float value)
     {
-        float percent = (Mathf.Abs(value) / 100);
+        float percent = Mathf.Abs(value) / 100;
         switch (type)
         {
             case StatType.Health:
@@ -55,10 +55,10 @@ public class PulseShockwave : MonoBehaviour
                 float dam = BattleMech.instance.weaponController.mainWeaponEquiped.damage;
                 damage = dam *percent;
                 break;
-            case StatType.Fuel_Tank:
-                canRegenFuel = true;
-                float tankSize = BattleMech.instance.weaponFuelManager.weaponFuelMax;
-                regenAmount = tankSize * percent;
+            case StatType.Tech:
+                canDamage = true;
+                float tech = BattleMech.instance.weaponController.altWeaponEquiped.damage;
+                damage = tech *percent;
                 break;
             case StatType.Pulse_Range:
                 float toRemove = range * percent;

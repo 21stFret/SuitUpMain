@@ -315,6 +315,10 @@ public class CrawlerMovement : MonoBehaviour
             return;
         }
         MoveCrawler();
+        if(movementTarget == null)
+        {
+            return;
+        }
         lastStuckCheck += Time.deltaTime;
         if (lastStuckCheck >= stuckCheckInterval)
         {

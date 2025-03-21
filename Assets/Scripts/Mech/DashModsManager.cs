@@ -80,7 +80,6 @@ public class DashModsManager : MonoBehaviour
             BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 1f);
             characterController.battleMech.targetHealth.invincible = true;
             characterController.isDodging = true;
-            characterController.dashForce = 0;
             characterController.dashDuration = time;
         }
         if (hologram)

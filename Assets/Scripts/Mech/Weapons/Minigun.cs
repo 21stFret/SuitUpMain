@@ -10,7 +10,7 @@ public class Minigun : MechWeapon
     public GameObject gunturret;
     private Animator _animator;
     public ProjectileWeapon weaponController;
-    public float bonusDamage;
+    public float miniGunBonusDamage;
     public MeshRenderer meshRenderer;
     public bool autoTurret;
 
@@ -47,7 +47,7 @@ public class Minigun : MechWeapon
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                weaponController.Minigun(damage + bonusDamage, bounces);
+                weaponController.Minigun(damage + miniGunBonusDamage, bounces);
                 _timer = 0.0f;
             }
             return;
@@ -59,7 +59,7 @@ public class Minigun : MechWeapon
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                weaponController.Minigun(damage + bonusDamage, bounces);
+                weaponController.Minigun(damage + miniGunBonusDamage, bounces);
                 _timer = 0.0f;
             }
         }

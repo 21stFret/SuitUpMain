@@ -57,8 +57,10 @@ public class MechHealth : MonoBehaviour
     public Color shieldColor;
     private bool isFlashing;
     private Coroutine currentFlashRoutine;
-
     private bool dodgeAchievement;
+    private bool isRevengeActive;
+    private bool lowHealthMod;
+    private bool fullHealthMod;
 
     public void OnDisable()
     {
@@ -107,6 +109,8 @@ public class MechHealth : MonoBehaviour
             StartCoroutine(LerpHealthBar());
         }
 
+        HandleOnUpdateMods();
+
         // Achievement check
         if(GameManager.instance != null)
         {
@@ -129,6 +133,40 @@ public class MechHealth : MonoBehaviour
             }
         }
 
+    }
+
+    private void HandleOnUpdateMods()
+    {
+        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("On the Edge");
+        if (__selectMod != null)
+        {
+            if (healthlow && !lowHealthMod)
+            {
+                lowHealthMod = true;
+                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            else if (!healthlow && lowHealthMod)
+            {
+                lowHealthMod = false;
+                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            return;
+        }
+        __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Champion");
+        if (__selectMod != null)
+        {
+            if (targetHealth.health == targetHealth.maxHealth && !fullHealthMod)
+            {
+                fullHealthMod = true;
+                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            else if (targetHealth.health != targetHealth.maxHealth && fullHealthMod)
+            {
+                fullHealthMod = false;
+                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+            }
+            return;
+        }
     }
 
     private void TakeDamage1()
@@ -155,6 +193,20 @@ public class MechHealth : MonoBehaviour
         if (!isHeal && characterController.isDodging)
         {
             return;
+        }
+
+        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Mag Shield");
+        if (__selectMod != null)
+        {
+            float chance = __selectMod.modifiers[0].statValue;
+            if (Random.Range(0, 100) < chance)
+            {
+                if (!isFlashing)
+                {
+                    currentFlashRoutine = StartCoroutine(DamageFlash(Color.cyan));
+                }
+                return;
+            }
         }
 
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
@@ -200,16 +252,10 @@ public class MechHealth : MonoBehaviour
             rb.velocity = rb.velocity*0.75f;
             float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
             impulseSource.GenerateImpulse(damagePercent);
+
             if(GameManager.instance != null)
             {
-                RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
-                if (__selectMod != null)
-                {
-                    float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
-                    float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
-                    print("feedback damage is "+feedbackDamage);
-                    crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
-                }
+                HandleOnDamageMods();
             }
 
         }
@@ -230,6 +276,38 @@ public class MechHealth : MonoBehaviour
             Die();
         }
 
+    }
+
+
+
+    private void HandleOnDamageMods(Crawler crawler = null)
+    {
+        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Feedback");
+        if (__selectMod != null)
+        {
+            float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
+            float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
+            print("feedback damage is "+feedbackDamage);
+            crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
+            return;
+        }
+        __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Revenge");
+        if (__selectMod != null && !isRevengeActive)
+        {
+            isRevengeActive = true;
+            StartCoroutine(RevengeCoroutine(__selectMod));
+        }
+    }
+
+    private IEnumerator RevengeCoroutine(RunMod mod)
+    {
+
+        BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(mod.modifiers[0].statValue);
+        
+        yield return new WaitForSeconds(mod.modifiers[1].statValue);
+        
+        BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(mod.modifiers[0].statValue);
+        isRevengeActive = false;
     }
 
     private void SetEmmsiveLights()
