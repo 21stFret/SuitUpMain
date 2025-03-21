@@ -56,18 +56,15 @@ public class Shotgun : MechWeapon
 
         gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);
 
+        _timer += Time.deltaTime;
+
         if (isFiring)
         {
-            _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
                 _timer = 0.0f;
                 FireShotgun();
             }
-        }
-        else
-        {
-            _timer = 0.0f;
         }
 
     }

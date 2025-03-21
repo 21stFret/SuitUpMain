@@ -44,7 +44,10 @@ public class Grenade : MonoBehaviour
         }
         live = true;
         rb.velocity = Vector3.zero;
-        meshRenderer.enabled = true;
+        if(meshRenderer != null)
+        {
+            meshRenderer.enabled = true;
+        }
         col.enabled = true;
         damage = _damage;
         range = _range;

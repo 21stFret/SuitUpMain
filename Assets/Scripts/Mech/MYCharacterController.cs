@@ -241,16 +241,9 @@ public class MYCharacterController : MonoBehaviour
             return;
         }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRotation, rotateSpeed);
-
-        if(transform.rotation != lookRotation)
-        {
-            CharacterAnimator.SetBool("isTurning", true);
-        }
-        else
-        {
-            CharacterAnimator.SetBool("isTurning", false);
-        }
+        // Smoothly interpolate rotation based on rotateSpeed
+        float step = rotateSpeed * Time.deltaTime;
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, step);
     }
 
     private void Movement()

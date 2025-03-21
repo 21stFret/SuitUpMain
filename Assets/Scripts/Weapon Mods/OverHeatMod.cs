@@ -81,7 +81,7 @@ public class OverHeatMod : WeaponMod
                 baseWeapon.weaponOverride = false;
             }
         }
-        minigun.bonusDamage = bonusDam;
+        minigun.miniGunBonusDamage = bonusDam;
         overHeatMaterial.SetFloat("_Flash_Strength", timer / overHeatTime);
     }
 

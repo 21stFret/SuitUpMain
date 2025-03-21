@@ -255,14 +255,11 @@ public class PlayerProgressManager : MonoBehaviour
     public void EndGamePlayerProgress(bool won, int difficultyLevel)
     {
         playTime = Time.timeSinceLevelLoad;
+        rewardMultiplier = GetRewardMultiplierByDifficulty(difficultyLevel);
         if (won)
         {
-            rewardMultiplier = GetRewardMultiplierByDifficulty(difficultyLevel);
+            rewardMultiplier += 0.5f;
             cashCount = Mathf.CeilToInt(cashCount * rewardMultiplier);
-        }
-        else
-        {
-            rewardMultiplier = 0.5f;
         }
         UpdatePlayerStats();
         if (PlayerAchievements.instance != null)
