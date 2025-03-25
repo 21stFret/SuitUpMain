@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private bool wonGame;
     private BattleManager battleManager;
+    private bool triggeredAreaIntro;
+    public AreaIntro areaIntro;
 
     private void Awake()
     {
@@ -123,6 +125,11 @@ public class GameManager : MonoBehaviour
         gameUI.gameUIFade.FadeIn();
         gameUI.objectiveUI.UpdateObjective(battleManager.objectiveMessage);
         gameActive = true;
+        if (!triggeredAreaIntro)
+        {
+            areaIntro.ShowAreaIntro();
+            triggeredAreaIntro = true;
+        }
     }
 
     public IEnumerator LoadVoidRoom()
@@ -144,11 +151,12 @@ public class GameManager : MonoBehaviour
     {
         //TODO: Add Void Room Completion interaction
         currentAreaType++;
+        triggeredAreaIntro = false;
         battleManager.armyGen.SetCurrentAreaType(currentAreaType);
-        SpawnPortalsToNextRoom(true);
+        SpawnPortalsToNextRoom();
     }
 
-    public void SpawnPortalsToNextRoom(bool voidRoom = false)
+    public void SpawnPortalsToNextRoom()
     {
         voidPortalManager.transform.position = playerInput.transform.position;
         battleManager.crawlerSpawner.waveText.text = "Head through the Portal!";

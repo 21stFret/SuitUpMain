@@ -19,6 +19,8 @@ public enum CrawlerType
     Charger,
     Leaper,
     Hunter,
+    Bomber,
+    Spore
 }
 
 public class Crawler : MonoBehaviour
@@ -418,6 +420,7 @@ public class Crawler : MonoBehaviour
         meshRenderer.enabled = false;
         target = null;
         DeathBlood.transform.SetParent(null);
+        DeathBlood.gameObject.SetActive(true);
         DeathBlood.Play();
         _crawlerBehavior.OnDeath();
 
@@ -548,10 +551,10 @@ public class Crawler : MonoBehaviour
         _targetHealth.alive = true;
         SetSpeed();
         crawlerMovement.speedFinal = _finalSpeed;
+        DeathBlood.transform.SetParent(transform);
         transform.localScale = Vector3.zero;
         StartCoroutine(SpawnEffect(daddy));
         StartCoroutine(SpawnImmunity());
-        DeathBlood.transform.SetParent(transform);
         tag = "Enemy";
         overkill = false;
     }

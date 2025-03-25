@@ -14,6 +14,8 @@ public class CrawlerSpawner : MonoBehaviour
     [SerializeField] private List<Crawler> chargers = new List<Crawler>();
     [SerializeField] private List<Crawler> leapers = new List<Crawler>();
     [SerializeField] private List<Crawler> hunters = new List<Crawler>();
+    [SerializeField] private List<Crawler> bombers = new List<Crawler>();
+    [SerializeField] private List<Crawler> spore = new List<Crawler>();
     [SerializeField] private List<Crawler> activeCrawlers = new List<Crawler>();
     public int activeCrawlerCount { get { return activeCrawlers.Count; } }
     public List<Transform> spawnPoints;
@@ -139,6 +141,8 @@ public class CrawlerSpawner : MonoBehaviour
         InitCrawlerList(chargers, CrawlerType.Charger);
         InitCrawlerList(leapers, CrawlerType.Leaper);
         InitCrawlerList(hunters, CrawlerType.Hunter);
+        InitCrawlerList(bombers, CrawlerType.Bomber);
+        InitCrawlerList(spore, CrawlerType.Spore);
     }
 
     private void InitCrawlerList(List<Crawler> crawlerList, CrawlerType type)
@@ -299,6 +303,8 @@ public class CrawlerSpawner : MonoBehaviour
             case CrawlerType.Charger: return chargers;
             case CrawlerType.Leaper: return leapers;
             case CrawlerType.Hunter: return hunters;
+            case CrawlerType.Bomber: return bombers;
+            case CrawlerType.Spore: return spore;
             default: return new List<Crawler>();
         }
     }
