@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AreaIntro : MonoBehaviour
 {
@@ -14,11 +15,15 @@ public class AreaIntro : MonoBehaviour
     public bool fadeIn = true;
     private bool _enabled;
 
+    public Sprite[] areaIntroSprites;
+    public Image areaIntroImage;
+
     [InspectorButton("ShowAreaIntro")]
     public bool showAreaIntro;
 
     public void ShowAreaIntro()
     {
+        areaIntroImage.sprite = areaIntroSprites[(int)GameManager.instance.currentAreaType];
         fadeIn = true;
         fadeTime = 0.0f;
         _enabled = true;
@@ -30,6 +35,7 @@ public class AreaIntro : MonoBehaviour
         _enabled = false;
         fadeTime = 0.0f;
         shader = Shader.PropertyToID("_DirectionalGlowFadeFade");
+        material.SetFloat(shader, fadeMinValue);
     }
 
     void Update()

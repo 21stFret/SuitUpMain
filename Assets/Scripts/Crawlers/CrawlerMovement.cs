@@ -225,7 +225,7 @@ public class CrawlerMovement : MonoBehaviour
         }
 
             // If all rays are blocked, turn around
-        if (blockedRays >= rayAmount)
+        if (blockedRays >= rayAmount-1)
         {
             return -transform.forward;
         }
