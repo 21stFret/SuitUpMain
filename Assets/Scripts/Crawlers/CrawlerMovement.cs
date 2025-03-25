@@ -70,23 +70,20 @@ public class CrawlerMovement : MonoBehaviour
         Vector3 targetDirection = (destination - transform.position).normalized;
         Vector3 desiredDirection = targetDirection;
 
-        // 2. Check for obstacles and wall sticking
+        // 2. Check for obstacles with raycast steering
         Vector3 avoidanceDirection = RayCastSteering();
-        Vector3 wallStickForce = CheckWallSticking();
 
-        // Visualization
+        // Visualization for target direction
         Debug.DrawRay(transform.position, targetDirection * 5, Color.blue);
 
-        // 3. Determine desired direction
-        if (avoidanceDirection != Vector3.zero || wallStickForce != Vector3.zero)
+        // 3. Determine desired direction - prioritize obstacle avoidance
+        if (avoidanceDirection != Vector3.zero)
         {
-            // Combine all avoidance forces
-            desiredDirection = (targetDirection + 
-                avoidanceDirection * obstacleAvoidanceWeight +
-                wallStickForce * wallStickPrevention).normalized;
-            
+            // When obstacle detected, use pure avoidance direction
+            desiredDirection = avoidanceDirection;
             Debug.DrawRay(transform.position, avoidanceDirection * 3, Color.yellow);
         }
+        // Otherwise, move toward target if tracking
         else if (tracking && movementTarget != null)
         {
             desiredDirection = (movementTarget.position - transform.position).normalized;
@@ -119,10 +116,11 @@ public class CrawlerMovement : MonoBehaviour
             speed *= slowedAmount;
         }
 
-        // Apply separation if not attacking
-        if (!m_crawler.triggeredAttack)
+        // 7. Apply separation ONLY if not avoiding obstacles and not attacking
+        if (avoidanceDirection == Vector3.zero && !m_crawler.triggeredAttack)
         {
             Vector3 separationForce = CalculateSeparationForce();
+            // Apply separation force to the current direction
             currentDirection = Vector3.Lerp(currentDirection, 
                 (currentDirection + separationForce * separationWeight).normalized, 
                 Time.deltaTime * steerSpeed);
