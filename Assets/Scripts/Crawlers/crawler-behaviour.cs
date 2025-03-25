@@ -69,6 +69,10 @@ public class CrawlerBehavior : MonoBehaviour
         {
             availableStates.Add(typeof(AlbinoChargeState), new AlbinoChargeState(crawler, movement, this));
         }
+        if (crawler is CrawlerBomber)
+        {
+            availableStates.Add(typeof(BombState), new BombState(crawler, movement, this));
+        }
         // Start in idle state
         TransitionToState(availableStates[typeof(SpawnedState)]);
     }
@@ -708,6 +712,30 @@ public class StealthState : CrawlerState
             //hunter.StealthAttack();
             behavior.TransitionToState(typeof(AttackState));
         }
+    }
+}
+
+// Specialized States for Different Crawler Types
+public class BombState : CrawlerState
+{
+    private CrawlerBomber bomber;
+    public BombState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
+        : base(crawler, movement, behavior)
+    {
+        bomber = crawler as CrawlerBomber;
+    }
+    
+    public override void Enter()
+    {
+        if (bomber != null)
+        {
+            movement.canMove = false;
+        }
+    }
+    
+    public override void Update()
+    {
+        
     }
 }
 

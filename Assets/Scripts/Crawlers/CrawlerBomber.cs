@@ -11,14 +11,31 @@ public class CrawlerBomber : Crawler
     public LayerMask layerMask;
 
     public float distanceToGrow;
+    public float growSize;
+    public float explodeSize;
+    public float explosionDelay = 0.5f;
+    private float explosionTImer;
+
+    public AudioClip splatSound;
+
+    [Header("Shake Settings")]
+    [SerializeField] private float shakeIntensity = 0.2f;
+    [SerializeField] private float shakeFrequency = 30f;
+    private Vector3[] originalPositions;
 
     public override void Die(WeaponType killedBy)
     {
         overrideDeathNoise = true;
-        //deathNoise.clip = deathSound;
+        deathNoise.clip = splatSound;
         ExplodeIfInRange();
         base.Die(killedBy);
-        //eggs.SetActive(false);
+        for (int i = 0; i < bombsacks.Length; i++)
+        {
+            if (bombsacks[i] != null)
+            {
+                bombsacks[i].transform.localPosition = originalPositions[i];
+            }
+        }
     }
 
     private void ExplodeIfInRange()
@@ -31,9 +48,10 @@ public class CrawlerBomber : Crawler
             {
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
+                float attackDamageAfterRange = attackDamage * (1 - (Vector3.Distance(transform.position, collider.transform.position) / explosionRadius));
                 if(rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer);
+                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Cralwer);
                 }
             }
         }
@@ -41,13 +59,22 @@ public class CrawlerBomber : Crawler
 
     void Update()
     {
+        if(triggeredAttack)
+        {
+            explosionTImer += Time.deltaTime;
+            foreach (var item in bombsacks)
+            {
+                item.transform.localScale = Vector3.Lerp(item.transform.localScale, Vector3.one*explodeSize, explosionTImer/explosionDelay);
+            }
+            return;
+        }
         if(crawlerMovement!=null)
         {
             if(crawlerMovement.distanceToTarget <= distanceToGrow)
             {
                 foreach (var item in bombsacks)
                 {
-                    item.transform.localScale = Vector3.Lerp(item.transform.localScale, Vector3.one*3, 1 - crawlerMovement.distanceToTarget / distanceToGrow);
+                    item.transform.localScale = Vector3.Lerp(item.transform.localScale, Vector3.one*growSize, 1 - crawlerMovement.distanceToTarget / distanceToGrow);
                 }
             }
             else
@@ -58,6 +85,54 @@ public class CrawlerBomber : Crawler
                 }
             }
         }
+    }
+
+    public override void Attack()
+    {
+        triggeredAttack = true;
+        StartCoroutine(Explode());
+        _crawlerBehavior.TransitionToState(typeof(BombState));
+    }
+
+    private IEnumerator Explode()
+    {
+        float elapsedTime = 0f;
+        deathNoise.clip = deathSounds[Random.Range(0, deathSounds.Length)];
+        deathNoise.Play();
+
+        while (elapsedTime < explosionDelay)
+        {
+            for (int i = 0; i < bombsacks.Length; i++)
+            {
+                if (bombsacks[i] != null)
+                {
+                    // Create random offset based on sine wave for smooth shaking
+                    Vector3 offset = new Vector3(
+                        Mathf.Sin(Time.time * shakeFrequency + i) * shakeIntensity,
+                        Mathf.Sin(Time.time * shakeFrequency + i + 1) * shakeIntensity,
+                        Mathf.Sin(Time.time * shakeFrequency + i + 2) * shakeIntensity
+                    );
+
+                    bombsacks[i].transform.localPosition = originalPositions[i] + offset;
+                }
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Die(WeaponType.Cralwer);
+    }
+
+    public override void Spawn(bool daddy = false)
+    {
+        base.Spawn(daddy);
+        originalPositions = new Vector3[bombsacks.Length];
+        for (int i = 0; i < bombsacks.Length; i++)
+        {
+            originalPositions[i] = bombsacks[i].transform.localPosition;
+        }
+        DeathBlood.transform.SetParent(transform);
     }
 
 }

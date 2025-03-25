@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8af66c1671e73a4e8d4b7926629ae6a, type: 3}
+  m_Name: Pebbles
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 1956064514463986, guid: b200516e65de5a142a3bbadb73cd77e4, type: 3}
+  - {fileID: 1976401696516608, guid: 7aec7d7b6b4e5f24f832c33028ee90d9, type: 3}
+  - {fileID: 1218948445974146, guid: 7f4082e70edb70e4b83b1d67eb74deb5, type: 3}
+  minScale: 0.8
+  maxScale: 1.2
+  minRotation: 0
+  maxRotation: 360
+  paintLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  randomizeRotationY: 1
+  alignToNormal: 1
+  surfaceOffset: 0
+  minSpacing: 1
+  checkOverlap: 1
+  overlapCheckLayers:
+    serializedVersion: 2
+    m_Bits: 0
