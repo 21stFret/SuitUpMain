@@ -69,31 +69,53 @@ public class CrawlerMovement : MonoBehaviour
         // 1. Calculate base direction to target
         Vector3 targetDirection = (destination - transform.position).normalized;
         Vector3 desiredDirection = targetDirection;
-
-        // 2. Check for obstacles with raycast steering
-        Vector3 avoidanceDirection = RayCastSteering();
-
-        // Visualization for target direction
-        Debug.DrawRay(transform.position, targetDirection * 5, Color.blue);
-
-        // 3. Determine desired direction - prioritize obstacle avoidance
-        if (avoidanceDirection != Vector3.zero)
+        
+        // Get raycast start position (slightly elevated)
+        var raycastPos = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+        
+        // 2. First check if there's a clear path to target
+        bool clearPathToTarget = true;
+        //float distanceToDestination = Vector3.Distance(transform.position, destination);
+        float distanceToDestination = 5f;
+        
+        RaycastHit directHit;
+        if (Physics.Raycast(raycastPos, targetDirection, out directHit, distanceToDestination, SteeringRaycast))
         {
-            // When obstacle detected, use pure avoidance direction
+            // Something is between us and the target
+            clearPathToTarget = false;
+            Debug.DrawRay(raycastPos, targetDirection * directHit.distance, Color.red);
+        }
+        else
+        {
+            // Clear path to target
+            Debug.DrawRay(raycastPos, targetDirection * distanceToDestination, Color.blue);
+        }
+        
+        // 3. If path is not clear, check for avoidance directions
+        Vector3 avoidanceDirection = Vector3.zero;
+        if (!clearPathToTarget)
+        {
+            avoidanceDirection = RayCastSteering();
+        }
+
+        // 4. Determine desired direction based on conditions
+        if (!clearPathToTarget && avoidanceDirection != Vector3.zero)
+        {
+            // Use pure avoidance when obstacle detected and no clear path
             desiredDirection = avoidanceDirection;
             Debug.DrawRay(transform.position, avoidanceDirection * 3, Color.yellow);
         }
-        // Otherwise, move toward target if tracking
+        // Otherwise, move directly toward target
         else if (tracking && movementTarget != null)
         {
             desiredDirection = (movementTarget.position - transform.position).normalized;
         }
 
-        // 4. Smoothly lerp the current direction
+        // 5. Smoothly lerp the current direction
         currentDirection = Vector3.Lerp(currentDirection, desiredDirection, Time.deltaTime * steerSpeed);
         direction = currentDirection;
 
-        // 5. Handle rotation
+        // 6. Handle rotation
         if (!canRotate)
         {
             direction = transform.forward;
@@ -109,15 +131,15 @@ public class CrawlerMovement : MonoBehaviour
 
         if (!canMove) return;
 
-        // 6. Apply movement forces
+        // 7. Apply movement forces
         float speed = speedFinal;
         if (isSlowed)
         {
             speed *= slowedAmount;
         }
 
-        // 7. Apply separation ONLY if not avoiding obstacles and not attacking
-        if (avoidanceDirection == Vector3.zero && !m_crawler.triggeredAttack)
+        // 8. Apply separation ONLY if not avoiding obstacles and not attacking
+        if (clearPathToTarget && !m_crawler.triggeredAttack)
         {
             Vector3 separationForce = CalculateSeparationForce();
             // Apply separation force to the current direction
