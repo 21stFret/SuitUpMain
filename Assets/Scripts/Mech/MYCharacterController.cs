@@ -38,6 +38,7 @@ public class MYCharacterController : MonoBehaviour
     public bool candodge;
     public FootprintSystem footprintSystem;
     public ParticleSystem icedEffect;
+    public ParticleSystem sandEffect;
     private bool isSlowed;
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
@@ -389,10 +390,12 @@ public class MYCharacterController : MonoBehaviour
         {
             slowedAmount = amount;
             isSlowed = true;
+            sandEffect.Play();
         }
         else
         {
             isSlowed = false;
+            sandEffect.Stop();
         }
 
     }

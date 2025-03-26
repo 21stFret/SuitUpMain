@@ -54,6 +54,9 @@ MonoBehaviour:
   explosionForce: 500
   explosionRadius: 2
   localScale: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &737137055935145924
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,26 +4966,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: fcdfe77bc30df4543b281b52b9463d75, type: 3}
+      objectReference: {fileID: 4300000, guid: ba0c276f92fc8e948af3ed0b51494c11, type: 3}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.51
+      value: 12.577717
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.02
+      value: -0.43505654
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10.23
+      value: 67.17137
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.93987834
+      value: 0.9628955
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
@@ -4992,7 +4995,7 @@ PrefabInstance:
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.34150946
+      value: 0.2698746
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
@@ -5007,7 +5010,7 @@ PrefabInstance:
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 31.314
       objectReference: {fileID: 0}
     - target: {fileID: 8745872676006101725, guid: c8409d1cdb2cb99498071a28a169b0d1,
         type: 3}
@@ -5023,7 +5026,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: fcdfe77bc30df4543b281b52b9463d75, type: 3}
+      objectReference: {fileID: 4300000, guid: ba0c276f92fc8e948af3ed0b51494c11, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -5078,6 +5081,8 @@ MonoBehaviour:
   invincible: 0
   alive: 1
   immuneWeapons: 
+  damageNumbersOn: 0
+  damageNumberPrefab: {fileID: 0}
 --- !u!114 &3931220267901547260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5093,6 +5098,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 0}
   damageNumberPrefab: {fileID: 0}
   damageNumbersOn: 0
+  init: 0
   loot: []
   lootChance: 0
   explosionEffect: {fileID: 4738863220010474521}
