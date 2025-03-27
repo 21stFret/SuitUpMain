@@ -50,7 +50,7 @@ public class DamageArea : MonoBehaviour
     {
         damageActive = true;
         targetsInRange.Clear();
-        var targets = Physics.OverlapSphere(transform.position, damageRadius);
+        var targets = Physics.OverlapSphere(transform.position, triggerCollider.radius);
         foreach (var target in targets)
         {
             TargetHealth targetHealth = target.GetComponent<TargetHealth>();
@@ -92,13 +92,6 @@ public class DamageArea : MonoBehaviour
             {
                 if (targetsInRange[i] != null && targetsInRange[i].gameObject.activeInHierarchy)
                 {
-                    Vector3 yCancelled = targetsInRange[i].transform.position;
-                    yCancelled.y = transform.position.y;
-                    if(Vector3.Distance(transform.position, yCancelled) > damageRadius+radiusExtender)
-                    {
-                        targetsInRange.RemoveAt(i);
-                        continue;
-                    }
                     targetsInRange[i].TakeDamage(damageAmount, damageType);
                 }
                 else

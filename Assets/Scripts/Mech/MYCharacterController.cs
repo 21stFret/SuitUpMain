@@ -38,6 +38,7 @@ public class MYCharacterController : MonoBehaviour
     public bool candodge;
     public FootprintSystem footprintSystem;
     public ParticleSystem icedEffect;
+    public ParticleSystem sandEffect;
     private bool isSlowed;
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
@@ -58,6 +59,12 @@ public class MYCharacterController : MonoBehaviour
     [Header("Collision Prevention")]
     [SerializeField] private float collisionCheckDistance = 1f;
     [SerializeField] private LayerMask collisionMask;
+
+    [Header("Ice Movement")]
+    [SerializeField] private float iceAcceleration = 2f;
+    [SerializeField] private float iceDashForceMultiplier = 0.5f;
+    [SerializeField] private float iceDragMultiplier = 0.2f;
+    [SerializeField] private float normalDrag = 3f;
 
     private void Awake()
     {
@@ -138,7 +145,12 @@ public class MYCharacterController : MonoBehaviour
         {
             dashModsManager.UseMod();
         }
-        _rigidbody.AddForce(direction * dashForce, ForceMode.Impulse);
+        float _dashForce = dashForce;
+        if (onIce)
+        {
+            _dashForce *= iceDashForceMultiplier;
+        }
+        _rigidbody.AddForce(direction * _dashForce, ForceMode.Impulse);
         StartCoroutine(DashCooldown());
     }
 
@@ -248,11 +260,6 @@ public class MYCharacterController : MonoBehaviour
 
     private void Movement()
     {
-        Vector3 icedPos = transform.position;
-        icedPos.y += 2.6f;
-        icedEffect.transform.position = icedPos;
-        _rigidbody.drag = onIce? iceDrift : 3;
-
         if (isAimLocked)
         {
             if (aimDirectionLoc == Vector3.zero)
@@ -274,42 +281,19 @@ public class MYCharacterController : MonoBehaviour
             direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
             direction.Normalize();
 
-            float adjustedSpeed = Speed;
-
-            if (bonusSpeed != 0)
-            {
-                adjustedSpeed = bonusSpeed;
-                if (adjustedSpeed <= 0)
-                {
-                    adjustedSpeed = minSpeed;
-                }
-            }
-
-            float inputedSpeed = _moveInputVector.magnitude * adjustedSpeed;
-
-  
-
-            float weaponFiringSlow = weaponFiringSlowAmount * weaponController.WeaponsFiring();
-            if(weaponFiringSlow !=0) 
-            { inputedSpeed *= 1-weaponFiringSlow; }
-
-            if(isSlowed)
-            {
-                inputedSpeed *= slowedAmount;
-            }
-
-            direction = new Vector3(_moveInputVector.x, 0, _moveInputVector.y);
-            direction.Normalize();
-
             bool canMoveInDirection = !Physics.Raycast(transform.position, direction, collisionCheckDistance, collisionMask);
             if (!canMoveInDirection)
             {
                 return;
             }
+
+            Vector3 icedPos = transform.position;
+            icedPos.y += 2.6f;
+            icedEffect.transform.position = icedPos;
                    
             if(!isDodging)
             {
-                adjustedSpeed = Speed;
+                float adjustedSpeed = Speed;
                 if (bonusSpeed != 0)
                 {
                     adjustedSpeed = bonusSpeed;
@@ -319,27 +303,46 @@ public class MYCharacterController : MonoBehaviour
                     }
                 }
 
-                inputedSpeed = _moveInputVector.magnitude * adjustedSpeed;
-
-                if (weaponFiringSlow != 0) 
-                { 
-                    inputedSpeed *= 1-weaponFiringSlow; 
-                }
+                float inputedSpeed = _moveInputVector.magnitude * adjustedSpeed;
+                float weaponFiringSlow = weaponFiringSlowAmount * weaponController.WeaponsFiring();
+                if(weaponFiringSlow !=0) 
+                { inputedSpeed *= 1-weaponFiringSlow; }
 
                 if (isSlowed)
                 {
                     inputedSpeed *= slowedAmount;
                 }
 
-                if (_rigidbody.velocity.magnitude < maxSpeed)
+
+
+                // Updated ice physics
+                if (onIce)
                 {
-                    _rigidbody.AddForce(direction * inputedSpeed, ForceMode.Force);
+                    // Reduce drag for sliding
+                    _rigidbody.drag = normalDrag * iceDragMultiplier;
+
+                    if (isRunning && !isDodging)
+                    {
+                        // Reduced force application on ice
+                        Vector3 desiredVelocity = direction * inputedSpeed;
+                        Vector3 velocityChange = (desiredVelocity - _rigidbody.velocity) * iceAcceleration;
+                        velocityChange.y = 0f; // Prevent vertical movement
+                        _rigidbody.AddForce(velocityChange, ForceMode.Force);
+                    }
                 }
                 else
                 {
-                    _rigidbody.velocity = direction * maxSpeed;
+                    // Normal movement
+                    _rigidbody.drag = normalDrag;
+                    if (_rigidbody.velocity.magnitude < maxSpeed)
+                    {
+                        _rigidbody.AddForce(direction * inputedSpeed, ForceMode.Force);
+                    }
+                    else
+                    {
+                        _rigidbody.velocity = direction * maxSpeed;
+                    }
                 }
-                
             }
 
         }
@@ -389,10 +392,12 @@ public class MYCharacterController : MonoBehaviour
         {
             slowedAmount = amount;
             isSlowed = true;
+            sandEffect.Play();
         }
         else
         {
             isSlowed = false;
+            sandEffect.Stop();
         }
 
     }

@@ -46,8 +46,17 @@ public class Crate : Prop
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();
         explosionEffect.Play();
-        rend.enabled = false;
-        Invoke("DelaySetActive", 1f);
+        explosionEffect.transform.parent = null;
+        if(rend != null)
+        {
+            Invoke("DelaySetActive", 1f);
+            rend.enabled = false;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+
     }
 
     private void DelaySetActive()
@@ -66,6 +75,8 @@ public class Crate : Prop
         }
         transform.position = originalPosition;
         transform.eulerAngles = originalRoation;
+        explosionEffect.transform.parent = transform;
+        explosionEffect.transform.localPosition = Vector3.zero;
     }
     
 

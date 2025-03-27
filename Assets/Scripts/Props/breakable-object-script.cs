@@ -14,7 +14,7 @@ public class BreakableObject : MonoBehaviour
     private List<GameObject> activeparts = new List<GameObject>();
     private bool isBroken = false;
     public float localScale;
-    public LayerMask layerMask;
+    public int layer;
 
 
     private void Awake()
@@ -76,7 +76,7 @@ public class BreakableObject : MonoBehaviour
             part.transform.position = transform.position + randomOffset;
             part.transform.rotation = transform.rotation;
             part.SetActive(true);
-            part.layer = layerMask;
+            part.layer = layer;
             activeparts.Add(part);
             part.transform.localScale = new Vector3(localScale, localScale, localScale);
             Rigidbody rb = part.GetComponent<Rigidbody>();

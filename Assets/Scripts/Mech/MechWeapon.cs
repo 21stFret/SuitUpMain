@@ -13,6 +13,7 @@ public enum WeaponType
     AoE,
     Cralwer,
     Default,
+    Trap,
     Heal
 }
 
