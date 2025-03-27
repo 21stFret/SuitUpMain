@@ -47,8 +47,16 @@ public class Crate : Prop
         explosionSound.Play();
         explosionEffect.Play();
         explosionEffect.transform.parent = null;
-        rend.enabled = false;
-        Invoke("DelaySetActive", 1f);
+        if(rend != null)
+        {
+            Invoke("DelaySetActive", 1f);
+            rend.enabled = false;
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+
     }
 
     private void DelaySetActive()
