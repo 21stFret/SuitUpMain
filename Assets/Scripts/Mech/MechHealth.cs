@@ -109,11 +109,11 @@ public class MechHealth : MonoBehaviour
             StartCoroutine(LerpHealthBar());
         }
 
-        HandleOnUpdateMods();
-
         // Achievement check
         if(GameManager.instance != null)
         {
+            HandleOnUpdateMods();
+
             if(PlayerAchievements.instance != null)
             {
                 if(dodgeAchievement) 
@@ -138,17 +138,29 @@ public class MechHealth : MonoBehaviour
     private void HandleOnUpdateMods()
     {
         RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("On the Edge");
+        if(__selectMod == null)
+        {
+            __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Emergency Valve");
+        }
         if (__selectMod != null)
         {
             if (healthlow && !lowHealthMod)
             {
                 lowHealthMod = true;
                 BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+                if(__selectMod.modifiers.Count>1)
+                {
+                    GameManager.instance.runUpgradeManager.ApplyStatModifiers(__selectMod);
+                }
             }
             else if (!healthlow && lowHealthMod)
             {
                 lowHealthMod = false;
                 BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+                if(__selectMod.modifiers.Count>1)
+                {
+                    GameManager.instance.runUpgradeManager.RemoveMod(__selectMod);
+                }
             }
             return;
         }
@@ -195,19 +207,23 @@ public class MechHealth : MonoBehaviour
             return;
         }
 
-        RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Mag Shield");
-        if (__selectMod != null)
+        if(GameManager.instance != null)
         {
-            float chance = __selectMod.modifiers[0].statValue;
-            if (Random.Range(0, 100) < chance)
+            RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Mag Shield");
+            if (__selectMod != null)
             {
-                if (!isFlashing)
+                float chance = __selectMod.modifiers[0].statValue;
+                if (Random.Range(0, 100) < chance)
                 {
-                    currentFlashRoutine = StartCoroutine(DamageFlash(Color.cyan));
+                    if (!isFlashing)
+                    {
+                        currentFlashRoutine = StartCoroutine(DamageFlash(Color.cyan));
+                    }
+                    return;
                 }
-                return;
             }
         }
+
 
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 

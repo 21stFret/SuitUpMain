@@ -12,6 +12,7 @@ public enum WeaponType
     Cryo,
     AoE,
     Cralwer,
+    Spore,
     Default,
     Trap,
     Heal

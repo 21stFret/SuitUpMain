@@ -56,7 +56,7 @@ public class Crawler : MonoBehaviour
     protected bool inRange;
     [SerializeField]
     private bool immune;
-    public float immuneTime = 1;
+    public float _immuneTime = 1;
     public float crawlerScale;
     public int cashWorth;
     public int expWorth;
@@ -102,6 +102,8 @@ public class Crawler : MonoBehaviour
     public float eliteSteerMultiplier = 1.25f;
     protected Material originalMaterial;
     public float eliteChance = 5;
+    public bool sporeEmpowered;
+    public ParticleSystem sporedEffect;
 
     private void TestSpawn()
     {
@@ -317,7 +319,7 @@ public class Crawler : MonoBehaviour
         triggeredAttack = false;
     }
 
-    private IEnumerator SpawnImmunity()
+    private IEnumerator SpawnImmunity(float immuneTime) 
     {
         _targetHealth.invincible = true;
         meshRenderer.material.SetColor("_Flash_Color", Color.green);
@@ -347,6 +349,14 @@ public class Crawler : MonoBehaviour
         if (target == null && killedBy != WeaponType.AoE)
         {
             FindClosestTarget(100);
+        }
+        if(killedBy == WeaponType.Spore)
+        {
+            if(_targetHealth.health < _targetHealth.maxHealth)
+            {
+                _targetHealth.health -= damage;
+            }
+            return;
         }
 
         FlashRed();
@@ -554,7 +564,7 @@ public class Crawler : MonoBehaviour
         DeathBlood.transform.SetParent(transform);
         transform.localScale = Vector3.zero;
         StartCoroutine(SpawnEffect(daddy));
-        StartCoroutine(SpawnImmunity());
+        StartCoroutine(SpawnImmunity(_immuneTime));
         tag = "Enemy";
         overkill = false;
     }
@@ -606,6 +616,33 @@ public class Crawler : MonoBehaviour
         deathNoise.transform.position = transform.position;
         deathNoise.pitch = Random.Range(0.8f, 1.2f);
         deathNoise.Play();
+    }
+
+    public void SporeEmpower()
+    {
+        if(crawlerType == CrawlerType.Spore || crawlerType == CrawlerType.Bomber)
+        {
+            return;
+        }
+        if(sporeEmpowered)
+        {
+            return;
+        }
+        sporeEmpowered = true;
+        StartCoroutine(SporeEmpowerRoutine());
+        StartCoroutine(SpawnImmunity(3));
+    }
+
+    private IEnumerator SporeEmpowerRoutine()
+    {
+        sporedEffect.Play();
+        crawlerMovement.speedFinal *= 1.3f;
+        attackDamage *= 1.3f;
+        yield return new WaitForSeconds(3);
+        crawlerMovement.speedFinal /= 1.3f;
+        attackDamage /= 1.3f;
+        sporedEffect.Stop();
+        sporeEmpowered = false;
     }
 }
 

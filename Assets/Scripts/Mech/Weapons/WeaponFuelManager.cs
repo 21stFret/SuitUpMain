@@ -75,11 +75,16 @@ public class WeaponFuelManager : MonoBehaviour
             return;
         }
         FuelManagement();
+
         HandleOnUpdateMods();
     }
 
-        private void HandleOnUpdateMods()
+    private void HandleOnUpdateMods()
     {
+        if(GameManager.instance == null)
+        {
+            return;
+        }
         RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Final Reserves");
         if (__selectMod != null)
         {
