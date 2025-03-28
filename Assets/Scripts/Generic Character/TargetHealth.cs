@@ -12,6 +12,7 @@ public class TargetHealth : MonoBehaviour
 
     private Crawler _crawler;
     private MechHealth _mech;
+    public TrippyEffect trippyEffect;
     private Prop _prop;
 
     public List<WeaponType> immuneWeapons;
@@ -96,8 +97,11 @@ public class TargetHealth : MonoBehaviour
             {
                 DamageNumbers(damage, weaponType);
             }
-
             _mech.TakeDamage(damage, crawler);
+            if(weaponType == WeaponType.Spore)
+            {
+                trippyEffect.ActivateTrippyEffect();
+            }
             return;
         }
 
@@ -121,6 +125,11 @@ public class TargetHealth : MonoBehaviour
         {
             if (weaponType != WeaponType.Cralwer)
             {
+                if(weaponType == WeaponType.Spore)
+                {
+                    damage = -damage;
+                    _crawler.SporeEmpower();
+                }
                 _crawler.TakeDamage(damage, weaponType, stunTime, invincible);
                 if (damageNumbersOn)
                 {
