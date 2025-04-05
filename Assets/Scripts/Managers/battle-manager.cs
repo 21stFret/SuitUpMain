@@ -280,9 +280,12 @@ public class BattleManager : MonoBehaviour
             crawlerSpawner.SpawnBoss();
         }
     }
-
+    
+    private bool _isCoroutineRunning = false;
     public IEnumerator CheckActiveEnemies()
     {
+        if (_isCoroutineRunning) yield break;
+        _isCoroutineRunning = true;
         if (crawlerSpawner.activeCrawlerCount == 0)
         {
             yield return new WaitForSeconds(1);
@@ -301,7 +304,8 @@ public class BattleManager : MonoBehaviour
                     ObjectiveComplete();
                 }
             }
-        }   
+        }
+        _isCoroutineRunning = false;
     }
 
     [SerializeField] public ArmyGenerator armyGen;

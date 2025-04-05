@@ -37,6 +37,7 @@ public class DamageArea : MonoBehaviour
         }
         float adjustedRadius = damageRadius / parentScale;
         //Debug.Log("Adjusted Radius: " + adjustedRadius);
+        adjustedRadius = Mathf.Clamp(adjustedRadius, 0.1f, 10f); // Ensure radius is within a reasonable range
         triggerCollider.radius = adjustedRadius;
         triggerCollider.isTrigger = true;
 
@@ -49,6 +50,7 @@ public class DamageArea : MonoBehaviour
     public void EnableDamageArea()
     {
         damageActive = true;
+        triggerCollider.enabled = true;
         targetsInRange.Clear();
         var targets = Physics.OverlapSphere(transform.position, triggerCollider.radius);
         foreach (var target in targets)
@@ -107,12 +109,14 @@ public class DamageArea : MonoBehaviour
     {
         yield return new WaitForSeconds(damageDuration);
         damageActive = false;
+        triggerCollider.enabled = false;
     }
 
     // Public method to activate/deactivate damage
     public void SetDamageActive(bool active)
     {
         damageActive = active;
+        triggerCollider.enabled = active;
     }
 
     // Public method to change damage type

@@ -30263,13 +30263,13 @@ MonoBehaviour:
   airDropTimer: {fileID: 0}
   airdropMenu: {fileID: 0}
   playerInput: {fileID: 0}
-  fade: {fileID: 0}
   eventSystem: {fileID: 0}
   firstSelected: {fileID: 0}
   missileLauncher: {fileID: 0}
-  missileAmount: 5
+  missileAmount: 6
   timesUsed: 0
   airstikes: 0
+  crates: 0
   tutorial: 0
   droneInputs:
   - {fileID: 0}
@@ -30285,7 +30285,7 @@ MonoBehaviour:
   - {fileID: 0}
   chargeDrone: 0
   testActiveate: 0
-  testDrone: 2
+  testDrone: 5
 --- !u!1 &5311525923415399229
 GameObject:
   m_ObjectHideFlags: 0
@@ -40252,7 +40252,7 @@ MonoBehaviour:
   crawler: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 128
   droneStart: {fileID: 8300000, guid: 050ac9688a769774691335ebdf39d8f2, type: 3}
   droneLoop: {fileID: 8300000, guid: a3741d0dd2229dc4eb17466a6fec0e1b, type: 3}
   _incomingAudioSource: {fileID: 0}
@@ -45440,7 +45440,7 @@ PrefabInstance:
     - target: {fileID: 123883607251771409, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: range
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 123883607251771409, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
@@ -45450,7 +45450,7 @@ PrefabInstance:
     - target: {fileID: 123883607251771409, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: fireRate
-      value: 0.25
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 123883607251771409, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
@@ -45467,6 +45467,11 @@ PrefabInstance:
       propertyPath: weaponController
       value: 
       objectReference: {fileID: 28257364171228270}
+    - target: {fileID: 922689415931832636, guid: 641c00b7808a4b847ac23c4588874d14,
+        type: 3}
+      propertyPath: DetectsOnLayers.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 922689415931832637, guid: 641c00b7808a4b847ac23c4588874d14,
         type: 3}
       propertyPath: MaxHorizAngle

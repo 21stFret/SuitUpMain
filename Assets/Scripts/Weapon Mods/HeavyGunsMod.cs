@@ -9,7 +9,7 @@ public class HeavyGunsMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        runUpgradeManager.ApplyStatModifiers(runMod);
+        runUpgradeManager.ApplyMod(runMod);
         myCharacterController = BattleMech.instance.myCharacterController;
     }
 

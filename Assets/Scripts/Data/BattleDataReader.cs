@@ -83,6 +83,8 @@ public class BattleDataReader : MonoBehaviour
         AddCrawlerGroupIfPresent(crawlerGroups, row, "Leaper", CrawlerType.Leaper);
         AddCrawlerGroupIfPresent(crawlerGroups, row, "Charger", CrawlerType.Charger);
         AddCrawlerGroupIfPresent(crawlerGroups, row, "Hunter", CrawlerType.Hunter);
+        AddCrawlerGroupIfPresent(crawlerGroups, row, "Bomber", CrawlerType.Bomber);
+        AddCrawlerGroupIfPresent(crawlerGroups, row, "Spore", CrawlerType.Spore);
 
         return new CrawlerSquad(crawlerGroups.ToArray());
     }

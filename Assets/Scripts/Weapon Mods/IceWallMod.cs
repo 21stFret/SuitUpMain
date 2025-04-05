@@ -23,7 +23,7 @@ public class IceWallMod : WeaponMod
         Vector3 IceWallLocation = baseWeapon.transform.position + (baseWeapon.transform.forward * 1);
         transform.position = IceWallLocation;
         transform.rotation = baseWeapon.transform.rotation;
-        runUpgradeManager.ApplyStatModifiers(runMod);
+        runUpgradeManager.ApplyMod(runMod);
     }
 
     public override void Fire()

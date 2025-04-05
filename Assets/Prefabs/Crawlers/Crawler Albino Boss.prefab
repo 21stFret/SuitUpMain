@@ -15278,13 +15278,13 @@ GameObject:
   - component: {fileID: 4414502184644092993}
   - component: {fileID: 7156213421808378861}
   - component: {fileID: 3208657932530357669}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Crawler Albino Boss
   m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3101261175861027531
 Transform:
   m_ObjectHideFlags: 0
@@ -15408,7 +15408,7 @@ MonoBehaviour:
   deathNoise: {fileID: 1684373086875704436}
   overrideDeathNoise: 1
   immune: 0
-  immuneTime: 1
+  _immuneTime: 1
   crawlerScale: 3
   cashWorth: 100
   expWorth: 50
@@ -15440,6 +15440,8 @@ MonoBehaviour:
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
   eliteChance: 0
+  sporeEmpowered: 0
+  sporedEffect: {fileID: 0}
   smashEffect: {fileID: 1020282015054569457}
   smashRadius: 10
   smashDistance: 20
@@ -15454,7 +15456,7 @@ MonoBehaviour:
   burstSpawner: {fileID: 3208657932530357669}
   chargeCooldown: 6
   chargeDuration: 1.2
-  chargeSpeed: 400
+  chargeSpeed: 15000
   chargeRadius: 6
   buildChargeTime: 1.3
   buildChargeTimer: 1.3
@@ -15535,7 +15537,7 @@ MonoBehaviour:
   rayDistance: 12
   SteeringRaycast:
     serializedVersion: 2
-    m_Bits: 131073
+    m_Bits: 135169
   distanceToTarget: 0
   tracking: 1
   separationWeight: 1.5
@@ -15571,6 +15573,7 @@ MonoBehaviour:
   maxHealth: 200
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,

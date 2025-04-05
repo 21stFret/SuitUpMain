@@ -375,8 +375,10 @@ public class Crawler : MonoBehaviour
         {
             overkill =true;
         }
-
-        _crawlerBehavior.OnDamageTaken();
+        if(_crawlerBehavior != null)
+        {
+            _crawlerBehavior.OnDamageTaken();   
+        }
 
         if (_targetHealth.health <= 0 )
         {
@@ -398,6 +400,10 @@ public class Crawler : MonoBehaviour
 
     private void FlashRed()
     {
+        if(dead || gameObject.activeSelf == false)
+        {
+            return;
+        }
         if(_targetHealth.invincible)
         {
             return;
@@ -429,9 +435,15 @@ public class Crawler : MonoBehaviour
         crawlerMovement.enabled = false;
         meshRenderer.enabled = false;
         target = null;
+        DeathBlood.transform.position = transform.position;
         DeathBlood.transform.SetParent(null);
         DeathBlood.gameObject.SetActive(true);
         DeathBlood.Play();
+        
+        if(_crawlerBehavior == null)
+        {
+            return;
+        }
         _crawlerBehavior.OnDeath();
 
         CheckForModsOnDeath(weapon);

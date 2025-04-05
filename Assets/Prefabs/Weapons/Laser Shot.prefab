@@ -45,13 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71d84e8c92ffdf1438c9798f91d60981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fxType: 6
+  fxType: 2
   layerMask:
     serializedVersion: 2
-    m_Bits: 1053057
+    m_Bits: 1315201
   lifeTime: 5
   despawnDelay: 0
-  velocity: 100
+  velocity: 50
   RaycastAdvance: 0.8
   DelayDespawn: 0
   delayedParticles: []
@@ -59,7 +59,7 @@ MonoBehaviour:
   impactForce: 0
   pierceCount: 0
   stunTime: 0
-  sphereCastRadius: 1.2
+  sphereCastRadius: 1.5
   _weaponController: {fileID: 0}
   weaponType: 2
   hitObjects: []
@@ -69,6 +69,7 @@ MonoBehaviour:
   splitRounds: 0
   splitCount: 0
   range: 0
+  pierceCountMax: 0
 --- !u!1 &904917544813269207
 GameObject:
   m_ObjectHideFlags: 0

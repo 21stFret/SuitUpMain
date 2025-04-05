@@ -158,10 +158,4 @@ public class EnemyLocator : MonoBehaviour
 
         return nearestTarget;
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }
 }

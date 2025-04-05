@@ -43,6 +43,9 @@ public class DroneControllerUI : MonoBehaviour
     [InspectorButton("TestActiveate")]
     public bool testActiveate;
     public DroneType testDrone;
+    private bool isMenuOpen;
+
+    public bool testingFreeUse;
 
     private void Start()
     {
@@ -109,7 +112,7 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
 
-        if(!airDropTimer.charged)
+        if(!airDropTimer.charged && !testingFreeUse)
         {
             return;
         }
@@ -123,10 +126,19 @@ public class DroneControllerUI : MonoBehaviour
             }
         }
 
+        
+        if(isMenuOpen)
+        {
+            CloseMenu();
+            return;
+        }
+        isMenuOpen = true;
+
         SetupSequencers();
 
         AudioManager.instance.PlaySFX(SFX.Select);
         Time.timeScale = 0.3f;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
         airdropMenu.SetActive(true);
         foreach (DroneInputUI sequence in droneInputs)
         {
@@ -136,7 +148,7 @@ public class DroneControllerUI : MonoBehaviour
             }
             sequence.sequenceInputController.StartNewSequence();
         }
-        playerInput.SwitchCurrentActionMap("UI");
+        //playerInput.SwitchCurrentActionMap("UI");
     }
 
     public void OnCloseMenu(InputAction.CallbackContext context)
@@ -158,8 +170,10 @@ public class DroneControllerUI : MonoBehaviour
     public void CloseMenu()
     {
         Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.02F ;
         airdropMenu.SetActive(false);
-        playerInput.SwitchCurrentActionMap("Gameplay");
+        //playerInput.SwitchCurrentActionMap("Gameplay");
+        isMenuOpen = false;
         if(tutorial)
         {
             Invoke("FullyChargeDrone", 3f);

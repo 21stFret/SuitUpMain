@@ -38,11 +38,13 @@ public class CrawlerDaddy : Crawler
             }
             if(isElite)
             {
+                EliteDeathEffect.transform.position = transform.position;
                 EliteDeathEffect.transform.SetParent(null);
                 EliteDeathEffect.SetActive(true);
             }
             else
             {
+                DeathEffect.transform.position = transform.position;
                 DeathEffect.transform.SetParent(null);
                 DeathEffect.SetActive(true);
             }

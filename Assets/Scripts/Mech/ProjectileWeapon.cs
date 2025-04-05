@@ -75,7 +75,7 @@ public class ProjectileWeapon : MonoBehaviour
 
     public void Cryo(float dam, float force, float stunTime, int shards = 1)
     {
-        float angle = 30;
+        float angle = 15f; // Angle between each shard
         int startigIndex = shards>0? -shards : 0;
         for (int i = startigIndex; i <= shards; i++)
         {
@@ -148,6 +148,7 @@ public class ProjectileWeapon : MonoBehaviour
             proj._weaponController = this;
             proj.weaponType = WeaponType.Plasma;
             proj.pierceCount = pierceC;
+            proj.pierceCountMax = pierceC;
             proj.splitRounds = splitrounds;
             proj.splitCount = splitCount;
         }

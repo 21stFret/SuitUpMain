@@ -56,12 +56,32 @@ public class CrawlerMovement : MonoBehaviour
 
     public bool canRotate = true;
 
-    private Vector3 currentDirection; 
+    private Vector3 currentDirection;
+
+    private bool useavoidance;
     
     private void Start()
     {
         lastPosition = transform.position;
         currentDirection = transform.forward;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        // Convert LayerMask to layer number and compare
+        if (((1 << other.gameObject.layer) & SteeringRaycast) != 0)
+        {
+            print("Obstacle detected: " + other.gameObject.name);
+            useavoidance = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & SteeringRaycast) != 0)
+        {
+            useavoidance = false;
+        }
     }
 
     private void MoveCrawler()
@@ -93,7 +113,7 @@ public class CrawlerMovement : MonoBehaviour
         
         // 3. If path is not clear, check for avoidance directions
         Vector3 avoidanceDirection = Vector3.zero;
-        if (!clearPathToTarget)
+        if (!clearPathToTarget || useavoidance)
         {
             avoidanceDirection = RayCastSteering();
         }
@@ -125,6 +145,10 @@ public class CrawlerMovement : MonoBehaviour
             // Apply smooth rotation
             Vector3 rotationDirection = currentDirection;
             rotationDirection.y = 0;
+            if (rotationDirection == Vector3.zero)
+            {
+                rotationDirection = transform.forward;
+            }
             Quaternion targetRotation = Quaternion.LookRotation(rotationDirection, Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, lookSpeed * Time.deltaTime);
         }
@@ -159,7 +183,7 @@ public class CrawlerMovement : MonoBehaviour
         if (movementTarget == null) return;
         
         // Apply force towards predicted position
-        rb.AddForce(transform.forward * _speed, ForceMode.Acceleration);
+        rb.AddForce(transform.forward * _speed * Time.deltaTime, ForceMode.Acceleration);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, _speed);
     }
 

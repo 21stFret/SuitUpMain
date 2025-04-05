@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 7089888831725209665}
   - component: {fileID: 1853808369309738232}
   - component: {fileID: 3358707237729660399}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Crawler Spitter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ MonoBehaviour:
   eliteHealthMultiplier: 2
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 15
+  eliteChance: 5
   sporeEmpowered: 0
   sporedEffect: {fileID: 818523197902603484}
   layerMask:
@@ -421,6 +421,7 @@ MonoBehaviour:
   maxHealth: 3
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 07000000
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
@@ -439,9 +440,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseAggression: 0.9
   healthAggressionModifier: 0.3
-  preferredEngageDistance: 20
+  preferredEngageDistance: 22
   maxEngageDistance: 30
-  fleeDistance: 15
+  fleeDistance: 18
   fleeHealthThreshold: 0.3
   cautionHealthThreshold: 0.5
 --- !u!1001 &216884323223801966

@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 8265754060228884709}
   - component: {fileID: 8835100205756127941}
   - component: {fileID: 2247234208028704554}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Crawler
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ MonoBehaviour:
   eliteHealthMultiplier: 3
   eliteSpeedMultiplier: 1.5
   eliteSteerMultiplier: 1.25
-  eliteChance: 10
+  eliteChance: 5
   sporeEmpowered: 0
   sporedEffect: {fileID: 2326850250404693844}
 --- !u!54 &4026478879676073532
@@ -471,6 +471,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 07000000
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,

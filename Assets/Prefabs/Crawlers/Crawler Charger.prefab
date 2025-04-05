@@ -19456,7 +19456,7 @@ GameObject:
   - component: {fileID: 4009836193941654996}
   - component: {fileID: 6499886239188906295}
   - component: {fileID: 102815767397415322}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Crawler Charger
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -19557,7 +19557,7 @@ MonoBehaviour:
   deathNoise: {fileID: 4195929182837322614}
   overrideDeathNoise: 0
   immune: 1
-  immuneTime: 1
+  _immuneTime: 1
   crawlerScale: 1.3
   cashWorth: 10
   expWorth: 20
@@ -19585,7 +19585,9 @@ MonoBehaviour:
   eliteHealthMultiplier: 2
   eliteSpeedMultiplier: 1.3
   eliteSteerMultiplier: 1.25
-  eliteChance: 5
+  eliteChance: 2
+  sporeEmpowered: 0
+  sporedEffect: {fileID: 0}
   chargeEffect: {fileID: 4823605491945663866}
   chargeDistance: 40
   chargeTime: 2
@@ -19740,6 +19742,7 @@ MonoBehaviour:
   maxHealth: 25
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 07000000
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,

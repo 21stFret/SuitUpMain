@@ -74,14 +74,6 @@ public class DashModsManager : MonoBehaviour
             hitTargets.Clear();
             StartCoroutine(DoDamage());
         }
-        if (invincible)
-        {
-            BattleMech.instance.mechHealth.shieldMaterial.SetColor("_Flash_Color", invincibleColor);
-            BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 1f);
-            characterController.battleMech.targetHealth.invincible = true;
-            characterController.isDodging = true;
-            characterController.dashDuration = time;
-        }
         if (hologram)
         {
             hologramPrefab.SetActive(true);
@@ -92,6 +84,28 @@ public class DashModsManager : MonoBehaviour
         if (speedBoost > 0)
         {
             StartCoroutine(SpeedBoost());
+        }
+    }
+
+    public void InvincibleCall()
+    {
+        StartCoroutine(Invinsible());
+    }
+
+    private IEnumerator Invinsible()
+    {
+        try
+        {
+            BattleMech.instance.mechHealth.shieldMaterial.SetColor("_Flash_Color", invincibleColor);
+            BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 1f);
+            characterController.battleMech.targetHealth.invincible = true;
+            yield return new WaitForSeconds(time);
+        }
+        finally
+        {
+            // This will always execute, even if the coroutine is stopped
+            BattleMech.instance.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0);
+            characterController.battleMech.targetHealth.invincible = false;
         }
     }
 

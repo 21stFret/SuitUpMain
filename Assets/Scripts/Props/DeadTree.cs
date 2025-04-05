@@ -12,4 +12,9 @@ public class DeadTree : Crate
             Die();
         }
     }
+
+    public override void RefreshProp()
+    {
+        Init();
+    }
 }

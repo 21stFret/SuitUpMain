@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlasmaGun : MechWeapon
 {
     public bool hasTarget;
-    public GameObject gunturret;
     public ProjectileWeapon weaponController;
     private float _timer;
     public int pierceCount;
@@ -22,19 +21,34 @@ public class PlasmaGun : MechWeapon
     {
         
         var target = sensor.GetNearestDetection();
-        
-        Vector3 location;
+        Vector3 location = transform.forward;
         if (target != null)
         {
-            hasTarget = true;
-            location = target.transform.position - gunturret.transform.position + aimOffest;
+            var hunter = target.GetComponent<CrawlerHunter>();
+            if(hunter != null)
+            {
+                if (hunter.isStealthed)
+                {
+                    location = transform.forward;
+                }
+                else
+                {
+                    location = target.transform.position - gunturret.transform.position + aimOffest;
+                }
+            }
+            else
+            {
+                location = target.transform.position - gunturret.transform.position + aimOffest;
+            }
+
         }
         else
         {
             location = transform.forward;
-            hasTarget = false;
         }
-        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);
+
+
+        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * autoAimSpeed);
         
         if (isFiring)
         {

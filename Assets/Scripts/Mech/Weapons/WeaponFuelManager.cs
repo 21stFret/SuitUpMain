@@ -69,14 +69,13 @@ public class WeaponFuelManager : MonoBehaviour
         {
             return;
         }
+        HandleOnUpdateMods();
         if (!constantUse)
         {
             BurstFuel();
             return;
         }
         FuelManagement();
-
-        HandleOnUpdateMods();
     }
 
     private void HandleOnUpdateMods()
@@ -91,12 +90,12 @@ public class WeaponFuelManager : MonoBehaviour
             if (weaponFuel<= weaponFuelMax * 0.2 && !lowFuelMod)
             {
                 lowFuelMod = true;
-                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod);
             }
             else if (weaponFuel >= weaponFuelMax * 0.2 && lowFuelMod)
             {
                 lowFuelMod = false;
-                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod);
             }
             return;
         }
@@ -106,12 +105,12 @@ public class WeaponFuelManager : MonoBehaviour
             if (weaponFuel> weaponFuelMax * 0.8  && !fullFuelMod)
             {
                 fullFuelMod = true;
-                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod);
             }
             else if (weaponFuel <= weaponFuelMax * 0.8 && fullFuelMod)
             {
                 fullFuelMod = false;
-                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod);
             }
             return;
         }

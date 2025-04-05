@@ -43,6 +43,7 @@ namespace FORGE3D
 
         private float _distance;
         public float range;
+        public int pierceCountMax;
 
         void Awake()
         {
@@ -146,6 +147,11 @@ namespace FORGE3D
                 damage = damage * perceentage;
                 force = force * perceentage;
             }
+            if(pierceCountMax > 0)
+            {
+                damage = damage * pierceCount / pierceCountMax;
+                force = force * pierceCount / pierceCountMax;
+            }
 
             if(targetHealth != null)
             {
@@ -175,12 +181,16 @@ namespace FORGE3D
         private void PlasmaSplitRounds()
         {
             Transform newDir = transform;
-            newDir.forward = Vector3.Cross(newDir.forward, hitPoint.normal);
-            Vector3 newDirection = new Vector3(newDir.forward.x, 0, newDir.forward.z).normalized;
+            Vector3 crossVector = Vector3.Cross(transform.forward, hitPoint.normal);
+            Vector3 baseDirection = transform.forward;
+            
+            // Calculate the mid angles (45 degrees) between forward and cross vectors
+            Vector3 rightSplit = Vector3.Lerp(baseDirection, crossVector, 0.5f).normalized;
+            Vector3 leftSplit = Vector3.Lerp(baseDirection, -crossVector, 0.5f).normalized;
 
             for (int i = 0; i < splitCount; i++)
             {
-                newDir.forward = i==0 ? newDirection:-newDirection;
+                newDir.forward = i == 0 ? rightSplit : leftSplit;
                 var newGO =
                     F3DPoolManager.Pools["GeneratedPool"].Spawn(_weaponController.vulcanProjectile,
                                        null, newDir.position,
@@ -275,6 +285,7 @@ namespace FORGE3D
                 {
                     if (!hitObjects.Contains(hitPoint.collider.gameObject))
                     {
+
                         hitObjects.Add(hitPoint.collider.gameObject);
                         _weaponController.Impact(hitPoint.point + hitPoint.normal * fxOffset, weaponType);
                         ApplyForce(impactForce, stunTime);

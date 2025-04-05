@@ -170,15 +170,7 @@ public class MYCharacterController : MonoBehaviour
         {
             if (dashModsManager.invincible)
             {
-                if (battleMech.mechHealth.shieldHealth == 0)
-                {
-                    battleMech.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0f);
-                }
-                else
-                {
-                    battleMech.mechHealth.shieldMaterial.SetColor("_Flash_Color", battleMech.mechHealth.shieldColor);
-                }
-                battleMech.targetHealth.invincible = false;
+                dashModsManager.InvincibleCall();
             }
         }
         yield return new WaitForSeconds(dashCooldown);
@@ -438,6 +430,7 @@ public class MYCharacterController : MonoBehaviour
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             CharacterAnimator.speed = 1;
+            onIce = false;
         }
     }
 

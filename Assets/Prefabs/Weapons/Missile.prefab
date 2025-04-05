@@ -9461,7 +9461,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3.05, z: 2.035}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5693101680240111480}
@@ -9535,23 +9535,26 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  detonationDistance: 5
+  detonationDistance: 3
   lifeTime: 5
   despawnDelay: 1
-  velocity: 50
-  alignSpeed: 4
-  RaycastAdvance: 0.5
+  velocity: 1
+  alignSpeed: 3
+  RaycastAdvance: 0.3
   DelayDespawn: 1
   delayedParticles:
   - {fileID: 3203260690163003214}
   - {fileID: 8633114395340821836}
   launcher: {fileID: 0}
   upLaunchTimer: 0
-  upLaunchTime: 0.2
+  upLaunchTime: 0.4
   range: 7
   crawlerLayer:
     serializedVersion: 2
-    m_Bits: 266496
+    m_Bits: 1315201
   forceStrength: 180
   impactDamage: 5
   randomOffsetStrength: 20
+  targetPosition: {x: 0, y: 0, z: 0}
+  circleRegion: {fileID: 0}
+  startingDistance: 0

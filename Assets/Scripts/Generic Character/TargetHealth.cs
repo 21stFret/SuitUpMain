@@ -146,6 +146,11 @@ public class TargetHealth : MonoBehaviour
 
     public void DamageNumbers(float dam, WeaponType weapon)
     {
+        if(damageNumberPrefab == null)
+        {
+            Debug.LogError("DamageNumber prefab is not assigned in TargetHealth script on " + gameObject.name);
+            return;
+        }
         if (weapon == WeaponType.Default)
         {
             return;
@@ -156,7 +161,6 @@ public class TargetHealth : MonoBehaviour
             weapon = WeaponType.Heal;
         }
         
-
         DamageNumber newPopup = damageNumberPrefab.Spawn(transform.position, Mathf.Abs(dam));
         newPopup.SetFollowedTarget(transform);
         newPopup.SetScale(5);

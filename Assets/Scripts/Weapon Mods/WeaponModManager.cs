@@ -59,7 +59,7 @@ public class WeaponModManager : MonoBehaviour
         currentTechMod = mod;
         techWeapon.weaponMod = currentTechMod;
         currentTechMod.baseWeapon = techWeapon;
-        currentTechMod.transform.SetParent(techWeapon.transform);
+        currentTechMod.transform.SetParent(techWeapon.gunturret.transform);
         currentTechMod.transform.localPosition = Vector3.zero;
         currentTechMod.transform.localRotation = Quaternion.identity;
         currentTechMod.enabled = true;
@@ -76,7 +76,7 @@ public class WeaponModManager : MonoBehaviour
         assualtWeapon.weaponMod = currentAssaultMod;
         currentAssaultMod.baseWeapon = assualtWeapon;
         currentAssaultMod.enabled = true;
-        currentAssaultMod.transform.SetParent(assualtWeapon.transform);
+        currentAssaultMod.transform.SetParent(assualtWeapon.gunturret.transform);
         currentAssaultMod.transform.localPosition = Vector3.zero;
         currentAssaultMod.transform.localRotation = Quaternion.identity;
         currentAssaultMod.Init();

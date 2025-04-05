@@ -11,10 +11,11 @@ public class CrawlerSpore : Crawler
     private float timer;
     public GameObject LargeDeathEffect;
 
+    private bool damamgeInitialized = false;
+
     public override void Spawn(bool daddy = false)
     {
         base.Spawn(daddy);
-        damageArea.Init();
         timer = sporeTimer / 2;
     }
 
@@ -26,10 +27,10 @@ public class CrawlerSpore : Crawler
         sporePrefab.SetActive(true);
         sporeEffect.Play();
         damageArea.EnableDamageArea();
-        base.Die(killedBy);
         StartCoroutine(SpawnSpores());
         LargeDeathEffect.transform.SetParent(null);
         LargeDeathEffect.SetActive(true);
+        base.Die(killedBy);
     }
 
     private void Update()
@@ -41,6 +42,11 @@ public class CrawlerSpore : Crawler
         timer -= Time.deltaTime;
         if (timer <= 0)
         {
+            if (!damamgeInitialized)
+            {
+                damageArea.Init();
+                damamgeInitialized = true;
+            }
             StartCoroutine(SpawnSpores());
             timer = sporeTimer;
         }
