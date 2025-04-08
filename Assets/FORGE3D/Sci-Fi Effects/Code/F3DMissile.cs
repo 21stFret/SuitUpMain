@@ -186,20 +186,14 @@ namespace FORGE3D
             {
 
                 // Navigate
-                if (target != null)
+                if (missileType == MissileType.Guided)
                 {
-                    if (missileType == MissileType.Predictive)
+                    if(target != null)
                     {
-                        var hitPos = F3DPredictTrajectory.Predict(transform.position, target.position, targetLastPos,
-                            velocity);
-                        targetLastPos = target.position;
-
-                        transform.rotation = Quaternion.Lerp(transform.rotation,
-                            Quaternion.LookRotation(hitPos - transform.position), Time.deltaTime*alignSpeed);
+                        targetPosition = target.position;
+                        targetPosition.y = 2f;
+                        circleRegion.transform.position = targetPosition;
                     }
-                }
-                else if (missileType == MissileType.Guided)
-                {
                     upLaunchTimer += Time.deltaTime;    
                     if(upLaunchTimer > upLaunchTime)
                     {

@@ -378,21 +378,25 @@ public class MYCharacterController : MonoBehaviour
         }
     }
 
-    public void ToggleSlow(float amount, bool isOn)
+    public void TriggerSand()
     {
-        if(isOn)
+        if(isSlowed)
         {
-            slowedAmount = amount;
-            isSlowed = true;
-            sandEffect.Play();
+            return;
         }
-        else
-        {
-            isSlowed = false;
-            sandEffect.Stop();
-        }
-
+        sandEffect.Play();
+        sandEffect.transform.parent = null;
+        isSlowed = true;
+        StartCoroutine(SandEffect());
     }
+
+    private IEnumerator SandEffect()
+    {
+        yield return new WaitForSeconds(slowedDuration);
+        isSlowed = false;
+        sandEffect.Stop();
+    }
+
 
     public void ApplyIce(float amount)
     {
@@ -400,10 +404,10 @@ public class MYCharacterController : MonoBehaviour
         icedEffect.Play();
         icedEffect.transform.parent = null;
         isSlowed = true;
-        StartCoroutine(SlowEffect());
+        StartCoroutine(IcedEffect());
     }
 
-    private IEnumerator SlowEffect()
+    private IEnumerator IcedEffect()
     {
         yield return new WaitForSeconds(slowedDuration);
         isSlowed = false;

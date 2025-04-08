@@ -91,7 +91,7 @@ public class CrawlerSpawner : MonoBehaviour
         float difficulty = BattleManager.instance.dificultyMultiplier;
         //currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
         currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax * difficulty);
-        currentBattle.burstTimer /=  difficulty;
+        //currentBattle.burstTimer /=  difficulty;
     }
 
     private void Awake()

@@ -47,11 +47,23 @@ public class DroneControllerUI : MonoBehaviour
 
     public bool testingFreeUse;
 
+    public float menuopenforTime = 4f;
+
     private void Start()
     {
         gameUI = GameUI.instance;
         timesUsed =0;
         SetupSequencers();
+    }
+
+    void Update()
+    {
+        menuopenforTime -= Time.deltaTime;
+        if (menuopenforTime <= 0f && isMenuOpen)
+        {
+            CloseMenu();
+            menuopenforTime = 5f;
+        }
     }
 
     public void TestActiveate()
@@ -133,6 +145,7 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
         isMenuOpen = true;
+        
 
         SetupSequencers();
 

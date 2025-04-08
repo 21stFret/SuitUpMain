@@ -81,14 +81,19 @@ namespace FORGE3D
 
                 missile.launcher = this;
                 missile.missileType = missileType;
-                if (target>targets.Count)
+                if (target<targets.Count)
                 {
-                    target = Random.Range(0, targets.Count);
+                    missile.target = targets[target];
+                    missile.targetPosition = targets[target].position;
                 }
-                //missile.target = targets[target];
-                //missile.targetPosition = RandomTargetPosition();
-                SpreadInFront();
-                missile.targetPosition = targetPositions[target];
+                else
+                {
+                    //SpreadInFront();
+                    //missile.targetPosition = targetPositions[target];
+
+                    missile.targetPosition = RandomTargetPosition();
+                }
+
                 hitUI[target].transform.position = missile.targetPosition;
                 hitUI[target].transform.SetParent(null);
                 hitUI[target].SetActive(true);

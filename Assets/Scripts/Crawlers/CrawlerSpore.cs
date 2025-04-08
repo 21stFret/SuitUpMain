@@ -26,8 +26,10 @@ public class CrawlerSpore : Crawler
         sporePrefab.transform.position = transform.position;
         sporePrefab.SetActive(true);
         sporeEffect.Play();
-        damageArea.EnableDamageArea();
-        StartCoroutine(SpawnSpores());
+        if(killedBy != WeaponType.Default)
+        {
+            damageArea.EnableDamageArea();
+        }
         LargeDeathEffect.transform.SetParent(null);
         LargeDeathEffect.SetActive(true);
         base.Die(killedBy);
