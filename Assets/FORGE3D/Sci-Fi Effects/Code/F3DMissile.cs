@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DTT.AreaOfEffectRegions;
 
 namespace FORGE3D
 {
@@ -53,6 +54,10 @@ namespace FORGE3D
         private Vector3 randomOffset;
         public float randomOffsetStrength;
 
+        public Vector3 targetPosition;
+
+        public CircleRegion circleRegion;
+        public float startingDistance;
 
         private void Awake()
         {
@@ -72,6 +77,7 @@ namespace FORGE3D
             step = Vector3.zero;
             meshRenderer.enabled = true;
             transform.forward = Vector3.up;
+            upLaunchTimer = 0f;
         }
 
         // OnDespawned called by pool manager 
@@ -130,18 +136,25 @@ namespace FORGE3D
             Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
             foreach (Collider collider in colliders)
             {
-                Crawler crawler = collider.GetComponent<Crawler>();
-                if (crawler != null)
+                Rigidbody rb = collider.GetComponent<Rigidbody>();
+                if(rb != null)
                 {
-                    crawler.DealyedDamage(impactDamage , 1f, WeaponType.AoE);
-                    Rigidbody crawlerRigidbody = crawler.GetComponent<Rigidbody>();
-                    if (crawlerRigidbody != null)
+                    Vector3 forceDirection = (collider.transform.position - transform.position).normalized;
+                    forceDirection.y = 0.5f;
+                    rb.AddForce(forceDirection * forceStrength, ForceMode.Impulse);
+                    rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
+                }
+                var targetHealth  = collider.GetComponent<TargetHealth>();
+                if(targetHealth != null)
+                {
+                    Crawler crawler = collider.GetComponent<Crawler>();
+                    if (crawler != null)
                     {
-                        Vector3 forceDirection = (crawler.transform.position - transform.position).normalized;
-                        forceDirection.y = 0.5f;
-                        crawlerRigidbody.AddForce(forceDirection * forceStrength, ForceMode.Impulse);
-                        crawlerRigidbody.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
+                        crawler.DealyedDamage(impactDamage , 1f, WeaponType.AoE);
+                        return;
                     }
+                    targetHealth.TakeDamage(impactDamage, WeaponType.AoE);
+
                 }
             }
         }
@@ -158,6 +171,7 @@ namespace FORGE3D
                     // .....
                     ApplyForceToCrawlers();
                     launcher.SpawnExplosion(transform.position);
+                    circleRegion.gameObject.SetActive(false);
 
 
                     isFXSpawned = true;
@@ -170,35 +184,36 @@ namespace FORGE3D
             // No collision occurred yet
             else
             {
-                // Navigate
-                if (target != null)
-                {
-                    if (missileType == MissileType.Predictive)
-                    {
-                        var hitPos = F3DPredictTrajectory.Predict(transform.position, target.position, targetLastPos,
-                            velocity);
-                        targetLastPos = target.position;
 
-                        transform.rotation = Quaternion.Lerp(transform.rotation,
-                            Quaternion.LookRotation(hitPos - transform.position), Time.deltaTime*alignSpeed);
+                // Navigate
+                if (missileType == MissileType.Guided)
+                {
+                    if(target != null)
+                    {
+                        targetPosition = target.position;
+                        targetPosition.y = 2f;
+                        circleRegion.transform.position = targetPosition;
                     }
                     upLaunchTimer += Time.deltaTime;    
                     if(upLaunchTimer > upLaunchTime)
                     {
-                        if (missileType == MissileType.Guided)
-                        {
-                            transform.rotation = Quaternion.Lerp(transform.rotation,
-                                Quaternion.LookRotation(target.position  - transform.position), Time.deltaTime * alignSpeed);
-                        }
+                        Vector3 direction = targetPosition - transform.position;
+                        // Align missile to forward direction
+                        transform.rotation = Quaternion.Lerp(transform.rotation,
+                        Quaternion.LookRotation(direction), Time.deltaTime*alignSpeed);
+
+                        circleRegion.FillProgress = Vector3.Distance(transform.position, targetPosition) / startingDistance;
                     }
-
-
                 }
 
                 // Missile step per frame based on velocity and time
                 step = transform.forward*Time.deltaTime*velocity;
 
                 if (target != null && Vector3.SqrMagnitude(transform.position - target.position) <= detonationDistance)
+                {
+                    OnHit();
+                }
+                if(circleRegion != null && Vector3.Distance(transform.position, targetPosition) <= detonationDistance)
                 {
                     OnHit();
                 }
@@ -213,7 +228,7 @@ namespace FORGE3D
                     if (timer >= lifeTime)
                     {
                         // Do not detonate
-                        isFXSpawned = true;
+                        //isFXSpawned = true;
                         OnHit();
                     }
                 }

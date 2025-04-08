@@ -299,7 +299,7 @@ public class PursuitState : CrawlerState
 
         if (movement.distanceToTarget <= behavior.GetEngagementRange())
         {
-            if(crawler.target.GetComponent<TargetHealth>() == null)
+            if(crawler.target.GetComponent<TargetHealth>() == null || !crawler.target.gameObject.activeInHierarchy)
             {
                 crawler.FindClosestTarget();
                 behavior.TransitionToState(typeof(IdleState));

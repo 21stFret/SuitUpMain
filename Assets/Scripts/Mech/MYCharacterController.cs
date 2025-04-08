@@ -170,15 +170,7 @@ public class MYCharacterController : MonoBehaviour
         {
             if (dashModsManager.invincible)
             {
-                if (battleMech.mechHealth.shieldHealth == 0)
-                {
-                    battleMech.mechHealth.shieldMaterial.SetFloat("_FlashOn", 0f);
-                }
-                else
-                {
-                    battleMech.mechHealth.shieldMaterial.SetColor("_Flash_Color", battleMech.mechHealth.shieldColor);
-                }
-                battleMech.targetHealth.invincible = false;
+                dashModsManager.InvincibleCall();
             }
         }
         yield return new WaitForSeconds(dashCooldown);
@@ -386,21 +378,25 @@ public class MYCharacterController : MonoBehaviour
         }
     }
 
-    public void ToggleSlow(float amount, bool isOn)
+    public void TriggerSand()
     {
-        if(isOn)
+        if(isSlowed)
         {
-            slowedAmount = amount;
-            isSlowed = true;
-            sandEffect.Play();
+            return;
         }
-        else
-        {
-            isSlowed = false;
-            sandEffect.Stop();
-        }
-
+        sandEffect.Play();
+        sandEffect.transform.parent = null;
+        isSlowed = true;
+        StartCoroutine(SandEffect());
     }
+
+    private IEnumerator SandEffect()
+    {
+        yield return new WaitForSeconds(slowedDuration);
+        isSlowed = false;
+        sandEffect.Stop();
+    }
+
 
     public void ApplyIce(float amount)
     {
@@ -408,10 +404,10 @@ public class MYCharacterController : MonoBehaviour
         icedEffect.Play();
         icedEffect.transform.parent = null;
         isSlowed = true;
-        StartCoroutine(SlowEffect());
+        StartCoroutine(IcedEffect());
     }
 
-    private IEnumerator SlowEffect()
+    private IEnumerator IcedEffect()
     {
         yield return new WaitForSeconds(slowedDuration);
         isSlowed = false;
@@ -438,6 +434,7 @@ public class MYCharacterController : MonoBehaviour
         {
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             CharacterAnimator.speed = 1;
+            onIce = false;
         }
     }
 

@@ -55,6 +55,8 @@ public class CrawlerSpawner : MonoBehaviour
 
     public Crawler huntedTarget;
 
+    private List<Coroutine> activeSpawnCoroutines = new List<Coroutine>();
+
     public void Init()
     {
         InitCrawlers();
@@ -89,6 +91,7 @@ public class CrawlerSpawner : MonoBehaviour
         float difficulty = BattleManager.instance.dificultyMultiplier;
         //currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
         currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax * difficulty);
+        //currentBattle.burstTimer /=  difficulty;
     }
 
     private void Awake()
@@ -117,10 +120,10 @@ public class CrawlerSpawner : MonoBehaviour
             timeElapsed = 0f;
             
             // slowly increase the amount of crawlers spawned per burst
-            totalTimeElapsesd += 0.1f;
+            totalTimeElapsesd += 0.5f;
             int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
             min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
-            burstSpawnAmount = Random.Range(min, min+2);
+            burstSpawnAmount = min;
             spawnListArmy.Clear();
             spawnListArmy = GenerateArmyList();
             List<Crawler> spawnList = new List<Crawler>();
@@ -374,8 +377,9 @@ public class CrawlerSpawner : MonoBehaviour
             bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomY, 0);
 
             float delay = FromDaddy? 0 : i * 0.2f;
-            StartCoroutine(SpawnRandomizer(bugs[i], delay, FromDaddy));
             portalAllowed++;
+            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], delay, FromDaddy));
+            activeSpawnCoroutines.Add(spawnCoroutine);
         }
     }
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Vector3 location)
@@ -396,9 +400,9 @@ public class CrawlerSpawner : MonoBehaviour
             bugs[i].transform.position = randomPoint;
             bugs[i].transform.rotation = Quaternion.Euler(0, randomCircle.y, 0);
 
-
-            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
             portalAllowed++;
+            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            activeSpawnCoroutines.Add(spawnCoroutine);
         }
         
     }
@@ -448,9 +452,9 @@ public class CrawlerSpawner : MonoBehaviour
             bugs[i].transform.position = randomPoint;
             bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
 
-
-            StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
             portalAllowed++;
+            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
+            activeSpawnCoroutines.Add(spawnCoroutine);
         }
         
     }
@@ -505,6 +509,16 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void KillAllCrawlers()
     {
+        // Stop all active spawn coroutines
+        foreach (var coroutine in activeSpawnCoroutines)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+        }
+        activeSpawnCoroutines.Clear();
+
         // Create a copy of the list to avoid modification during iteration
         List<Crawler> crawlersToKill = new List<Crawler>(activeCrawlers);
         
@@ -513,7 +527,7 @@ public class CrawlerSpawner : MonoBehaviour
             if (crawler != null && crawler.gameObject != null)
             {
                 // Immediate death instead of delayed
-                crawler.TakeDamage(100,WeaponType.AoE);
+                crawler.TakeDamage(100,WeaponType.Default);
                 
                 // Force remove from active list if still present
                 if (activeCrawlers.Contains(crawler))

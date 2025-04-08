@@ -315,7 +315,20 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
+        AudioManager.instance.PlaySFX(SFX.Select);
+        menuOpen = false;
+        cheatsMenu.SetActive(false);
+        pauseMenu.SetActive(false);
+        menu.SetActive(false);
+        controlsMenu.SetActive(false);
+        settingsMenu.SetActive(false);
+        backImage.SetActive(false);
+        pauseModUI.HidePauseMods();
+        lastSelectedButton = null;
+        onPressBack = null;
         Time.timeScale = 1;
+        isPaused = false;
+        BattleMech.instance.mechHealth.Die();
     }
 
     public void ShowBackImage(bool value)

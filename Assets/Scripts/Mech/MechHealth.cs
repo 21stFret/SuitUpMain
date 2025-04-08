@@ -62,6 +62,8 @@ public class MechHealth : MonoBehaviour
     private bool lowHealthMod;
     private bool fullHealthMod;
 
+    public float mechDefense = 0.5f;
+
     public void OnDisable()
     {
         // Clean up any running flash
@@ -147,16 +149,16 @@ public class MechHealth : MonoBehaviour
             if (healthlow && !lowHealthMod)
             {
                 lowHealthMod = true;
-                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod);
                 if(__selectMod.modifiers.Count>1)
                 {
-                    GameManager.instance.runUpgradeManager.ApplyStatModifiers(__selectMod);
+                    GameManager.instance.runUpgradeManager.ApplyMod(__selectMod);
                 }
             }
             else if (!healthlow && lowHealthMod)
             {
                 lowHealthMod = false;
-                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod);
                 if(__selectMod.modifiers.Count>1)
                 {
                     GameManager.instance.runUpgradeManager.RemoveMod(__selectMod);
@@ -170,12 +172,12 @@ public class MechHealth : MonoBehaviour
             if (targetHealth.health == targetHealth.maxHealth && !fullHealthMod)
             {
                 fullHealthMod = true;
-                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(__selectMod);
             }
             else if (targetHealth.health != targetHealth.maxHealth && fullHealthMod)
             {
                 fullHealthMod = false;
-                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod.modifiers[0].statValue);
+                BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod);
             }
             return;
         }
@@ -227,6 +229,8 @@ public class MechHealth : MonoBehaviour
 
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
+        // quick fix to make the game easier, mech defense 0 = full dam, 1 = no damge
+        damage *= 1-mechDefense;
 
         if(shieldHealth >0 && !isHeal)
         {
@@ -318,11 +322,11 @@ public class MechHealth : MonoBehaviour
     private IEnumerator RevengeCoroutine(RunMod mod)
     {
 
-        BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(mod.modifiers[0].statValue);
+        BattleMech.instance.weaponController.mainWeaponEquiped.ApplyDamageModifier(mod);
         
         yield return new WaitForSeconds(mod.modifiers[1].statValue);
         
-        BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(mod.modifiers[0].statValue);
+        BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(mod);
         isRevengeActive = false;
     }
 
@@ -383,7 +387,7 @@ public class MechHealth : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         targetHealth.health = 0;
         isDead = true;

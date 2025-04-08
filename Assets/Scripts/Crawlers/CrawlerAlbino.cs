@@ -136,6 +136,10 @@ public class CrawlerAlbino : Crawler
                 Vector3 direction = collider.transform.position - smashLocation.position;
                 rb.AddForce(direction.normalized * smashForce, ForceMode.Impulse);
             }
+            if(collider.CompareTag("BigEnvironment"))
+            {
+                collider.GetComponent<BreakableEnvironment>().Hit();
+            }
         }
         triggeredAttack = false;
         float damagePercent = Mathf.Clamp(dam / 10f, 0.5f,1f);

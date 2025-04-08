@@ -28,7 +28,7 @@ public class BeamMod : WeaponMod
         base.Init();
         gun = baseWeapon as PlasmaGun;
         baseWeapon.weaponOverride = true;
-        runUpgradeManager.ApplyStatModifiers(runMod);
+        runUpgradeManager.ApplyMod(runMod);
         beam.enabled = true;
         beam.beamDamage = baseWeapon.damage;
         beamReadyLight.SetActive(true);

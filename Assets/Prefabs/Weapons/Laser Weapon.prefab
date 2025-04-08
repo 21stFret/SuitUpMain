@@ -35,9 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8160097823220825205}
-  - {fileID: 2229872019701436040}
   - {fileID: 4215328581237748320}
-  - {fileID: 4842704759842100827}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6951267595185181951
@@ -59,6 +57,7 @@ MonoBehaviour:
     type: 3}
   vulcanMuzzle: {fileID: 400002, guid: e4aff98840a58c94ea1cec28789d55d6, type: 3}
   vulcanImpact: {fileID: 400000, guid: bfa7781c328a236468eda51a8ae2be55, type: 3}
+  range: 0
 --- !u!114 &2554992489879498107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +303,7 @@ MonoBehaviour:
     weaponEffect: {fileID: 0}
     weaponLights: {fileID: 0}
   weaponType: 2
+  gunturret: {fileID: 4498493766254750917}
   damage: 0
   force: 0
   fireRate: 0
@@ -371,11 +371,12 @@ Transform:
   m_GameObject: {fileID: 2229872019701535400}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.75999963, z: -0.28100005}
+  m_LocalPosition: {x: 0, y: 0, z: 0.608}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2760412817417953826}
+  m_Children:
+  - {fileID: 4842704759842100827}
+  m_Father: {fileID: 2229872019701436042}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2229872019701535402
 GameObject:
@@ -407,7 +408,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2229872019701436040}
   m_Father: {fileID: 2229872019701436046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2229872019700666026
@@ -10396,7 +10398,7 @@ Transform:
   m_GameObject: {fileID: 5586610905987549431}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.014, y: -0.004, z: 1.209}
+  m_LocalPosition: {x: 0.014001846, y: -0.0040026903, z: -0.00899452}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10404,7 +10406,7 @@ Transform:
   - {fileID: 6872768708324572128}
   - {fileID: 2434759764998739529}
   - {fileID: 4452735539011974959}
-  m_Father: {fileID: 2760412817417953826}
+  m_Father: {fileID: 2229872019701436040}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &8534440649573820014
 ParticleSystem:

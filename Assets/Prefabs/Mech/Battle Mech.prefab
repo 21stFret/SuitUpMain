@@ -568,11 +568,11 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: -1508168537
-  m_SortingOrder: 1
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &3779395199768494828
 MonoBehaviour:
@@ -41027,9 +41027,9 @@ MonoBehaviour:
   detectionRadius: 200
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 65792
+    m_Bits: 65920
   locatorArrow: {fileID: 4465028023471026302}
-  rotationSpeed: 10
+  rotationSpeed: 5
   fadeInDuration: 0.5
   fadeOutDuration: 2
   activeColor: {r: 0.28235295, g: 1, b: 0, a: 0.20392157}
@@ -66255,6 +66255,7 @@ Transform:
   - {fileID: 2446780929845776748}
   - {fileID: 4122817938222281923}
   - {fileID: 3310712960604598016}
+  - {fileID: 4780735103439208398}
   m_Father: {fileID: 8122996381916016047}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7574829102360885476
@@ -71560,7 +71561,6 @@ Transform:
   - {fileID: 342172484653664680}
   - {fileID: 5750433708171439372}
   - {fileID: 8670443235848254688}
-  - {fileID: 4780735103439208398}
   - {fileID: 3299094880344178496}
   - {fileID: 6882711272807096378}
   m_Father: {fileID: 0}
@@ -71699,6 +71699,7 @@ MonoBehaviour:
   maxHealth: 100
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 568f589631ce4e7429922beeca1021e3,
@@ -71736,6 +71737,7 @@ MonoBehaviour:
   shieldBar: {fileID: 0}
   shieldMaterial: {fileID: 2100000, guid: 777f34780a8192b45bb6c1e818093a0f, type: 2}
   shieldColor: {r: 0, g: 2.1688414, b: 2.0641198, a: 1}
+  mechDefense: 0.3
 --- !u!54 &364384307396218630
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -71782,10 +71784,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.51
-  m_Height: 4.79
+  m_Radius: 1.5
+  m_Height: 5.33
   m_Direction: 1
-  m_Center: {x: 0, y: 2.5, z: 0}
+  m_Center: {x: 0, y: 2.59, z: 0.4}
 --- !u!114 &5514233860546987800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77673,7 +77675,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6858550102467727535}
+    m_TransformParent: {fileID: 8338578915834677053}
     m_Modifications:
     - target: {fileID: 50831241619885519, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}
@@ -77703,12 +77705,12 @@ PrefabInstance:
     - target: {fileID: 5568535256027540728, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.2597606
+      value: 0.55409956
       objectReference: {fileID: 0}
     - target: {fileID: 5568535256027540728, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.934641
+      value: 11.93464
       objectReference: {fileID: 0}
     - target: {fileID: 5568535256027540728, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}
@@ -77764,7 +77766,7 @@ PrefabInstance:
     - target: {fileID: 8856276958920911582, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}
       propertyPath: layerMask.m_Bits
-      value: 256
+      value: 1315200
       objectReference: {fileID: 0}
     - target: {fileID: 8856276958920911582, guid: 5df1d97ee332e924084f466ecc3657dc,
         type: 3}

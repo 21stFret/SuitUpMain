@@ -65,7 +65,7 @@ public class CrawlerSpitter : Crawler
         if (spitTimer > spitSpeed)
         {
             StartCoroutine(Spit());
-            spitTimer = 0;
+            spitTimer = Random.Range(-0.5f, 0.5f);
         }
     }
 

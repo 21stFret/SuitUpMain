@@ -53,19 +53,19 @@ public class SetupGame : MonoBehaviour
         {
             case Difficulty.Easy:
                 battleManager.Battles.AddRange(roomwavesEasy);
-                mulitpler = 1;
+                mulitpler = 1f;
                 break;
             case Difficulty.Mid:
                 battleManager.Battles.AddRange(roomwavesMid);
-                mulitpler = 1.5f;
+                mulitpler = 1.25f;
                 break;
             case Difficulty.Hard:
                 battleManager.Battles.AddRange(roomwavesHard);
-                mulitpler = 2;
+                mulitpler = 1.5f;
                 break;
             case Difficulty.Insane:
                 battleManager.Battles.AddRange(roomwavesInsane);
-                mulitpler = 3;
+                mulitpler = 2f;
                 break;
         }
         battleManager.dificultyMultiplier = mulitpler;

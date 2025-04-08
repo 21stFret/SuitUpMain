@@ -51,6 +51,7 @@ public class MechWeapon : MonoBehaviour
     public BaseWeaponInfo baseWeaponInfo;
     public WeaponEffects weaponEffects;
     public WeaponType weaponType;
+    public GameObject gunturret;
     public float damage;
     public float force;
     public float fireRate;
@@ -68,7 +69,7 @@ public class MechWeapon : MonoBehaviour
     public WeaponMod weaponMod;
     public bool weaponOverride;
     public int bounces;
-    private float bonusDamage;
+    protected float autoAimSpeed = 2.0f;
 
     public virtual void Init()
     {
@@ -88,14 +89,14 @@ public class MechWeapon : MonoBehaviour
         }
     }
 
-    public void ApplyDamageModifier(float modifier)
+    public void ApplyDamageModifier(RunMod mod)
     {
-        damage *= modifier;
+        GameManager.instance.runUpgradeManager.ApplyMod(mod);
     }
 
-    public void RemoveDamageModifier(float modifier)
+    public void RemoveDamageModifier(RunMod mod)
     {
-        damage /= modifier;
+        GameManager.instance.runUpgradeManager.RemoveMod(mod);
     }
 
     private void SetValues()

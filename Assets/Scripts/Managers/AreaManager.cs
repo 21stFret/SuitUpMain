@@ -93,7 +93,8 @@ public class AreaManager : MonoBehaviour
             if (roomPrefab == currentRoom)
             {
                 print("Room is the same as the current room");
-                randomIndex = (randomIndex + 1) % roomPrefabs.Count-1;
+                randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
+                roomPrefab = roomPrefabs[randomIndex];
             }
             area = roomPrefab.GetComponent<EnvironmentArea>();
             if(directionalDaylight!=null)

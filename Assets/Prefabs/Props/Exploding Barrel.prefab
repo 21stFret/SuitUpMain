@@ -4912,6 +4912,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 0}
@@ -4955,8 +4956,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetHealth: {fileID: 7257537869699536365}
-  damageNumberPrefab: {fileID: 0}
-  damageNumbersOn: 0
   init: 0
   weaponType: 6
   explosionForce: 10
@@ -4966,7 +4965,7 @@ MonoBehaviour:
   explosionEffect: {fileID: 6132995402259027068}
   layerMask:
     serializedVersion: 2
-    m_Bits: 266560
+    m_Bits: 266688
   prefab: {fileID: 1640948532861070197}
   fuseTime: 1
   fuseCount: 1
@@ -38717,9 +38716,7 @@ MonoBehaviour:
   explosionForce: 500
   explosionRadius: 2
   localScale: 0
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 2
+  layer: 0
 --- !u!1 &7518972558097953152
 GameObject:
   m_ObjectHideFlags: 0

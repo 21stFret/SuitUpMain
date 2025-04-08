@@ -422,7 +422,7 @@ public class RunUpgradeManager : MonoBehaviour
                 }
                 break;
             case ModCategory.STATS:
-                ApplyStatModifiers(mod);
+                ApplyMod(mod);
                 break;
         }
 
@@ -432,7 +432,7 @@ public class RunUpgradeManager : MonoBehaviour
         GameManager.instance.SpawnPortalsToNextRoom();
     }
 
-    public void ApplyStatModifiers(RunMod mod)
+    public void ApplyMod(RunMod mod)
     {
         foreach (var modifier in mod.modifiers)
         {
@@ -482,7 +482,7 @@ public class RunUpgradeManager : MonoBehaviour
         {
             if (mod.modCategory == ModCategory.STATS)
             {
-                ApplyStatModifiers(mod);
+                ApplyMod(mod);
             }
             // Re-apply other mod types if necessary
         }

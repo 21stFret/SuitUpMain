@@ -13,7 +13,7 @@ public class NitrogenMod : WeaponMod
         base.Init();
         baseWeapon.weaponOverride = true;
         flameTrigger.InitFlameTrigger(baseWeapon.damage, baseWeapon.fireRate, 13, WeaponType.Cryo);
-        runUpgradeManager.ApplyStatModifiers(runMod);
+        runUpgradeManager.ApplyMod(runMod);
     }
 
     // Fire Weapon

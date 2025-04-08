@@ -177,13 +177,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
     public void EndGame(bool won)
     {
         AudioManager.instance.PlayBGMusic(4);
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
+        CrawlerSpawner.instance.KillAllCrawlers();
         if(PlayerProgressManager.instance != null && SetupGame.instance != null)
         {
             PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
@@ -199,13 +198,14 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator DelayedEndGame(bool won)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
         gameUI.ShowEndGamePanel(won);
         SwapPlayerInput("UI");
     }
 
     public void EndGameCall(bool win)
     {
+        Time.timeScale = 1;
         StartCoroutine(EndGameDelay(win));
     }
 

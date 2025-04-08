@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class Shotgun : MechWeapon
 {
-    public GameObject gunturret;
     private Animator _animator;
     public ProjectileWeapon weaponController;
-
     private float _timer;
-
     public int shotsPerBurst;
     public float spreadAngle;
     public float stunTime;
@@ -54,7 +51,7 @@ public class Shotgun : MechWeapon
         }
 
 
-        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);
+        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * autoAimSpeed);
 
         _timer += Time.deltaTime;
 

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using System.Reflection;
 using System.Collections.Generic;
+using DTT.AreaOfEffectRegions;
 
 namespace FORGE3D
 {
@@ -15,9 +16,11 @@ namespace FORGE3D
         public Transform player;
         public Vector3 target;
         public Transform[] socket;
+        public GameObject[] hitUI;
         public Transform explosionPrefab;
         public Transform fatManEffectPrefab;
         public float trackingRaduis = 20f;
+        public float missileSpeed = 10f;
         public LayerMask layerMask;
         private F3DMissile.MissileType missileType;
         public List<Transform> targets;
@@ -25,6 +28,8 @@ namespace FORGE3D
         public bool FatMan;
 
         public Text missileTypeLabel;
+
+        private List<Vector3> targetPositions = new List<Vector3>();
 
         // Use this for initialization
         private void Start()
@@ -53,6 +58,10 @@ namespace FORGE3D
         public void LaunchMissiles(int amount)
         {
             targets = SetTargetInRadius(player.position, trackingRaduis, layerMask);
+            foreach (var ui in hitUI)
+            {
+                ui.SetActive(false);
+            }
             for (var i = 0; i < amount; i++)
             {
                 LaunchMissile(i);
@@ -72,11 +81,77 @@ namespace FORGE3D
 
                 missile.launcher = this;
                 missile.missileType = missileType;
-                if (target>targets.Count)
+                if (target<targets.Count)
                 {
-                    target = Random.Range(0, targets.Count);
+                    missile.target = targets[target];
+                    missile.targetPosition = targets[target].position;
                 }
-                missile.target = targets[target];
+                else
+                {
+                    //SpreadInFront();
+                    //missile.targetPosition = targetPositions[target];
+
+                    missile.targetPosition = RandomTargetPosition();
+                }
+
+                hitUI[target].transform.position = missile.targetPosition;
+                hitUI[target].transform.SetParent(null);
+                hitUI[target].SetActive(true);
+                missile.circleRegion = hitUI[target].GetComponent<CircleRegion>();
+                missile.startingDistance = Vector3.Distance(missile.targetPosition, socket[randomSocketId].position);
+                missile.velocity =  missileSpeed;
+            }
+        }
+
+        private Vector3 RandomTargetPosition()
+        {
+            Vector3 pos = GetRandomPointInSphere(transform.position, trackingRaduis);
+            pos.y = 2f;
+            return pos;
+        }
+
+        private void SpreadInFront()
+        {
+            targetPositions.Clear(); // Clear previous positions
+            // Get number of missiles to spread
+            int missileCount = droneController.missileAmount;
+            float angleStep = 60f / missileCount; // Spread across 60 degree arc
+            float minDistance = 3f; // Minimum distance between targets
+
+            for (int i = 0; i < missileCount; i++)
+            {
+                // Calculate angle for this target
+                float angle = -30f + (angleStep * i); // Start at -30 degrees
+                
+                // Create rotation for this angle
+                Quaternion rotation = transform.rotation * Quaternion.Euler(0, angle, 0);
+                
+                // Get forward direction with random distance
+                float distance = Random.Range(trackingRaduis * 0.5f, trackingRaduis);
+                Vector3 targetPos = transform.position + (rotation * Vector3.forward * distance);
+                targetPos.y = 2f; // Set consistent height
+
+                // Check for overlaps with existing positions
+                bool validPosition = true;
+                foreach (Vector3 existingPos in targetPositions)
+                {
+                    if (Vector3.Distance(targetPos, existingPos) < minDistance)
+                    {
+                        validPosition = false;
+                        break;
+                    }
+                }
+
+                // If position is too close to another, try to adjust it
+                if (!validPosition)
+                {
+                    // Try moving it further out
+                    targetPos = transform.position + (rotation * Vector3.forward * (distance + minDistance));
+                    targetPos.y = 2f;
+                }
+
+                targetPositions.Add(targetPos);
+
             }
         }
 
@@ -103,7 +178,7 @@ namespace FORGE3D
                 {
                     var newTarget = Instantiate(new GameObject());
                     Vector3 randomPoint = GetRandomPointInSphere(center, radius);
-                    randomPoint.y = 0;
+                    randomPoint.y = 1f;
                     newTarget.transform.position = randomPoint;
                     targets.Add(newTarget.transform);
                     Destroy(newTarget, 5f);

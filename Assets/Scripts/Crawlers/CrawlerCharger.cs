@@ -98,6 +98,10 @@ public class CrawlerCharger : Crawler
     {
         base.Die(weapon);
         PlayerSavedData.instance._gameStats.totalElites++;
+        if(PlayerAchievements.instance == null)
+        {
+            return;
+        }
         if (PlayerSavedData.instance._gameStats.totalElites == 1)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_1");

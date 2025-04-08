@@ -56,7 +56,7 @@ public class SequenceInputController : MonoBehaviour
     private void Awake()
     {
         // Setup Input Actions
-        var gameplayMap = inputActions.FindActionMap("UI");
+        var gameplayMap = inputActions.FindActionMap("Gameplay");
         upAction = gameplayMap.FindAction("Up");
         downAction = gameplayMap.FindAction("Down");
         leftAction = gameplayMap.FindAction("Left");

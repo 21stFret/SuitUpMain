@@ -7,7 +7,6 @@ using UnityEngine.InputSystem;
 public class Minigun : MechWeapon
 {
     public bool hasTarget;
-    public GameObject gunturret;
     private Animator _animator;
     public ProjectileWeapon weaponController;
     public float miniGunBonusDamage;
@@ -27,19 +26,36 @@ public class Minigun : MechWeapon
     void Update()
     {
         var target = sensor.GetNearestDetection();
-        Vector3 location;
+        Vector3 location = transform.forward;
         if (target != null)
         {
             hasTarget = true;
-            location = target.transform.position - gunturret.transform.position + aimOffest;
+            var hunter = target.GetComponent<CrawlerHunter>();
+            if(hunter != null)
+            {
+                if (hunter.isStealthed)
+                {
+                    location = transform.forward;
+                }
+                else
+                {
+                    location = target.transform.position - gunturret.transform.position + aimOffest;
+                }
+            }
+            else
+            {
+                location = target.transform.position - gunturret.transform.position + aimOffest;
+            }
+
         }
         else
         {
-            location = transform.forward;
             hasTarget = false;
+            location = transform.forward;
         }
 
-        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * 10.0f);
+
+        gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * autoAimSpeed);
         _animator.SetBool("HasTarget", hasTarget);
 
         if(hasTarget && autoTurret)

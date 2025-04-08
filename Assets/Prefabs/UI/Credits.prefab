@@ -2353,6 +2353,8 @@ MonoBehaviour:
   nextSceneName: Back Yard Area
   doTweenFade: {fileID: 5227103424695778734}
   fillBar: {fileID: 6127958087845810290}
+  playerInput: {fileID: 0}
+  loadScene: 0
 --- !u!1 &6837685994623110451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3151,7 +3153,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hold  B to Skip
+  m_text: Hold    to Skip
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1cf89c4469de2a4f8d235e558f58118, type: 2}
   m_sharedMaterial: {fileID: 6806131820979247816, guid: c1cf89c4469de2a4f8d235e558f58118,

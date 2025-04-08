@@ -5082,9 +5082,7 @@ MonoBehaviour:
   explosionForce: 500
   explosionRadius: 2
   localScale: 1
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 2
+  layer: 0
 --- !u!1 &6569910827466637269
 GameObject:
   m_ObjectHideFlags: 0
@@ -5190,7 +5188,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 2277740699517821931}
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}
-  damageNumbersOn: 1
+  damageNumbersOn: 0
   init: 0
   loot:
   - {fileID: 6074910426733548213, guid: c566ed7d5e9c419408524045a480981c, type: 3}
@@ -5267,6 +5265,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
