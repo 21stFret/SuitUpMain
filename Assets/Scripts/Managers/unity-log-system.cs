@@ -26,4 +26,9 @@ public class LogDatabase : ScriptableObject
     {
         return allLogs.FindAll(log => log.category == category);
     }
+
+    public LogEntry GetLogById(string id)
+    {
+        return allLogs.Find(log => log.id == id);
+    }
 }

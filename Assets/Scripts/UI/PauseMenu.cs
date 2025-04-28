@@ -13,10 +13,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject menu;
     public GameObject cheatsMenu;
-    public GameObject controlsMenu;
     public GameObject controlsPC;
     public GameObject controlsGamePad;
     public GameObject settingsMenu;
+    public GameObject datalogsMenu;
     public GameObject settingsPopup;
     public GameObject quitMenu;
     public bool isPaused;
@@ -24,6 +24,7 @@ public class PauseMenu : MonoBehaviour
     public EventSystem eventSystem;
     public GameObject firstSelectedButton;
     public GameObject settingsSelectedButton;
+    public GameObject logsSelectedButton;
     public GameObject quitSelectedButton;
     public GameObject modSelectedButton;
     public bool menuLocked;
@@ -36,8 +37,11 @@ public class PauseMenu : MonoBehaviour
     public GameObject lastSelectedButton;
     public ModUI _modUI;
     public DroneControllerUI droneControllerUI;
+    public LogManager logManager;
     private bool hiddenMenu;
     private bool wasPreviouslyConnected = false;
+
+    public bool canQuickOpen = false;
 
     private Callback<GameOverlayActivated_t> m_GameOverlayActivated;
 
@@ -61,6 +65,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         menuOpen = false;
         lastSelectedButton = null;
+        canQuickOpen = false;
     }
 
     void Update()
@@ -149,25 +154,6 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    private void OpenPauseMenu()
-    {
-        SetTitleText("paused");
-        pauseMenu.SetActive(true);
-        menu.SetActive(true);
-        SetOnBackAction(ResumeGame);
-        backImage.SetActive(false);
-        SwapBackIcon();
-        if (lastSelectedButton != null)
-        {
-            eventSystem.SetSelectedGameObject(lastSelectedButton);
-        }
-        else
-        {
-            eventSystem.SetSelectedGameObject(firstSelectedButton);
-        }
-    }
-
-
     public void SetOnBackAction(Action action)
     {
         onPressBack = null;
@@ -184,10 +170,29 @@ public class PauseMenu : MonoBehaviour
         backImage.GetComponent<Image>().sprite = InputTracker.instance.usingMouse ? PcBack : gamepadBack;
     }
 
+    private void OpenPauseMenu()
+    {
+        SetTitleText("paused");
+        pauseMenu.SetActive(true);
+        menu.SetActive(true);
+        SetOnBackAction(ResumeGame);
+        backImage.SetActive(true);
+        SwapBackIcon();
+        if (lastSelectedButton != null)
+        {
+            eventSystem.SetSelectedGameObject(lastSelectedButton);
+        }
+        else
+        {
+            eventSystem.SetSelectedGameObject(firstSelectedButton);
+        }
+    }
+
     public void OpenSettingsMenu(bool value)
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         settingsMenu.SetActive(value);
+        SwapControlsMenu();
         settingsPopup.SetActive(false);
         menu.SetActive(false);
         backImage.SetActive(true);
@@ -199,22 +204,6 @@ public class PauseMenu : MonoBehaviour
         lastSelectedButton = eventSystem.currentSelectedGameObject;
         SetOnBackAction(() => { OpenSettingsMenu(false); });
         eventSystem.SetSelectedGameObject(settingsSelectedButton);
-    }
-
-    public void OpenControlsMenu(bool value)
-    {
-        AudioManager.instance.PlaySFX(SFX.Confirm);
-        controlsMenu.SetActive(value);
-        SwapControlsMenu();
-        backImage.SetActive(true);
-        menu.SetActive(false);
-        if (!value)
-        {
-            OpenPauseMenu();
-            return;
-        }
-        lastSelectedButton = eventSystem.currentSelectedGameObject;
-        SetOnBackAction(() => { OpenControlsMenu(false); });
     }
 
     public void OpenQuitMenu(bool value)
@@ -231,6 +220,24 @@ public class PauseMenu : MonoBehaviour
         lastSelectedButton = eventSystem.currentSelectedGameObject;
         SetOnBackAction(() => { OpenQuitMenu(false); });
         eventSystem.SetSelectedGameObject(quitSelectedButton);
+    }
+
+    public void OpenDataLogMenu(bool value)
+    {
+        logManager.LoadUI();
+        SetTitleText("data logs");
+        AudioManager.instance.PlaySFX(SFX.Confirm);
+        datalogsMenu.SetActive(value);
+        menu.SetActive(false);
+        backImage.SetActive(true);
+        if (!value)
+        {
+            OpenPauseMenu();
+            return;
+        }
+        lastSelectedButton = eventSystem.currentSelectedGameObject;
+        SetOnBackAction(() => { OpenDataLogMenu(false); });
+        eventSystem.SetSelectedGameObject(logsSelectedButton);
     }
 
     public void OpenCheatsMenu()
@@ -268,6 +275,18 @@ public class PauseMenu : MonoBehaviour
         modSelectedButton.GetComponent<ModEntry>().OnHoverEnter();
     }
 
+    public void QuickOpenDataLogMenu(InputAction.CallbackContext context)
+    {
+        if (context.performed && canQuickOpen)
+        {
+            logManager.dataLogPopUpUI.DisableLogPopUp();
+            AudioManager.instance.PlaySFX(SFX.Confirm);
+            PauseGame();
+            OpenDataLogMenu(true);
+            canQuickOpen = false;
+        }
+    }
+
     public void ResumeGame()
     {
         if(!menuOpen)
@@ -279,10 +298,13 @@ public class PauseMenu : MonoBehaviour
         cheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
         menu.SetActive(false);
-        controlsMenu.SetActive(false);
         settingsMenu.SetActive(false);
         backImage.SetActive(false);
         pauseModUI.HidePauseMods();
+        if(datalogsMenu != null)
+        {
+            datalogsMenu.SetActive(false);
+        }
         lastSelectedButton = null;
         onPressBack = null;
         Time.timeScale = 1;
@@ -320,7 +342,6 @@ public class PauseMenu : MonoBehaviour
         cheatsMenu.SetActive(false);
         pauseMenu.SetActive(false);
         menu.SetActive(false);
-        controlsMenu.SetActive(false);
         settingsMenu.SetActive(false);
         backImage.SetActive(false);
         pauseModUI.HidePauseMods();

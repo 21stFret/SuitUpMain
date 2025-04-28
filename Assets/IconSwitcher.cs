@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class IconSwitcher : MonoBehaviour
 {
-    public InputTracker inputTracker;
+    private InputTracker inputTracker;
     public Image image;
     public Sprite pcIcon, gamepadIcon;
 

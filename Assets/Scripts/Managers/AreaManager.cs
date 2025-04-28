@@ -25,6 +25,7 @@ public class AreaManager : MonoBehaviour
     public GameObject dayLight;
     public GameObject nightLight;
     public DirectionalDaylight directionalDaylight;
+    public DataLogSpawner dataLogSpawner;
 
     private void Start()
     {
@@ -113,6 +114,7 @@ public class AreaManager : MonoBehaviour
         roomPrefab.SetActive(true);
         currentRoom = roomPrefab;
         area.RefreshArea();
+        LoadDataLog();
     }
 
     public void LoadVoidArea()
@@ -125,5 +127,22 @@ public class AreaManager : MonoBehaviour
         currentRoom = voidArea;
         DayNightCycle(true);
     }
-
+    
+    public void LoadDataLog()
+    {
+        int randomIndex = Random.Range(0, 100);
+        if (randomIndex < 25)
+        {
+            dataLogSpawner.HideDataLog();
+            return;
+        }
+        if (dataLogSpawner != null && currentRoom != null)
+        {
+            dataLogSpawner.SpawnRandomDataLog();
+        }
+        else
+        {
+            Debug.LogError("DataLogSpawner or currentRoom is null. Cannot load data log.");
+        }
+    }
 }

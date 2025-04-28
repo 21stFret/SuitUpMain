@@ -230,7 +230,11 @@ public class MechHealth : MonoBehaviour
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
         // quick fix to make the game easier, mech defense 0 = full dam, 1 = no damge
-        damage *= 1-mechDefense;
+        if(!isHeal)
+        {
+            damage *= 1-mechDefense;
+        }
+
 
         if(shieldHealth >0 && !isHeal)
         {

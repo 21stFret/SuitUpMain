@@ -15,6 +15,8 @@ public class InteractionManager : MonoBehaviour
     private bool canInteract = true;
     [SerializeField] private float interactionCooldown = 0.5f;
 
+    public BaseManager baseManager;
+
     private void OnInteract(InputAction.CallbackContext context)
     {
         if (!context.performed || !canInteract)
@@ -24,7 +26,7 @@ public class InteractionManager : MonoBehaviour
         if (currentInteractable != null && currentInteractable.CanInteract())
         {
             interactEndAction.action.performed += OnEndInteraction;
-            BattleMech.instance.myCharacterController.ToggleCanMove(false);
+            //BattleMech.instance.myCharacterController.ToggleCanMove(false);
             canInteract = false;
             currentInteractable.ShowPrompt(false);
             AudioManager.instance.PlaySFX(SFX.Select);
@@ -71,7 +73,7 @@ public class InteractionManager : MonoBehaviour
     {
         if (other.TryGetComponent(out IInteractable interactable) && interactable == currentInteractable)
         {
-            //currentInteractable.EndInteraction();
+            currentInteractable.EndInteraction();
             currentInteractable.ShowPrompt(false);
             currentInteractable = null;
             interactableObject = null;
@@ -80,11 +82,18 @@ public class InteractionManager : MonoBehaviour
 
     private void OnEndInteraction(InputAction.CallbackContext context)
     {
+        if(baseManager != null)
+        {
+            if(baseManager.thankYouPanel.activeSelf)
+            {
+                return;
+            }
+        }
         if (currentInteractable != null)
         {
             currentInteractable.ShowPrompt(true);
             currentInteractable.EndInteraction();
-            BattleMech.instance.myCharacterController.ToggleCanMove(true);
+            //BattleMech.instance.myCharacterController.ToggleCanMove(true);
             interactEndAction.action.performed -= OnEndInteraction;
             interactEndAction.action.Disable();
         }

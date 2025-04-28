@@ -95,7 +95,7 @@ public class TutorialUI : MonoBehaviour
     {
         currentTextCoroutine = StartCoroutine(PrintText("Well Done! Now simulating pain!"));
         yield return currentTextCoroutine;
-        mechHealth.TakeDamage(10);
+        mechHealth.TakeDamage(20);
         instructionPanel.SetActive(false);
         TutorialManager.instance.droneTextCheck = true;
     }
