@@ -217,47 +217,13 @@ public class BattleManager : MonoBehaviour
         crawlerSpawner.EndBattle();
     }
 
-    private void SetPickUpPosition(float minDistance = 5f, float maxDistance = 15f, int maxAttempts = 10)
+    private void SetPickUpPosition()
     {
         Vector3 pos;
         pos = Vector3.zero;
         pos.y = 3;
         roomDrop.transform.position = pos;
         return;
-        
-        /*
-        Vector3 playerPos = GameManager.instance.playerInput.transform.position;
-        int attempts = 0;
-
-        do
-        {
-            // Generate a random position within a spherical shell
-            Vector3 randomDirection = Random.insideUnitSphere.normalized;
-            float randomDistance = Random.Range(minDistance, maxDistance);
-            pos = playerPos + randomDirection * randomDistance;
-            pos.y = 3;
-
-            attempts++;
-
-            if(Vector3.Distance(playerPos, pos) < minDistance) continue;
-            if(Vector3.Distance(Vector3.zero, pos) > 50) continue;
-
-            // Check if the position is valid (not obstructed)
-            Collider[] colliders = Physics.OverlapSphere(pos, 4, dropLayer);
-
-            if (colliders.Length==0)
-            {
-                roomDrop.transform.position = pos;
-                return;
-            }
-        } while (attempts < maxAttempts);
-
-        // If we've exceeded max attempts, fall back to a position at minDistance
-        //print("Failed to find a valid drop position, falling back to map centre");
-        pos = Vector3.zero;
-        pos.y = 3;
-        roomDrop.transform.position = pos;
-        */
     }
 
     public void UpdateCrawlerSpawner()

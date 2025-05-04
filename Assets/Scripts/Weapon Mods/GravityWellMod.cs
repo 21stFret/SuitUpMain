@@ -9,12 +9,15 @@ public class GravityWellMod : WeaponMod
     private float shotTimer;
     public float grenadeShotTime;
     private bool overideFire;
+    public float modFuelCostOveride;
 
     public override void Init()
     {
         base.Init();
         baseWeapon.weaponOverride = true;
         damage = baseWeapon.damage * (runMod.modifiers[0].statValue/100);
+        baseWeapon.weaponFuelManager.constantUse = false;
+        modFuelCost = modFuelCostOveride;
     }
 
     public void Update()
@@ -24,8 +27,6 @@ public class GravityWellMod : WeaponMod
         {
             return;
         }
-
-
 
         if (shotTimer <= grenadeShotTime)
         {
@@ -41,6 +42,7 @@ public class GravityWellMod : WeaponMod
         {
             currentGrenade = 0;
         }
+        baseWeapon.weaponFuelManager.UseFuel(modFuelCost);
         shotTimer = 0;
     }
 

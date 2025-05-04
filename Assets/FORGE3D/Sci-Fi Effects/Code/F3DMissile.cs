@@ -151,7 +151,7 @@ namespace FORGE3D
                     if (crawler != null)
                     {
                         crawler.DealyedDamage(impactDamage , 1f, WeaponType.AoE);
-                        return;
+                        continue;
                     }
                     targetHealth.TakeDamage(impactDamage, WeaponType.AoE);
 

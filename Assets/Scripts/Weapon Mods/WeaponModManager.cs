@@ -88,7 +88,12 @@ public class WeaponModManager : MonoBehaviour
         {
             return;
         }
-        
+
+        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentAssaultMod.runMod.modName);
+
+        GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
+
+        /*
         assualtWeapon.weaponMod = currentAssaultMod;
         currentAssaultMod.baseWeapon = assualtWeapon;
         currentAssaultMod.enabled = true;
@@ -96,6 +101,7 @@ public class WeaponModManager : MonoBehaviour
         currentAssaultMod.transform.localPosition = Vector3.zero;
         currentAssaultMod.transform.localRotation = Quaternion.identity;
         currentAssaultMod.Init();
+        */
     }
 
     public void EquipTechModTEst()

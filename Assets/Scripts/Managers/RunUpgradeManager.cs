@@ -333,6 +333,9 @@ public class RunUpgradeManager : MonoBehaviour
         AudioManager.instance.PlaySFX(SFX.Confirm);
         var mod = listMods[index];
         EnableModSelection(mod);
+        ModUI.CloseModUI();
+        GameManager.instance.SpawnPortalsToNextRoom();
+
     }
 
     public void ReRollMods()
@@ -427,9 +430,6 @@ public class RunUpgradeManager : MonoBehaviour
         }
 
         currentEquipedMods.Add(mod);
-
-        ModUI.CloseModUI();
-        GameManager.instance.SpawnPortalsToNextRoom();
     }
 
     public void ApplyMod(RunMod mod)
@@ -504,6 +504,11 @@ public class RunUpgradeManager : MonoBehaviour
     public List<RunMod> HasModsByName(string ModName)
     {
         return currentEquipedMods.FindAll(mod => mod.modName == ModName);
+    }
+
+    public RunMod GetWeaponModByName(string ModName)
+    {
+        return runModsWeaponUpgrades.Find(mod => mod.modName == ModName);
     }
 
 }

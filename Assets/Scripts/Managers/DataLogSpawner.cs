@@ -42,6 +42,7 @@ public class DataLogSpawner : MonoBehaviour
         dataLog.transform.position = spawnPosition;
         dataLog.transform.rotation = Quaternion.Euler(0, 0, 0);
         logManager.GenerateGOLog();
+        dataLog.GetComponentInChildren<InteractableObject>().ShowPrompt(false);
         
         if (showDebugGizmos)
         {

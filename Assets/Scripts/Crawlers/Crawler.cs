@@ -514,7 +514,6 @@ public class Crawler : MonoBehaviour
                     burningPatchScript.damageArea.damageAmount = 0.5f;
                     burningPatchScript.burnDuration = selectMod.modifiers[0].statValue;
                     burningPatchScript.EnableDamageArea();
-
                 }
             break;
             case WeaponType.Cryo:

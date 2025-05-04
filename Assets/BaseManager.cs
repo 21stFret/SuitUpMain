@@ -104,7 +104,7 @@ public class BaseManager : MonoBehaviour
             AudioManager.instance.PlayButtonSFX((int)SFX.Error);
             return;
         }
-        if(value>2 && PlayerSavedData.instance.demoBuild)
+        if(loadOutPanel.currentDifficulty >0 && PlayerSavedData.instance.demoBuild)
         {
             ShowThankYouPanel();
             return;

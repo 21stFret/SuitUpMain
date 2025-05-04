@@ -59,7 +59,7 @@ public class CryoController : MechWeapon
         {
             shotTimer = 0;
             projectileWeapon.Cryo(damage, force, stunTime);
-            weaponFuelManager.weaponFuel -= weaponFuelManager.weaponFuelRate;
+            weaponFuelManager.UseFuel(weaponFuelManager.weaponFuelRate);
         }
     }
 

@@ -296,7 +296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6972537012618767916
 Transform:
   m_ObjectHideFlags: 0
@@ -5302,7 +5302,7 @@ GameObject:
   - component: {fileID: 2012697057808572494}
   - component: {fileID: 3000359406134171685}
   - component: {fileID: 6226889211682186540}
-  m_Layer: 17
+  m_Layer: 0
   m_Name: Bondary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5318,9 +5318,9 @@ Transform:
   m_GameObject: {fileID: 4815249171952755623}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -1, w: 0.00000058114523}
-  m_LocalPosition: {x: -0, y: 63.37, z: 1.4753}
-  m_LocalScale: {x: 236.99998, y: 236.99998, z: 236.99998}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: -0, y: 19.9, z: 1.4753}
+  m_LocalScale: {x: 236.99998, y: 68.8, z: 236.99998}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6972537012618767916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
@@ -5405,7 +5405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 713620715360290400}
-  - component: {fileID: 5416118631749643898}
+  - component: {fileID: 8642750545615224744}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: Untagged
@@ -5421,15 +5421,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5891913718079187136}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1, y: -9.399998, z: 1.2}
-  m_LocalScale: {x: 50, y: 2, z: 50}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: -1, y: -0, z: -0, w: 0.0000029504295}
+  m_LocalPosition: {x: 1.1, y: -6.4, z: 1.2}
+  m_LocalScale: {x: 250.3192, y: 56.092754, z: 250.3192}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6972537012618767916}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5416118631749643898
-BoxCollider:
+  m_LocalEulerAnglesHint: {x: -180, y: 0, z: 0}
+--- !u!64 &8642750545615224744
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5446,9 +5446,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 6ed551e890e2cd04a9b79d864c5320c7, type: 3}
 --- !u!1 &6203057246688961800
 GameObject:
   m_ObjectHideFlags: 0

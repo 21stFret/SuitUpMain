@@ -107,10 +107,6 @@ public class CashCollector : MonoBehaviour
 
     public void SetUI()
     {
-        if (UIshown)
-        {
-            return;
-        }
         autoHide = false;
         UIshown = true;
         panelTrans.anchoredPosition = new Vector2(posX, panelTrans.anchoredPosition.y);

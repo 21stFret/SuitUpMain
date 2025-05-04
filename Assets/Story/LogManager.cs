@@ -30,8 +30,6 @@ public class LogManager : MonoBehaviour
     private void OnEnable()
     {
         Initialize();
-        LoadDiscoveredLogs();
-        LoadReadLogs();
         LoadUI();
         currentLog = GetRandomUndiscoverdEntry();
         if(logPrefab==null)
@@ -71,11 +69,12 @@ public class LogManager : MonoBehaviour
 
     public void LoadUI()
     {
+        LoadDiscoveredLogs();
+        LoadReadLogs();
         if (logUIManager != null)
         {
             logUIManager.PopulateLogList(logDatabase.allLogs);
         }
-
     }
 
     // Create a new log GameObject in the scene

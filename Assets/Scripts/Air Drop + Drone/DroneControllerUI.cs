@@ -47,7 +47,7 @@ public class DroneControllerUI : MonoBehaviour
 
     public bool testingFreeUse;
 
-    public float menuopenforTime = 4f;
+    private float menuopenforTime;
 
     private void Start()
     {
@@ -58,7 +58,11 @@ public class DroneControllerUI : MonoBehaviour
 
     void Update()
     {
-        menuopenforTime -= Time.deltaTime;
+        if(!isMenuOpen)
+        {
+            return;
+        }
+        menuopenforTime -= Time.unscaledDeltaTime;
         if (menuopenforTime <= 0f && isMenuOpen)
         {
             CloseMenu();
@@ -145,7 +149,7 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
         isMenuOpen = true;
-        
+        menuopenforTime = 5f;
 
         SetupSequencers();
 
@@ -185,7 +189,6 @@ public class DroneControllerUI : MonoBehaviour
         Time.timeScale = 1;
         Time.fixedDeltaTime = 0.02F ;
         airdropMenu.SetActive(false);
-        //playerInput.SwitchCurrentActionMap("Gameplay");
         isMenuOpen = false;
         if(tutorial)
         {

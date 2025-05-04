@@ -52,7 +52,7 @@ public class LightningOrbMod : WeaponMod
         {
             currentGrenade = 0;
         }
-        baseWeapon.weaponFuelManager.weaponFuel -= modFuelCost;
+        baseWeapon.weaponFuelManager.UseFuel(modFuelCost);
         verrideshotTimerT = 0;
     }
 

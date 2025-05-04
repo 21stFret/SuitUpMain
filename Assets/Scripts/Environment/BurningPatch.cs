@@ -17,6 +17,7 @@ public class BurningPatch : MonoBehaviour
         }
         _enabled = true;
         damageArea.damageDuration = burnDuration;
+        damageArea.Init();
         damageArea.EnableDamageArea();
         fireParticles.Play();
         StartCoroutine(DisableDamageArea());

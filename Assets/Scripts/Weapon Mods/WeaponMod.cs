@@ -13,12 +13,6 @@ public class WeaponMod : MonoBehaviour
     public bool assaultMod;
     public RunUpgradeManager runUpgradeManager;
 
-
-    public virtual void SetBaseWeapon(MechWeapon weapon)
-    {
-        baseWeapon = weapon;
-    }
-
     public virtual void Init()
     {
         runUpgradeManager = FindObjectOfType<RunUpgradeManager>();

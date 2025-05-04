@@ -20,7 +20,7 @@ public class DialogueManager : MonoBehaviour
     private float typeTimer = 0f;
     private int typeIndex = 0;
 
-    public InteractableObject interactableObject;
+    private InteractableObject interactableObject;
     public Image buttonPrompt;
 
     [System.Serializable]

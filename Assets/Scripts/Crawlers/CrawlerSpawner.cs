@@ -273,6 +273,10 @@ public class CrawlerSpawner : MonoBehaviour
             for (int i = 0; i < squad.crawlerGroups.Length; i++)
             {
                 CrawlerType type = squad.crawlerGroups[i].type;
+                if(BannedTypes().Contains(type))
+                {
+                    continue;
+                }
                 int amount = squad.crawlerGroups[i].amount;
 
                 for (int j = 0; j < amount && j < GetCrawlerList(type).Count; j++)
@@ -284,6 +288,37 @@ public class CrawlerSpawner : MonoBehaviour
         _spawnListArmy.Shuffle();
         return _spawnListArmy;
     }
+
+    public List<CrawlerType> BannedTypes()
+    {
+        int[] typeCount = new int[System.Enum.GetValues(typeof(CrawlerType)).Length];
+        List<CrawlerType> bannedTypes = new List<CrawlerType>();
+        foreach(Crawler crawler in activeCrawlers)  
+        {
+            if(crawler.crawlerType != CrawlerType.Crawler || crawler.crawlerType != CrawlerType.Daddy || crawler.crawlerType != CrawlerType.Spitter)
+            {
+                continue;
+            }
+            {
+                if (crawler.gameObject.CompareTag("Boss"))
+                {
+                    continue;
+                }
+            }
+            {
+                typeCount[(int)crawler.crawlerType]++;
+            }
+        }
+        for (int i = 0; i < typeCount.Length; i++)
+        {
+            if(typeCount[i] > 2)
+            {
+                bannedTypes.Add((CrawlerType)i);
+            }
+        }
+        return bannedTypes;
+    }
+
 
     public List<Crawler> GenerateNewSquad(CrawlerType crawlerType, int amount)
     {
