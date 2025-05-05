@@ -80,7 +80,7 @@ public class Grenade : MonoBehaviour
             Rigidbody rb = hit.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpward);
+                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius, explosionUpward, ForceMode.Impulse);
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
             hit.GetComponent<TargetHealth>()?.TakeDamage(damage, weaponType);
@@ -88,6 +88,9 @@ public class Grenade : MonoBehaviour
         live = false;
         meshRenderer.enabled = false;
         col.enabled = false;
+        explosionEffect.transform.position = transform.position;
+        explosionEffect.transform.SetParent(null);
+        explosionEffect.transform.up = Vector3.up;
         explosionEffect.Play();
         explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
         explosionSound.Play();

@@ -92,16 +92,6 @@ public class WeaponModManager : MonoBehaviour
         RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentAssaultMod.runMod.modName);
 
         GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
-
-        /*
-        assualtWeapon.weaponMod = currentAssaultMod;
-        currentAssaultMod.baseWeapon = assualtWeapon;
-        currentAssaultMod.enabled = true;
-        currentAssaultMod.transform.SetParent(assualtWeapon.transform);
-        currentAssaultMod.transform.localPosition = Vector3.zero;
-        currentAssaultMod.transform.localRotation = Quaternion.identity;
-        currentAssaultMod.Init();
-        */
     }
 
     public void EquipTechModTEst()
@@ -110,12 +100,8 @@ public class WeaponModManager : MonoBehaviour
         {
             return;
         }
-        techWeapon.weaponMod = currentTechMod;
-        currentTechMod.baseWeapon = techWeapon;
-        currentTechMod.transform.SetParent(techWeapon.transform);
-        currentTechMod.transform.localPosition = Vector3.zero;
-        currentTechMod.transform.localRotation = Quaternion.identity;
-        currentTechMod.enabled = true;
-        currentTechMod.Init();
+        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentAssaultMod.runMod.modName);
+
+        GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
     }
 }

@@ -389,7 +389,7 @@ public class Crawler : MonoBehaviour
     public void DealyedDamage(float damage, float delay, WeaponType weapon)
     {
         StartCoroutine(StunCralwer(delay));
-        StartCoroutine(DealyedDamageCoroutine(damage, delay, weapon));
+        StartCoroutine(DealyedDamageCoroutine(damage, delay-0.1f, weapon));
     }
 
     private IEnumerator DealyedDamageCoroutine(float damage, float delay, WeaponType weapon)
