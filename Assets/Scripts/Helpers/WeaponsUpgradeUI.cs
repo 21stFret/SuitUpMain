@@ -46,9 +46,12 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public InputActionReference inputUpgrade;
 
+    private PlayerSavedData _playerSavedData;
+    bool inputBlocked;
 
     public void Init()
     {
+        _playerSavedData = PlayerSavedData.instance;
         isMainWeapon = true;
         weaponsManager = WeaponsManager.instance;
         ToggleMainWeapon(true);
@@ -170,9 +173,21 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     private void ActualUpgrade()
     {
-        StartCoroutine(pauseInput(1f));
+        if (inputBlocked)
+        {
+            return;
+        }
+        StartCoroutine(pauseInput(1.1f));
         if (!currentWeapon.weaponData.unlocked)
         {
+            if(_playerSavedData.demoBuild)
+            {
+                string _text = "Locked in Demo";
+                cantAffordPanel.GetComponentInChildren<TMP_Text>().text = _text;
+                cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();    
+                return;
+            }
+            
             if (CheckUnlockCost(currentWeapon.baseWeaponInfo._unlockCost))
             {
                 statsUI.RemoveArtifact(currentWeapon.baseWeaponInfo._unlockCost);
@@ -187,8 +202,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
             {
                 return;
             }
-
-            if (!CheckCost(currentWeapon.baseWeaponInfo))
+            if (!CheckCost(currentWeapon))
             {
                 return;
             }
@@ -199,10 +213,10 @@ public class WeaponsUpgradeUI : MonoBehaviour
             lockUpgradebutton = true;
             statsUI.RemoveCash(currentWeapon.baseWeaponInfo._cost[currentWeapon.weaponData.level]);
             currentWeapon.weaponData.level++;
-            PlayerSavedData.instance._gameStats.totalUpgrades++;
+            _playerSavedData._gameStats.totalUpgrades++;
             if (PlayerAchievements.instance != null)
             {
-                if (PlayerSavedData.instance._gameStats.totalUpgrades == 1)
+                if (_playerSavedData._gameStats.totalUpgrades == 1)
                 {
                     PlayerAchievements.instance.SetAchievement("UPGRADE_1");
                 }
@@ -213,9 +227,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
                 }
             }
         }
-
-
-
         weaponsManager.UpdateWeaponData();
         StartCoroutine(PlayUpgradeEffect());
     }
@@ -257,12 +268,23 @@ public class WeaponsUpgradeUI : MonoBehaviour
         lockUpgradebutton = false;
     }
 
-    public bool CheckCost(BaseWeaponInfo info)
+    public bool CheckCost(MechWeapon currentWeapon)
     {
-        if (info._cost[currentWeapon.weaponData.level] > PlayerSavedData.instance._Cash)
+        BaseWeaponInfo info = currentWeapon.baseWeaponInfo;
+        if (info._cost[currentWeapon.weaponData.level] > _playerSavedData._Cash)
         {
+            string _text = "Not Enough Credits";
+            cantAffordPanel.GetComponentInChildren<TMP_Text>().text = _text;
             cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
             print("Not enough cash");
+            return false;
+        }
+        if(currentWeapon.weaponData.level ==4 && _playerSavedData.demoBuild)
+        {
+            string _text = "Demo Build Max Level Reached";
+            cantAffordPanel.GetComponentInChildren<TMP_Text>().text = _text;
+            cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
+            print("Demo Build Max level reached");
             return false;
         }
         return true;
@@ -270,7 +292,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public bool CheckUnlockCost(int cost)
     {
-        if (cost > PlayerSavedData.instance._Artifact)
+        if (cost > _playerSavedData._Artifact)
         {
             cantAffordPanel.GetComponent<DoTweenFade>().PlayTween();
             print("Not enough tech");
@@ -385,6 +407,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
 
     public IEnumerator pauseInput(float time, bool close = false)
     {
+        inputBlocked = true;
         MainMenu.instance.PauseInput(true);
         yield return new WaitForSeconds(time);
         MainMenu.instance.PauseInput(false);
@@ -392,6 +415,6 @@ public class WeaponsUpgradeUI : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
+        inputBlocked = false;
     }
 }

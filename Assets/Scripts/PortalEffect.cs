@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class PortalEffect : MonoBehaviour
@@ -19,6 +21,11 @@ public class PortalEffect : MonoBehaviour
 
     [InspectorButton("StopEffect")]
     public bool stopEffect;
+
+    public TMP_Text chipText;
+    public GameObject Chip;
+    public GameObject pins;
+    public DoTweenFade label;
 
     public void DealyedEffect(float delay)
     {         
@@ -103,6 +110,7 @@ public class PortalEffect : MonoBehaviour
         doTweenScale.ReverseTween();
         _particleSystem.Stop();
         _particleSystem2.Stop();
+        HideChipAndText();
     }
 
 
@@ -114,5 +122,34 @@ public class PortalEffect : MonoBehaviour
             StopEffect();
         }
     }
+
+    public void SetChipandText(Color pickupColor, ModBuildType pickupType)
+    {
+        if (Chip == null) return;
+        if (chipText == null) return;
+        Chip.transform.localScale = Vector3.zero;
+        Chip.SetActive(false);
+        chipText.color = pickupColor;
+        string text = pickupType.ToString().ToLower();
+        chipText.text = text + " chip";
+        pins.GetComponent<Renderer>().material.SetColor("_EmissionColor", pickupColor * 5);
+        StartCoroutine(ShowChipAndText());
+    }
+
+    private IEnumerator ShowChipAndText()
+    {
+        yield return new WaitForSeconds(1f);
+        Chip.transform.DOScale(1, 1f);
+        Chip.SetActive(true);
+        label.FadeIn();
+    }
+
+    public void HideChipAndText()
+    {
+        if(Chip == null) return;
+        Chip.SetActive(false);
+        label.FadeOut();
+    }
+
 
 }

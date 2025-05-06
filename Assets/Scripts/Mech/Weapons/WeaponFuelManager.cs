@@ -170,4 +170,14 @@ public class WeaponFuelManager : MonoBehaviour
         }
         weaponUI.UpdateWeaponUI(weaponFuel);
     }
+
+    public void UseFuel(float value)
+    {
+        weaponFuel -= value;
+        if (weaponFuel <= 0)
+        {
+            weapon.Stop();
+            return;
+        }
+    }
 }

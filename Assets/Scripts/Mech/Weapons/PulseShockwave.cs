@@ -128,7 +128,7 @@ public class PulseShockwave : MonoBehaviour
             Crawler crawler = collider.GetComponent<Crawler>();
             if (crawler != null)
             {
-                float stunDuration = canStun? stunTime :0.2f;
+                float stunDuration = canStun? stunTime :0.8f;
                 crawler.StartCoroutine(crawler.StunCralwer(stunDuration));
                 crawlerCount++;
             }

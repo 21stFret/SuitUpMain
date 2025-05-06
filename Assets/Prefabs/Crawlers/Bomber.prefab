@@ -950,7 +950,7 @@ MonoBehaviour:
   attackDamage: 10
   attackRange: 2
   seekRange: 25
-  speed: 100
+  speed: 150
   randomScale: 0
   DeathBlood: {fileID: 4676488795238572319}
   _spawnEffect: {fileID: 4047479889985361884}
@@ -959,7 +959,7 @@ MonoBehaviour:
   deathNoise: {fileID: 5549493681441046442}
   overrideDeathNoise: 0
   immune: 0
-  _immuneTime: 1
+  _immuneTime: 2
   crawlerScale: 0.4
   cashWorth: 5
   expWorth: 5
@@ -994,6 +994,7 @@ MonoBehaviour:
   eliteChance: 0
   sporeEmpowered: 0
   sporedEffect: {fileID: 0}
+  sporedTime: 2
   bombsacks:
   - {fileID: 2161148086584461725}
   - {fileID: 8115875134229596919}
@@ -1007,7 +1008,7 @@ MonoBehaviour:
   distanceToGrow: 7
   growSize: 2
   explodeSize: 4
-  explosionDelay: 1
+  explosionDelay: 0.7
   splatSound: {fileID: 8300000, guid: c7316287b09c23144a405d8b0d5b1721, type: 3}
   shakeIntensity: 0.4
   shakeFrequency: 30
@@ -2478,6 +2479,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6466428979351393968, guid: 624a4d097fc634d42a2b0d0a4f5baa0d,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466428979351393968, guid: 624a4d097fc634d42a2b0d0a4f5baa0d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466428979351393968, guid: 624a4d097fc634d42a2b0d0a4f5baa0d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466428979351393968, guid: 624a4d097fc634d42a2b0d0a4f5baa0d,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.17828372
       objectReference: {fileID: 0}
@@ -2525,6 +2541,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466428979351393968, guid: 624a4d097fc634d42a2b0d0a4f5baa0d,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -17,7 +17,6 @@ public class FlameGrenadeMod : WeaponMod
         base.Init();
         baseWeapon.weaponOverride = true;
         baseWeapon.weaponFuelManager.constantUse = false;
-        modFuelCost = modFuelCostOveride;
         damage = baseWeapon.damage * (runMod.modifiers[0].statValue/100);
     }
 
@@ -28,7 +27,7 @@ public class FlameGrenadeMod : WeaponMod
             return;
         }
 
-        if (baseWeapon.weaponFuelManager.weaponFuel - modFuelCost <=0)
+        if (baseWeapon.weaponFuelManager.weaponFuel - modFuelCostOveride <=0)
         {
             return;
         }
@@ -49,7 +48,7 @@ public class FlameGrenadeMod : WeaponMod
         {
             currentGrenade = 0;
         }
-        baseWeapon.weaponFuelManager.weaponFuel -= modFuelCost;
+        baseWeapon.weaponFuelManager.UseFuel(modFuelCostOveride);
         shotTimer = 0;
     }
 

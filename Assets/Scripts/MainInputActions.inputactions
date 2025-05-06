@@ -24,6 +24,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Open Data Log Menu",
+                    "type": "Button",
+                    "id": "183bd1a1-90f9-4610-a146-b389230e63a2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "FireAlt",
                     "type": "Button",
                     "id": "b3ed8966-a462-4d28-93d3-d7c13ed49df1",
@@ -482,6 +491,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca97f75d-455a-47e1-b2aa-55b54c05860d",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Default",
+                    "action": "Open Data Log Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8db61341-db5e-47f1-a803-40091d977f3a",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Open Data Log Menu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -51,6 +51,7 @@ public class MYCharacterController : MonoBehaviour
     public float weaponFiringSlowAmount;
     [HideInInspector]
     public BattleMech battleMech;
+    [SerializeField]
     private bool canMove;
     private float savedDodgeDuration;
     private float savedDodgeCooldown;

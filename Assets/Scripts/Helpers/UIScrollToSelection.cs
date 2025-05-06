@@ -90,6 +90,10 @@ namespace UnityEngine.UI.Extensions
 
         protected virtual void Update()
         {
+            if(InputTracker.instance.usingMouse)
+            {
+                return;
+            }
             UpdateReferences();
             CheckIfScrollingShouldBeLocked();
             ScrollRectToLevelSelection();

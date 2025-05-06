@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class InitGame : MonoBehaviour
 {
-    public MechLoader mechLoadOut;
-    public ConnectWeaponHolderToManager weaponHolder;
-    public MainMenu mainMenu;
-    public bool MainMenu;
+    public bool demoBuild;  
 
     private void Start()
     {
@@ -17,17 +14,8 @@ public class InitGame : MonoBehaviour
     private void DelayedStart()
     {
         PlayerSavedData.instance.LoadPlayerData();
-
-        if (!MainMenu)
-        {
-            Time.timeScale = 1;
-            AudioManager.instance.Init();
-            return;
-        }
-
-        print("Init Main Menu");
-        weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
-        mechLoadOut.Init();
+        PlayerSavedData.instance.demoBuild = demoBuild;
+        Time.timeScale = 1;
+        AudioManager.instance.Init();
     }
 }

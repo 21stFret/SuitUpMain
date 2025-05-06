@@ -33,6 +33,7 @@ public class LoadOutPanel : MonoBehaviour
     public int currentDifficulty;
     public int maxDifficulty;
     public bool playLocked;
+    public GameObject firstSelectedButton;
 
     public void OnEnable()
     {
@@ -47,12 +48,15 @@ public class LoadOutPanel : MonoBehaviour
         altWeaponName.text = weaponsManager._techWeapons[currentAltIndex].baseWeaponInfo.weaponName;
         //armorName.text = "Armor " + currentArmorIndex;
         armorName.text = "Coming soon!";
+        InputTracker.instance.eventSystem.SetSelectedGameObject(firstSelectedButton);
+        BattleMech.instance.myCharacterController.ToggleCanMove(false);
     }
 
     public void CloseMenu()
     {
         mechLoader.Init();
         gameObject.SetActive(false);
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
     }
 
     private void ChangeWeaponImage()

@@ -9,6 +9,7 @@ public class GravityWellMod : WeaponMod
     private float shotTimer;
     public float grenadeShotTime;
     private bool overideFire;
+    public float modFuelCostOveride;
 
     public override void Init()
     {
@@ -24,8 +25,6 @@ public class GravityWellMod : WeaponMod
         {
             return;
         }
-
-
 
         if (shotTimer <= grenadeShotTime)
         {

@@ -9,6 +9,7 @@ public class LogManager : MonoBehaviour
     public LogDatabase logDatabase;
     public GameObject logPrefab;
     public SequenceInputController sequenceInputController;
+    public DataLogPopUpUI dataLogPopUpUI;
     public LogUIManager logUIManager;
     public LogEntry currentLog;
     public DoTweenFade doTweenFade;
@@ -16,13 +17,40 @@ public class LogManager : MonoBehaviour
     // Set of discovered log IDs (Serialized to save progress)
     [SerializeField]
     private HashSet<string> discoveredLogs = new HashSet<string>();
+    private HashSet<string> readLogs = new HashSet<string>();
 
     // Dictionary to cache logs by category for quick access
     private Dictionary<string, List<LogEntry>> logsByCategory = new Dictionary<string, List<LogEntry>>();
 
-    private void Awake()
+    [InspectorButton("TestDiscoverLog")]
+    public bool logIdToDiscover; // Example log ID to discover
+
+    private bool initialized = false;
+
+    private void OnEnable()
     {
-        // Initialize category cache
+        Initialize();
+        LoadUI();
+        currentLog = GetRandomUndiscoverdEntry();
+        if(logPrefab==null)
+        {
+            return;
+        }
+        if (currentLog != null)
+        {
+            logPrefab.SetActive(true);
+        }
+        else
+        {
+            logPrefab.SetActive(false);
+        }
+    }
+
+    private void Initialize()
+    {
+        if (initialized) return;
+        initialized = true;
+
         foreach (var log in logDatabase.allLogs)
         {
             if (!logsByCategory.ContainsKey(log.category))
@@ -32,12 +60,21 @@ public class LogManager : MonoBehaviour
             logsByCategory[log.category].Add(log);
         }
 
-        sequenceInputController.OnSequenceComplete +=  () => DiscoverLog(currentLog.id);
-        sequenceInputController.OnSequenceFailed += () => HideSequencer();
+        if(sequenceInputController!=null)
+        {
+            sequenceInputController.OnSequenceComplete +=  () => DiscoverLog(currentLog.id);
+            sequenceInputController.OnSequenceFailed += () => HideSequencer();
+        }
+    }
 
+    public void LoadUI()
+    {
         LoadDiscoveredLogs();
-        //Testing
-        GenerateGOLog();
+        LoadReadLogs();
+        if (logUIManager != null)
+        {
+            logUIManager.PopulateLogList(logDatabase.allLogs);
+        }
     }
 
     // Create a new log GameObject in the scene
@@ -45,14 +82,14 @@ public class LogManager : MonoBehaviour
     {
         logPrefab.SetActive(true);
         currentLog = GetRandomUndiscoverdEntry();
-        // logPrefab.entry = GetRandomUndiscoverdEntry();
+        //logPrefab.entry = GetRandomUndiscoverdEntry();
     }
 
     public void ShowSequencer()
     {
         doTweenFade.FadeIn();
         sequenceInputController.enabled = true;
-        BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
+        //BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         sequenceInputController.gameObject.SetActive(true);
         sequenceInputController.StartNewSequence();
     }
@@ -62,6 +99,14 @@ public class LogManager : MonoBehaviour
         sequenceInputController.enabled = false;
         doTweenFade.FadeOut();
     }
+
+    // Test function to discover a log (for debugging purposes)
+    public void TestDiscoverLog()
+    {
+        ClearLogs();
+        DiscoverLog("1");
+    }
+
 
 
     // Mark a log as discovered
@@ -76,8 +121,12 @@ public class LogManager : MonoBehaviour
             SaveDiscoveredLogs();
             BattleMech.instance.myCharacterController.ToggleCanMove(true);
             BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
-            logPrefab.SetActive(false);
-            HideSequencer();
+            if (logPrefab != null)
+            {
+                dataLogPopUpUI.EnableLogPopUp(currentLog.category, currentLog.content);
+                logPrefab.SetActive(false);
+                HideSequencer();
+            }
         }
     }
 
@@ -85,6 +134,22 @@ public class LogManager : MonoBehaviour
     public bool IsLogDiscovered(string logId)
     {
         return discoveredLogs.Contains(logId);
+    }
+
+    // Mark a log as read
+    public void MarkLogAsRead(string logId)
+    {
+        if (!readLogs.Contains(logId))
+        {
+            readLogs.Add(logId);
+            SaveReadLogs();
+        }
+    }
+
+    // Check if a log has been read
+    public bool IsLogRead(string logId)
+    {
+        return readLogs.Contains(logId);
     }
 
     // Get all discovered logs in a specific category
@@ -101,6 +166,14 @@ public class LogManager : MonoBehaviour
         List<LogEntry> undiscoveredLogs = new List<LogEntry>();
         foreach (var log in logDatabase.allLogs)
         {
+            if(BattleManager.instance!=null)
+            {
+                if (log.rarity > BattleManager.instance.dificultyMultiplier)
+                {
+                    continue;
+                }
+            }           
+
             if (!discoveredLogs.Contains(log.id))
             {
                 undiscoveredLogs.Add(log);
@@ -140,6 +213,13 @@ public class LogManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    public void SaveReadLogs()
+    {
+        string logsString = string.Join(",", readLogs);
+        PlayerPrefs.SetString("ReadLogs", logsString);
+        PlayerPrefs.Save();
+    }
+
     // Load discovered logs
     private void LoadDiscoveredLogs()
     {
@@ -149,5 +229,23 @@ public class LogManager : MonoBehaviour
             string[] logIds = logsString.Split(',');
             discoveredLogs = new HashSet<string>(logIds);
         }
+    }
+
+    // Load read logs
+    private void LoadReadLogs()
+    {
+        string logsString = PlayerPrefs.GetString("ReadLogs", "");
+        if (!string.IsNullOrEmpty(logsString))
+        {
+            string[] logIds = logsString.Split(',');
+            readLogs = new HashSet<string>(logIds);
+        }
+    }
+
+    // Clear all discovered logs (for testing purposes)
+    public void ClearLogs()
+    {
+        PlayerPrefs.DeleteKey("DiscoveredLogs");
+        discoveredLogs.Clear();
     }
 }

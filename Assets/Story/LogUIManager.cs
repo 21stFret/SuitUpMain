@@ -1,39 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 // Example UI Manager for displaying logs
 public class LogUIManager : MonoBehaviour
 {
     public LogManager logManager;
-
-    // Reference to your UI elements (you'll need to set these up)
-    public Transform categoryContainer;
+    public List<DataLogListUI> logListEntries = new List<DataLogListUI>();
     public Transform logListContainer;
-    public Transform logViewContainer;
 
-    public void ShowLogsByCategory(string category)
+    public void PopulateLogList(List<LogEntry> logs)
     {
-        var logs = logManager.GetDiscoveredLogsByCategory(category);
-        // Clear and populate your UI with the logs
-        PopulateLogList(logs);
-    }
+        logListEntries.Clear();
 
-    private void PopulateLogList(List<LogEntry> logs)
-    {
-        // Clear existing entries
-        foreach (Transform child in logListContainer)
+        foreach (DataLogListUI child in logListContainer.GetComponentsInChildren<DataLogListUI>())
         {
-            Destroy(child.gameObject);
+            logListEntries.Add(child);
         }
 
-        // Add new entries (you'll need to create a prefab for this)
-        foreach (var log in logs)
+        for (int i = 0; i < logs.Count; i++)
         {
-            // Instantiate your log entry prefab and populate it
-            // This is just an example - implement based on your UI design
-            //var logEntryUI = Instantiate(logEntryPrefab, logListContainer);
-            //logEntryUI.SetLog(log);
+            if (i < logListEntries.Count)
+            {
+                logListEntries[i]._logManager = logManager; // Assign the log manager to each entry
+                logListEntries[i].gameObject.SetActive(true);
+                logListEntries[i].SetInfo(logs[i].title, logs[i].content, logManager.IsLogDiscovered(logs[i].id), logManager.IsLogRead(logs[i].id), logs[i].id);
+            }
         }
     }
 }

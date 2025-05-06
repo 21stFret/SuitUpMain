@@ -109,11 +109,10 @@ public class Pickup : MonoBehaviour
         }
         if(upgrade)
         {
-            CashCollector.instance.AddArtifact(1);
             pickupUpgrade.Stop();
+            CashCollector.instance.AddArtifact(1);
         }
         pickupParticles.Stop();
-
     }
 
     private void RemovePickup()

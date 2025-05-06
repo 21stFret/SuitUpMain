@@ -92,6 +92,7 @@ public class VoidPortalManager : MonoBehaviour
                 color = Color.magenta;
                 break;
         }
+        portal.SetChipandText(color, type);
         for (int i = 0; i < portal.f3DWarpJumpTunnel.Length; i++)
         {
             Material mat = portal.f3DWarpJumpTunnel[i].GetComponent<Renderer>().material;

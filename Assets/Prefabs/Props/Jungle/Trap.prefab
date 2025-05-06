@@ -83,6 +83,81 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &495966345039142354
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 441819356047324788}
+  - component: {fileID: 1897560442056922750}
+  - component: {fileID: 1390194426535433852}
+  m_Layer: 13
+  m_Name: DamageArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &441819356047324788
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495966345039142354}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3866206602952545497}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1897560442056922750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495966345039142354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0424fa96f5bfdb1409a260af02d4da89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageRadius: 3
+  damageInterval: 0.2
+  damageAmount: 5
+  damageDuration: 0.1
+  damageType: 6
+  damageActive: 1
+  damageOnStart: 0
+  targetsInRange: []
+  radiusExtender: 1
+--- !u!135 &1390194426535433852
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 495966345039142354}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 3
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &606532263880880407
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +252,6 @@ GameObject:
   - component: {fileID: 3866206602952545497}
   - component: {fileID: 4138447582007433850}
   - component: {fileID: 3944545432214661753}
-  - component: {fileID: 3163867962148973931}
   m_Layer: 13
   m_Name: Trap
   m_TagString: Untagged
@@ -199,6 +273,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5489455356518429275}
+  - {fileID: 441819356047324788}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4138447582007433850
@@ -213,9 +288,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227762dcd8cb00745858c139487adba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageArea: {fileID: 3163867962148973931}
+  damageArea: {fileID: 1897560442056922750}
   canTriggerMultipleTimes: 1
-  resetTime: 5
+  resetTime: 2
   trapAnimator: {fileID: 2395091577428625486}
   triggerAnimationParameter: Spike
   trapSoundEffect: {fileID: 0}
@@ -241,27 +316,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3163867962148973931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3848928601364012428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0424fa96f5bfdb1409a260af02d4da89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageRadius: 3
-  damageInterval: 0.2
-  damageAmount: 5
-  damageDuration: 0.1
-  damageType: 6
-  damageActive: 1
-  damageOnStart: 0
-  targetsInRange: []
-  radiusExtender: 1
 --- !u!1 &4859966924368833861
 GameObject:
   m_ObjectHideFlags: 0

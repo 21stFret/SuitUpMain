@@ -15,23 +15,31 @@ public class DoTweenFade : MonoBehaviour
     public float fadeValue;
     public bool disableOnEnd;
 
+    public Tween tween;
+
+    private int loopCountValue = 0;
+
     void Start()
     {
     }
 
     public void PlayTween()
     {
+        if(tween != null)
+        {
+            return; // If a tween is already playing, do nothing
+        }
         if (canvasGroup != null)
         {
-            canvasGroup.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType);
+            tween = canvasGroup.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType).OnComplete(OnComplete);;
         }
         if(image != null)
         {
-            image.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType);
+            tween = image.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType).OnComplete(OnComplete);;
         }
         if(material != null)
         {
-            material.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType);
+            tween = material.DOFade(fadeValue, fadeDuration).SetLoops(loopCount, loopType).OnComplete(OnComplete);;
         }
     }
 
@@ -85,20 +93,35 @@ public class DoTweenFade : MonoBehaviour
         if (image != null)
         {
             image.DOKill();
-            image.DOFade(0, fadeDuration);
+            image.DOFade(0, fadeDuration).OnComplete(OnComplete);
         }
         if (material != null)
         {
             material.DOKill();
-            material.DOFade(0, fadeDuration);
+            material.DOFade(0, fadeDuration).OnComplete(OnComplete);
         }
     }
 
     public void OnComplete()
     {
-        if (disableOnEnd)
+        if(loopCount>0)
         {
-            gameObject.SetActive(false);
+            loopCountValue++;
+            if(loopCountValue >= loopCount-1)
+            {
+                loopCountValue = 0;
+                tween.Kill();
+                tween = null;
+            }
+        }
+        else
+        {
+            tween.Kill();
+            tween = null; // Reset the tween reference
+            if (disableOnEnd)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

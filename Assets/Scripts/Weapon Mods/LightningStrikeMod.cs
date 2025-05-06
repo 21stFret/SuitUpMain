@@ -37,7 +37,6 @@ public class LightningStrikeMod : WeaponMod
         }
 
         strike.Strike(pos);
-        //baseWeapon.weaponFuelManager.weaponFuel -= modFuelCost;
         timer = 0;
     }
 
@@ -46,10 +45,6 @@ public class LightningStrikeMod : WeaponMod
     {
         base.Fire();
         overideFire = true;
-        if (baseWeapon.weaponFuelManager.weaponFuel - modFuelCost <= 0)
-        {
-            return;
-        }
         chargeEffect.transform.SetParent(this.transform);
         chargeEffect.Play();
     }

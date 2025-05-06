@@ -12,6 +12,8 @@ public class InteractableObject : MonoBehaviour, IInteractable
     [SerializeField] private Image interactPrompt;
     [SerializeField] public Sprite controlPC, controlGamepad;
 
+    public bool changeActionMap = true;
+
     public void Interact()
     {
         if (CanInteract())
@@ -19,7 +21,11 @@ public class InteractableObject : MonoBehaviour, IInteractable
             if(BattleMech.instance != null)
             {
                 //BattleMech.instance.myCharacterController.ToggleCanMove(false);
-                BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
+                if (changeActionMap)
+                {
+                    BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
+                }
+
             }
             
             onInteract?.Invoke();
@@ -31,7 +37,11 @@ public class InteractableObject : MonoBehaviour, IInteractable
         if(BattleMech.instance != null)
         {
             BattleMech.instance.myCharacterController.ToggleCanMove(true);
-            BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
+            if (changeActionMap)
+            {
+                BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
+            }
+
         }
         onEnd?.Invoke();
         ShowPrompt(true);

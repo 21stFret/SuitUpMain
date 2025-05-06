@@ -25,6 +25,7 @@ public class PlayerSavedData : MonoBehaviour
     public bool hasSeenThankYouPanel = false;
     public GameStats _gameStats         {get; private set;}
     public int highestDifficulty;
+    public bool demoBuild;
 
     private void Awake()
     {

@@ -96,6 +96,7 @@ public class ExplodingBarrel : Prop
         explosionSound.Play();
         explosionEffect.transform.parent = null;
         explosionEffect.transform.position = transform.position;
+        explosionEffect.transform.up = Vector3.up;
         explosionEffect.Play();
         prefab.SetActive(false);
         if (damageArea != null)

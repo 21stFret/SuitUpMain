@@ -151,7 +151,7 @@ namespace FORGE3D
                     if (crawler != null)
                     {
                         crawler.DealyedDamage(impactDamage , 1f, WeaponType.AoE);
-                        return;
+                        continue;
                     }
                     targetHealth.TakeDamage(impactDamage, WeaponType.AoE);
 
@@ -167,8 +167,6 @@ namespace FORGE3D
                 // Execute once
                 if (!isFXSpawned)
                 {
-                    // Put your calls to effect manager that spawns explosion on hit
-                    // .....
                     ApplyForceToCrawlers();
                     launcher.SpawnExplosion(transform.position);
                     circleRegion.gameObject.SetActive(false);
@@ -177,7 +175,6 @@ namespace FORGE3D
                     isFXSpawned = true;
                 }
 
-                // Despawn current missile 
                 if (!DelayDespawn || (DelayDespawn && (timer >= despawnDelay)))
                     OnMissileDestroy();
             }

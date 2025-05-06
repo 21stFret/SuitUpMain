@@ -110,6 +110,7 @@ public class DamageArea : MonoBehaviour
         yield return new WaitForSeconds(damageDuration);
         damageActive = false;
         triggerCollider.enabled = false;
+        targetsInRange.Clear();
     }
 
     // Public method to activate/deactivate damage

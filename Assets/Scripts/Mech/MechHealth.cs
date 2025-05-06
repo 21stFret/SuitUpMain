@@ -140,10 +140,12 @@ public class MechHealth : MonoBehaviour
     private void HandleOnUpdateMods()
     {
         RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("On the Edge");
+
         if(__selectMod == null)
         {
             __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Emergency Valve");
         }
+
         if (__selectMod != null)
         {
             if (healthlow && !lowHealthMod)
@@ -166,6 +168,7 @@ public class MechHealth : MonoBehaviour
             }
             return;
         }
+
         __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Champion");
         if (__selectMod != null)
         {
@@ -178,6 +181,22 @@ public class MechHealth : MonoBehaviour
             {
                 fullHealthMod = false;
                 BattleMech.instance.weaponController.mainWeaponEquiped.RemoveDamageModifier(__selectMod);
+            }
+            return;
+        }
+
+        __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Critical Repairs");
+        if (__selectMod != null)
+        {
+            if(GameManager.instance.gameActive)
+            {
+                return;
+            }
+            float healthRegenLimit = __selectMod.modifiers[0].statValue * targetHealth.maxHealth / 100;
+            float missingHealth = healthRegenLimit - targetHealth.health;
+            if (missingHealth > 0)
+            {
+                Heal(missingHealth);
             }
             return;
         }
@@ -230,7 +249,11 @@ public class MechHealth : MonoBehaviour
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
         // quick fix to make the game easier, mech defense 0 = full dam, 1 = no damge
-        damage *= 1-mechDefense;
+        if(!isHeal)
+        {
+            damage *= 1-mechDefense;
+        }
+
 
         if(shieldHealth >0 && !isHeal)
         {

@@ -11369,10 +11369,10 @@ MonoBehaviour:
   pauseMenu: {fileID: 5857895042396198021}
   menu: {fileID: 6269533659493139879}
   cheatsMenu: {fileID: 1193221009204786135}
-  controlsMenu: {fileID: 2565174884579116589}
   controlsPC: {fileID: 6487039145308564089}
   controlsGamePad: {fileID: 8928134945236783445}
   settingsMenu: {fileID: 6634199485086411435}
+  datalogsMenu: {fileID: 0}
   settingsPopup: {fileID: 0}
   quitMenu: {fileID: 7945197706460221028}
   isPaused: 0
@@ -11380,6 +11380,7 @@ MonoBehaviour:
   eventSystem: {fileID: 5126253479417353926}
   firstSelectedButton: {fileID: 6724177741100804310}
   settingsSelectedButton: {fileID: 3831797246666211119}
+  logsSelectedButton: {fileID: 0}
   quitSelectedButton: {fileID: 4119120760810573958}
   modSelectedButton: {fileID: 3691941092773621275}
   menuLocked: 0
@@ -11391,6 +11392,8 @@ MonoBehaviour:
   lastSelectedButton: {fileID: 0}
   _modUI: {fileID: 0}
   droneControllerUI: {fileID: 0}
+  logManager: {fileID: 0}
+  canQuickOpen: 1
 --- !u!114 &4148596912575737355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13187,6 +13190,10 @@ MonoBehaviour:
   _light: {fileID: 0}
   startEffect: 0
   stopEffect: 0
+  chipText: {fileID: 0}
+  Chip: {fileID: 0}
+  pins: {fileID: 0}
+  label: {fileID: 0}
 --- !u!65 &5081446018574581735
 BoxCollider:
   m_ObjectHideFlags: 0

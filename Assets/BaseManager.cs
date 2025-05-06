@@ -17,6 +17,11 @@ public class BaseManager : MonoBehaviour
     public Image globalBackButton;
     public Sprite button, key;
 
+    [InspectorButton("GetRichQuick")]
+    public bool getRichQuickButton = false;
+
+    private string actionMap;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -68,6 +73,7 @@ public class BaseManager : MonoBehaviour
 
     private void ShowThankYouPanel()
     {
+        actionMap = BattleMech.instance.playerInput.currentActionMap.name;
         BattleMech.instance.myCharacterController.ToggleCanMove(false);
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         thankYouPanel.SetActive(true);
@@ -79,7 +85,11 @@ public class BaseManager : MonoBehaviour
         thankYouPanel.SetActive(false);
         PlayerSavedData.instance.hasSeenThankYouPanel = true;
         PlayerSavedData.instance.SavePlayerData();
-        InitializeBaseSystem();
+        BattleMech.instance.playerInput.SwitchCurrentActionMap(actionMap);
+        if(actionMap == "UI")
+        {
+            InputTracker.instance.eventSystem.SetSelectedGameObject(loadOutPanel.firstSelectedButton);
+        }
     }
 
     public void OpenDiscordLink()
@@ -94,6 +104,11 @@ public class BaseManager : MonoBehaviour
             AudioManager.instance.PlayButtonSFX((int)SFX.Error);
             return;
         }
+        if(loadOutPanel.currentDifficulty >0 && PlayerSavedData.instance.demoBuild)
+        {
+            ShowThankYouPanel();
+            return;
+        }
         AudioManager.instance.PlayButtonSFX((int)SFX.Confirm);
         Time.timeScale = 1;
         if(sceneLoader == null) sceneLoader = SceneLoader.instance;
@@ -105,5 +120,13 @@ public class BaseManager : MonoBehaviour
         {             
             Debug.LogError("SceneLoader is null");
         }
+    }
+
+    public void GetRichQuick()
+    {
+        PlayerSavedData.instance.UpdatePlayerCash(100000);
+        //PlayerSavedData.instance.UpdatePlayerArtifact(100);
+        statsUI.UpdateCash(PlayerSavedData.instance._Cash);
+        statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
     }
 }
