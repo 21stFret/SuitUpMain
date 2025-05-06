@@ -50,6 +50,12 @@ public class CryoController : MechWeapon
 
         shotTimer += Time.deltaTime;
 
+        if (weaponFuelManager.weaponFuel - weaponFuelUseRate <= 0)
+        {
+            Stop();
+            return;
+        }
+
         if (!isFiring)
         {
             return;

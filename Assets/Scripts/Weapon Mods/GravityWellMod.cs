@@ -16,8 +16,6 @@ public class GravityWellMod : WeaponMod
         base.Init();
         baseWeapon.weaponOverride = true;
         damage = baseWeapon.damage * (runMod.modifiers[0].statValue/100);
-        baseWeapon.weaponFuelManager.constantUse = false;
-        modFuelCost = modFuelCostOveride;
     }
 
     public void Update()
@@ -42,7 +40,6 @@ public class GravityWellMod : WeaponMod
         {
             currentGrenade = 0;
         }
-        baseWeapon.weaponFuelManager.UseFuel(modFuelCost);
         shotTimer = 0;
     }
 

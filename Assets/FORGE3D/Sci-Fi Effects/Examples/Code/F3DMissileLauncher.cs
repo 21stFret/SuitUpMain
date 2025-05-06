@@ -6,6 +6,16 @@ using Random = UnityEngine.Random;
 using System.Reflection;
 using System.Collections.Generic;
 using DTT.AreaOfEffectRegions;
+using Unity.VisualScripting;
+
+public enum Ordanance
+{
+    Burst,
+    Line,
+    Area,
+    Random,
+
+}
 
 namespace FORGE3D
 {
@@ -21,11 +31,12 @@ namespace FORGE3D
         public Transform fatManEffectPrefab;
         public float trackingRaduis = 20f;
         public float missileSpeed = 10f;
-        public LayerMask layerMask;
+        public LayerMask trackingLayerMask;
         private F3DMissile.MissileType missileType;
         public List<Transform> targets;
         public DroneControllerUI droneController;
         public bool FatMan;
+        public Ordanance ordananceType;
 
         public Text missileTypeLabel;
 
@@ -57,7 +68,7 @@ namespace FORGE3D
 
         public void LaunchMissiles(int amount)
         {
-            targets = SetTargetInRadius(player.position, trackingRaduis, layerMask);
+            targets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
             foreach (var ui in hitUI)
             {
                 ui.SetActive(false);
@@ -88,10 +99,29 @@ namespace FORGE3D
                 }
                 else
                 {
-                    //SpreadInFront();
-                    //missile.targetPosition = targetPositions[target];
+                    switch (ordananceType)
+                    {
+                        case Ordanance.Burst:
+                            SpreadInFront();
+                            break;
+                        case Ordanance.Line:
 
-                    missile.targetPosition = RandomTargetPosition();
+                            break;
+                        case Ordanance.Area:
+                            SpreadInFront();
+                            if (targetPositions.Count > 0)
+                            {
+                                missile.targetPosition = targetPositions[target - targets.Count];
+                            }
+                            else
+                            {
+                                missile.targetPosition = RandomTargetPosition();
+                            }
+                            break;
+                        case Ordanance.Random:
+                            missile.targetPosition = RandomTargetPosition();
+                            break;
+                    }
                 }
 
                 hitUI[target].transform.position = missile.targetPosition;
@@ -106,7 +136,7 @@ namespace FORGE3D
         private Vector3 RandomTargetPosition()
         {
             Vector3 pos = GetRandomPointInSphere(transform.position, trackingRaduis);
-            pos.y = 2f;
+            pos.y = 1f;
             return pos;
         }
 
@@ -155,6 +185,14 @@ namespace FORGE3D
             }
         }
 
+        private Vector3 FireInLine(int i)
+        {
+                // Create a new target position in front of the player
+                Vector3 targetPos = transform.position + (transform.forward * (i * trackingRaduis * 0.5f));
+                targetPos.y = 1f; // Set consistent height
+                return targetPos;
+        }
+
         public List<Transform> SetTargetInRadius(Vector3 center, float radius, LayerMask layerMask)
         {
             List<Transform> targets = new List<Transform>();
@@ -177,8 +215,23 @@ namespace FORGE3D
                 for (int i = 0; i < missleAmount; i++)
                 {
                     var newTarget = Instantiate(new GameObject());
-                    Vector3 randomPoint = GetRandomPointInSphere(center, radius);
+                    Vector3 randomPoint = Vector3.zero;
+                    switch (ordananceType)
+                    {
+                        case Ordanance.Burst:
+                            SpreadInFront();
+                            break;
+                        case Ordanance.Line:
+                            randomPoint = FireInLine(i);
+                            break;
+                        case Ordanance.Area:
+                            break;
+                        case Ordanance.Random:
+                            randomPoint = GetRandomPointInSphere(center, radius);
+                            break;
+                    }
                     randomPoint.y = 1f;
+
                     newTarget.transform.position = randomPoint;
                     targets.Add(newTarget.transform);
                     Destroy(newTarget, 5f);
