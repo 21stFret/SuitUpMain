@@ -121,7 +121,7 @@ public class CrawlerHunter : Crawler
                 var targetHealth = target.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(stealthAttackDamage, WeaponType.Cralwer);
+                    targetHealth.TakeDamage(stealthAttackDamage, WeaponType.Crawler);
                 }
             }
 

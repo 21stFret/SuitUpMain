@@ -89,9 +89,9 @@ public class CrawlerSpawner : MonoBehaviour
     private void MultiplyBurstByDifficulty()
     {
         float difficulty = BattleManager.instance.dificultyMultiplier;
-        //currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin * difficulty);
-        currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax * difficulty);
-        //currentBattle.burstTimer /=  difficulty;
+        currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin + difficulty);
+        currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax + (difficulty*2));
+        currentBattle.burstTimer -= difficulty;
     }
 
     private void Awake()
@@ -241,7 +241,7 @@ public class CrawlerSpawner : MonoBehaviour
             {
                 if (currentSquad.crawlerGroups[j].type == CrawlerType.Crawler)
                 {
-                    amount *= 1.2f;
+                    amount *= 2f;
                 }
             }
             for (int k = 0; k < amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
@@ -539,7 +539,6 @@ public class CrawlerSpawner : MonoBehaviour
         {
             hordePortal.StopEffect();
         }
-        //KillAllCrawlers();
     }
 
     public void KillAllCrawlers()

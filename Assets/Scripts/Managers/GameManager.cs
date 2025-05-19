@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public bool spawnPortal;
 
     private MYCharacterController _myCharacterController;
+    public DroneAbilityManager droneAbilityManager;
 
     public CreditsController creditsController;
 
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBattleMusic();
         runUpgradeManager.LoadData();
         wonGame = false;
+        droneAbilityManager.Init();
 
         if (!playOnAwake) return;
 
@@ -183,13 +185,24 @@ public class GameManager : MonoBehaviour
         gameActive = false;
         CrawlerSpawner.instance.EndBattle();
         CrawlerSpawner.instance.KillAllCrawlers();
-        if(PlayerProgressManager.instance != null && SetupGame.instance != null)
+        if(SetupGame.instance == null)
+        {
+            return;
+        }
+        if(PlayerProgressManager.instance != null)
         {
             PlayerProgressManager.instance.EndGamePlayerProgress(won, (int)SetupGame.instance.diffiulty);
         }
-        if(PlayerSavedData.instance != null && SetupGame.instance != null)
+        if(PlayerSavedData.instance != null)
         {
-            PlayerSavedData.instance.highestDifficulty = won?  (int)SetupGame.instance.diffiulty+1: PlayerSavedData.instance.highestDifficulty;
+            if(won)
+            {
+                PlayerSavedData.instance.highestDifficulty++;
+                if(PlayerSavedData.instance.highestDifficulty > 3)
+                {
+                    PlayerSavedData.instance.highestDifficulty = 3;
+                }
+            }
             PlayerSavedData.instance.SavePlayerData();
         }
         wonGame = won;

@@ -11,7 +11,7 @@ public enum WeaponType
     Lightning,
     Cryo,
     AoE,
-    Cralwer,
+    Crawler,
     Spore,
     Default,
     Trap,
@@ -64,12 +64,12 @@ public class MechWeapon : MonoBehaviour
     [Header("Main Weapon")]
     public LOSSensor sensor;
     public Vector3 aimOffest;
-    public LaserSight laserSight;
     [Header("Weapon Mods")]
     public WeaponMod weaponMod;
     public bool weaponOverride;
     public int bounces;
     protected float autoAimSpeed = 2.0f;
+    protected bool Initialized = false;
 
     public virtual void Init()
     {
@@ -80,13 +80,12 @@ public class MechWeapon : MonoBehaviour
             rangeSensor = GetComponent<RangeSensor>();
             rangeSensor.Sphere.Radius = range;
             sensor.enabled = true;
-            //laserSight.gameObject.SetActive(true);
-            //laserSight.SetLaserLength(range);
         }
         else
         {
             weaponFuelManager.Init(this);
         }
+        Initialized = true;
     }
 
     public void ApplyDamageModifier(RunMod mod)

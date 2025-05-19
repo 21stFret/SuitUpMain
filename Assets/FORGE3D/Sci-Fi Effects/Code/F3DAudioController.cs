@@ -69,6 +69,17 @@ namespace FORGE3D
         public float laserImpulseDelay;
         public float laserImpulseHitDelay;
 
+        [Header("Nuke")] public AudioClip[] nukeHit;
+
+        [Header("Nuke")] public AudioClip[] bombHit;
+        public float bombHitDelay;
+
+        [Header("Box")] public AudioClip[] boxHit;
+        public float boxHitDelay;
+
+        [Header("Spit")] public AudioClip[] spitHit;
+        public float spitHitDelay;
+
         void Awake()
         {
             // Initialize singleton
@@ -365,6 +376,82 @@ namespace FORGE3D
             }
         }
 
+        // Play nuke hit audio at specific position
+        public void NukeHit(Vector3 pos)
+        {
+            AudioSource aSrc =
+                F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource, nukeHit[Random.Range(0, nukeHit.Length)], pos, null)
+                    .gameObject.GetComponent<AudioSource>();
+            if (aSrc != null)
+            {
+                aSrc.pitch = Random.Range(0.8f, 1f);
+                aSrc.volume = 1f;
+                aSrc.minDistance = 50f;
+                aSrc.loop = false;
+                aSrc.Play();
+            }
+        }
+
+        public void BombHit(Vector3 pos)
+        {
+            if (timer_02 >= bombHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        bombHit[Random.Range(0, bombHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.8f, 1f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 25f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_02 = 0f;
+                }
+            }
+        }
+
+        public void SpitHit(Vector3 pos)
+        {
+            if (timer_02 >= spitHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        spitHit[Random.Range(0, spitHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.6f, 0.8f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 25f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_02 = 0f;
+                }
+            }
+        }
+
+        // Play box hit audio at specific position
+        public void BoxHit(Vector3 pos)
+        {
+            if (timer_02 >= boxHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        boxHit[Random.Range(0, boxHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.8f, 1f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 15f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_02 = 0f;
+                }
+            }
+        }
 
         // Play railgun hit audio at specific position
         public void RailGunExplosion(Vector3 pos)

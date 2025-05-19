@@ -18987,23 +18987,26 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  detonationDistance: 5
+  detonationDistance: 0.5
   lifeTime: 5
   despawnDelay: 1
-  velocity: 50
+  velocity: 1
   alignSpeed: 4
-  RaycastAdvance: 1
+  RaycastAdvance: 0.5
   DelayDespawn: 1
   delayedParticles:
   - {fileID: 7889306262746585134}
   - {fileID: 1784591737014866391}
   launcher: {fileID: 0}
   upLaunchTimer: 0
-  upLaunchTime: 0.1
-  range: 20
+  upLaunchTime: 0.5
+  explosionRadius: 20
   crawlerLayer:
     serializedVersion: 2
-    m_Bits: 266496
-  forceStrength: 100
+    m_Bits: 1315201
+  forceStrength: 200
   impactDamage: 30
   randomOffsetStrength: 10
+  targetPosition: {x: 0, y: 0, z: 0}
+  circleRegion: {fileID: 0}
+  startingDistance: 0

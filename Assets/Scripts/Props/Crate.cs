@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FORGE3D;
 using UnityEngine;
 
 public class Crate : Prop
@@ -7,8 +8,6 @@ public class Crate : Prop
     public GameObject[] loot;
     public float lootChance;
     public ParticleSystem explosionEffect;
-    public AudioClip[] audioClips;
-    public AudioSource explosionSound;
     public BreakableObject breakableObject;
     private Vector3 originalPosition;
     private Vector3 originalRoation;
@@ -43,8 +42,7 @@ public class Crate : Prop
         }
         breakableObject.transform.parent = null;
         breakableObject.Break();
-        explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
-        explosionSound.Play();
+        F3DAudioController.instance.BoxHit(transform.position);
         explosionEffect.Play();
         explosionEffect.transform.parent = null;
         if(rend != null)

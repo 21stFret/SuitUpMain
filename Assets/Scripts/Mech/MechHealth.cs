@@ -21,7 +21,6 @@ public class MechHealth : MonoBehaviour
     public float damageFlashDuration = 1f;
 
     [Header("Components")]
-    public DoTweenFade screenFlash;
     public Cinemachine.CinemachineImpulseSource impulseSource;
     public GameObject deathEffect;
     public GameObject mainObject;
@@ -73,10 +72,6 @@ public class MechHealth : MonoBehaviour
             currentFlashRoutine = null;
         }
         isFlashing = false;
-        if (screenFlash != null)
-        {
-            screenFlash.KillTween();
-        }
     }
 
     public void Init()
@@ -97,7 +92,6 @@ public class MechHealth : MonoBehaviour
         damageOverlay.fillAmount = 1;
         cachedFillamount = 1;
         SetShieldBar(100);
-        flash = screenFlash.GetComponent<Image>();
     }
 
     private void Update()
@@ -236,15 +230,19 @@ public class MechHealth : MonoBehaviour
                 float chance = __selectMod.modifiers[0].statValue;
                 if (Random.Range(0, 100) < chance)
                 {
-                    if (!isFlashing)
+                    if (targetHealth.damageNumbersOn)
                     {
-                        currentFlashRoutine = StartCoroutine(DamageFlash(Color.cyan));
+                        targetHealth.damageNumberPrefab.Spawn(transform.position, "Missed");
                     }
                     return;
                 }
             }
         }
 
+        if (targetHealth.damageNumbersOn)
+        {
+            targetHealth.DamageNumbers(damage, WeaponType.Crawler);
+        }
 
         BattleMech.instance.droneController.ChargeDroneOnHit(damage);
 
@@ -285,6 +283,7 @@ public class MechHealth : MonoBehaviour
             }
         }
 
+        // do health flash with vignette
         Color flashColor = isHeal ? healthLightColor : damageLightColor;
 
         if (!isHeal)
@@ -293,7 +292,7 @@ public class MechHealth : MonoBehaviour
             lastDamageTime = Time.time;
             AudioManager.instance.PlayHurt();
             rb.velocity = rb.velocity*0.75f;
-            float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 0.6f);
+            float damagePercent = Mathf.Clamp(damage / 10f, 0.1f, 1.5f);
             impulseSource.GenerateImpulse(damagePercent);
 
             if(GameManager.instance != null)
@@ -308,10 +307,8 @@ public class MechHealth : MonoBehaviour
             AudioManager.instance.PlayHeal();
         }
 
-        if (!isFlashing)
-        {
-            currentFlashRoutine = StartCoroutine(DamageFlash(flashColor));
-        }
+        PostProcessController.instance.vignette.color.Override(flashColor);
+        PostProcessController.instance.FlashVignette(0.5f);
         SetEmmsiveLights();
 
         if (targetHealth.health <= 0)
@@ -433,30 +430,5 @@ public class MechHealth : MonoBehaviour
     public void UpdateHealthUI(float health)
     {
         healthText.text = $"{Mathf.Round(health)}/{Mathf.Round(targetHealth.maxHealth)}";
-    }
-
-
-    private IEnumerator DamageFlash(Color color)
-    {
-
-        // If there's already a flash in progress, stop it
-        if (currentFlashRoutine != null)
-        {
-            StopCoroutine(currentFlashRoutine);
-            screenFlash.KillTween();
-        }
-
-        flash.color = color;
-        isFlashing = true;
-        screenFlash.FadeIn();
-
-        yield return new WaitForSeconds(0.2f);
-
-        screenFlash.FadeOut();
-
-        yield return new WaitForSeconds(0.2f);
-
-        isFlashing = false;
-        currentFlashRoutine = null;
     }
 }

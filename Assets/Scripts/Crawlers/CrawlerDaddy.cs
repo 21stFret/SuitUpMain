@@ -67,7 +67,7 @@ public class CrawlerDaddy : Crawler
                 float attackDamageAfterRange = attackDamage * (1 - (Vector3.Distance(transform.position, collider.transform.position) / explosionRadius));
                 if(rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Cralwer);
+                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Crawler);
                 }
             }
         }

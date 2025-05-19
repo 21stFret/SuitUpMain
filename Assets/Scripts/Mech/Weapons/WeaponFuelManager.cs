@@ -97,7 +97,6 @@ public class WeaponFuelManager : MonoBehaviour
                 lowFuelMod = false;
                 BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod);
             }
-            return;
         }
         __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Conservation");
         if (__selectMod != null)
@@ -112,7 +111,6 @@ public class WeaponFuelManager : MonoBehaviour
                 fullFuelMod = false;
                 BattleMech.instance.weaponController.altWeaponEquiped.RemoveDamageModifier(__selectMod);
             }
-            return;
         }
     }
 
@@ -157,12 +155,7 @@ public class WeaponFuelManager : MonoBehaviour
                 
         if (weaponInUse)
         {
-            if (weaponFuel <= 0)
-            {
-                weapon.Stop();
-                return;
-            }
-            weaponFuel -= Time.deltaTime * weaponFuelRate;
+            UseFuel(Time.deltaTime * weaponFuelRate);
         }
         else
         {
@@ -176,8 +169,8 @@ public class WeaponFuelManager : MonoBehaviour
         weaponFuel -= value;
         if (weaponFuel <= 0)
         {
+            weaponFuel = 0;
             weapon.Stop();
-            return;
         }
     }
 }

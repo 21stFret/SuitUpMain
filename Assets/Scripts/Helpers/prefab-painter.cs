@@ -22,6 +22,21 @@ public class PrefabPainter : EditorWindow
     private bool checkOverlap = true;
     private LayerMask overlapCheckLayers = 0;
 
+    // New fields for drag painting
+    private bool isDragging = false;
+    private float paintFrequency = 10f; // Prefabs per second
+    private float lastPaintTime;
+    private Vector3 lastPaintPosition = Vector3.zero;
+    private float minDragDistance = 0.5f; // Minimum distance between placements when dragging
+
+    // Fields for ensuring we dont use the same prefab twice, the same rotation or scale
+    private GameObject lastPrefab;
+    private float lastYRotation;
+    private float lastScale;
+
+    private bool forceNoDuplicates = false;
+    
+
     private void SaveTemplate()
     {
         string path = EditorUtility.SaveFilePanelInProject(
@@ -208,7 +223,17 @@ public class PrefabPainter : EditorWindow
             overlapCheckLayers = Mathf.Clamp(overlapCheckLayers, 0, 31);
             overlapCheckLayers = EditorGUILayout.MaskField("Overlap Layers", overlapCheckLayers, overlapLayerNames);
         }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Drag Painting Settings", EditorStyles.boldLabel);
+        paintFrequency = EditorGUILayout.Slider("Paint Frequency", paintFrequency, 1f, 30f);
+        minDragDistance = EditorGUILayout.FloatField("Min Drag Distance", minDragDistance);
+
+        EditorGUILayout.Space();
+        forceNoDuplicates = EditorGUILayout.Toggle("Force No Duplicates", forceNoDuplicates);
+
     }
+
 
     private void OnSceneGUI(SceneView sceneView)
     {
@@ -227,12 +252,40 @@ public class PrefabPainter : EditorWindow
             Handles.color = Color.green;
             Handles.DrawWireDisc(hit.point, hit.normal, minSpacing);
 
-            // Check for left click (without requiring Control)
+            // Handle mouse down to start dragging
             if (e.type == EventType.MouseDown && e.button == 0)
             {
+                isDragging = true;
+                lastPaintTime = Time.realtimeSinceStartup;
+                lastPaintPosition = hit.point;
                 PlacePrefab(hit);
                 e.Use();
-                // Force the scene view to repaint
+                sceneView.Repaint();
+            }
+            
+            // Handle dragging
+            else if (e.type == EventType.MouseDrag && e.button == 0 && isDragging)
+            {
+                float timeSinceLastPaint = Time.realtimeSinceStartup - lastPaintTime;
+                float distanceFromLastPaint = Vector3.Distance(hit.point, lastPaintPosition);
+                
+                // Place prefab if enough time has passed AND we've moved far enough
+                if (timeSinceLastPaint > (1f / paintFrequency) && distanceFromLastPaint > minDragDistance)
+                {
+                    PlacePrefab(hit);
+                    lastPaintTime = Time.realtimeSinceStartup;
+                    lastPaintPosition = hit.point;
+                }
+                
+                e.Use();
+                sceneView.Repaint();
+            }
+            
+            // Handle mouse up to stop dragging
+            else if (e.type == EventType.MouseUp && e.button == 0)
+            {
+                isDragging = false;
+                e.Use();
                 sceneView.Repaint();
             }
         }
@@ -289,11 +342,22 @@ public class PrefabPainter : EditorWindow
         }
 
         // Select random prefab
-        GameObject prefab = prefabs[Random.Range(0, prefabs.Count)];
-        while (prefab == null && prefabs.Exists(p => p != null))
+        // Ensure we don't use the same prefab twice
+        int prefabIndex = Random.Range(0, prefabs.Count);
+        GameObject prefab = prefabs[prefabIndex];
+        // If we got the same prefab, choose the next one in the list
+        if(forceNoDuplicates)
         {
-            prefab = prefabs[Random.Range(0, prefabs.Count)];
+            if (lastPrefab != null && prefab == lastPrefab)
+            {
+                // Move to next prefab, wrapping around if we reach the end
+                prefabIndex = (prefabIndex + 1) % prefabs.Count;
+                prefab = prefabs[prefabIndex];
+            }
+            lastPrefab = prefab;
         }
+
+
 
         if (prefab == null) return;
 
@@ -324,6 +388,18 @@ public class PrefabPainter : EditorWindow
             if (randomizeRotationY)
             {
                 float randomY = Random.Range(minRotation, maxRotation);
+                if(lastYRotation != 0)
+                {
+                    // Define an acceptable difference (e.g. 10% of the rotation range)
+                    float minDifference = (maxRotation - minRotation) * 0.1f;
+                    
+                    // Check if the rotations are too similar (within the minimum difference)
+                    if (Mathf.Abs(randomY - lastYRotation) < minDifference)
+                    {
+                        // Generate a new random rotation
+                        randomY = Random.Range(minRotation, maxRotation);
+                    }
+                }
                 instance.transform.Rotate(Vector3.up, randomY, Space.Self);
             }
         }
@@ -335,6 +411,19 @@ public class PrefabPainter : EditorWindow
 
         // Scale
         float randomScale = Random.Range(minScale, maxScale);
+        if (lastScale != 0)
+        {
+            // Define an acceptable difference (e.g. 10% of the scale range)
+            float minDifference = (maxScale - minScale) * 0.1f;
+            
+            // Check if the scales are too similar (within the minimum difference)
+            if (Mathf.Abs(randomScale - lastScale) < minDifference)
+            {
+                // Generate a new random scale
+                randomScale = Random.Range(minScale, maxScale);
+            }
+        }
+        lastScale = randomScale;
         instance.transform.localScale *= randomScale;
     }
 }

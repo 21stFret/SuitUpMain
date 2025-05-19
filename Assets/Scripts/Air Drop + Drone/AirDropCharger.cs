@@ -11,6 +11,8 @@ public class AirDropCharger : MonoBehaviour
     public float DroneCharge;
     public float chargeRate;
     public Image cover;
+    public GameObject[] chargesIcons;
+    public int charges;
     public bool charged;
     public TMP_Text airDropText;
     public AudioSource audioSource;
@@ -19,21 +21,20 @@ public class AirDropCharger : MonoBehaviour
     void Start()
     {
         ActivateButton(false);
+        for (int i = 0; i < chargesIcons.Length; i++)
+        {
+            chargesIcons[i].SetActive(false);
+        }
     }
 
     void Update()
     {
         ChargeOverTime();
 
-        if(charged)
-        {
-            return;
-        }
-
         float percentage = DroneCharge / DroneMaxCharge;
 
         cover.fillAmount = percentage;
-        if (DroneCharge >= DroneMaxCharge)
+        if (charges > 0)
         {
             ActivateButton(true);
         }
@@ -67,22 +68,59 @@ public class AirDropCharger : MonoBehaviour
                 airDropText.text = "Drone Ready";
             }
         }
-        if (charged)
+        if (charges == 3)
         {
             return;
         }
         ChargeDrone(chargeRate * Time.deltaTime);
+        if (DroneCharge >= DroneMaxCharge)
+        {
+            DroneCharge = 0;
+            charges++;
+            airDropText.text = "Drone Ready";
+            airDropText.enabled = true;
+            SetBars();
+        }
+
     }
 
     public void ActivateButton(bool value)
     {
         charged = value;
-        DroneCharge = value ? DroneMaxCharge:0;
-        cover.fillAmount = value ? 1 : 0;
         airDropText.enabled = value;
         if (value)
         {
             audioSource.PlayOneShot(airDropSound);
+        }
+    }
+
+    public void UseCharge(int amount)
+    {
+        if (charges > 0)
+        {
+            charges -= amount;
+            SetBars();
+        }
+        if (charges == 0)
+        {
+            ActivateButton(false);
+        }
+        else
+        {
+            airDropText.text = "Drone Ready";
+            airDropText.enabled = true;
+        }
+    }
+
+    private void SetBars()
+    {
+        for (int i = 0; i < chargesIcons.Length; i++)
+        {
+            chargesIcons[i].SetActive(false);
+        }
+        for (int i = 0; i < charges; i++)
+        {
+            chargesIcons[i].SetActive(true);
         }
     }
 

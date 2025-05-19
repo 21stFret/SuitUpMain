@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Cheats : MonoBehaviour
@@ -35,5 +36,26 @@ public class Cheats : MonoBehaviour
             altWeaponController.altWeaponEquiped.weaponFuelUseRate = savedFuelUseRate;
         }
 
+    }
+
+    public void ToggleFreeDroneUse(bool toggle)
+    {
+        BattleMech.instance.droneController.testingFreeUse = toggle;
+    }
+
+    public void ToggleFreeReRoll(bool toggle)
+    {
+        GameManager.instance.runUpgradeManager.freeReroll = toggle;
+    }
+
+    private bool richcheck = false;
+    public void GetRichQuick()
+    {
+        if (richcheck) return;
+        richcheck = true;
+        CashCollector.instance.AddCash(1000000);
+        CashCollector.instance.AddArtifact(100);
+        PlayerSavedData.instance.SavePlayerData();
+        print("Gave you 1 million cash and 100 artifacts!");
     }
 }

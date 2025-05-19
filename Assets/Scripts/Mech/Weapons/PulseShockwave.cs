@@ -122,7 +122,7 @@ public class PulseShockwave : MonoBehaviour
             var spit = collider.GetComponent<SpitProjectile>();
             if (spit != null)
             {
-                spit.Reflected(transform.position);
+                spit.Reflected(transform.position, range);
                 continue;
             }
             Crawler crawler = collider.GetComponent<Crawler>();

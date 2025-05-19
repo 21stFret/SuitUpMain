@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2594342239608267839}
   - component: {fileID: -2996138440681610046}
+  - component: {fileID: 4871974158595616016}
   m_Layer: 9
   m_Name: Projectile_Cryo
   m_TagString: Untagged
@@ -71,6 +72,20 @@ MonoBehaviour:
   splitCount: 0
   range: 0
   pierceCountMax: 0
+--- !u!114 &4871974158595616016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2594342239608267824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af19da7458dc9174699d0b34f404eafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DespawnDelay: 5
+  DespawnOnMouseUp: 0
 --- !u!1 &2594342240193226743
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,6 +18,11 @@ public class CryoController : MechWeapon
 
     public void Update()
     {
+        if(!Initialized)
+        {
+            return;
+        }
+        
         var target = sensor.GetNearestDetection();
         Vector3 location = transform.forward;
         if (target != null)
@@ -45,16 +50,9 @@ public class CryoController : MechWeapon
             location = transform.forward;
         }
 
-
         gunturret.transform.forward = Vector3.Lerp(gunturret.transform.forward, location, Time.deltaTime * autoAimSpeed);
 
         shotTimer += Time.deltaTime;
-
-        if (weaponFuelManager.weaponFuel - weaponFuelUseRate <= 0)
-        {
-            Stop();
-            return;
-        }
 
         if (!isFiring)
         {
@@ -65,7 +63,7 @@ public class CryoController : MechWeapon
         {
             shotTimer = 0;
             projectileWeapon.Cryo(damage, force, stunTime);
-            weaponFuelManager.UseFuel(weaponFuelManager.weaponFuelRate);
+            weaponFuelManager.UseFuel(weaponFuelUseRate);
         }
     }
 

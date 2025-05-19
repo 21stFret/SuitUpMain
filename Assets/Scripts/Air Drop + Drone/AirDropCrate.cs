@@ -40,6 +40,8 @@ public class AirDropCrate : MonoBehaviour
         active = true;
         _meshRenderer.enabled = active;
         _collider.enabled = !active;
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         _object.SetActive(true);
@@ -47,7 +49,7 @@ public class AirDropCrate : MonoBehaviour
 
     private void DeActive()
     {
-        active = !active;
+        active = false;
         _meshRenderer.enabled = active;
         _collider.enabled = active;
         rb.useGravity = false;
@@ -84,9 +86,6 @@ public class AirDropCrate : MonoBehaviour
         {
             case DroneType.Repair:
                 BattleMech.instance.RepairArmour(20);
-                break;
-            case DroneType.Shield:
-                BattleMech.instance.Shield();
                 break;
             default:
                 break;

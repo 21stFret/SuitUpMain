@@ -57,12 +57,12 @@ MonoBehaviour:
   - {fileID: 3934164164701172194, guid: 3d00a4a7b66b25741998ca8195962a83, type: 3}
   - {fileID: 3934164164701172194, guid: 3d00a4a7b66b25741998ca8195962a83, type: 3}
   hideDelay: 5
-  explosionForce: 500
+  explosionForce: 50
   explosionRadius: 3
+  upwardModifier: 1
+  torqueMultiplier: 30
   localScale: 1
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
+  layer: 21
 --- !u!1 &3209592250305003896
 GameObject:
   m_ObjectHideFlags: 0
@@ -14889,6 +14889,7 @@ MonoBehaviour:
   maxHealth: 5
   invincible: 0
   alive: 1
+  trippyEffect: {fileID: 0}
   immuneWeapons: 0300000004000000
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
@@ -14906,20 +14907,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetHealth: {fileID: 4559301371835365882}
-  damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
-    type: 3}
-  damageNumbersOn: 1
   init: 0
   loot: []
   lootChance: 0
   explosionEffect: {fileID: 3209592252322673267}
-  audioClips:
-  - {fileID: 8300000, guid: 4da9cd0e03ae3054884b6b0883567aa6, type: 3}
-  - {fileID: 8300000, guid: f470dc67012b9ca4a9726aff9252ba8e, type: 3}
-  - {fileID: 8300000, guid: 4161b1ec132d18442b3844f6756b08d0, type: 3}
-  - {fileID: 8300000, guid: bb85444c1d42a1e41bf441f730fed69a, type: 3}
-  - {fileID: 8300000, guid: 0cc47f629491f24469048f60968b4f12, type: 3}
-  explosionSound: {fileID: 3742184771059343869}
   breakableObject: {fileID: 3814146864286713231}
 --- !u!82 &3742184771059343869
 AudioSource:

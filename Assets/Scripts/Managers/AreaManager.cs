@@ -40,8 +40,7 @@ public class AreaManager : MonoBehaviour
         dayLight.SetActive(!night);
         nightLight.SetActive(night);
         directionalDaylight.enabled = !night;
-        directionalDaylight.startTime = Random.Range(0.2f, 0.7f);
-        directionalDaylight.Init();
+        directionalDaylight.ApplyLightSettings();
     }
 
     public void LoadRoom(AreaType areaType)
@@ -97,6 +96,8 @@ public class AreaManager : MonoBehaviour
                 randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
                 roomPrefab = roomPrefabs[randomIndex];
             }
+            int NinetyAngle = Random.Range(0, 4) * 90;
+            roomPrefab.transform.rotation = Quaternion.Euler(0, NinetyAngle, 0);
             area = roomPrefab.GetComponent<EnvironmentArea>();
             if(directionalDaylight!=null)
             {

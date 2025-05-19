@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject menu;
     public GameObject cheatsMenu;
+    public GameObject controlsMenu;
     public GameObject controlsPC;
     public GameObject controlsGamePad;
     public GameObject settingsMenu;
@@ -27,6 +28,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject logsSelectedButton;
     public GameObject quitSelectedButton;
     public GameObject modSelectedButton;
+    public GameObject cheatsSelectedButton;
     public bool menuLocked;
     private bool menuOpen;
     public PauseModUI pauseModUI;
@@ -44,6 +46,8 @@ public class PauseMenu : MonoBehaviour
     public bool canQuickOpen = false;
 
     private Callback<GameOverlayActivated_t> m_GameOverlayActivated;
+
+    public SequenceInputController sequenceInputController;
 
     private void OnEnable()
     {
@@ -66,6 +70,11 @@ public class PauseMenu : MonoBehaviour
         menuOpen = false;
         lastSelectedButton = null;
         canQuickOpen = false;
+        if(sequenceInputController != null)
+        {
+            sequenceInputController.OnSequenceComplete += () => OpenCheatsMenu(true);
+        }
+
     }
 
     void Update()
@@ -140,7 +149,6 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         playerInput.SwitchCurrentActionMap("UI");
         BattleMech.instance.myCharacterController.runAudio.Stop();
-
     }
 
     public void InvokeOnBack(InputAction.CallbackContext context)
@@ -186,13 +194,17 @@ public class PauseMenu : MonoBehaviour
         {
             eventSystem.SetSelectedGameObject(firstSelectedButton);
         }
+        if(sequenceInputController != null)
+        {
+            sequenceInputController.LoadSetSequence();
+        }
+
     }
 
     public void OpenSettingsMenu(bool value)
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         settingsMenu.SetActive(value);
-        SwapControlsMenu();
         settingsPopup.SetActive(false);
         menu.SetActive(false);
         backImage.SetActive(true);
@@ -204,6 +216,23 @@ public class PauseMenu : MonoBehaviour
         lastSelectedButton = eventSystem.currentSelectedGameObject;
         SetOnBackAction(() => { OpenSettingsMenu(false); });
         eventSystem.SetSelectedGameObject(settingsSelectedButton);
+    }
+
+    public void OpenControlsMenu(bool value)
+    {
+        AudioManager.instance.PlaySFX(SFX.Confirm);
+        SetTitleText("controls");
+        SwapControlsMenu();
+        controlsMenu.SetActive(value);
+        menu.SetActive(false);
+        backImage.SetActive(true);
+        if (!value)
+        {
+            OpenPauseMenu();
+            return;
+        }
+        lastSelectedButton = eventSystem.currentSelectedGameObject;
+        SetOnBackAction(() => { OpenControlsMenu(false); });
     }
 
     public void OpenQuitMenu(bool value)
@@ -240,12 +269,21 @@ public class PauseMenu : MonoBehaviour
         eventSystem.SetSelectedGameObject(logsSelectedButton);
     }
 
-    public void OpenCheatsMenu()
+    public void OpenCheatsMenu(bool value)
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
-        cheatsMenu.SetActive(true);
+        SetTitleText("cheats");
+        cheatsMenu.SetActive(value);
         backImage.SetActive(true);
         menu.SetActive(false);
+        if (!value)
+        {
+            OpenPauseMenu();
+            return;
+        }
+        lastSelectedButton = eventSystem.currentSelectedGameObject;
+        SetOnBackAction(() => { OpenCheatsMenu(false); });
+        eventSystem.SetSelectedGameObject(cheatsSelectedButton);
     }
 
     public void ToggleModMenu(bool value)
@@ -295,7 +333,10 @@ public class PauseMenu : MonoBehaviour
         }
         AudioManager.instance.PlaySFX(SFX.Select);
         menuOpen = false;
-        cheatsMenu.SetActive(false);
+        if(cheatsMenu != null)
+        {
+            cheatsMenu.SetActive(false);
+        }
         pauseMenu.SetActive(false);
         menu.SetActive(false);
         settingsMenu.SetActive(false);
@@ -339,7 +380,7 @@ public class PauseMenu : MonoBehaviour
     {
         AudioManager.instance.PlaySFX(SFX.Select);
         menuOpen = false;
-        cheatsMenu.SetActive(false);
+        cheatsMenu?.SetActive(false);
         pauseMenu.SetActive(false);
         menu.SetActive(false);
         settingsMenu.SetActive(false);

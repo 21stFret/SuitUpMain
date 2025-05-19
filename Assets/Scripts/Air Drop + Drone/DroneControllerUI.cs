@@ -8,12 +8,17 @@ using UnityEngine.EventSystems;
 
 public enum DroneType
 {
+    BurstStrike,
     Repair,
-    Airstrike,
+    BombingRun,
+    Guided,
+    Napalm,
+    Mines,
+    Smoke,
+    LittleBoy,
+    FatMan,
+    Companion,
     Orbital,
-    ElementBomb,
-    Shield,
-    Companion
 }
 
 
@@ -39,21 +44,24 @@ public class DroneControllerUI : MonoBehaviour
 
     [InspectorButton("FullyChargeDrone")]
     public bool chargeDrone;
-
-    [InspectorButton("TestActiveate")]
-    public bool testActiveate;
-    public DroneType testDrone;
     private bool isMenuOpen;
 
     public bool testingFreeUse;
 
     private float menuopenforTime;
 
+    public DroneType currentDroneType;
+
     private void Start()
     {
         gameUI = GameUI.instance;
-        timesUsed =0;
+        timesUsed = 0;
         SetupSequencers();
+        CloseMenu();
+        foreach (DroneInputUI sequence in droneInputs)
+        {
+            sequence.isActive = false;
+        }
     }
 
     void Update()
@@ -68,11 +76,6 @@ public class DroneControllerUI : MonoBehaviour
             CloseMenu();
             menuopenforTime = 5f;
         }
-    }
-
-    public void TestActiveate()
-    {
-        ActivateDroneInput(testDrone);
     }
 
     public void ActivateDroneInput(DroneType type)
@@ -203,10 +206,11 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
 
+        currentDroneType = type;
         StartCoroutine(InputDelay());
-        drone.Init(type);
+        drone.UseDroneAbility(type, airDropTimer.charges);
 
-        if(type == DroneType.Repair || type == DroneType.Shield)
+        if(type == DroneType.Repair)
         {
             crates++;
         }
@@ -225,10 +229,10 @@ public class DroneControllerUI : MonoBehaviour
         inputDelay = false;
     }
 
-    public void MissileStrike()
+    public void MissileStrike(Ordanance ordanance)
     {
         missileLauncher.FatMan = false;
-        missileLauncher.LaunchMissiles(missileAmount);
+        missileLauncher.LaunchMissiles(missileAmount,ordanance);
         airstikes++;
 
         if(PlayerAchievements.instance == null)
@@ -245,10 +249,10 @@ public class DroneControllerUI : MonoBehaviour
         }
     }
 
-    public void FatManLaunch()
+    public void LittleBoyLaunch()
     {
         missileLauncher.FatMan = true;
-        missileLauncher.LaunchMissiles(1);
+        missileLauncher.LaunchNuke();
     }
 
 

@@ -7,15 +7,16 @@ public class BreakableObject : MonoBehaviour
 {
     [SerializeField] private GameObject[] brokenPartPrefabs;
     [SerializeField] private float hideDelay = 5f;
-    [SerializeField] private float explosionForce = 500f;
-    [SerializeField] private float explosionRadius = 2f;
+    [SerializeField] private float explosionForce = 1500f; // Increased force
+    [SerializeField] private float explosionRadius = 3f;   // Increased radius
+    [SerializeField] private float upwardModifier = 2f;    // Dedicated upward modifier
+    [SerializeField] private float torqueMultiplier = 50f; // Control rotation separately
 
     private List<GameObject>[] brokenPartPools;
     private List<GameObject> activeparts = new List<GameObject>();
     private bool isBroken = false;
     public float localScale;
-    public int layer;
-
+    public int layer = 21;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class BreakableObject : MonoBehaviour
         {
             brokenPartPools[i] = new List<GameObject>();
         }
+        layer = 21;
     }
 
     private GameObject GetPooledpart(int partIndex)
@@ -52,57 +54,69 @@ public class BreakableObject : MonoBehaviour
         if (isBroken) return;
         isBroken = true;
 
+        // Common explosion center
+        Vector3 explosionCenter = transform.position;
+
         // Activate and apply physics to broken parts
         for (int i = 0; i < brokenPartPrefabs.Length; i++)
         {
             GameObject part = GetPooledpart(i);
 
+            // Reset renderer alpha
             var rend = part.GetComponent<Renderer>();
-            if(rend != null)
+            if (rend != null)
             {
-                if(rend.material.HasProperty("_Color"))
+                if (rend.material.HasProperty("_Color"))
                 {
                     Color color = rend.material.color;
                     color.a = 1;
                     rend.material.color = color;
                 }
-
             }
 
-
-            Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
-            randomOffset.y = 1f;
-            Vector3 newPos = transform.position + randomOffset;
+            // Position part initially at object center with slight offset
+            Vector3 randomOffset = Random.insideUnitSphere * 0.2f;
             part.transform.position = transform.position + randomOffset;
-            part.transform.rotation = transform.rotation;
+
+            // Random rotation for variety
+            part.transform.rotation = Random.rotation;
             part.SetActive(true);
             part.layer = layer;
             activeparts.Add(part);
             part.transform.localScale = new Vector3(localScale, localScale, localScale);
+
             Rigidbody rb = part.GetComponent<Rigidbody>();
             if (rb != null)
             {
+                // Reset velocity
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
 
-                // Add random offset to explosion center
-                Vector3 randomOffset1 = Random.insideUnitSphere * 0.5f;
-                randomOffset1.y = -0.5f;
-                Vector3 explosionCenter = newPos + randomOffset1;
+                // Ensure mass is reasonable
+                rb.mass = Mathf.Clamp(rb.mass, 0.1f, 2f);
 
-                // Add random torque for spin
-                rb.AddTorque(Random.insideUnitSphere * Random.Range(10f, 30f), ForceMode.Impulse);
+                // Adjust drag for more realistic movement
+                rb.drag = 0.2f;
+                rb.angularDrag = 0.1f;
 
-                // Randomize the upwards modifier
-                float randomUpwardsModifier = Random.Range(0.5f, 2f) * (explosionForce / 2);
+                // Strong random torque for dramatic spinning
+                rb.AddTorque(Random.insideUnitSphere * Random.Range(torqueMultiplier * 0.8f, torqueMultiplier * 1.5f),
+                             ForceMode.Impulse);
 
-                // Add explosion force with randomized parameters
+                // Apply explosion force from slight offset for better dispersion
+                Vector3 forceDir = (part.transform.position - explosionCenter).normalized;
+
+                // Add significant explosion force
                 rb.AddExplosionForce(
-                    Random.Range(explosionForce * 0.7f, explosionForce * 1.3f),
-                    explosionCenter,
-                    Random.Range(explosionRadius * 0.8f, explosionRadius * 1.2f),
-                    randomUpwardsModifier
+                    Random.Range(explosionForce * 0.9f, explosionForce * 1.5f),
+                    explosionCenter - forceDir * 0.5f,  // Offset the center for better dispersion
+                    explosionRadius,
+                    upwardModifier * Random.Range(0.8f, 1.5f),
+                    ForceMode.Impulse
                 );
+
+                // Add additional random impulse for more chaotic movement
+                rb.AddForce(Random.insideUnitSphere * explosionForce * 0.3f, ForceMode.Impulse);
             }
         }
 

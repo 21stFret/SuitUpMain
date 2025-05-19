@@ -97,8 +97,8 @@ public class AudioManager : MonoBehaviour
         musicVolume = PlayerSavedData.instance._BGMVolume;
         sfxVolume = PlayerSavedData.instance._SFXVolume;
         // Set initial volumes
-        audioMixer.SetFloat("BGMVolume", Mathf.Log10(musicVolume) * 20);
-        audioMixer.SetFloat("SFXVolume", Mathf.Log10(sfxVolume) * 20);
+        SetMusicVolume(musicVolume);
+        SetSFXVolume(sfxVolume);
     }
 
     // Play a music clip
@@ -202,7 +202,9 @@ public class AudioManager : MonoBehaviour
     public void SetMusicVolume(float volume)
     {
         musicVolume = volume;
-        audioMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
+        float adjustedVolume = volume * 0.5f;
+        float targetVolume = Mathf.Log10(adjustedVolume) * 20;
+        audioMixer.SetFloat("BGMVolume", targetVolume);
         PlayerSavedData.instance.UpdateBGMVolume(musicVolume);
         PlayerSavedData.instance.SavePlayerData();
     }

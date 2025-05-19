@@ -129,7 +129,7 @@ public class CrawlerAlbino : Crawler
             float ratio1 = Mathf.Clamp01(1 - dist / smashRadius);
             dam = attackDamage * 2 * ratio1;
             dam = Mathf.Clamp(dam, 1, attackDamage * 2);
-            targetHealth.TakeDamage(dam, WeaponType.Cralwer);
+            targetHealth.TakeDamage(dam, WeaponType.Crawler);
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
             {

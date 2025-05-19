@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FORGE3D;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,7 +11,8 @@ public class SpitProjectile : MonoBehaviour
     public float speed;
     public float explosionRadius = 10f;
     public float explosionForce = 1000f;
-    public LayerMask layerMask;
+    public LayerMask targetLayer;
+    public LayerMask reflectedLayer;
     public ParticleSystem explosionEffect;
     private Rigidbody _rigidbody;
     private Collider _collider;
@@ -19,7 +21,8 @@ public class SpitProjectile : MonoBehaviour
     public bool inflight;
     public GameObject trailEffect;
     private bool aiming;
-    public float aimDealay = 0.2f;
+    public float aimDelay = 0.2f;
+    private bool isReflected;
 
     public void Init(float damage, Transform target)
     {
@@ -33,8 +36,9 @@ public class SpitProjectile : MonoBehaviour
         targetLocation = target.position;
         transform.forward = Vector3.up;
         inflight = true;
+        isReflected = false;
         aiming = false;
-        Invoke("DelayedAiming", aimDealay);
+        Invoke("DelayedAiming", aimDelay);
         trailEffect.GetComponent<ParticleSystem>().Play();
     }
 
@@ -44,15 +48,18 @@ public class SpitProjectile : MonoBehaviour
         _collider.enabled = true;
     }
 
-    public void Reflected(Vector3 reflectPos)
+    public void Reflected(Vector3 reflectPos, float range)
     {
         Vector3 dir = reflectPos - transform.position;
-        dir.y =0;
-        targetLocation = reflectPos - dir.normalized * 2;
+        float distance = Vector3.Distance(reflectPos, transform.position);
+        float t = 5 - Mathf.Clamp01(distance / range) * 5;
+        t += 8f;
+        dir.Normalize();
+        targetLocation = transform.position - dir * t;
         targetLocation.y = 0;
-        aiming = false;
-        transform.forward = -transform.forward;
-        Invoke("DelayedAiming", aimDealay * 0.3f);
+        transform.forward = -dir;
+        isReflected = true;
+        Invoke("DelayedAiming", aimDelay*0.2f);
     }
 
     private void Update()
@@ -67,7 +74,8 @@ public class SpitProjectile : MonoBehaviour
         {
             return;
         }
-        transform.forward = Vector3.Lerp(transform.forward, targetLocation - transform.position, Time.deltaTime * aimSpeed);
+        Vector3 dir = targetLocation - transform.position;
+        transform.forward = Vector3.Lerp(transform.forward, dir.normalized, Time.deltaTime * aimSpeed);
 
     }
 
@@ -81,7 +89,7 @@ public class SpitProjectile : MonoBehaviour
     private void Explode()
     {
         inflight = false;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, isReflected ? reflectedLayer : targetLayer);
         foreach (Collider collider in colliders)
         {
             Rigidbody rb = collider.GetComponent<Rigidbody>();
@@ -95,11 +103,17 @@ public class SpitProjectile : MonoBehaviour
             {
                 float distance = Vector3.Distance(transform.position, collider.transform.position);
                 float damage = Mathf.Clamp(_damage * (1.2f - (distance / explosionRadius)), 0, _damage);
-                targetHealth.TakeDamage(damage, WeaponType.Cralwer);
+                var weaponType = WeaponType.Crawler;
+                if (isReflected)
+                {
+                    weaponType = WeaponType.AoE;
+                }
+                targetHealth.TakeDamage(damage, weaponType);
             }
         }
         explosionEffect.Play();
         trailEffect.SetActive(false);
+        F3DAudioController.instance.SpitHit(transform.position);
         _collider.enabled = false;  
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.constraints = RigidbodyConstraints.FreezeAll;

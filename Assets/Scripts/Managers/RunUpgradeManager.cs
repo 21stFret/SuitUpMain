@@ -57,6 +57,8 @@ public class RunUpgradeManager : MonoBehaviour
 
     public int RerollCost;
 
+    public bool freeReroll = false;
+
     public void SelectNextBuilds()
     {
         randomlySelectedBuilds.Clear();
@@ -340,6 +342,12 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void ReRollMods()
     {
+        if(freeReroll)
+        {
+            GenerateListOfUpgradesFromAll(currentBuildType);
+            AudioManager.instance.PlaySFX(SFX.Confirm);
+            return;
+        }
         if(PlayerProgressManager.instance.crawlerParts>=RerollCost)
         {
             GenerateListOfUpgradesFromAll(currentBuildType);
@@ -389,25 +397,6 @@ public class RunUpgradeManager : MonoBehaviour
                 weaponModManager.EquipTechWeaponMod(Wmod);
                 break;
             case ModCategory.DRONE:
-                switch (mod.modName)
-                {
-                    case "Orbital Strike":
-                        BattleMech.droneController.ActivateDroneInput(DroneType.Orbital);
-                        BattleMech.droneController.drone.orbitalStrike.beamDamage = BattleMech.weaponController.altWeaponEquiped.damage *(mod.modifiers[0].statValue/100);
-                        BattleMech.droneController.drone.orbitalStrike.beamDuration = mod.modifiers[1].statValue;
-                        break;
-                    case "Element Bomb":
-                        BattleMech.droneController.ActivateDroneInput(DroneType.ElementBomb);
-                        break;
-                    case "Shield":
-                        BattleMech.droneController.ActivateDroneInput(DroneType.Shield);
-                        break;
-                    case "Companion":
-                        BattleMech.droneController.ActivateDroneInput(DroneType.Companion);
-                        BattleMech.droneController.drone.companionDamage = BattleMech.weaponController.altWeaponEquiped.damage * (mod.modifiers[0].statValue / 100);
-                        BattleMech.droneController.drone.companionTime = mod.modifiers[1].statValue;                
-                        break;
-                }
                 break;
             case ModCategory.PULSE:
                 pulseShockwave.ResetMods();

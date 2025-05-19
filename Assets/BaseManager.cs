@@ -59,7 +59,7 @@ public class BaseManager : MonoBehaviour
         AudioManager.instance.PlayBGMusic(3);
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
-        daylight.startTime = Random.Range(0, 1f);
+        daylight.ApplyLightSettings();
         globalBackButton.sprite = InputTracker.instance.usingMouse ? key : button;
 
         Debug.Log("Base Initialized");

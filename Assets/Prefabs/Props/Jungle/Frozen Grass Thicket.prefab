@@ -14805,12 +14805,12 @@ MonoBehaviour:
   - {fileID: 5983441870239963633, guid: fb475fdf184994f40a411124da94bd8c, type: 3}
   - {fileID: 5983441870239963633, guid: fb475fdf184994f40a411124da94bd8c, type: 3}
   hideDelay: 5
-  explosionForce: 300
-  explosionRadius: 1
+  explosionForce: 100
+  explosionRadius: 2
+  upwardModifier: 2
+  torqueMultiplier: 20
   localScale: 1
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
+  layer: 21
 --- !u!1001 &2696999600549941879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15079,8 +15079,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetHealth: {fileID: 8818870570181923943}
-  damageNumberPrefab: {fileID: 0}
-  damageNumbersOn: 0
   init: 0
   iceDamage: {fileID: 3194489535412128214}
   explosionEffect: {fileID: 6768388660930464330}
