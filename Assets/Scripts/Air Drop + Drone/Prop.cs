@@ -10,7 +10,7 @@ public class Prop : MonoBehaviour
     private float healthMax;
     public TargetHealth _targetHealth;
 
-    private Collider _collider;
+    public Collider _collider;
 
     [InspectorButton("RefreshProp")]
     public bool init;
@@ -30,7 +30,7 @@ public class Prop : MonoBehaviour
         if (_targetHealth == null)
         {
             _targetHealth = GetComponent<TargetHealth>();
-            if(_targetHealth == null)
+            if (_targetHealth == null)
             {
                 //print("No target health found on " + gameObject.name);
                 return;
@@ -39,6 +39,7 @@ public class Prop : MonoBehaviour
         _targetHealth.Init(null, null, this);
         healthMax = _targetHealth.maxHealth;
         health = healthMax;
+        _collider.enabled = true;
     }
 
     public void TakeDamage(float damage, WeaponType weapon)
@@ -53,7 +54,11 @@ public class Prop : MonoBehaviour
 
     public virtual void Die()
     {
-        _targetHealth.alive = false;
+        if (_targetHealth != null)
+        {
+            _targetHealth.alive = false;
+        }
+
         _collider.enabled = false;
         //print(gameObject.name + " has died");
     }

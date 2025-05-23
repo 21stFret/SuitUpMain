@@ -9,6 +9,7 @@ public class DroneAbilityManager : MonoBehaviour
     public List<DroneAbility> _droneAbilities = new List<DroneAbility>();
     public DroneAbilityDataReader dataReader;
     public List<DroneAbility> _equippedAbilities = new List<DroneAbility>();
+    public bool equipAbilitesOnAwake = false;
 
     [InspectorButton("TEquipDroneAbility")]
     public bool equipDroneAbility;
@@ -34,8 +35,8 @@ public class DroneAbilityManager : MonoBehaviour
     {
         dataReader.LoadFromExcel(this);
         // Load the drone loadout from PlayerSavedData
+        UpdateDroneAbilityData();
         LoadDroneAbilities();
-
     }
 
     private void LoadDroneAbilities()
@@ -43,61 +44,29 @@ public class DroneAbilityManager : MonoBehaviour
         for (int i = 0; i < PlayerSavedData.instance.droneLoadOut.Length; i++)
         {
             int index = PlayerSavedData.instance.droneLoadOut[i];
-            if (index != -1)
+            if (index >= 0)
             {
-                EquipDroneAbility(index);
+                if(equipAbilitesOnAwake)
+                {
+                    EquipDroneAbility(index);
+                }
             }
         }
-    }
-
-    public void UnlockDroneAbility(int index)
-    {
-        var ability = _droneAbilities[index];
-        ability.unlocked = true;
-        UpdateDroneAbilityData();
     }
 
     public void UpdateDroneAbilityData()
     {
         for (int i = 0; i < _droneAbilities.Count; i++)
         {
-            PlayerSavedData.instance._droneAbilities[i].unlocked = _droneAbilities[i].unlocked;
-            //sAVE EQUIPED  ABILITES
+            _droneAbilities[i].unlocked = PlayerSavedData.instance._droneAbilities[i] == 0 ? true : false;
         }
-        PlayerSavedData.instance.SavePlayerData();
     }
 
     public void EquipDroneAbility(int index)
     {
         _equippedAbilities.Add(_droneAbilities[index]);
-        UpdateDroneAbilityData();
         droneControllerUI.ActivateDroneInput((DroneType)index);
-        //Testing
-        /*
-        if (_droneAbilities[index].unlocked)
-        {
-            _equippedAbilities.Add(_droneAbilities[index]);
-            UpdateDroneAbilityData();
-            droneControllerUI.ActivateDroneInput((DroneType)index);
-        }
-        else
-        {
-            Debug.Log("Ability is not unlocked.");
-        }
-        */
     }
     
 
-    public void UnequipDroneAbility(int index)
-    {
-        if (_equippedAbilities.Contains(_droneAbilities[index]))
-        {
-            _equippedAbilities.Remove(_droneAbilities[index]);
-            UpdateDroneAbilityData();
-        }
-        else
-        {
-            Debug.Log("Ability is not equipped.");
-        }
-    }
 }

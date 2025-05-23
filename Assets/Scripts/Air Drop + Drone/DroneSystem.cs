@@ -41,6 +41,7 @@ public class DroneSystem : MonoBehaviour
     private DroneType currentType;
     public List<AudioClip> droneIncomingSounds;
     public DroneAbilityManager droneAbilityManager;
+    public float BombingRunTime = 1f;
 
     private void Start()
     {
@@ -68,7 +69,8 @@ public class DroneSystem : MonoBehaviour
         minigun.autoTurret = false;
         DroneControllerUI droneController = droneAbilityManager.droneControllerUI;
 
-        droneController.missileAmount = droneAbilityManager._droneAbilities[(int)droneType].chargeInts[_charges-1];
+        int missileAmount = GetChargeInt(droneAbilityManager._droneAbilities[(int)droneType], _charges - 1);
+        droneController.missileAmount = missileAmount;
 
         switch (droneType)
         {
@@ -81,26 +83,35 @@ public class DroneSystem : MonoBehaviour
                 InitCrate();
                 break;
             case DroneType.BombingRun:
-                BattleMech.instance.droneController.MissileStrike(Ordanance.Line);
+                StartCoroutine(MultipleBombingRuns(missileAmount));
+                active = true;
+                break;
+            case DroneType.Guided:
+                BattleMech.instance.droneController.MissileStrike(Ordanance.Guided);
+                active = true;
+                break;
+            case DroneType.Napalm:
+                //BattleMech.instance.droneController.MissileStrike(Ordanance.Napalm);
+                //active = true;
+                break;
+            case DroneType.Mines:
+                BattleMech.instance.droneController.missileLauncher.LaunchMines(missileAmount);
                 active = true;
                 break;
             case DroneType.LittleBoy:
                 BattleMech.instance.droneController.LittleBoyLaunch();
                 active = true;
                 break;
-            case DroneType.Orbital:
-                PingClosestEnemy();
-                stoppingDistance = 0.5f;
-                break;
             case DroneType.Companion:
                 PingClosestEnemy();
                 minigun.gameObject.SetActive(true);
                 stoppingDistance = 5;
                 break;
-            case DroneType.Guided:
-                BattleMech.instance.droneController.MissileStrike(Ordanance.Guided);
-                active = true;
+            case DroneType.Orbital:
+                PingClosestEnemy();
+                stoppingDistance = 0.5f;
                 break;
+
         }
         int droneTypeInt = (int)droneType;
         if (droneTypeInt < droneIncomingSounds.Count)
@@ -110,6 +121,21 @@ public class DroneSystem : MonoBehaviour
         droneAbilityManager.droneControllerUI.airDropTimer.UseCharge(_charges);
 
         ToggleActive();
+    }
+
+    public int GetChargeInt(DroneAbility droneAbility, int index)
+    {
+        return droneAbility.chargeInts[index];
+    }
+
+    private IEnumerator MultipleBombingRuns(int index = 1)
+    {
+        for (int i = 0; i < index; i++)
+        {
+            droneAbilityManager.droneControllerUI.missileAmount = 5;
+            BattleMech.instance.droneController.MissileStrike(Ordanance.Line);
+            yield return new WaitForSeconds(BombingRunTime);
+        }
     }
 
     private void InitCrate()
@@ -196,6 +222,12 @@ public class DroneSystem : MonoBehaviour
                 PingClosestEnemy();
                 return;
             }
+        }
+
+        if (target == null)
+        {
+            target = player.transform;
+            print("Target is null so set to player");
         }
 
         Vector3 newPos = target.position + hoverOffest;

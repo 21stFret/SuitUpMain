@@ -35,14 +35,12 @@ public class WeaponsManager : MonoBehaviour
     {
         mainWeapon = index;
         _playerSavedData.UpdateMainWeaponLoadout(index);
-        _playerSavedData.SavePlayerData();
     }
 
     public void SetAltWeaponIndex(int index)
     {
         altWeapon = index;
         _playerSavedData.UpdateAltWeaponLoadout(index);
-        _playerSavedData.SavePlayerData();
     }
 
     public void LoadWeaponsData(WeaponData[] mainWeapons, WeaponData[] altWeapons)

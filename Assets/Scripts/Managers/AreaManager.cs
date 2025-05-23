@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FORGE3D;
 using UnityEngine;
 
 public enum AreaType
@@ -26,6 +27,7 @@ public class AreaManager : MonoBehaviour
     public GameObject nightLight;
     public DirectionalDaylight directionalDaylight;
     public DataLogSpawner dataLogSpawner;
+    public F3DMissileLauncher missileLauncher;
 
     private void Start()
     {
@@ -45,6 +47,8 @@ public class AreaManager : MonoBehaviour
 
     public void LoadRoom(AreaType areaType)
     {
+        CashCollector.instance.DestroyParts();
+        missileLauncher.RefreshMines();
         allRooms.ForEach(room => room.SetActive(false));
 
         if (currentRoom != null)
@@ -96,7 +100,7 @@ public class AreaManager : MonoBehaviour
                 randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
                 roomPrefab = roomPrefabs[randomIndex];
             }
-            int NinetyAngle = Random.Range(0, 4) * 90;
+            int NinetyAngle = Random.Range(0, 2) * 180;
             roomPrefab.transform.rotation = Quaternion.Euler(0, NinetyAngle, 0);
             area = roomPrefab.GetComponent<EnvironmentArea>();
             if(directionalDaylight!=null)

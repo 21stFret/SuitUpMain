@@ -26,7 +26,7 @@ public class PlayerSavedData : MonoBehaviour
     public GameStats _gameStats         {get; private set;}
     public int highestDifficulty;
     public bool demoBuild;
-    public DroneAbility[] _droneAbilities;
+    public int[] _droneAbilities;
     public int[] droneLoadOut;
 
     private void Awake()
@@ -175,20 +175,18 @@ public class PlayerSavedData : MonoBehaviour
 
     public void CreateDroneAbilityData()
     {
-        _droneAbilities = new DroneAbility[15];
+        _droneAbilities = new int[15];
         for (int i = 0; i < _droneAbilities.Length; i++)
         {
-            DroneAbility droneAbility = new DroneAbility();
-            _droneAbilities[i] = droneAbility;
-            _droneAbilities[i].unlocked = false;
+            _droneAbilities[i] = -1; // -1 means locked
         }
-        _droneAbilities[0].unlocked = true;
-        _droneAbilities[1].unlocked = true;
+        _droneAbilities[0] = 0; // 0 means unlocked
+        _droneAbilities[1] = 0;
 
         droneLoadOut = new int[5];
         for (int i = 0; i < droneLoadOut.Length; i++)
         {
-            droneLoadOut[i] = -1;
+            droneLoadOut[i] = -2;
         }
         droneLoadOut[0] = 0;
         droneLoadOut[1] = 1;
@@ -357,5 +355,6 @@ public class SaveData
     public int highestDifficulty;
     public bool triggeredEasterEgg;
     public bool hasSeenThankYouPanel;
-    public DroneAbility[] droneAbilities;
+    public int[] droneAbilities;
+    public int[] droneLoadOut;
 }

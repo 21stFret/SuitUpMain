@@ -17,14 +17,12 @@ public class AirDropCharger : MonoBehaviour
     public TMP_Text airDropText;
     public AudioSource audioSource;
     public AudioClip airDropSound;
+    private bool buttonActive;
 
     void Start()
     {
         ActivateButton(false);
-        for (int i = 0; i < chargesIcons.Length; i++)
-        {
-            chargesIcons[i].SetActive(false);
-        }
+        SetBars();
     }
 
     void Update()
@@ -32,8 +30,8 @@ public class AirDropCharger : MonoBehaviour
         ChargeOverTime();
 
         float percentage = DroneCharge / DroneMaxCharge;
-
         cover.fillAmount = percentage;
+
         if (charges > 0)
         {
             ActivateButton(true);
@@ -86,6 +84,11 @@ public class AirDropCharger : MonoBehaviour
 
     public void ActivateButton(bool value)
     {
+        if (buttonActive == value)
+        {
+            return;
+        }
+        buttonActive = value;
         charged = value;
         airDropText.enabled = value;
         if (value)

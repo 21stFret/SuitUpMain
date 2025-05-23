@@ -73,7 +73,7 @@ public class DroneAbilityDataReader : MonoBehaviour
                 }
             }
             // Add the ability to the list in the DroneAbilityManager
-            ability.unlocked = PlayerSavedData.instance._droneAbilities[abilityIndex].unlocked;
+            ability.unlocked = PlayerSavedData.instance._droneAbilities[abilityIndex]==0 ? true : false;
             droneAbilityManager._droneAbilities.Add(ability);
         }
     }

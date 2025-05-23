@@ -115,7 +115,6 @@ public class GameManager : MonoBehaviour
         gameUI.gameUIFade.FadeOut();
         yield return new WaitForSeconds(delay);
         AudioManager.instance.PlayBattleMusic();
-        CashCollector.instance.DestroyParts();
         battleManager.roomDrop.gameObject.SetActive(false);
         battleManager.SetBattleType();
         areaManager.LoadRoom(currentAreaType);

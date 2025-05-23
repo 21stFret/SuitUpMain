@@ -58,10 +58,6 @@ public class DroneControllerUI : MonoBehaviour
         timesUsed = 0;
         SetupSequencers();
         CloseMenu();
-        foreach (DroneInputUI sequence in droneInputs)
-        {
-            sequence.isActive = false;
-        }
     }
 
     void Update()
@@ -110,7 +106,7 @@ public class DroneControllerUI : MonoBehaviour
                 continue;
             }
             droneInput.gameObject.SetActive(true);
-            GameObject uiObject = uiObjects[(int)droneInput.droneType];
+            GameObject uiObject = uiObjects[i];
             uiObject.transform.SetParent(droneInput.UIObject.transform);
             uiObject.transform.localPosition = Vector3.zero;
             uiObject.SetActive(true);
@@ -206,11 +202,43 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
 
+        int droneAbilityCharges = 0;
+
+        if (!testingFreeUse)
+        {
+            droneAbilityCharges = airDropTimer.charges - 1;
+            DroneAbility droneAbility = drone.droneAbilityManager._droneAbilities[(int)type];
+
+            if (drone.GetChargeInt(droneAbility, droneAbilityCharges) == 0)
+            {
+                droneAbilityCharges--;
+                if (droneAbilityCharges <= 0)
+                {
+                    print("Cannot use drone ability");
+                    return;
+                }
+                if (drone.GetChargeInt(droneAbility, droneAbilityCharges) == 0)
+                {
+                    droneAbilityCharges--;
+                    if (droneAbilityCharges <= 0)
+                    {
+                        print("Cannot use drone ability");
+                        return;
+                    }
+                }
+            }
+        }
+        else
+        {
+            droneAbilityCharges = 2;
+        }   
+
+
         currentDroneType = type;
         StartCoroutine(InputDelay());
-        drone.UseDroneAbility(type, airDropTimer.charges);
+        drone.UseDroneAbility(type, droneAbilityCharges + 1);
 
-        if(type == DroneType.Repair)
+        if (type == DroneType.Repair)
         {
             crates++;
         }

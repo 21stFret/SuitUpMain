@@ -173,7 +173,7 @@ namespace FORGE3D
                 if (!isFXSpawned)
                 {
                     ApplyForceToCrawlers();
-                    launcher.SpawnExplosion(transform.position);
+                    launcher.SpawnExplosion(circleRegion.transform.position);
                     circleRegion.gameObject.SetActive(false);
                     isFXSpawned = true;
                     if (droneType == DroneType.LittleBoy)
