@@ -31,7 +31,7 @@ public class SceneLoader : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(loadinBar == null)
+        if (loadinBar == null)
         {
             return;
         }
@@ -39,6 +39,7 @@ public class SceneLoader : MonoBehaviour
         loadinBar.enabled = false;
         StartCoroutine(DelayFade());
         isLoading = false;
+        PlayerSavedData.instance.SavePlayerData();
     }
 
     private IEnumerator DelayFade()
@@ -65,9 +66,8 @@ public class SceneLoader : MonoBehaviour
         StartCoroutine(LoadSceneAsync(sceneID, delay));
     }
 
-    IEnumerator LoadSceneAsync(int sceneID ,bool delay = false)
+    IEnumerator LoadSceneAsync(int sceneID, bool delay = false)
     {
-
         blackout.PlayTween();
 
         if(audioManager == null)
@@ -80,28 +80,60 @@ public class SceneLoader : MonoBehaviour
         hintManager.ShowRandomHint();
 
         loadinBar.enabled = true;
+        
+        // Start the loading operation but don't allow it to complete automatically
+        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneID);
+        operation.allowSceneActivation = false;
+        
+        float cycleTime = 2.0f; // Time in seconds for one full cycle
+        float cycleProgress = 0f;
 
-        float fakeProgress = 0;
-        float fakeTime = 0;
-
+        // Keep cycling the loading bar until the actual loading is nearly complete
+        while (operation.progress < 0.9f)
+        {
+            // Cycle the loading bar
+            cycleProgress += Time.deltaTime / cycleTime;
+            if (cycleProgress > 1f)
+                cycleProgress -= 1f; // Reset but don't jump (smooth looping)
+                
+            // Map the progress from 0-1 to display on loading bar
+            loadinBar.fillAmount = cycleProgress;
+            
+            yield return null;
+        }
+        
+        // If we need a minimum loading time
         if (delay)
         {
-            while (fakeTime < minloadTime)
+            float elapsedTime = 0f;
+            while (elapsedTime < minloadTime)
             {
-                fakeTime += Time.deltaTime;
-                fakeProgress = fakeTime / minloadTime;
-                loadinBar.fillAmount = fakeProgress;
+                elapsedTime += Time.deltaTime;
+                
+                // Continue cycling the bar
+                cycleProgress += Time.deltaTime / cycleTime;
+                if (cycleProgress > 1f)
+                    cycleProgress -= 1f;
+                    
+                loadinBar.fillAmount = cycleProgress;
+                
                 yield return null;
             }
         }
-
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneID);
-
-        while (!operation.isDone)
+        
+        // Fill the bar completely before activating the scene
+        float fillTime = 0.5f;
+        float fillTimer = 0f;
+        float startFill = loadinBar.fillAmount;
+        
+        while (fillTimer < fillTime)
         {
-            float progress = Mathf.Clamp01(operation.progress +fakeProgress);
-            loadinBar.fillAmount = progress;
+            fillTimer += Time.deltaTime;
+            loadinBar.fillAmount = Mathf.Lerp(startFill, 1f, fillTimer / fillTime);
             yield return null;
         }
+        
+        // Finally allow the scene to activate
+        operation.allowSceneActivation = true;
     }
 }

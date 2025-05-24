@@ -220,7 +220,7 @@ public class BattleManager : MonoBehaviour
     private void SetPickUpPosition()
     {
         Vector3 pos;
-        pos = Vector3.zero;
+        pos = crawlerSpawner.spawnPoints[0].transform.position;
         pos.y = 3;
         roomDrop.transform.position = pos;
         return;

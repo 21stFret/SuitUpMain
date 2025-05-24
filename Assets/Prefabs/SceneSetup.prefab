@@ -9378,6 +9378,8 @@ MonoBehaviour:
   DroneCharge: 0
   chargeRate: 0.1
   cover: {fileID: 7280517733014026072}
+  chargesIcons: []
+  charges: 0
   charged: 0
   airDropText: {fileID: 2860963347373803813}
   audioSource: {fileID: 0}
@@ -10451,6 +10453,14 @@ MonoBehaviour:
   laserImpulseShot: {fileID: 8300000, guid: 15a3211a3c389664a94d401850cad8c7, type: 3}
   laserImpulseDelay: 0.1
   laserImpulseHitDelay: 0.1
+  nukeHit:
+  - {fileID: 0}
+  bombHit: []
+  bombHitDelay: 0
+  boxHit: []
+  boxHitDelay: 0
+  spitHit: []
+  spitHitDelay: 0
 --- !u!1 &2795793284856367287
 GameObject:
   m_ObjectHideFlags: 0
@@ -11369,6 +11379,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 5857895042396198021}
   menu: {fileID: 6269533659493139879}
   cheatsMenu: {fileID: 1193221009204786135}
+  controlsMenu: {fileID: 0}
   controlsPC: {fileID: 6487039145308564089}
   controlsGamePad: {fileID: 8928134945236783445}
   settingsMenu: {fileID: 6634199485086411435}
@@ -11383,6 +11394,7 @@ MonoBehaviour:
   logsSelectedButton: {fileID: 0}
   quitSelectedButton: {fileID: 4119120760810573958}
   modSelectedButton: {fileID: 3691941092773621275}
+  cheatsSelectedButton: {fileID: 0}
   menuLocked: 0
   pauseModUI: {fileID: 6648876308925725457}
   titleText: {fileID: 1504412309640960525}
@@ -11394,6 +11406,7 @@ MonoBehaviour:
   droneControllerUI: {fileID: 0}
   logManager: {fileID: 0}
   canQuickOpen: 1
+  sequenceInputController: {fileID: 0}
 --- !u!114 &4148596912575737355
 MonoBehaviour:
   m_ObjectHideFlags: 0

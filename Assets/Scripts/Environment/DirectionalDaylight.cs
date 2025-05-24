@@ -2,30 +2,36 @@ using UnityEngine;
 
 public class DirectionalDaylight : MonoBehaviour
 {
-    [Header("Sun Settings")]
-    public float dayDuration = 24f;
-    public float startTime = 0.25f;
-    public float dawnTime = 0.25f;  // 6 AM
-    public float duskTime = 0.75f;  // 6 PM
+    [Header("Light State")]
+    public bool isDay = true;
+    public bool isEvening = false;
 
-    [Header("Colors")]
-    [SerializeField]
-    private Gradient skyGradient;
-    public Color dawnColor = new Color(1f, 0.6f, 0.4f);
-    public Color dayColor = Color.white;
-    public Color duskColor = new Color(1f, 0.5f, 0.3f);
-    public Color nightColor = new Color(0.1f, 0.1f, 0.3f);
+    [Header("Rotation Settings")]
+    public float rotationMinX = 30f;
+    public float rotationMaxX = 80f;
+    
+    [Header("Day Settings")]
+    public float dayIntensity = 1.0f;
+    public float dayTempMin = 5500f;
+    public float dayTempMax = 6500f;
+    [Range(0.3f, 1f)]
+    public float dayHeightSlider = 0.7f; // Slider to control the height of the sun during the day
 
-    [Header("Intensity")]
-    public float dayIntensity = 1f;
+    [Header("Evening Settings")]
+    public float eveningIntensity = 0.7f;
+    public float eveningTempMin = 3000f; 
+    public float eveningTempMax = 4000f;
+    
+    [Header("Night Settings")]
     public float nightIntensity = 0.1f;
+    public float nightTempMin = 1500f;
+    public float nightTempMax = 2500f;
 
     private Light directionalLight;
-    private float currentTime;
-    public Vector3 nightRotation;
-    public Vector3 dawnRotation;
-    public Vector3 duskRotation;
-    public Vector3 middayRotation;
+    private Vector3 targetRotation;
+
+    [InspectorButton("ApplyLightSettings")]
+    public bool applySettings;
 
     void Start()
     {
@@ -34,93 +40,66 @@ public class DirectionalDaylight : MonoBehaviour
 
     public void Init()
     {
-        skyGradient = null;
         directionalLight = GetComponent<Light>();
-        currentTime = startTime;
-        SetupGradient();
+        ApplyLightSettings();
     }
 
-    void Update()
+    public void SetTimeOfDay(bool day, bool evening = false)
     {
-        currentTime += Time.deltaTime / dayDuration;
-        if (currentTime >= 1f)
-            currentTime -= 1f;
-
-        UpdateSunRotation();
-        UpdateLightSettings(currentTime);
+        isDay = day;
+        isEvening = evening && day; // Evening is only valid during day
+        
+        ApplyLightSettings();
     }
 
-    void UpdateSunRotation()
+    public void ApplyLightSettings()
     {
-        if (currentTime < dawnTime || currentTime > duskTime)
-        {
-            // Keep light pointing down during night
-            transform.rotation = Quaternion.Euler(nightRotation);
-            return;
-        }
+        if (directionalLight == null)
+            directionalLight = GetComponent<Light>();
 
-        // Calculate daytime rotation (dawn to dusk)
-        float dayProgress = (currentTime - dawnTime) / (duskTime - dawnTime);
-        float middayTime = (dawnTime + duskTime) / 2f;
+        float randomY = Random.Range(0f, 360f); // Random Y rotation for variety
+        
+        isDay = Random.Range(0f, 1f) > 0.3f; // Randomly decide if it's day or night
+        isEvening = Random.Range(0f, 1f) > 0.5f; // Randomly decide if it's evening
 
-        if (currentTime < middayTime)
+        if (isDay)
         {
-            float hlafdayProgress = 1f - Mathf.Abs(dayProgress - 0.5f) * 2f;
-            Vector3 sunAngle = Vector3.Lerp(dawnRotation, middayRotation, hlafdayProgress);
-            transform.rotation = Quaternion.Euler(sunAngle);
+            if (isEvening)
+            {
+                // Evening settings - mid rotation, high temp, mid intensity
+                float midRotationX = Mathf.Lerp(rotationMinX, rotationMaxX * 0.6f, 0.5f);
+                targetRotation = new Vector3(midRotationX, randomY, 0);
+                
+                directionalLight.intensity = eveningIntensity;
+                directionalLight.colorTemperature = Random.Range(eveningTempMin, eveningTempMax);
+            }
+            else
+            {
+                // Day settings - top 30% rotation, mid temp, high intensity
+                float highRotationX = Mathf.Lerp(rotationMaxX * dayHeightSlider, rotationMaxX, Random.value);
+                targetRotation = new Vector3(highRotationX, randomY, 0);
+                
+                directionalLight.intensity = dayIntensity;
+                directionalLight.colorTemperature = Random.Range(dayTempMin, dayTempMax);
+            }
         }
         else
         {
-            float hlafdayProgress =  Mathf.Abs(dayProgress - 0.5f) * 2f;
-            Vector3 sunAngle = Vector3.Lerp(middayRotation, duskRotation, hlafdayProgress);
-            transform.rotation = Quaternion.Euler(sunAngle);
+            // Night settings - any rotation, low temp, low intensity
+            float anyRotationX = Random.Range(rotationMinX, rotationMaxX);
+            targetRotation = new Vector3(anyRotationX, randomY, 0);
+            
+            directionalLight.intensity = nightIntensity;
+            directionalLight.colorTemperature = Random.Range(nightTempMin, nightTempMax);
         }
-
+        
+        // Apply rotation
+        transform.rotation = Quaternion.Euler(targetRotation);
     }
 
-    void SetupGradient()
+    // Legacy method renamed for backwards compatibility
+    public void CreateRandomRotation()
     {
-        if (skyGradient == null)
-        {
-            GradientColorKey[] colorKeys = new GradientColorKey[5];
-            colorKeys[0] = new GradientColorKey(nightColor, 0f);
-            colorKeys[1] = new GradientColorKey(dawnColor, dawnTime);
-            colorKeys[2] = new GradientColorKey(dayColor, 0.5f);
-            colorKeys[3] = new GradientColorKey(duskColor, duskTime);
-            colorKeys[4] = new GradientColorKey(nightColor, 1f);
-
-            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-            alphaKeys[0] = new GradientAlphaKey(1f, 0f);
-            alphaKeys[1] = new GradientAlphaKey(1f, 1f);
-
-            skyGradient = new Gradient();
-            skyGradient.SetKeys(colorKeys, alphaKeys);
-        }
-    }
-
-    void UpdateLightSettings(float time)
-    {
-        directionalLight.color = skyGradient.Evaluate(time);
-
-        float intensityMultiplier = 1f;
-        if (time < dawnTime || time > duskTime)
-        {
-            intensityMultiplier = nightIntensity;
-        }
-        else
-        {
-            float dayProgress = (time - dawnTime) / (duskTime - dawnTime);
-
-            if (dayProgress < 0.5f) // Morning
-            {
-                intensityMultiplier = Mathf.Lerp(nightIntensity, dayIntensity, dayProgress * 2f);
-            }
-            else // Afternoon
-            {
-                intensityMultiplier = Mathf.Lerp(dayIntensity, nightIntensity, (dayProgress - 0.5f) * 2f);
-            }
-        }
-
-        directionalLight.intensity = intensityMultiplier;
+        ApplyLightSettings();
     }
 }

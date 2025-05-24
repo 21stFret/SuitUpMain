@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2238100894819322929}
   - component: {fileID: 780502835159420313}
   - component: {fileID: 2952657130563542979}
+  - component: {fileID: 3953246860107886330}
   m_Layer: 0
   m_Name: Global Volume
   m_TagString: Untagged
@@ -66,3 +67,24 @@ MonoBehaviour:
   trippyActive: 0
   trippyDuration: 5
   hueShiftSpeed: 50
+--- !u!114 &3953246860107886330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2882454892951106116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94f34f0e4fc690846b318168155c655e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  globalVolume: {fileID: 780502835159420313}
+  vignette: {fileID: 0}
+  nukeDuration: 3
+  nukeIntensity: 1
+  nukeCanvasGroup: {fileID: 0}
+  isNukeActive: 0
+  flashDuration: 0.5
+  flashOn: 0
+  flashIntensity: 0.5

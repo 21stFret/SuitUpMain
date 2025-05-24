@@ -57,6 +57,7 @@ public class LoadOutPanel : MonoBehaviour
         mechLoader.Init();
         gameObject.SetActive(false);
         BattleMech.instance.myCharacterController.ToggleCanMove(true);
+        PlayerSavedData.instance.SavePlayerData();
     }
 
     private void ChangeWeaponImage()

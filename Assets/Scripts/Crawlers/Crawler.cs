@@ -115,6 +115,10 @@ public class Crawler : MonoBehaviour
         dead = false;
         overrideDeathNoise = false;
         _targetHealth = GetComponent<TargetHealth>();
+        if (!dummy)
+        {
+            _targetHealth.maxHealth *= BattleManager.instance.dificultyMultiplier;
+        }
         _targetHealth.Init(this);
         _collider = GetComponent<Collider>();
         animator = GetComponent<Animator>();
@@ -311,7 +315,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
-         target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Cralwer, 0, this);
+         target.GetComponent<TargetHealth>().TakeDamage(attackDamage, WeaponType.Crawler, 0, this);
     }
 
     public void EndAttack()
@@ -522,11 +526,12 @@ public class Crawler : MonoBehaviour
                 {
                     var fractureEffect = MyPooler.Instance.GetFractureEffect();
                     fractureEffect.transform.position = transform.position;
+                    fractureEffect.transform.rotation = Quaternion.Euler(Vector3.up);
                     fractureEffect.SetActive(true);
                     var particleSystem = fractureEffect.GetComponent<ParticleSystem>();
                     particleSystem.Play();
                     var colliders = Physics.OverlapSphere(transform.position, 5f);
-                    float damage = (_selectMod.modifiers[0].statValue /100) * BattleMech.instance.weaponController.altWeaponEquiped.damage;
+                    float damage = _selectMod.modifiers[0].statValue /100 * BattleMech.instance.weaponController.altWeaponEquiped.damage;
                     foreach (var col in colliders)
                     {
                         var health = col.GetComponent<TargetHealth>();

@@ -896,7 +896,7 @@ public class AlbinoChargeState : CrawlerState
                 var health = hit.GetComponent<TargetHealth>();
                 if (health != null)
                 {
-                    health.TakeDamage(albino.attackDamage * 1.5f, WeaponType.Cralwer);
+                    health.TakeDamage(albino.attackDamage * 1.5f, WeaponType.Crawler);
                 }
                 if(hit.CompareTag("BigEnvironment"))
                 {

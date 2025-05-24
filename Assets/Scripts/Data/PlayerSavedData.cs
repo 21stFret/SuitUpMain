@@ -26,6 +26,8 @@ public class PlayerSavedData : MonoBehaviour
     public GameStats _gameStats         {get; private set;}
     public int highestDifficulty;
     public bool demoBuild;
+    public int[] _droneAbilities;
+    public int[] droneLoadOut;
 
     private void Awake()
     {
@@ -115,6 +117,11 @@ public class PlayerSavedData : MonoBehaviour
         _SFXVolume = volume;
     }
 
+    public void UpdateDroneLoadout(int[] loadout)
+    {
+        droneLoadOut = loadout;
+    }
+
     public void ResetAllData()
     {
         CreateData();
@@ -134,6 +141,7 @@ public class PlayerSavedData : MonoBehaviour
         highestDifficulty = 0;
         hasSeenThankYouPanel = false;
         CreateWeaponData();
+        CreateDroneAbilityData();
         _playerLoadout = new Vector2(0, 0);
         _gameStats = new GameStats();
         SavePlayerData();
@@ -165,6 +173,25 @@ public class PlayerSavedData : MonoBehaviour
         _altWeaponData[0].unlocked = true;
     }
 
+    public void CreateDroneAbilityData()
+    {
+        _droneAbilities = new int[15];
+        for (int i = 0; i < _droneAbilities.Length; i++)
+        {
+            _droneAbilities[i] = -1; // -1 means locked
+        }
+        _droneAbilities[0] = 0; // 0 means unlocked
+        _droneAbilities[1] = 0;
+
+        droneLoadOut = new int[5];
+        for (int i = 0; i < droneLoadOut.Length; i++)
+        {
+            droneLoadOut[i] = -2;
+        }
+        droneLoadOut[0] = 0;
+        droneLoadOut[1] = 1;
+    }
+
     public void SavePlayerData()
     {
         SaveData saveData = new SaveData();
@@ -183,6 +210,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.triggeredEasterEgg = triggeredEasterEgg;
         saveData.highestDifficulty = highestDifficulty;
         saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
+        saveData.droneAbilities = _droneAbilities;
 
         string jsonData = JsonUtility.ToJson(saveData, true);
         byte[] byteData = Encoding.UTF8.GetBytes(jsonData); // Changed from ASCII to UTF8
@@ -190,7 +218,7 @@ public class PlayerSavedData : MonoBehaviour
         if (SteamManager.Initialized)
         {
             string cloudFileName = "saveData.sav";
-            
+
             // Check if we have enough cloud storage
             if (SteamRemoteStorage.GetQuota(out ulong totalBytes, out ulong availableBytes))
             {
@@ -208,10 +236,10 @@ public class PlayerSavedData : MonoBehaviour
                     Debug.LogWarning($"Not enough Steam Cloud storage. Need: {byteData.Length}, Available: {availableBytes}");
                 }
             }
-            
+
             Debug.LogWarning("Falling back to local save");
         }
-        
+
         // Local save as fallback
         SaveLocalFile(jsonData);
     }
@@ -293,6 +321,7 @@ public class PlayerSavedData : MonoBehaviour
                 triggeredEasterEgg = savedData.triggeredEasterEgg;
                 highestDifficulty = savedData.highestDifficulty;
                 hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
+                _droneAbilities = savedData.droneAbilities;
 
                 Debug.Log("Save data parsed successfully");
             }
@@ -326,4 +355,6 @@ public class SaveData
     public int highestDifficulty;
     public bool triggeredEasterEgg;
     public bool hasSeenThankYouPanel;
+    public int[] droneAbilities;
+    public int[] droneLoadOut;
 }

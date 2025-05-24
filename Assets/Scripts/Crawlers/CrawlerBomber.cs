@@ -51,7 +51,7 @@ public class CrawlerBomber : Crawler
                 float attackDamageAfterRange = attackDamage * (1 - (Vector3.Distance(transform.position, collider.transform.position) / explosionRadius));
                 if(rb.GetComponent<TargetHealth>() != null)
                 {
-                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Cralwer);
+                    rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Crawler);
                 }
             }
         }
@@ -121,7 +121,7 @@ public class CrawlerBomber : Crawler
             yield return null;
         }
 
-        Die(WeaponType.Cralwer);
+        Die(WeaponType.Crawler);
     }
 
     public override void Spawn(bool daddy = false)

@@ -121,7 +121,7 @@ public class CrawlerLeaper : Crawler
                 var targetHealth = col.GetComponent<TargetHealth>();
                 if (targetHealth != null)
                 {
-                    targetHealth.TakeDamage(attackDamage*2, WeaponType.Cralwer);
+                    targetHealth.TakeDamage(attackDamage*2, WeaponType.Crawler);
                     //hasDealtDamage = true;  // Prevent multiple hits
                     break;
                 }

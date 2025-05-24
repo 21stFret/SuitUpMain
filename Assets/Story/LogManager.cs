@@ -38,7 +38,7 @@ public class LogManager : MonoBehaviour
         }
         if (currentLog != null)
         {
-            logPrefab.SetActive(true);
+            //logPrefab.SetActive(true);
         }
         else
         {

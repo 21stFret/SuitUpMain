@@ -13,6 +13,7 @@ public class BaseManager : MonoBehaviour
     public LoadOutPanel loadOutPanel;
     public GameObject thankYouPanel;
     public GameObject ThankyouButton;
+    public DroneAbilityManager droneAbilityManager;
 
     public Image globalBackButton;
     public Sprite button, key;
@@ -59,8 +60,10 @@ public class BaseManager : MonoBehaviour
         AudioManager.instance.PlayBGMusic(3);
         statsUI.UpdateCash(PlayerSavedData.instance._Cash);
         statsUI.UpdateArtifact(PlayerSavedData.instance._Artifact);
-        daylight.startTime = Random.Range(0, 1f);
+        daylight.ApplyLightSettings();
         globalBackButton.sprite = InputTracker.instance.usingMouse ? key : button;
+        droneAbilityManager = DroneAbilityManager.instance;
+        droneAbilityManager.Init();
 
         Debug.Log("Base Initialized");
     }

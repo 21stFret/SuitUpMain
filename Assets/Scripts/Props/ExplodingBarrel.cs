@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using DTT.AreaOfEffectRegions;
+using FORGE3D;
 using UnityEngine;
 
 public class ExplodingBarrel : Prop
@@ -15,17 +17,16 @@ public class ExplodingBarrel : Prop
     public float fuseTime;
     private float _fuseTimer;
     public int fuseCount;
-    public GameObject explosionRadiusPrefab;
+    public CircleRegion damageAreaRegion;
     public Light warningLight;
     public bool isFuseActive;
     public float flashTime;
-    public AudioClip[] audioClips;
-    public AudioSource explosionSound;
     public AudioClip warningNoise;
     public BreakableObject breakableObject;
     public DamageArea damageArea;
     private Rigidbody rb;
     private int _currentFuseCount;
+
 
     private void Start()
     {
@@ -35,14 +36,15 @@ public class ExplodingBarrel : Prop
     public override void Init()
     {
         base.Init();
+        rb = GetComponent<Rigidbody>();
         isFuseActive = false;
         warningLight.enabled = false;
-        explosionRadiusPrefab.SetActive(false);
         explosionEffect.transform.parent = this.transform;
         explosionEffect.Stop();
-        explosionSound.Stop();
-        breakableObject.transform.parent = this.transform;
-        rb = GetComponent<Rigidbody>();
+        if (breakableObject != null)
+        {
+            breakableObject.transform.parent = this.transform;
+        }
         _fuseTimer = 0;
         _currentFuseCount = fuseCount;
     }
@@ -50,7 +52,15 @@ public class ExplodingBarrel : Prop
     public override void Die()
     {
         isFuseActive = true;
+        if (damageAreaRegion != null)
+        {
+            damageAreaRegion.FillProgress = 0;
+            damageAreaRegion.gameObject.SetActive(true);
+            damageAreaRegion.transform.SetParent(null);
+            damageAreaRegion.transform.rotation = Quaternion.Euler(Vector3.up);
+        }
     }
+
 
     private void Update()
     {
@@ -65,7 +75,7 @@ public class ExplodingBarrel : Prop
         bool isPlayer = false;
         isFuseActive = false;
         rb.isKinematic = true;
-        GetComponent<Collider>().enabled = false;
+        base.Die();
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
         foreach (Collider collider in colliders)
         {
@@ -76,8 +86,14 @@ public class ExplodingBarrel : Prop
             TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
             if (targetHealth != null)
             {
-                float damageByDistance = Mathf.Clamp(1 - Vector3.Distance(transform.position, collider.transform.position) / explosionRadius, 0.5f, 1);
-                targetHealth.TakeDamage(damage * damageByDistance, weaponType);
+                float damageByDistance = damage * Mathf.Clamp(1 - Vector3.Distance(transform.position, collider.transform.position) / explosionRadius, 0.5f, 1);
+                Crawler crawler = collider.GetComponent<Crawler>();
+                if (crawler != null)
+                {
+                    crawler.DealyedDamage(damageByDistance , 0.5f, WeaponType.AoE);
+                    continue;
+                }
+                targetHealth.TakeDamage(damageByDistance, weaponType);
             }
             Rigidbody rb = collider.GetComponent<Rigidbody>();
             if (rb != null)
@@ -89,24 +105,37 @@ public class ExplodingBarrel : Prop
                 isPlayer = true;
             }
         }
-        breakableObject.transform.parent = null;
-        breakableObject.Break();
-        explosionSound.clip = audioClips[Random.Range(0, audioClips.Length)];
-        explosionSound.pitch = Random.Range(0.7f, 1.2f);
-        explosionSound.Play();
+        if (breakableObject != null)
+        {
+            breakableObject.transform.parent = null;
+            breakableObject.transform.position = transform.position;
+            breakableObject.transform.rotation = Quaternion.Euler(Vector3.up);
+            breakableObject.Break();
+        }
+
+        F3DAudioController.instance.BombHit(transform.position);
         explosionEffect.transform.parent = null;
         explosionEffect.transform.position = transform.position;
         explosionEffect.transform.up = Vector3.up;
         explosionEffect.Play();
+        ScreenShakeUtility.Instance.ShakeScreenDistance(transform.position);
         prefab.SetActive(false);
         if (damageArea != null)
         {
+            damageArea.transform.SetParent(null);
+            damageArea.transform.position = transform.position;
+            damageArea.transform.rotation = Quaternion.Euler(Vector3.up);
             damageArea.EnableDamageArea();
+        }
+        if(damageAreaRegion != null)
+        {
+            damageAreaRegion.gameObject.SetActive(false);
         }
     }
 
     public void TimerDelay()
     {
+        /*
         if(_currentFuseCount>0)
         {
             if (_fuseTimer < flashTime)
@@ -143,8 +172,19 @@ public class ExplodingBarrel : Prop
                 _fuseTimer = 0;
             }
         }
-
+        */
         _fuseTimer += Time.deltaTime;
+        
+        if (damageAreaRegion != null)
+        {
+            damageAreaRegion.transform.position = transform.position + Vector3.up * 0.5f;
+            damageAreaRegion.FillProgress = _fuseTimer / fuseTime;
+        }
+
+        if (_fuseTimer >= fuseTime)
+        {
+            Explode();
+        }
     }
 
     private void OnDrawGizmos()
@@ -171,11 +211,12 @@ public class ExplodingBarrel : Prop
         base.RefreshProp();
         explosionEffect.transform.parent = this.transform;
         explosionEffect.Stop();
-        explosionSound.Stop();
-        breakableObject.transform.parent = this.transform;
+        if(breakableObject != null)
+        {
+            breakableObject.transform.parent = this.transform;
+        }
         prefab.SetActive(true);
         warningLight.enabled = false;
-        explosionRadiusPrefab.SetActive(false);
         _fuseTimer = 0;
         _currentFuseCount = fuseCount;
     }

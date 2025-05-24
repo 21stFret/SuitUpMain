@@ -73,7 +73,8 @@ public class Shotgun : MechWeapon
         {
             int newI = i - (shotsPerBurst / 2);
             weaponController.range = range;
-            weaponController.Shotgun(damage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
+            float spreadDamage = damage / shotsPerBurst;
+            weaponController.Shotgun(spreadDamage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
         }
         _animator.SetTrigger("Recoil");
     }

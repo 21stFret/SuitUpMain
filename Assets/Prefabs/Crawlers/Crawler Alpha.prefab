@@ -44650,7 +44650,7 @@ GameObject:
   - component: {fileID: 2550985015025176912}
   - component: {fileID: 2130287821825659914}
   - component: {fileID: -6426209739194802718}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Crawler Alpha
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -44856,6 +44856,7 @@ MonoBehaviour:
   maxHealth: 3
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 0}
@@ -44891,7 +44892,7 @@ MonoBehaviour:
     type: 3}
   overrideDeathNoise: 0
   immune: 0
-  immuneTime: 1
+  _immuneTime: 1
   crawlerScale: 0.6
   cashWorth: 10
   expWorth: 6
@@ -44909,7 +44910,20 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   SpawnForce: 20
   dummy: 0
+  overkill: 0
   spawn: 0
+  deathSounds: []
+  isElite: 0
+  becomeElite: 0
+  eliteMaterial: {fileID: 0}
+  eliteDamageMultiplier: 2
+  eliteHealthMultiplier: 2
+  eliteSpeedMultiplier: 1.5
+  eliteSteerMultiplier: 1.25
+  eliteChance: 5
+  sporeEmpowered: 0
+  sporedEffect: {fileID: 0}
+  sporedTime: 2
 --- !u!114 &-6426209739194802718
 MonoBehaviour:
   m_ObjectHideFlags: 0

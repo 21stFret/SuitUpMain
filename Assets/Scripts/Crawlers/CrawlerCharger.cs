@@ -64,7 +64,7 @@ public class CrawlerCharger : Crawler
                 continue;
             }
 
-            targetHealth.TakeDamage(chargeDamage, WeaponType.Cralwer);
+            targetHealth.TakeDamage(chargeDamage, WeaponType.Crawler);
 
             if(collider.CompareTag("Player"))
             {

@@ -36,17 +36,13 @@ namespace FORGE3D
         private bool isFXSpawned = false; // Hit FX prefab spawned flag
 
         private float timer = 0f; // Missile timer
-
         private Vector3 targetLastPos;
         private Vector3 step;
-
         private MeshRenderer meshRenderer;
         public F3DMissileLauncher launcher;
-
-
         public float upLaunchTimer;
         public float upLaunchTime;
-        public float range;
+        public float explosionRadius;
         public LayerMask crawlerLayer;
         public float forceStrength;
         public float impactDamage;
@@ -58,6 +54,9 @@ namespace FORGE3D
 
         public CircleRegion circleRegion;
         public float startingDistance;
+        public DroneType droneType;
+
+        private float fuseDelay = 0.2f;
 
         private void Awake()
         {
@@ -78,6 +77,7 @@ namespace FORGE3D
             meshRenderer.enabled = true;
             transform.forward = Vector3.up;
             upLaunchTimer = 0f;
+            fuseDelay = 0.2f;
         }
 
         // OnDespawned called by pool manager 
@@ -133,7 +133,7 @@ namespace FORGE3D
 
         private void ApplyForceToCrawlers()
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, range, crawlerLayer);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, crawlerLayer);
             foreach (Collider collider in colliders)
             {
                 Rigidbody rb = collider.GetComponent<Rigidbody>();
@@ -161,6 +161,11 @@ namespace FORGE3D
 
         private void Update()
         {
+            if (fuseDelay > 0f)
+            {
+                fuseDelay -= Time.deltaTime;
+                return;
+            }
             // If something was hit
             if (isHit)
             {
@@ -168,11 +173,16 @@ namespace FORGE3D
                 if (!isFXSpawned)
                 {
                     ApplyForceToCrawlers();
-                    launcher.SpawnExplosion(transform.position);
+                    launcher.SpawnExplosion(circleRegion.transform.position);
                     circleRegion.gameObject.SetActive(false);
-
-
                     isFXSpawned = true;
+                    if (droneType == DroneType.LittleBoy)
+                    {
+                        PostProcessController.instance.NukeEffect();
+                    }
+                    float intensity = droneType != DroneType.LittleBoy ? 0.5f : 1f;
+                    ScreenShakeUtility.Instance.ShakeScreen(intensity);
+
                 }
 
                 if (!DelayDespawn || (DelayDespawn && (timer >= despawnDelay)))
@@ -185,36 +195,35 @@ namespace FORGE3D
                 // Navigate
                 if (missileType == MissileType.Guided)
                 {
-                    if(target != null)
+                    if (target != null)
                     {
                         targetPosition = target.position;
-                        targetPosition.y = 2f;
                         circleRegion.transform.position = targetPosition;
                     }
-                    upLaunchTimer += Time.deltaTime;    
-                    if(upLaunchTimer > upLaunchTime)
+                    upLaunchTimer += Time.deltaTime;
+                    if (upLaunchTimer > upLaunchTime)
                     {
                         Vector3 direction = targetPosition - transform.position;
                         // Align missile to forward direction
                         transform.rotation = Quaternion.Lerp(transform.rotation,
-                        Quaternion.LookRotation(direction), Time.deltaTime*alignSpeed);
+                        Quaternion.LookRotation(direction), Time.deltaTime * alignSpeed);
 
                         circleRegion.FillProgress = Vector3.Distance(transform.position, targetPosition) / startingDistance;
                     }
                 }
 
                 // Missile step per frame based on velocity and time
-                step = transform.forward*Time.deltaTime*velocity;
+                step = transform.forward * Time.deltaTime * velocity;
 
                 if (target != null && Vector3.SqrMagnitude(transform.position - target.position) <= detonationDistance)
                 {
                     OnHit();
                 }
-                if(circleRegion != null && Vector3.Distance(transform.position, targetPosition) <= detonationDistance)
+                if (circleRegion != null && Vector3.Distance(transform.position, targetPosition) <= detonationDistance)
                 {
                     OnHit();
                 }
-                if (Physics.Raycast(transform.position, transform.forward, step.magnitude*RaycastAdvance, layerMask))
+                if (Physics.Raycast(transform.position, transform.forward, step.magnitude * RaycastAdvance, layerMask))
                 {
                     OnHit();
                 }

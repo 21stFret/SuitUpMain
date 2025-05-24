@@ -47,6 +47,8 @@ public class SequenceInputController : MonoBehaviour
     public event SequenceEvent OnSequenceComplete;
     public event SequenceEvent OnSequenceFailed;
 
+    public string ActionMapName = "Gameplay";
+
     public void RemoveAllListeners()
     {
         OnSequenceComplete = null;
@@ -56,7 +58,7 @@ public class SequenceInputController : MonoBehaviour
     private void Awake()
     {
         // Setup Input Actions
-        var gameplayMap = inputActions.FindActionMap("Gameplay");
+        var gameplayMap = inputActions.FindActionMap(ActionMapName);
         upAction = gameplayMap.FindAction("Up");
         downAction = gameplayMap.FindAction("Down");
         leftAction = gameplayMap.FindAction("Left");
@@ -91,6 +93,12 @@ public class SequenceInputController : MonoBehaviour
     {
         InitializeDirectionMappings();
         //sequencePanel.SetActive(false);
+
+        if(ActionMapName == "UI")
+        {
+            LoadSetSequence();
+        }
+
     }
 
     private void InitializeDirectionMappings()
@@ -124,6 +132,44 @@ public class SequenceInputController : MonoBehaviour
         }
     }
 
+    public void LoadSetSequence()
+    {
+        sequenceLength = 8;
+        currentSequence = new Direction[8];
+        for (int i = 0; i < sequenceLength; i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    currentSequence[i] = Direction.Up;
+                    break;
+                case 1:
+                    currentSequence[i] = Direction.Up;
+                    break;
+                case 2:
+                    currentSequence[i] = Direction.Down;
+                    break;
+                case 3:
+                    currentSequence[i] = Direction.Down;
+                    break;
+                case 4:
+                    currentSequence[i] = Direction.Left;
+                    break;
+                case 5:
+                    currentSequence[i] = Direction.Right;
+                    break;
+                case 6:
+                    currentSequence[i] = Direction.Left;
+                    break;
+                case 7:
+                    currentSequence[i] = Direction.Right;
+                    break;
+            }
+        }
+        isSequenceActive = true;
+        currentInputIndex = 0;
+    }
+
     private void DisplaySequence()
     {
         sequencePanel.SetActive(true);
@@ -149,14 +195,19 @@ public class SequenceInputController : MonoBehaviour
     {
         if (currentSequence[currentInputIndex] == inputDirection)
         {
+            if (sequenceDisplayImages.Length > 0)
+            {
+                sequenceDisplayImages[currentInputIndex].sprite = completeSprite; 
+            }
             // Correct input
-            sequenceDisplayImages[currentInputIndex].sprite = completeSprite;
             currentInputIndex++;
             AudioManager.instance.PlaySFX(SFX.Select);
             if (currentInputIndex >= sequenceLength)
             {
                 SequenceSuccess();
             }
+
+
         }
         else
         {

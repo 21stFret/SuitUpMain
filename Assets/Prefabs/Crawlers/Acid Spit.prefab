@@ -14877,15 +14877,18 @@ MonoBehaviour:
   speed: 15
   explosionRadius: 5
   explosionForce: 50
-  layerMask:
+  targetLayer:
     serializedVersion: 2
-    m_Bits: 266305
+    m_Bits: 2101313
+  reflectedLayer:
+    serializedVersion: 2
+    m_Bits: 2101633
   explosionEffect: {fileID: 8052240430697224651}
   targetLocation: {x: 0, y: 0, z: 0}
-  aimSpeed: 0.5
+  aimSpeed: 2
   inflight: 0
   trailEffect: {fileID: 6120053482625956599}
-  aimDealay: 0.2
+  aimDelay: 0.2
 --- !u!1 &6120053482625956599
 GameObject:
   m_ObjectHideFlags: 0

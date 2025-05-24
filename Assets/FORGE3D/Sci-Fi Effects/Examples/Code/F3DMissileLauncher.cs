@@ -14,6 +14,7 @@ public enum Ordanance
     Line,
     Area,
     Random,
+    Guided
 
 }
 
@@ -23,17 +24,23 @@ namespace FORGE3D
     {
         public Transform missilePrefab;
         public Transform fatManPrefab;
+        public Transform minePrefab;
         public Transform player;
         public Vector3 target;
         public Transform[] socket;
         public GameObject[] hitUI;
+        private int hitUICount;
+        private int reseveredCount;
         public Transform explosionPrefab;
         public Transform fatManEffectPrefab;
         public float trackingRaduis = 20f;
+        public float firingRadius = 10f;
         public float missileSpeed = 10f;
         public LayerMask trackingLayerMask;
+        public LayerMask groundLayerMask;
         private F3DMissile.MissileType missileType;
-        public List<Transform> targets;
+        public List<Transform> launcherTargets;
+        public List<Transform> reservedTargets;
         public DroneControllerUI droneController;
         public bool FatMan;
         public Ordanance ordananceType;
@@ -41,6 +48,9 @@ namespace FORGE3D
         public Text missileTypeLabel;
 
         private List<Vector3> targetPositions = new List<Vector3>();
+
+        public Animator animator;
+        public GameObject emptyParent;
 
         // Use this for initialization
         private void Start()
@@ -51,24 +61,41 @@ namespace FORGE3D
         // Spawns explosion
         public void SpawnExplosion(Vector3 position)
         {
-            if(FatMan)
+            Transform t = null;
+            if (FatMan)
             {
-                F3DPoolManager.Pools["GeneratedPool"]
+                t = F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(fatManEffectPrefab, position, Quaternion.identity, null);
-                F3DAudioController.instance.RailGunHit(position);
+                F3DAudioController.instance.NukeHit(position);
             }
             else
             {
-                F3DPoolManager.Pools["GeneratedPool"]
+                t = F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(explosionPrefab, position, Quaternion.identity, null);
-                F3DAudioController.instance.RailGunExplosion(position);
+                F3DAudioController.instance.BombHit(position);
+            }
+            if (t != null)
+            {
+                StartCoroutine(DelayEffectDeactivate(t));
             }
 
         }
 
-        public void LaunchMissiles(int amount)
+        private IEnumerator DelayEffectDeactivate(Transform effect)
         {
-            targets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
+            if (effect != null)
+            {
+                yield return new WaitForSeconds(5f);
+                F3DPoolManager.Pools["GeneratedPool"].Despawn(effect);
+            }
+        }
+
+        public void LaunchMissiles(int amount, Ordanance ordanance)
+        {
+            ordananceType = ordanance;
+            launcherTargets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
+            FatMan = false;
+            animator.SetTrigger("Launch");
             foreach (var ui in hitUI)
             {
                 ui.SetActive(false);
@@ -79,7 +106,33 @@ namespace FORGE3D
             }
         }
 
-        public void LaunchMissile(int target)
+        public void LaunchMines(int amount)
+        {
+            animator.SetTrigger("Launch");
+            for (var i = 0; i < amount; i++)
+            {
+                var randomSocketId = Random.Range(0, socket.Length);
+                var _mine = F3DPoolManager.Pools["GeneratedPool"].Spawn(minePrefab,
+                socket[randomSocketId].position, socket[randomSocketId].rotation, emptyParent.transform);
+                Vector3 randomUpDirection = Random.onUnitSphere;
+                randomUpDirection.y = Mathf.Abs(randomUpDirection.y);
+                GameObject mine = _mine.gameObject;
+                mine.GetComponent<Rigidbody>().AddForce(randomUpDirection * Random.Range(10, 20), ForceMode.Impulse);
+                mine.GetComponent<Landmine>().Init();
+            }
+
+        }
+
+        public void LaunchNuke()
+        {
+            ordananceType = Ordanance.Guided;
+            launcherTargets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
+            FatMan = true;
+            animator.SetTrigger("Launch");
+            LaunchMissile(1);
+        }
+
+        public void LaunchMissile(int targetID)
         {
             Transform _missilePrefab = FatMan ? fatManPrefab : missilePrefab;
             var randomSocketId = Random.Range(0, socket.Length);
@@ -92,44 +145,26 @@ namespace FORGE3D
 
                 missile.launcher = this;
                 missile.missileType = missileType;
-                if (target<targets.Count)
+                missile.droneType = droneController.currentDroneType;
+                if (targetID < launcherTargets.Count)
                 {
-                    missile.target = targets[target];
-                    missile.targetPosition = targets[target].position;
-                }
-                else
-                {
-                    switch (ordananceType)
-                    {
-                        case Ordanance.Burst:
-                            SpreadInFront();
-                            break;
-                        case Ordanance.Line:
-
-                            break;
-                        case Ordanance.Area:
-                            SpreadInFront();
-                            if (targetPositions.Count > 0)
-                            {
-                                missile.targetPosition = targetPositions[target - targets.Count];
-                            }
-                            else
-                            {
-                                missile.targetPosition = RandomTargetPosition();
-                            }
-                            break;
-                        case Ordanance.Random:
-                            missile.targetPosition = RandomTargetPosition();
-                            break;
-                    }
+                    missile.target = launcherTargets[targetID];
+                    missile.targetPosition = launcherTargets[targetID].position;
                 }
 
-                hitUI[target].transform.position = missile.targetPosition;
-                hitUI[target].transform.SetParent(null);
-                hitUI[target].SetActive(true);
-                missile.circleRegion = hitUI[target].GetComponent<CircleRegion>();
+                hitUI[hitUICount].transform.position = missile.targetPosition;
+                hitUI[hitUICount].transform.position += Vector3.up * 0.5f;
+                hitUI[hitUICount].transform.SetParent(null);
+                missile.circleRegion = hitUI[hitUICount].GetComponent<CircleRegion>();
+                missile.circleRegion.Radius = missile.explosionRadius;
                 missile.startingDistance = Vector3.Distance(missile.targetPosition, socket[randomSocketId].position);
-                missile.velocity =  missileSpeed;
+                missile.velocity = missileSpeed;
+                hitUI[hitUICount].SetActive(true);
+                hitUICount++;
+                if (hitUICount >= hitUI.Length)
+                {
+                    hitUICount = 0;
+                }
             }
         }
 
@@ -140,73 +175,23 @@ namespace FORGE3D
             return pos;
         }
 
-        private void SpreadInFront()
-        {
-            targetPositions.Clear(); // Clear previous positions
-            // Get number of missiles to spread
-            int missileCount = droneController.missileAmount;
-            float angleStep = 60f / missileCount; // Spread across 60 degree arc
-            float minDistance = 3f; // Minimum distance between targets
-
-            for (int i = 0; i < missileCount; i++)
-            {
-                // Calculate angle for this target
-                float angle = -30f + (angleStep * i); // Start at -30 degrees
-                
-                // Create rotation for this angle
-                Quaternion rotation = transform.rotation * Quaternion.Euler(0, angle, 0);
-                
-                // Get forward direction with random distance
-                float distance = Random.Range(trackingRaduis * 0.5f, trackingRaduis);
-                Vector3 targetPos = transform.position + (rotation * Vector3.forward * distance);
-                targetPos.y = 2f; // Set consistent height
-
-                // Check for overlaps with existing positions
-                bool validPosition = true;
-                foreach (Vector3 existingPos in targetPositions)
-                {
-                    if (Vector3.Distance(targetPos, existingPos) < minDistance)
-                    {
-                        validPosition = false;
-                        break;
-                    }
-                }
-
-                // If position is too close to another, try to adjust it
-                if (!validPosition)
-                {
-                    // Try moving it further out
-                    targetPos = transform.position + (rotation * Vector3.forward * (distance + minDistance));
-                    targetPos.y = 2f;
-                }
-
-                targetPositions.Add(targetPos);
-
-            }
-        }
-
-        private Vector3 FireInLine(int i)
-        {
-                // Create a new target position in front of the player
-                Vector3 targetPos = transform.position + (transform.forward * (i * trackingRaduis * 0.5f));
-                targetPos.y = 1f; // Set consistent height
-                return targetPos;
-        }
-
         public List<Transform> SetTargetInRadius(Vector3 center, float radius, LayerMask layerMask)
         {
             List<Transform> targets = new List<Transform>();
-            // Find all colliders within the specified radius
-            Collider[] colliders = Physics.OverlapSphere(center, radius, layerMask);
             int missleAmount = droneController.missileAmount;
-            if (colliders.Length > 0)
+
+            if (ordananceType == Ordanance.Guided)
             {
-                foreach (var collider in colliders)
+                Collider[] colliders = Physics.OverlapSphere(center, radius * 2, layerMask);
+                if (colliders.Length > 0)
                 {
-                    if(missleAmount <= 0) break;
-                    if (collider.CompareTag("Untagged")) continue;
-                    targets.Add(collider.transform);
-                    missleAmount--;
+                    foreach (var collider in colliders)
+                    {
+                        if (missleAmount <= 0) break;
+                        if (collider.CompareTag("Untagged")) continue;
+                        targets.Add(collider.transform);
+                        missleAmount--;
+                    }
                 }
             }
             if (missleAmount > 0)
@@ -214,35 +199,140 @@ namespace FORGE3D
                 // If no objects found, set target to a random point in the sphere
                 for (int i = 0; i < missleAmount; i++)
                 {
-                    var newTarget = Instantiate(new GameObject());
                     Vector3 randomPoint = Vector3.zero;
                     switch (ordananceType)
                     {
                         case Ordanance.Burst:
-                            SpreadInFront();
+                            float radiusMultiplier = 1f;
+                            if (i > 5)
+                            {
+                                radiusMultiplier = 1.5f;
+                            }
+                            if (i > 11)
+                            {
+                                radiusMultiplier = 2f;
+                            }
+                            randomPoint = GetRandomPointOnSphereEdge(center, firingRadius * radiusMultiplier, i);
                             break;
                         case Ordanance.Line:
                             randomPoint = FireInLine(i);
                             break;
                         case Ordanance.Area:
+                            randomPoint = SpreadInFront(i);
                             break;
                         case Ordanance.Random:
-                            randomPoint = GetRandomPointInSphere(center, radius);
+                            randomPoint = GetRandomPointInSphere(center, firingRadius);
+                            break;
+                        case Ordanance.Guided:
+                            randomPoint = GetRandomPointInSphere(center, firingRadius);
                             break;
                     }
-                    randomPoint.y = 1f;
+                    randomPoint.y += 10f;
+                    Physics.Raycast(randomPoint, Vector3.down, out RaycastHit hit, 20f, groundLayerMask);
+                    if (hit.collider != null)
+                    {
+                        randomPoint.y = hit.point.y;
+                        randomPoint.y += 0.5f;
+                    }
+                    else
+                    {
+                        randomPoint.y = 1f;
+                    }
 
-                    newTarget.transform.position = randomPoint;
-                    targets.Add(newTarget.transform);
-                    Destroy(newTarget, 5f);
+                    reservedTargets[reseveredCount].transform.position = randomPoint;
+                    reservedTargets[reseveredCount].transform.SetParent(null);
+                    targets.Add(reservedTargets[reseveredCount]);
+                    reseveredCount++;
+                    if (reseveredCount >= reservedTargets.Count)
+                    {
+                        reseveredCount = 0;
+                    }
                 }
             }
             return targets;
         }
 
+        private Vector3 SpreadInFront(int i)
+        {
+            int missileCount = droneController.missileAmount;
+            float angleStep = 60f / missileCount; // Spread across 60 degree arc
+            float minDistance = 3f; // Minimum distance between targets
+
+            // Calculate angle for this target
+            float angle = -30f + (angleStep * i); // Start at -30 degrees
+
+            // Create rotation for this angle
+            Quaternion rotation = transform.rotation * Quaternion.Euler(0, angle, 0);
+
+            // Get forward direction with random distance
+            float distance = Random.Range(firingRadius * 0.5f, firingRadius);
+            Vector3 targetPos = transform.position + (rotation * Vector3.forward * distance);
+
+            // Check for overlaps with existing positions
+            bool validPosition = true;
+            foreach (Vector3 existingPos in targetPositions)
+            {
+                if (Vector3.Distance(targetPos, existingPos) < minDistance)
+                {
+                    validPosition = false;
+                    break;
+                }
+            }
+
+            // If position is too close to another, try to adjust it
+            if (!validPosition)
+            {
+                // Try moving it further out
+                targetPos = transform.position + (rotation * Vector3.forward * (distance + minDistance));
+            }
+
+            return targetPos;
+        }
+
+        private Vector3 FireInLine(int i)
+        {
+            // Create a new target position in front of the player
+            Vector3 targetPos = transform.position + (transform.forward * (i * firingRadius * 0.8f));
+            return targetPos;
+        }
+
+        private Vector3 GetRandomPointOnSphereEdge(Vector3 center, float radius, int i)
+        {
+            int ringamount = droneController.missileAmount / 6;
+            float angleStep = 360f / (droneController.missileAmount / ringamount); // Total angle divided by number of missiles
+            float angle = angleStep * i * Mathf.Deg2Rad;
+
+            // if ring amount is 2 add an offset to the angle
+            if (i >= 6 && i < 12)
+            {
+                angle += Mathf.PI / 2; // 90 degrees offset
+            }
+
+            // Calculate position using equal spacing
+            Vector3 evenlySpacedPoint = new Vector3(
+                Mathf.Cos(angle) * radius,
+                1f, // Consistent height
+                Mathf.Sin(angle) * radius
+            );
+
+            // Add to target positions for tracking
+            targetPositions.Add(center + evenlySpacedPoint);
+
+            return center + evenlySpacedPoint;
+        }
+
         private Vector3 GetRandomPointInSphere(Vector3 center, float radius)
         {
             return center + Random.insideUnitSphere * radius;
+        }
+
+        public void RefreshMines()
+        {
+            var mines = emptyParent.GetComponentsInChildren<Landmine>();
+            foreach (var mine in mines)
+            {
+                F3DPoolManager.Pools["GeneratedPool"].Despawn(mine.gameObject.transform);
+            }
         }
     }
 }

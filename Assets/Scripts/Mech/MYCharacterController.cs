@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FORGE3D;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -10,6 +11,7 @@ public class MYCharacterController : MonoBehaviour
     public Vector2 _moveInputVector;
     public AudioSource runAudio;
     public AudioClip dodgeClip;
+    public AudioClip[] footStepAudio;
     private bool isRunning;
     private Rigidbody _rigidbody;
     public Animator CharacterAnimator;
@@ -90,6 +92,7 @@ public class MYCharacterController : MonoBehaviour
     private void PlayRunningFSX()
     {
 
+/*
         if (isRunning)
         {
             if (!runAudio.isPlaying)
@@ -103,17 +106,24 @@ public class MYCharacterController : MonoBehaviour
         {
             runAudio.Stop();
         }
+        */
 
     }
 
     public void PlayFootStep()
     {
         footStep.Play();
+        runAudio.clip = footStepAudio[Random.Range(0, footStepAudio.Length)];
+        runAudio.pitch = Random.Range(0.9f, 1.1f);
+        runAudio.PlayOneShot(runAudio.clip);
     }
 
     public void PlayFootStep2()
     {
         footStep2.Play();
+        runAudio.clip = footStepAudio[Random.Range(0, footStepAudio.Length)];
+        runAudio.pitch = Random.Range(0.9f, 1.1f);
+        runAudio.PlayOneShot(runAudio.clip);
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -139,7 +149,7 @@ public class MYCharacterController : MonoBehaviour
         dashShoes2.enabled = false;
         dashEffect.Play();
         dashEffect2.Play();
-        runAudio.pitch = Random.Range(0.8f, 1.6f);
+        runAudio.pitch = Random.Range(0.9f, 1.4f);
         runAudio.PlayOneShot(dodgeClip);
         isDodging = true;
         if(dashModsManager!=null)
@@ -191,12 +201,14 @@ public class MYCharacterController : MonoBehaviour
     public void TriggerFootLeft()
     {
         footprintSystem.PlaceLeftFoot();
+        PlayFootStep();
         //print("TriggerFootLeft");
     }
 
     public void TriggerFootRight()
     {
         footprintSystem.PlaceRightFoot();
+        PlayFootStep2();
     }
 
     public void OnMove(InputAction.CallbackContext context)

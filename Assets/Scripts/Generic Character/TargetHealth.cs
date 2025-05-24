@@ -66,7 +66,7 @@ public class TargetHealth : MonoBehaviour
     }
 
 
-    public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Cralwer, float stunTime = 0, Crawler crawler = null)
+    public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Crawler, float stunTime = 0, Crawler crawler = null)
     {
         if (!alive)
         {
@@ -93,10 +93,6 @@ public class TargetHealth : MonoBehaviour
 
         if (_mech != null)
         {
-            if (damageNumbersOn)
-            {
-                DamageNumbers(damage, weaponType);
-            }
             _mech.TakeDamage(damage, crawler);
             if(weaponType == WeaponType.Spore)
             {
@@ -123,7 +119,7 @@ public class TargetHealth : MonoBehaviour
 
         if (_crawler != null)
         {
-            if (weaponType != WeaponType.Cralwer)
+            if (weaponType != WeaponType.Crawler)
             {
                 if(weaponType == WeaponType.Spore)
                 {
@@ -185,7 +181,7 @@ public class TargetHealth : MonoBehaviour
                 break;
             case WeaponType.AoE:
                 break;
-            case WeaponType.Cralwer:
+            case WeaponType.Crawler:
                 newPopup.SetColor(Color.red);
                 break;
             case WeaponType.Heal:
@@ -248,7 +244,7 @@ public class TargetHealth : MonoBehaviour
                 return 2;
             case WeaponType.Flame:
                 return 2;
-            case WeaponType.Cralwer:
+            case WeaponType.Crawler:
                 return 0;
             default:
                 return 0;

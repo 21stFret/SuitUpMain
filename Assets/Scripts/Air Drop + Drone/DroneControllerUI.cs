@@ -8,12 +8,17 @@ using UnityEngine.EventSystems;
 
 public enum DroneType
 {
+    BurstStrike,
     Repair,
-    Airstrike,
+    BombingRun,
+    Guided,
+    Napalm,
+    Mines,
+    Smoke,
+    LittleBoy,
+    FatMan,
+    Companion,
     Orbital,
-    ElementBomb,
-    Shield,
-    Companion
 }
 
 
@@ -39,21 +44,20 @@ public class DroneControllerUI : MonoBehaviour
 
     [InspectorButton("FullyChargeDrone")]
     public bool chargeDrone;
-
-    [InspectorButton("TestActiveate")]
-    public bool testActiveate;
-    public DroneType testDrone;
     private bool isMenuOpen;
 
     public bool testingFreeUse;
 
     private float menuopenforTime;
 
+    public DroneType currentDroneType;
+
     private void Start()
     {
         gameUI = GameUI.instance;
-        timesUsed =0;
+        timesUsed = 0;
         SetupSequencers();
+        CloseMenu();
     }
 
     void Update()
@@ -68,11 +72,6 @@ public class DroneControllerUI : MonoBehaviour
             CloseMenu();
             menuopenforTime = 5f;
         }
-    }
-
-    public void TestActiveate()
-    {
-        ActivateDroneInput(testDrone);
     }
 
     public void ActivateDroneInput(DroneType type)
@@ -107,7 +106,7 @@ public class DroneControllerUI : MonoBehaviour
                 continue;
             }
             droneInput.gameObject.SetActive(true);
-            GameObject uiObject = uiObjects[(int)droneInput.droneType];
+            GameObject uiObject = uiObjects[i];
             uiObject.transform.SetParent(droneInput.UIObject.transform);
             uiObject.transform.localPosition = Vector3.zero;
             uiObject.SetActive(true);
@@ -203,10 +202,43 @@ public class DroneControllerUI : MonoBehaviour
             return;
         }
 
-        StartCoroutine(InputDelay());
-        drone.Init(type);
+        int droneAbilityCharges = 0;
 
-        if(type == DroneType.Repair || type == DroneType.Shield)
+        if (!testingFreeUse)
+        {
+            droneAbilityCharges = airDropTimer.charges - 1;
+            DroneAbility droneAbility = drone.droneAbilityManager._droneAbilities[(int)type];
+
+            if (drone.GetChargeInt(droneAbility, droneAbilityCharges) == 0)
+            {
+                droneAbilityCharges--;
+                if (droneAbilityCharges <= 0)
+                {
+                    print("Cannot use drone ability");
+                    return;
+                }
+                if (drone.GetChargeInt(droneAbility, droneAbilityCharges) == 0)
+                {
+                    droneAbilityCharges--;
+                    if (droneAbilityCharges <= 0)
+                    {
+                        print("Cannot use drone ability");
+                        return;
+                    }
+                }
+            }
+        }
+        else
+        {
+            droneAbilityCharges = 2;
+        }   
+
+
+        currentDroneType = type;
+        StartCoroutine(InputDelay());
+        drone.UseDroneAbility(type, droneAbilityCharges + 1);
+
+        if (type == DroneType.Repair)
         {
             crates++;
         }
@@ -225,10 +257,10 @@ public class DroneControllerUI : MonoBehaviour
         inputDelay = false;
     }
 
-    public void MissileStrike()
+    public void MissileStrike(Ordanance ordanance)
     {
         missileLauncher.FatMan = false;
-        missileLauncher.LaunchMissiles(missileAmount);
+        missileLauncher.LaunchMissiles(missileAmount,ordanance);
         airstikes++;
 
         if(PlayerAchievements.instance == null)
@@ -245,10 +277,10 @@ public class DroneControllerUI : MonoBehaviour
         }
     }
 
-    public void FatManLaunch()
+    public void LittleBoyLaunch()
     {
         missileLauncher.FatMan = true;
-        missileLauncher.LaunchMissiles(1);
+        missileLauncher.LaunchNuke();
     }
 
 

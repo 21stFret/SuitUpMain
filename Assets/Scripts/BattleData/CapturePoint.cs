@@ -18,6 +18,7 @@ public class CapturePoint : MonoBehaviour
     {
         isCaptured = false;
         captureProgress = 0;
+        playerInArea = false;
         gameObject.SetActive(true);
         _enabled = true;
         online.Play();
@@ -91,19 +92,5 @@ public class CapturePoint : MonoBehaviour
         ball.SetActive(false);
         CrawlerSpawner.instance.KillAllCrawlers();
         BattleManager.instance.ObjectiveComplete();
-        // for finishing off the fight
-        /*
-        if(CrawlerSpawner.instance.activeCrawlerCount==0)
-        {
-            BattleManager.instance.ObjectiveComplete();
-            GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
-        }
-        else 
-        {
-            GameUI.instance.objectiveUI.UpdateObjective("Finish them off!");
-            BattleManager.instance._usingBattleType = BattleType.Exterminate;
-            CrawlerSpawner.instance.EndBattle();
-        }
-        */
     }
 }

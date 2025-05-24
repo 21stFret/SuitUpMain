@@ -5712,8 +5712,10 @@ MonoBehaviour:
   - {fileID: 1510500061009245815, guid: 11a493d8d51544d4c91d1157e581ff20, type: 3}
   - {fileID: 5786271963848488694, guid: 63eb800f1dee21948a99230f094aa2ea, type: 3}
   hideDelay: 5
-  explosionForce: 500
+  explosionForce: 40
   explosionRadius: 2
+  upwardModifier: 1
+  torqueMultiplier: 10
   localScale: 2
   layer: 12
 --- !u!1 &8442630682845800840
@@ -5887,16 +5889,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetHealth: {fileID: 1223547482077127487}
-  damageNumberPrefab: {fileID: 0}
-  damageNumbersOn: 0
   init: 0
   loot: []
   lootChance: 0
   explosionEffect: {fileID: 4622034323392780815}
-  audioClips:
-  - {fileID: 8300000, guid: d10b31a2d93fd8746aff02b1a6ad6006, type: 3}
-  - {fileID: 8300000, guid: 1d47280468eb40e4bbb209b7e5bc0a8a, type: 3}
-  explosionSound: {fileID: 4788025227912020359}
   breakableObject: {fileID: 2579497233876272163}
 --- !u!114 &1223547482077127487
 MonoBehaviour:
@@ -5914,6 +5910,7 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
+  trippyEffect: {fileID: 0}
   immuneWeapons: 
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 0}
