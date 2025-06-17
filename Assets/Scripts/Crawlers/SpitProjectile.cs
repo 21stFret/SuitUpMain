@@ -33,7 +33,10 @@ public class SpitProjectile : MonoBehaviour
         _rigidbody.constraints = RigidbodyConstraints.None;
         gameObject.SetActive(true);
         _damage = damage;
-        targetLocation = target.position;
+        targetLocation = target.position + Vector3.up * 0.5f; // Adjust target position to be slightly above the ground
+        Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * 2; 
+        randomOffset.y = 0; // Keep the offset on the horizontal plane
+        targetLocation += randomOffset; // Add random offset to the target location
         transform.forward = Vector3.up;
         inflight = true;
         isReflected = false;

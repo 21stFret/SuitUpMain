@@ -71,8 +71,11 @@ namespace FORGE3D
 
         [Header("Nuke")] public AudioClip[] nukeHit;
 
-        [Header("Nuke")] public AudioClip[] bombHit;
+        [Header("Bomb")] public AudioClip[] bombHit;
         public float bombHitDelay;
+
+        [Header("Napalm")] public AudioClip[] napalmHit;
+        public float napalmHitDelay;
 
         [Header("Box")] public AudioClip[] boxHit;
         public float boxHitDelay;
@@ -393,6 +396,26 @@ namespace FORGE3D
         }
 
         public void BombHit(Vector3 pos)
+        {
+            if (timer_02 >= bombHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        bombHit[Random.Range(0, bombHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.8f, 1f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 25f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_02 = 0f;
+                }
+            }
+        }
+
+        public void NapalmHit(Vector3 pos)
         {
             if (timer_02 >= bombHitDelay)
             {

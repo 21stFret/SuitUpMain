@@ -133,7 +133,7 @@ Transform:
   m_GameObject: {fileID: 801025068754926027}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0.25}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -253,6 +253,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7358266920897204044}
   - component: {fileID: 5959826411778379319}
+  - component: {fileID: 478143910880846035}
   m_Layer: 0
   m_Name: Portal
   m_TagString: Untagged
@@ -270,7 +271,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -71.9}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 9037581474673715554}
@@ -297,12 +298,36 @@ MonoBehaviour:
   - {fileID: 914115007630487745}
   - {fileID: 5582072905324065658}
   - {fileID: 825652371491975492}
-  portalEffectDuration: 10
+  portalEffectDuration: 3
   infinite: 0
   isActive: 0
   _light: {fileID: 0}
   startEffect: 0
   stopEffect: 0
+  chipText: {fileID: 0}
+  Chip: {fileID: 0}
+  pins: {fileID: 0}
+  label: {fileID: 0}
+--- !u!1183024399 &478143910880846035
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3505980306801440214}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 1
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &4510343162235685654
 GameObject:
   m_ObjectHideFlags: 0

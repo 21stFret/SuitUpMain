@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using FORGE3D;
 
 public class BattleManager : MonoBehaviour
 {
@@ -136,35 +137,35 @@ public class BattleManager : MonoBehaviour
         {
             yield break;
         }
-        if (crawlerSpawner.activeCrawlerCount == 0)
-        {
-            ObjectiveComplete();
-            GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
-        }
-        else
-        {
-            GameUI.instance.objectiveUI.UpdateObjective("Finish them off!");
-            _usingBattleType = BattleType.Exterminate;
-        }
+        _gameManager.areaManager.missileLauncher.missilePayload = MissilePayload.FatMan;
+        _gameManager.areaManager.missileLauncher.SpawnExplosion(Vector3.zero);
+        PostProcessController.instance.NukeEffect();
+        ObjectiveComplete();
+        GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
+        crawlerSpawner.KillAllCrawlers();
         lightningController.active = false;
         _gameManager.areaManager.DayNightCycle(false);
         GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
-    private void SpawnRunner()
-    {
-        crawlerSpawner.runner.Init();
-        crawlerSpawner.runner.Spawn();
-    }
-
     private void SpawnCapturePoint()
     {
-        Vector3 pos = Random.insideUnitSphere * 20;
+        Vector3 pos = GetRandomSpawnPoint() + Random.insideUnitSphere * 10;
         pos.y = 1;
-        pos += _gameManager.playerInput.transform.position;
         capturePoint.transform.position = pos;
         Invoke("InitCapturePoint", 1);
+    }
+
+    private Vector3 GetRandomSpawnPoint()
+    {
+        if (crawlerSpawner.spawnPoints.Count == 0)
+        {
+            Debug.LogError("No spawn points available for BattleManager!");
+            return Vector3.zero;
+        }
+        int randomIndex = Random.Range(0, crawlerSpawner.spawnPoints.Count);
+        return crawlerSpawner.spawnPoints[randomIndex].transform.position;
     }
 
     public void ResetOnNewArea()

@@ -9,7 +9,6 @@ public class WeaponUI : MonoBehaviour
     public TMP_Text weaponFuelText;
     public Image fuelBar;
     public Image bonusFuelBar;
-    public Image fuelImage;
 
     public void UpdateWeaponUI(float fuel)
     {
@@ -24,10 +23,5 @@ public class WeaponUI : MonoBehaviour
             bonusFuelBar.fillAmount = (fuel - 100) / 100;
         }
 
-    }
-
-    public void SetFuelImage(Sprite sprite)
-    {
-        fuelImage.sprite = sprite;  
     }
 }

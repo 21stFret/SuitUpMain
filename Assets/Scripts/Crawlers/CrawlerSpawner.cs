@@ -33,28 +33,26 @@ public class CrawlerSpawner : MonoBehaviour
     public float totalTimeElapsesd = 0f;
     public TMP_Text timeText;
     public TMP_Text waveText;
-
     public static CrawlerSpawner instance;
     public BattleManager battleManager;
     public CrawlerSquad currentSquad;
-
     public bool isActive;
-
     public int portalMaxAllowed;
+    private int portalAllowed = 0;
     public float portalSize;
-
     public List<Crawler> spawnListArmy = new List<Crawler>();
 
-    public CrawlerSpitter runner;
-
+    // Reference to Battle from BattleManager
     public Battle currentBattle;
-    private bool standardBattle;
+    
+    // Local copies of values we want to modify
+    public int localBurstMin;
+    public int localBurstMax;
+    public float localBurstTimer;
+    public bool standardBattle;
     public int burstSpawnAmount;
-
     private bool hordeBattle;
-
     public Crawler huntedTarget;
-
     private List<Coroutine> activeSpawnCoroutines = new List<Coroutine>();
 
     public void Init()
@@ -65,20 +63,34 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void LoadBattle()
     {
+        // Keep reference to original battle
         currentBattle = battleManager.currentBattle;
+        
+        // Store local copies of values you want to modify
+        localBurstMin = currentBattle.burstMin;
+        localBurstMax = currentBattle.burstMax;
+        localBurstTimer = currentBattle.burstTimer;
+        
         battleRound = 0;
         totalTimeElapsesd = 0;
+        
+        // Modify local values only
         MultiplyBurstByDifficulty();
-        burstTimer = currentBattle.burstTimer;
-        burstSpawnAmount = currentBattle.burstMin;       
+        
+        // Use local values for gameplay settings
+        burstTimer = localBurstTimer; 
+        burstSpawnAmount = localBurstMin;
+        
         timeElapsed = burstTimer;
         standardBattle = battleManager._usingBattleType == BattleType.Exterminate;
         endless = !standardBattle;
         hordeBattle = false;
+        
         if(battleManager._usingBattleType == BattleType.Survive)
         {
             hordeBattle = true;
         }
+        
         battleRoundMax = standardBattle? currentBattle.battleArmy.Count : 0;
         isActive = true;
         spawnListArmy.Clear();
@@ -89,9 +101,11 @@ public class CrawlerSpawner : MonoBehaviour
     private void MultiplyBurstByDifficulty()
     {
         float difficulty = BattleManager.instance.dificultyMultiplier;
-        currentBattle.burstMin = Mathf.RoundToInt(currentBattle.burstMin + difficulty);
-        currentBattle.burstMax = Mathf.RoundToInt(currentBattle.burstMax + (difficulty*2));
-        currentBattle.burstTimer -= difficulty;
+        
+        // Modify local values instead of battle values
+        localBurstMin = Mathf.RoundToInt(localBurstMin + difficulty);
+        localBurstMax = Mathf.RoundToInt(localBurstMax + difficulty);
+        localBurstTimer -= difficulty - 1;
     }
 
     private void Awake()
@@ -101,29 +115,39 @@ public class CrawlerSpawner : MonoBehaviour
 
     private void Update()
     {
-        if(!isActive)
+        if (!isActive)
         {
+            if (activeCrawlerCount > 0)
+            {
+                // If battle is not active but crawlers are still
+                activeCrawlers.Clear();
+            }
             return;
         }
         if (hordeBattle || battleManager._usingBattleType == BattleType.Upload)
         {
             BurstTimer();
         }
-        //ValidateActiveCrawlers();
     }
 
     private void BurstTimer()
     {
+        if (activeCrawlerCount > 50)
+        {
+            // If there are too many crawlers, stop spawning
+            return;
+        }
         timeElapsed += Time.deltaTime;
         if (timeElapsed >= burstTimer)
         {
             timeElapsed = 0f;
             
-            // slowly increase the amount of crawlers spawned per burst
+            // Slowly increase the amount of crawlers spawned per burst
             totalTimeElapsesd += 0.5f;
-            int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
-            min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
+            int min = Mathf.RoundToInt(localBurstMin + totalTimeElapsesd);
+            min = Mathf.Clamp(min, localBurstMin, localBurstMax);
             burstSpawnAmount = min;
+            
             spawnListArmy.Clear();
             spawnListArmy = GenerateArmyList();
             List<Crawler> spawnList = new List<Crawler>();
@@ -131,7 +155,7 @@ public class CrawlerSpawner : MonoBehaviour
             {
                 spawnList.Add(spawnListArmy[i]);
             }
-            SpawnFromArmy(spawnList, Vector3.zero );
+            SpawnFromArmy(spawnList, Vector3.zero);
         }
     }
 
@@ -176,7 +200,7 @@ public class CrawlerSpawner : MonoBehaviour
             return;
         }
         IncrementSpawnRound();
-        SpawnCheck();
+        SpawnSquad();
     }
 
     private void SelectSpawnPoint()
@@ -185,9 +209,9 @@ public class CrawlerSpawner : MonoBehaviour
         int check = 0;
         do
         {
-            check ++;
+            check++;
             randomSpawnPoint = Random.Range(0, spawnPoints.Count);
-        } while (randomSpawnPoint == currentSpawnPoint && check<3);
+        } while (randomSpawnPoint == currentSpawnPoint && check < 3);
 
         currentSpawnPoint = randomSpawnPoint;
         spawnPoint = spawnPoints[currentSpawnPoint];
@@ -217,18 +241,6 @@ public class CrawlerSpawner : MonoBehaviour
         waveText.text = $"Wave {battleRound}/{currentBattle.battleArmy.Count}";
     }
 
-    private void SpawnCheck()
-    {
-        if (isActive)
-        {
-            SpawnSquad();
-        }
-        else
-        {
-            print("Crawler tried to spawn a squad but was inactive");
-        }
-    }
-
     private void SpawnSquad()
     {
         var _spawnList = new List<Crawler>();
@@ -250,7 +262,7 @@ public class CrawlerSpawner : MonoBehaviour
             }
         }
         _spawnList.Shuffle();
-        StartCoroutine(SpawnCrawlerFromList(_spawnList));
+        StartCoroutine(SpawnBurstCrawlerFromList(_spawnList));
     }
     
     public void SpawnFromArmy(List<Crawler> armyList, Vector3 loc)
@@ -293,32 +305,58 @@ public class CrawlerSpawner : MonoBehaviour
     {
         int[] typeCount = new int[System.Enum.GetValues(typeof(CrawlerType)).Length];
         List<CrawlerType> bannedTypes = new List<CrawlerType>();
-        foreach(Crawler crawler in activeCrawlers)  
+        foreach (Crawler crawler in activeCrawlers)
         {
-            if(crawler.crawlerType != CrawlerType.Crawler || crawler.crawlerType != CrawlerType.Daddy || crawler.crawlerType != CrawlerType.Spitter)
+            if (crawler.crawlerType == CrawlerType.Crawler)
             {
                 continue;
             }
+            if (crawler.gameObject.CompareTag("Boss"))
             {
-                if (crawler.gameObject.CompareTag("Boss"))
-                {
-                    continue;
-                }
+                continue;
             }
-            {
-                typeCount[(int)crawler.crawlerType]++;
-            }
+            typeCount[(int)crawler.crawlerType]++;
         }
         for (int i = 0; i < typeCount.Length; i++)
         {
-            if(typeCount[i] > 2)
+            CrawlerType crawlerType = (CrawlerType)i;
+            int currentCount = typeCount[i];
+            int restriction = 0;
+            switch (crawlerType)
             {
-                bannedTypes.Add((CrawlerType)i);
+                case CrawlerType.Charger:
+                    restriction = 3; // Chargers are limited to 3
+                    break;
+                case CrawlerType.Spitter:
+                    restriction = 7; // Spitters are limited to 7
+                    break;
+                case CrawlerType.Daddy:
+                    restriction = 7; // Daddies are limited to 7
+                    break;
+                case CrawlerType.Leaper:
+                    restriction = 4; // Leapers are limited to 4
+                    break;
+                case CrawlerType.Hunter:
+                    restriction = 3; // Hunters are limited to 3
+                    break;
+                case CrawlerType.Bomber:
+                    restriction = 5; // Bombers are limited to 5
+                    break;
+                case CrawlerType.Spore:
+                    restriction = 2; // Spores are limited to 2
+                    break;
+                default:
+                    restriction = 50; // No restrictions for other types
+                    break;
+            }
+            if (currentCount > restriction)
+            {
+                bannedTypes.Add(crawlerType);
+                Debug.Log($"Banned {crawlerType} - Current count: {currentCount}, Limit: {restriction}");
             }
         }
         return bannedTypes;
     }
-
 
     public List<Crawler> GenerateNewSquad(CrawlerType crawlerType, int amount)
     {
@@ -352,161 +390,113 @@ public class CrawlerSpawner : MonoBehaviour
         spawnPoint = point;
     }
 
-    private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs, bool FromDaddy = false)
+    private IEnumerator SpawnCrawlerFromList(List<Crawler> bugs)
     {
-        int portalAllowed = 0;
-        if (!FromDaddy)
-        {
-            if (!isActive) yield break;
-            foreach(Crawler crawler in bugs)
-            {
-                AddToActiveList(crawler);
-            }
-            SelectSpawnPoint();
-            PlaySpawnEffect();
-            yield return new WaitForSeconds(0.5f);
-        }
-        else
-        {
-            foreach(Crawler crawler in bugs)
-            {
-                AddToActiveList(crawler);
-            }
-        }
-        for (int i = 0; i < bugs.Count; i++)
-        {
-            if (portalAllowed >= portalMaxAllowed)
-            {
-                SelectSpawnPoint();
-                PlaySpawnEffect();
-                portalAllowed = 0;
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            Vector3 randomCircle = Random.insideUnitSphere;
-
-            if (!FromDaddy)
-            {
-                randomCircle *= 5;
-                randomCircle.z = 0;
-            }
-            else
-            {
-                //randomCircle = Vector3.zero;
-                randomCircle.y = spawnPoint.position.y + 2;
-            }
-
-            Vector3 randomPoint = randomCircle + spawnPoint.position;
-            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
-            bugs[i].transform.position = randomPoint;
-            float randomY;
-            if (FromDaddy)
-            {
-                randomY = Random.Range(0, 360);
-            }
-            else
-            {
-                randomY = randomCircle.y;
-            }
-
-            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomY, 0);
-
-            float delay = FromDaddy? 0 : i * 0.2f;
-            portalAllowed++;
-            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], delay, FromDaddy));
-            activeSpawnCoroutines.Add(spawnCoroutine);
-        }
-    }
-    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Vector3 location)
-    {
-        
         if (!isActive) yield break;
-        foreach(Crawler crawler in bugs)
+        foreach (Crawler crawler in bugs)
         {
             AddToActiveList(crawler);
         }
-        int portalAllowed = 0;
-        for (int i = 0; i < bugs.Count; i++)
-        {
-            Vector3 randomCircle = Random.insideUnitSphere * portalSize;
-            randomCircle.z = 0;
-            Vector3 randomPoint = randomCircle + location;
-            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
-            bugs[i].transform.position = randomPoint;
-            bugs[i].transform.rotation = Quaternion.Euler(0, randomCircle.y, 0);
-
-            portalAllowed++;
-            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
-            activeSpawnCoroutines.Add(spawnCoroutine);
-        }
-        
+        SelectSpawnPoint();
+        PlaySpawnEffect();
+        yield return new WaitForSeconds(0.5f);
+        var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs, spawnPoint));
+        activeSpawnCoroutines.Add(spawnCoroutine);
     }
+    
+    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Vector3 location)
+    {
+
+        if (!isActive) yield break;
+        foreach (Crawler crawler in bugs)
+        {
+            AddToActiveList(crawler);
+        }
+
+        var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs, spawnPoint));
+        activeSpawnCoroutines.Add(spawnCoroutine);
+
+    }
+    
     private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs)
     {
         if (!isActive) yield break;
-        int portalAllowed = 0;
-        foreach(Crawler crawler in bugs)
+        foreach (Crawler crawler in bugs)
         {
             AddToActiveList(crawler);
         }
-        if (!hordeBattle)
-        {
-            SelectSpawnPoint();
-            PlaySpawnEffect();
-        }
-        else if (!hordePortal.isActive)
-        {
-            spawnPoint = spawnPoints[0];
-            hordePortal.transform.position = spawnPoint.position;
-            hordePortal.transform.rotation = spawnPoint.rotation;
-            hordePortal.StartEffect();
-            yield return new WaitForSeconds(0.5f);
-        }
 
-        for (int i = 0; i < burstSpawnAmount && i<bugs.Count; i++)
+        if (hordeBattle)
         {
-            if(!hordeBattle)
+            if (!hordePortal.isActive)
             {
-                if (portalAllowed >= portalMaxAllowed)
+                spawnPoint = spawnPoints[0];
+                hordePortal.transform.position = spawnPoint.position;
+                hordePortal.transform.rotation = spawnPoint.rotation;
+                hordePortal.StartEffect();
+                yield return new WaitForSeconds(0.5f);
+            }
+            StartCoroutine(SpawnRandomizer(bugs, spawnPoint));
+        }
+        else
+        {
+            List<Crawler> splitBugs = new List<Crawler>();
+            portalAllowed = 0;
+            var tempMaxportalMaxAllowed = portalMaxAllowed;
+            if (bugs.Count < portalMaxAllowed)
+            {
+                tempMaxportalMaxAllowed = bugs.Count;
+            }
+            for (int i = 0; i < bugs.Count; i++)
+            {
+                splitBugs.Add(bugs[i]);
+                portalAllowed++;
+                if (portalAllowed >= tempMaxportalMaxAllowed || i == bugs.Count - 1)
                 {
                     SelectSpawnPoint();
                     PlaySpawnEffect();
+                    yield return new WaitForSeconds(1f);
+                    print($"Spawning {splitBugs.Count} crawlers at {spawnPoint.name}");
+                    var spawnCoroutine = StartCoroutine(SpawnRandomizer(splitBugs, spawnPoint));
+                    activeSpawnCoroutines.Add(spawnCoroutine);
+                    splitBugs.Clear();
                     portalAllowed = 0;
-                    yield return new WaitForSeconds(0.5f);
                 }
             }
-            else
-            {
-                spawnPoint = spawnPoints[0];
-            }
-
-            Vector3 randomCircle = Random.insideUnitSphere * portalSize;
-            randomCircle.z = 0;
-            Vector3 randomPoint = randomCircle + spawnPoint.position;
-            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
-            bugs[i].transform.position = randomPoint;
-            bugs[i].transform.rotation = spawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
-
-            portalAllowed++;
-            var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs[i], i * 0.2f));
-            activeSpawnCoroutines.Add(spawnCoroutine);
         }
-        
     }
 
-    private IEnumerator SpawnRandomizer(Crawler bug, float delay, bool daddy = false)
+    private IEnumerator SpawnRandomizer(List<Crawler> bugs, Transform localSpawnPoint, bool daddy = false)
     {
-        yield return new WaitForSeconds(delay);
-        bug.gameObject.SetActive(true);
-        bug.Spawn(daddy);
-        // bugs have a bigger search range at the start of a horde
-        if (hordeBattle)
+        List<Crawler> activeBugs = new List<Crawler>(bugs);
+        foreach (var bug in activeBugs)
         {
-            bug.FindClosestTarget(70);
-        }
-        if(BattleManager.instance._usingBattleType == BattleType.Upload)
-        {
-            bug.target = BattleManager.instance.capturePoint.transform;
+            float random = daddy ? 0 : Random.Range(0.05f, 0.2f);
+
+            yield return new WaitForSeconds(random);
+
+            if (!isActive)
+            {
+                yield break;
+            }
+
+            Vector3 randomCircle = Random.insideUnitSphere * (portalSize / 2);
+            randomCircle.z = 0;
+            Vector3 randomPoint = randomCircle + localSpawnPoint.position;
+            randomPoint.y = Mathf.Clamp(randomPoint.y, 2, 6);
+            bug.transform.position = randomPoint;
+            bug.transform.rotation = localSpawnPoint.rotation * Quaternion.Euler(0, randomCircle.y, 0);
+            bug.gameObject.SetActive(true);
+            bug.Spawn(daddy);
+            // bugs have a bigger search range at the start of a horde
+            if (hordeBattle)
+            {
+                bug.FindClosestTarget(70);
+            }
+            if (BattleManager.instance._usingBattleType == BattleType.Upload)
+            {
+                bug.target = BattleManager.instance.capturePoint.transform;
+            }
         }
     }
 
@@ -524,8 +514,11 @@ public class CrawlerSpawner : MonoBehaviour
         {
             spawnList.Add(crawlers[i]);
         }
-        spawnPoint = point;
-        StartCoroutine(SpawnCrawlerFromList(spawnList, true));
+        foreach (Crawler crawler in spawnList)
+        {
+            AddToActiveList(crawler);
+        }
+        StartCoroutine(SpawnRandomizer(spawnList, point));
     }
 
     public void EndBattle()

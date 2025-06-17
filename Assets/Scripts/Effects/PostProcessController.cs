@@ -43,6 +43,7 @@ public class PostProcessController : MonoBehaviour
         nukeCanvasGroup.alpha = 1f;
         vignette.intensity.Override(0.5f);
         StartCoroutine(NukeCoroutine());
+        ScreenShakeUtility.Instance.ShakeScreen(1.4f);
     }
 
     private IEnumerator NukeCoroutine()

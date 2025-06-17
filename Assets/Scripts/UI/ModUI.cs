@@ -27,6 +27,9 @@ public class ModUI : MonoBehaviour
     public TMP_Text modNameText;
     public TMP_Text descriptionText;
     public TMP_Text rarityText;
+    [Header("CircuitBoard")]
+    public GameObject circuitBoardPanel;
+
 
 
     public void OpenModUI(ModBuildType type)
@@ -81,6 +84,19 @@ public class ModUI : MonoBehaviour
     {
         modUI.SetActive(false);
         CashCollector.instance.HideUI();
+        GameManager.instance.SwapPlayerInput("Gameplay");
+    }
+
+    public void OpenCircuitBoard()
+    {
+        circuitBoardPanel.SetActive(true);
+        GameManager.instance.SwapPlayerInput("UI");
+        eventSystem.SetSelectedGameObject(UpgradeCircuitboardManager.instance.firstSelectedChipSlot);
+    }
+
+    public void CloseCircuitBoard()
+    {
+        circuitBoardPanel.SetActive(false);
         GameManager.instance.SwapPlayerInput("Gameplay");
     }
 

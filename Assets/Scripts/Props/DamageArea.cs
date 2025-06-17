@@ -52,7 +52,7 @@ public class DamageArea : MonoBehaviour
         damageActive = true;
         triggerCollider.enabled = true;
         targetsInRange.Clear();
-        var targets = Physics.OverlapSphere(transform.position, triggerCollider.radius);
+        var targets = Physics.OverlapSphere(transform.position, triggerCollider.radius +1);
         foreach (var target in targets)
         {
             TargetHealth targetHealth = target.GetComponent<TargetHealth>();

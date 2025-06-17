@@ -23,7 +23,7 @@ public class PauseModUI : MonoBehaviour
     public PauseMenu pauseMenu;
 
     private List<ModEntry> modEntryPool = new List<ModEntry>();
-    private List<ModEntry> statEntryPool = new List<ModEntry>();
+    public List<ModEntry> statEntryPool = new List<ModEntry>();
 
     private void Awake()
     {
@@ -72,6 +72,34 @@ public class PauseModUI : MonoBehaviour
             entry.SetupMod(mod);
         }
         StartCoroutine(DelaySetSelected());
+    }
+
+    public void UpdateModEntry(RunMod mod)
+    {
+        var entry = statEntryPool[runUpgradeManager.currentEquipedMods.Count];
+        if (entry != null)
+        {
+            entry.SetupMod(mod);
+        }
+        else
+        {
+            Debug.LogWarning($"No ModEntry found for mod: {mod.modName}");
+        }
+    }
+
+    public ModEntry FindModEntry(RunMod mod)
+    {
+        for (int i = 0; i < statEntryPool.Count; i++)
+        {
+            ModEntry entry = statEntryPool[i];
+            if (entry._mod.ID == mod.ID)
+            {
+                entry.gameObject.SetActive(true);
+                entry.SetupMod(mod);
+                return entry;
+            }
+        }
+        return null;
     }
 
     private IEnumerator DelaySetSelected()

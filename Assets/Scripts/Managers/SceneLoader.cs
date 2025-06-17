@@ -39,7 +39,6 @@ public class SceneLoader : MonoBehaviour
         loadinBar.enabled = false;
         StartCoroutine(DelayFade());
         isLoading = false;
-        PlayerSavedData.instance.SavePlayerData();
     }
 
     private IEnumerator DelayFade()

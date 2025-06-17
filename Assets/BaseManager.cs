@@ -89,9 +89,13 @@ public class BaseManager : MonoBehaviour
         PlayerSavedData.instance.hasSeenThankYouPanel = true;
         PlayerSavedData.instance.SavePlayerData();
         BattleMech.instance.playerInput.SwitchCurrentActionMap(actionMap);
-        if(actionMap == "UI")
+        if (actionMap == "UI")
         {
             InputTracker.instance.eventSystem.SetSelectedGameObject(loadOutPanel.firstSelectedButton);
+        }
+        else
+        {
+            BattleMech.instance.myCharacterController.ToggleCanMove(true);
         }
     }
 

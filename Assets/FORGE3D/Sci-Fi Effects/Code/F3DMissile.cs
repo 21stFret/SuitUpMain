@@ -179,9 +179,9 @@ namespace FORGE3D
                     if (droneType == DroneType.LittleBoy)
                     {
                         PostProcessController.instance.NukeEffect();
+                        return;
                     }
-                    float intensity = droneType != DroneType.LittleBoy ? 0.5f : 1f;
-                    ScreenShakeUtility.Instance.ShakeScreen(intensity);
+                    ScreenShakeUtility.Instance.ShakeScreen(0.6f);
 
                 }
 

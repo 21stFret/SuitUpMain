@@ -43,7 +43,7 @@ public class HealthPickup : MonoBehaviour
         }
         if(Drone)
         {
-            if(battleMech.droneController.CanUseDrone())
+            if(battleMech.droneController.airDropTimer.charges==3)
             {
                 meterFull = true;
             }

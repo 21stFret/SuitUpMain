@@ -142,7 +142,6 @@ public class PlayerSavedData : MonoBehaviour
         hasSeenThankYouPanel = false;
         CreateWeaponData();
         CreateDroneAbilityData();
-        _playerLoadout = new Vector2(0, 0);
         _gameStats = new GameStats();
         SavePlayerData();
     }
@@ -171,6 +170,7 @@ public class PlayerSavedData : MonoBehaviour
         }
         _mainWeaponData[0].unlocked = true;
         _altWeaponData[0].unlocked = true;
+        _playerLoadout = new Vector2(0, 0);
     }
 
     public void CreateDroneAbilityData()
@@ -211,6 +211,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.highestDifficulty = highestDifficulty;
         saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
         saveData.droneAbilities = _droneAbilities;
+        saveData.droneLoadOut = droneLoadOut;
 
         string jsonData = JsonUtility.ToJson(saveData, true);
         byte[] byteData = Encoding.UTF8.GetBytes(jsonData); // Changed from ASCII to UTF8
@@ -306,6 +307,7 @@ public class PlayerSavedData : MonoBehaviour
         {
             try
             {
+                bool corrupted = false;
                 SaveData savedData = JsonUtility.FromJson<SaveData>(jsonData);
                 _BGMVolume = savedData.BGMVolume;
                 _SFXVolume = savedData.SFXVolume;
@@ -313,15 +315,42 @@ public class PlayerSavedData : MonoBehaviour
                 _Cash = savedData.playerCash;
                 _Exp = savedData.playerExp;
                 _Artifact = savedData.playerArtifact;
-                _mainWeaponData = savedData.mainWeaponData;
-                _altWeaponData = savedData.altWeaponData;
-                _playerLoadout = savedData.playerLoadout;
+                if (savedData.mainWeaponData.Length == 0 || savedData.altWeaponData.Length == 0)
+                {
+                    CreateWeaponData(); // Ensure weapon data is initialized if missing
+                    corrupted = true;
+                }
+                else
+                {
+                    _mainWeaponData = savedData.mainWeaponData;
+                    _altWeaponData = savedData.altWeaponData;
+                    _playerLoadout = savedData.playerLoadout;
+                }
                 _firstLoad = savedData.firstLoad;
                 _gameStats = savedData.gameStats;
                 triggeredEasterEgg = savedData.triggeredEasterEgg;
                 highestDifficulty = savedData.highestDifficulty;
                 hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
-                _droneAbilities = savedData.droneAbilities;
+                if (savedData.droneAbilities.Length == 0)
+                {
+                    CreateDroneAbilityData(); // Ensure drone data is initialized if missing
+                    corrupted = true;
+                }
+                else
+                {
+                    _droneAbilities = savedData.droneAbilities;
+                    droneLoadOut = savedData.droneLoadOut;
+                }
+
+                if (corrupted)
+                {
+                    SavePlayerData();
+                }
+                else
+                {
+                    Debug.Log("Save data loaded successfully");
+                }
+
 
                 Debug.Log("Save data parsed successfully");
             }

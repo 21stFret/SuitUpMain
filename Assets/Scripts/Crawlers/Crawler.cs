@@ -115,9 +115,13 @@ public class Crawler : MonoBehaviour
         dead = false;
         overrideDeathNoise = false;
         _targetHealth = GetComponent<TargetHealth>();
-        if (!dummy)
+        if (!dummy && BattleManager.instance != null)
         {
-            _targetHealth.maxHealth *= BattleManager.instance.dificultyMultiplier;
+            if (BattleManager.instance.dificultyMultiplier > 1)
+            {
+                _targetHealth.maxHealth *= 1 + 0.25f * (BattleManager.instance.dificultyMultiplier - 1);
+            }
+
         }
         _targetHealth.Init(this);
         _collider = GetComponent<Collider>();
@@ -247,6 +251,7 @@ public class Crawler : MonoBehaviour
             return;
         }
 
+
         TargetHealth targetHealth = target.GetComponent<TargetHealth>();
 
         if(targetHealth != null)
@@ -263,7 +268,6 @@ public class Crawler : MonoBehaviour
     {
         float range = trueFind>0? trueFind : seekRange;
         rangeSensor.SetSphereShape(range);
-        target = null;
         rangeSensor.Pulse();
         var _targets = rangeSensor.GetNearestDetection();
         if (!_targets)
@@ -495,7 +499,7 @@ public class Crawler : MonoBehaviour
         {
             return;
         }
-        var __selectMod = GameManager.instance.runUpgradeManager.HasModsByName("Nano Bots");
+        var __selectMod = GameManager.instance.runUpgradeManager.HasModsByName("Nanobots");
         if (__selectMod.Count > 0)
         {
             float mofValue = 0;

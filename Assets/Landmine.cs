@@ -34,6 +34,13 @@ public class Landmine : ExplodingBarrel
     public override void Init()
     {
         base.Init();
+        gameObject.SetActive(true);
+        StartCoroutine(DelayTrigger());
+    }
+
+    private IEnumerator DelayTrigger()
+    {
+        yield return new WaitForSeconds(1f);
         triggered = false;
     }
 

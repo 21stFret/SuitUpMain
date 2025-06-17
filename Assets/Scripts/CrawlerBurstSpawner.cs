@@ -5,7 +5,6 @@ using UnityEngine;
 public class CrawlerBurstSpawner : MonoBehaviour
 {
     public CrawlerSpawner crawlerSpawner;
-    public Battle currentBattle;
     public float burstTimer;
     public int burstSpawnAmount;
     public float timeElapsed;
@@ -20,7 +19,6 @@ public class CrawlerBurstSpawner : MonoBehaviour
         timeElapsed = 0f;
         totalTimeElapsesd = 0f;
         isActive = true;
-        currentBattle = crawlerSpawner.battleManager.currentBattle;
     }
 
     private void Update()
@@ -38,9 +36,9 @@ public class CrawlerBurstSpawner : MonoBehaviour
         if (timeElapsed >= burstTimer)
         {
             timeElapsed = 0f;
-            int min = Mathf.RoundToInt(currentBattle.burstMin + totalTimeElapsesd);
-            min = Mathf.Clamp(min, currentBattle.burstMin, currentBattle.burstMax);
-            burstSpawnAmount = Random.Range(min, currentBattle.burstMax);
+            int min = Mathf.RoundToInt(crawlerSpawner.localBurstMin + totalTimeElapsesd);
+            min = Mathf.Clamp(min, crawlerSpawner.localBurstMin, crawlerSpawner.localBurstMax);
+            burstSpawnAmount = Random.Range(min, crawlerSpawner.localBurstMax);
             spawnPosition = transform.position;
             spawnPosition.y +=1;
             var newSquad = new List<Crawler>();

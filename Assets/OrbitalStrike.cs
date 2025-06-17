@@ -13,9 +13,10 @@ public class OrbitalStrike : MonoBehaviour
     public float blastForce;
     public float blastRadius;
     public ParticleSystem beamParticles;
-    public List<TargetHealth> targets;
+    public ParticleSystem blastParticles;
     private Vector3 _sphereCastPos;
     public LayerMask layerMask;
+    public LayerMask groundLayer;
 
     private AudioSource _audioSource;
 
@@ -37,20 +38,18 @@ public class OrbitalStrike : MonoBehaviour
     public void ActivateBeam()
     {
         beamParticles.Play();
-        StartCoroutine(DelayDamage());
+        beamActive = true;
         _audioSource.Play();
+        blastParticles.Play();
     }
 
-    private IEnumerator DelayDamage()
-    {
-        yield return new WaitForSeconds(1);
-        beamActive = true;
-    }
+
 
     private void DeactivateBeam()
     {
         beamActive = false;
         beamParticles.Stop();
+        blastParticles.Stop();
         _audioSource.Stop();
         _droneSystem.finishedAbility = true;
     }
@@ -66,33 +65,30 @@ public class OrbitalStrike : MonoBehaviour
                 return;
             }
 
+            RaycastHit _hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out _hit, Mathf.Infinity, groundLayer))
+            {
+                blastParticles.transform.position = _hit.point + Vector3.up * 0.1f; // Adjust position to be slightly above the ground
+            }
+
             beamDamageRateT -= Time.deltaTime;
             if (beamDamageRateT <= 0)
             {
-                targets.Clear();
-                Vector3 pos = transform.position;
-                pos.y =0;
-                _sphereCastPos = pos;
-                RaycastHit[] hits = Physics.SphereCastAll(_sphereCastPos, blastRadius, Vector3.down, 0.1f, layerMask);
+                RaycastHit[] hits = Physics.SphereCastAll(_hit.point, blastRadius, Vector3.down, 0.1f, layerMask);
                 foreach (RaycastHit hit in hits)
                 {
                     TargetHealth target = hit.collider.GetComponent<TargetHealth>();
                     if (target != null)
                     {
-                        if (!targets.Contains(target))
-                        {
-                            targets.Add(target);
-                        }
+                        target.TakeDamage(beamDamage, WeaponType.AoE);
                     }
-                }
-                foreach (TargetHealth target in targets)
-                {
-                    target.TakeDamage(beamDamage, WeaponType.AoE);
-                    Rigidbody rb = target.GetComponent<Rigidbody>();
+                    
+                    Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
                     if (rb != null)
                     {
-                        rb.AddExplosionForce(blastForce, _sphereCastPos, blastRadius,-0.5f,ForceMode.Impulse);
+                        rb.AddExplosionForce(blastForce, _hit.point, blastRadius, -0.5f, ForceMode.Impulse);
                     }
+
                 }
                 beamDamageRateT = beamDamageRate;
             }
