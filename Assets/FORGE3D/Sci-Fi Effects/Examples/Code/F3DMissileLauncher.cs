@@ -18,6 +18,14 @@ public enum Ordanance
 
 }
 
+public enum MissilePayload
+{
+    Standard,
+    FatMan,
+    Mine,
+    Napalm
+}
+
 namespace FORGE3D
 {
     public class F3DMissileLauncher : MonoBehaviour
@@ -33,6 +41,7 @@ namespace FORGE3D
         private int reseveredCount;
         public Transform explosionPrefab;
         public Transform fatManEffectPrefab;
+        public Transform napalmPrefab;
         public float trackingRaduis = 20f;
         public float firingRadius = 10f;
         public float missileSpeed = 10f;
@@ -42,7 +51,7 @@ namespace FORGE3D
         public List<Transform> launcherTargets;
         public List<Transform> reservedTargets;
         public DroneControllerUI droneController;
-        public bool FatMan;
+
         public Ordanance ordananceType;
 
         public Text missileTypeLabel;
@@ -51,6 +60,8 @@ namespace FORGE3D
 
         public Animator animator;
         public GameObject emptyParent;
+
+        public MissilePayload missilePayload;
 
         // Use this for initialization
         private void Start()
@@ -62,20 +73,30 @@ namespace FORGE3D
         public void SpawnExplosion(Vector3 position)
         {
             Transform t = null;
-            if (FatMan)
+            if (missilePayload == MissilePayload.FatMan)
             {
                 t = F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(fatManEffectPrefab, position, Quaternion.identity, null);
                 F3DAudioController.instance.NukeHit(position);
             }
-            else
+            if (missilePayload == MissilePayload.Standard)
             {
                 t = F3DPoolManager.Pools["GeneratedPool"]
                 .Spawn(explosionPrefab, position, Quaternion.identity, null);
                 F3DAudioController.instance.BombHit(position);
             }
+            if (missilePayload == MissilePayload.Napalm)
+            {
+                t = F3DPoolManager.Pools["GeneratedPool"]
+                .Spawn(napalmPrefab, position, Quaternion.identity, null);
+                F3DAudioController.instance.NapalmHit(position);
+            }
             if (t != null)
             {
+                if(t.GetComponent<F3DDespawn>() != null)
+                {
+                    return;
+                }
                 StartCoroutine(DelayEffectDeactivate(t));
             }
 
@@ -94,7 +115,6 @@ namespace FORGE3D
         {
             ordananceType = ordanance;
             launcherTargets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
-            FatMan = false;
             animator.SetTrigger("Launch");
             foreach (var ui in hitUI)
             {
@@ -127,14 +147,31 @@ namespace FORGE3D
         {
             ordananceType = Ordanance.Guided;
             launcherTargets = SetTargetInRadius(player.position, trackingRaduis, trackingLayerMask);
-            FatMan = true;
             animator.SetTrigger("Launch");
             LaunchMissile(1);
         }
 
         public void LaunchMissile(int targetID)
         {
-            Transform _missilePrefab = FatMan ? fatManPrefab : missilePrefab;
+            Transform _missilePrefab;
+            switch (missilePayload)
+            {
+                case MissilePayload.Standard:
+                    _missilePrefab = missilePrefab;
+                    break;
+                case MissilePayload.FatMan:
+                    _missilePrefab = fatManPrefab;
+                    break;
+                case MissilePayload.Mine:
+                    _missilePrefab = minePrefab;
+                    break;
+                case MissilePayload.Napalm:
+                    _missilePrefab = missilePrefab;
+                    break;
+                default:
+                    _missilePrefab = missilePrefab;
+                    break;
+            }
             var randomSocketId = Random.Range(0, socket.Length);
             var tMissile = F3DPoolManager.Pools["GeneratedPool"].Spawn(_missilePrefab,
                 socket[randomSocketId].position, socket[randomSocketId].rotation, null);
@@ -256,16 +293,16 @@ namespace FORGE3D
         {
             int missileCount = droneController.missileAmount;
             float angleStep = 60f / missileCount; // Spread across 60 degree arc
-            float minDistance = 3f; // Minimum distance between targets
+            float minDistance = 10f; // Minimum distance between targets
 
             // Calculate angle for this target
-            float angle = -30f + (angleStep * i); // Start at -30 degrees
+            float angle = angleStep * i;
 
             // Create rotation for this angle
             Quaternion rotation = transform.rotation * Quaternion.Euler(0, angle, 0);
 
             // Get forward direction with random distance
-            float distance = Random.Range(firingRadius * 0.5f, firingRadius);
+            float distance = firingRadius * (1f + Random.Range(-0.2f, 0.2f)); // Randomize distance slightly
             Vector3 targetPos = transform.position + (rotation * Vector3.forward * distance);
 
             // Check for overlaps with existing positions
@@ -283,7 +320,7 @@ namespace FORGE3D
             if (!validPosition)
             {
                 // Try moving it further out
-                targetPos = transform.position + (rotation * Vector3.forward * (distance + minDistance));
+                targetPos = target + (rotation * Vector3.forward * (distance + minDistance));
             }
 
             return targetPos;
@@ -298,7 +335,11 @@ namespace FORGE3D
 
         private Vector3 GetRandomPointOnSphereEdge(Vector3 center, float radius, int i)
         {
-            int ringamount = droneController.missileAmount / 6;
+            int ringamount = 1;
+            if (droneController.missileAmount / 6 > 1)
+            {
+                ringamount = droneController.missileAmount / 6;
+            }
             float angleStep = 360f / (droneController.missileAmount / ringamount); // Total angle divided by number of missiles
             float angle = angleStep * i * Mathf.Deg2Rad;
 

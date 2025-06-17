@@ -16,16 +16,23 @@ public class JungleTrap : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (GameManager.instance != null)
+        {
+            if (!GameManager.instance.gameActive)
+            {
+                return; // Exit if the game is not active
+            }
+        }
         // Check if the trap is active and if the colliding object is the player
         if (isActive)
         {
-            if(other.gameObject.CompareTag("Player"))
+            if (other.gameObject.CompareTag("Player"))
             {
-                if(BattleMech.instance != null)
+                if (BattleMech.instance != null)
                 {
-                    if(BattleMech.instance.myCharacterController.isDodging)
-                    {                         
-                        return;                   
+                    if (BattleMech.instance.myCharacterController.isDodging)
+                    {
+                        return;
                     }
                 }
             }

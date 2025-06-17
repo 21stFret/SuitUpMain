@@ -152,7 +152,12 @@ public class PulseShockwave : MonoBehaviour
         }
         if (canHeal)
         {
-            BattleMech.instance.RepairArmour(healAmount);
+            float amountToHeal = healAmount * crawlerCount;
+            if(amountToHeal == 0)
+            {
+                return;
+            }
+            BattleMech.instance.RepairArmour(amountToHeal);
         }
         if (canRegenFuel)
         {

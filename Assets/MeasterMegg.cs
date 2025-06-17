@@ -25,11 +25,11 @@ public class MeasterMegg : MonoBehaviour
             {
                 if(!PlayerSavedData.instance.triggeredEasterEgg)
                 {
-                    PlayerSavedData.instance.UpdatePlayerCash(3000);
+                    PlayerSavedData.instance.UpdatePlayerCash(10000);
                     PlayerSavedData.instance.triggeredEasterEgg = true;
                     BaseManager.instance.statsUI.UpdateCash(PlayerSavedData.instance._Cash);
                     PlayerSavedData.instance.SavePlayerData();
-                    text.text = "You collected 3 crates! Well done loser! Just kidding you're awesome! Have 3000 cash!";
+                    text.text = "You collected 3 crates! Well done loser! \n Just kidding you're awesome! Have 10000 cash!";
                     GetComponent<Collider>().enabled = false;
                     count = 10;
                 }

@@ -136,7 +136,7 @@ public class AreaManager : MonoBehaviour
     public void LoadDataLog()
     {
         int randomIndex = Random.Range(0, 100);
-        if (randomIndex < 25)
+        if (randomIndex > 20)
         {
             dataLogSpawner.HideDataLog();
             return;

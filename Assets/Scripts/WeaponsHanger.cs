@@ -14,6 +14,14 @@ public class WeaponsHanger : MonoBehaviour
         weaponT.position = mainWeaponSlots[(int)weapon.weaponData.weaponIndex].position;
         weaponT.rotation = mainWeaponSlots[(int)weapon.weaponData.weaponIndex].rotation;
         weaponT.localScale = Vector3.one;
+        var children = weaponT.GetComponentsInChildren<Transform>();
+        foreach (var child in children)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                child.gameObject.layer = 0; // Set to default layer
+            }
+        }
     }
 
     public void SetAltWeaponPositionToSlot(MechWeapon weapon)
@@ -23,6 +31,14 @@ public class WeaponsHanger : MonoBehaviour
         weapon.gameObject.transform.position = AltWeaponSlots[(int)weapon.weaponData.weaponIndex].position;
         weapon.gameObject.transform.rotation = AltWeaponSlots[(int)weapon.weaponData.weaponIndex].rotation;
         weapon.gameObject.transform.localScale = Vector3.one;
+        var children = weaponT.GetComponentsInChildren<Transform>();
+        foreach (var child in children)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                child.gameObject.layer = 0; // Set to default layer
+            }
+        }
     }
 
     public void SetWeaponToLoadoutMenu(MechWeapon weapon, Transform location)
@@ -32,5 +48,13 @@ public class WeaponsHanger : MonoBehaviour
         weaponT.localPosition = Vector3.zero;
         weaponT.localRotation = Quaternion.identity;
         weaponT.localScale = Vector3.one;
+        var children = weaponT.GetComponentsInChildren<Transform>();
+        foreach (var child in children)
+        {
+            if (child.gameObject.activeSelf)
+            {
+                child.gameObject.layer = location.gameObject.layer;
+            }
+        }
     }
 }

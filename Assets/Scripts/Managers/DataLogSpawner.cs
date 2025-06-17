@@ -31,6 +31,13 @@ public class DataLogSpawner : MonoBehaviour
             return null;
         }
 
+        // if all logs found return null
+        if (logManager.discoveredLogsCount >= logManager.logDatabase.allLogs.Count)
+        {
+            Debug.LogWarning("Maximum number of data logs already found.");
+            return null;
+        }
+
         Vector3 spawnPosition = FindValidSpawnPosition();
         if (spawnPosition == Vector3.zero)
         {

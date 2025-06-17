@@ -17,7 +17,6 @@ public enum ModCategory
 {
     MAIN,
     ALT,
-    DRONE,
     PULSE,
     DASH,
     STATS,
@@ -58,6 +57,7 @@ public class RunUpgradeManager : MonoBehaviour
     public int RerollCost;
 
     public bool freeReroll = false;
+    public int runningModID = 0;
 
     public void SelectNextBuilds()
     {
@@ -97,6 +97,7 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void GenerateListOfUpgradesFromAll(ModBuildType build)
     {
+        Debug.LogWarning("Generating Mods for: " + build);
         listMods.Clear();
         int maxAttempts = 100; // Prevent infinite loop
         currentBuildType = build;
@@ -118,7 +119,7 @@ public class RunUpgradeManager : MonoBehaviour
                 break;
             case ModBuildType.UPGRADE:
                 selectedMods = new List<RunMod>(runModsWeaponUpgrades);
-                selectedMods= RandomiseModType(selectedMods);
+                selectedMods = RandomiseModType(selectedMods);
                 break;
             default:
                 break;
@@ -130,7 +131,8 @@ public class RunUpgradeManager : MonoBehaviour
         {
             if (selectedMods.Count > 0)
             {
-                RunMod mod = selectedMods[Random.Range(0, selectedMods.Count)];
+                RunMod mod = new RunMod();
+                mod = selectedMods[Random.Range(0, selectedMods.Count)];
 
                 if (listMods.Contains(mod))
                 {
@@ -154,10 +156,10 @@ public class RunUpgradeManager : MonoBehaviour
                 }
 
                 //can be extended to check for rare mods
-                if(mod.modName == "Nano Bots")
+                if (mod.modName == "Nano Bots")
                 {
                     //roll for chance to draw
-                    if(Random.Range(0,100) > 80)
+                    if (Random.Range(0, 100) > 80)
                     {
                         maxAttempts--;
                         continue;
@@ -192,6 +194,7 @@ public class RunUpgradeManager : MonoBehaviour
                 if (listMods.Contains(mod))
                 {
                     selectedMods.Remove(mod);
+                    maxAttempts--;
                     continue;
                 }
 
@@ -202,6 +205,7 @@ public class RunUpgradeManager : MonoBehaviour
                     continue;
                 }
 
+                mod.ID = runningModID++;
                 listMods.Add(mod);
 
                 i++;
@@ -224,21 +228,7 @@ public class RunUpgradeManager : MonoBehaviour
 
     private List<RunMod> RandomiseModType(List<RunMod> mods)
     {
-        ModCategory category = (ModCategory)Random.Range(0, 5);
-        int _maxAttempts = 10; // Prevent infinite loop
-
-        // Check if we already have a mod of this category and hard set a new one
-        if(currentEquipedMods.Count > 0 && _maxAttempts>0)
-        {
-            foreach (var _mod in currentEquipedMods)
-            {
-                if (_mod.modCategory == category)
-                {
-                    RandomiseModType(mods);
-                    _maxAttempts--;
-                }
-            }
-        }
+        ModCategory category = (ModCategory)Random.Range(0, 4);
         print("Selected Category: " + category);
         List<RunMod> mod = mods.FindAll(mod => mod.modCategory == category);
         if (mod.Count != 0)
@@ -301,25 +291,12 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
-    private RunMod FilterDroneMods(List<RunMod> mods)
-    {
-        List<RunMod> mod = mods.FindAll(mod => mod.modCategory == ModCategory.DRONE);
-        if (mod.Count != 0)
-        {
-            return mod[Random.Range(0, mod.Count)];
-        }
-        else
-        {
-            return null;
-        }
-    }
-
     private void SetModRarity(RunMod mod)
     {
         int rand = Random.Range(0, 100);
         if (rand <= 50)
             mod.rarity = 0;
-        else if (rand <= 80)
+        else if (rand <= 85)
             mod.rarity = 1;
         else
             mod.rarity = 2;
@@ -334,10 +311,11 @@ public class RunUpgradeManager : MonoBehaviour
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         var mod = listMods[index];
-        EnableModSelection(mod);
+        UpgradeCircuitboardManager.instance.currentRunMod = mod;
+        UpgradeCircuitboardManager.instance.UpdateModEntry(mod);
         ModUI.CloseModUI();
+        ModUI.OpenCircuitBoard();
         GameManager.instance.SpawnPortalsToNextRoom();
-
     }
 
     public void ReRollMods()
@@ -373,17 +351,6 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void EnableModSelection(RunMod mod)
     {
-        if(mod.modCategory != ModCategory.STATS)
-        {
-            if (currentEquipedMods.Contains(mod))
-            {
-                var _mod = currentEquipedMods.Find(m => m.modName == mod.modName);
-                Debug.Log($"Removing old mod: {_mod.modName}");
-                // Remove the old mod if we're upgrading
-                RemoveMod(_mod);
-            }
-        }
-
         switch (mod.modCategory)
         {
             case ModCategory.MAIN:
@@ -396,7 +363,38 @@ public class RunUpgradeManager : MonoBehaviour
                 Wmod.runMod = mod;
                 weaponModManager.EquipTechWeaponMod(Wmod);
                 break;
-            case ModCategory.DRONE:
+            case ModCategory.PULSE:
+                pulseShockwave.ResetMods();
+                for (int i = 0; i < mod.modifiers.Count; i++)
+                {
+                    var modifier = mod.modifiers[i];
+                    pulseShockwave.ApplyMod(modifier.statType, modifier.statValue);
+                }
+                break;
+            case ModCategory.DASH:
+                for (int i = 0; i < mod.modifiers.Count; i++)
+                {
+                    var modifier = mod.modifiers[i];
+                    BattleMech.myCharacterController.dashModsManager.ApplyMod(modifier.statType, modifier.statValue);
+                }
+                break;
+            case ModCategory.STATS:
+                ApplyMod(mod);
+                break;
+        }
+
+        currentEquipedMods.Add(mod);
+    }
+    
+    public void DisableModSelection(RunMod mod)
+    {
+        switch (mod.modCategory)
+        {
+            case ModCategory.MAIN:
+                weaponModManager.RemoveAssutaltMod();
+                break;
+            case ModCategory.ALT:
+                weaponModManager.RemoveTechMod();
                 break;
             case ModCategory.PULSE:
                 pulseShockwave.ResetMods();
@@ -425,7 +423,7 @@ public class RunUpgradeManager : MonoBehaviour
     {
         foreach (var modifier in mod.modifiers)
         {
-            if(modifier.statType == StatType.Unique)
+            if (modifier.statType == StatType.Unique)
             {
                 continue;
             }
@@ -514,6 +512,7 @@ public class RunMod
     public List<Modifier> modifiers = new List<Modifier>(3);
     public int rarity;
     public List<ModValues> modValues = new List<ModValues>(3);
+    public int ID = -1;
 }
 
 [System.Serializable]

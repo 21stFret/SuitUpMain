@@ -23,7 +23,7 @@ public class DroneShopUI : MonoBehaviour
     public List<VideoClip> videoClips = new List<VideoClip>();
     public DroneOptionShopUI currentSelectedOption;
     public DroneOptionShopUI currentSelectedEquipSlot;
-    public DroneAbility currentSelectedAbility;
+    private DroneAbility currentSelectedAbility = null;
     public InputActionReference inputUpgrade;
     private DroneControllerUI droneControllerUI;
 
@@ -139,6 +139,8 @@ public class DroneShopUI : MonoBehaviour
         if (ability.unlocked)
         {
             cost.SetActive(false);
+            artifactCost.SetActive(false);
+            abilityPriceText.text = "";
             buttonText.text = "Equip";
             return;
         }
@@ -205,13 +207,17 @@ public class DroneShopUI : MonoBehaviour
 
     private void Purchase()
     {
-        if(currentSelectedEquipSlot != null && currentSelectedEquipSlot.lockIcon.activeSelf)
+        if (currentSelectedEquipSlot != null && currentSelectedEquipSlot.lockIcon.activeSelf)
         {
             PurchaseEquip();
             return;
         }
         if (currentSelectedAbility != null && currentSelectedEquipSlot != null)
         {
+            if (currentSelectedEquipSlot.lockIcon.activeSelf)
+            {
+                return;
+            }
             Equip();
             return;
         }
@@ -239,6 +245,8 @@ public class DroneShopUI : MonoBehaviour
                 currentSelectedOption.lockIcon.SetActive(false);
                 currentSelectedOption.iconObjectParent.SetActive(true);
                 PlayerSavedData.instance._droneAbilities[currentSelectedOption.index] = 0;
+                currentSelectedAbility = ability;
+                UpdateAbilityInfo(currentSelectedAbility, true);
             }
             else
             {
@@ -296,6 +304,16 @@ public class DroneShopUI : MonoBehaviour
         currentSelectedOption = null;
         currentSelectedEquipSlot = equipOptions[_index];
         UpdateEquipInfo();
+        if(InputTracker.instance != null)
+        {
+            if(InputTracker.instance.usingMouse)
+            {
+                if (currentSelectedAbility != null && currentSelectedEquipSlot != null)
+                {
+                    Purchase();
+                }
+            }
+        }
     }
 
     public void EquipSlot(InputAction.CallbackContext context)

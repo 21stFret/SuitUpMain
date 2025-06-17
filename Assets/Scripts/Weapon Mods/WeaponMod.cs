@@ -27,7 +27,7 @@ public class WeaponMod : MonoBehaviour
         }
     }
 
-    public void RemoveMods()
+    public virtual void RemoveMods()
     {
         if(runUpgradeManager == null)
         {

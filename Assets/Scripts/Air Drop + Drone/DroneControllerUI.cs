@@ -14,9 +14,7 @@ public enum DroneType
     Guided,
     Napalm,
     Mines,
-    Smoke,
     LittleBoy,
-    FatMan,
     Companion,
     Orbital,
 }
@@ -25,12 +23,8 @@ public enum DroneType
 public class DroneControllerUI : MonoBehaviour
 {
     public DroneSystem drone;
-    public AirDropCrate crate;
     public AirDropCharger airDropTimer;
     public GameObject airdropMenu;
-    public PlayerInput playerInput;
-    public EventSystem eventSystem;
-    public GameObject firstSelected;
     public F3DMissileLauncher missileLauncher;
     public int missileAmount;
     private GameUI gameUI;
@@ -259,7 +253,6 @@ public class DroneControllerUI : MonoBehaviour
 
     public void MissileStrike(Ordanance ordanance)
     {
-        missileLauncher.FatMan = false;
         missileLauncher.LaunchMissiles(missileAmount,ordanance);
         airstikes++;
 
@@ -279,7 +272,6 @@ public class DroneControllerUI : MonoBehaviour
 
     public void LittleBoyLaunch()
     {
-        missileLauncher.FatMan = true;
         missileLauncher.LaunchNuke();
     }
 
@@ -291,15 +283,11 @@ public class DroneControllerUI : MonoBehaviour
 
     public void ChargeDroneOnHit(float value)
     {
-        if(airDropTimer.DroneCharge >= airDropTimer.DroneMaxCharge)
-        {
-            return;
-        }
         airDropTimer.ChargeDrone(value);
     }
 
     public bool CanUseDrone()
     {
-        return airDropTimer.DroneCharge >= airDropTimer.DroneMaxCharge;
+        return airDropTimer.charges > 0 || testingFreeUse;
     }
 }

@@ -17,8 +17,6 @@ public class TutorialManager : MonoBehaviour
     public ConnectWeaponHolderToManager weaponHolder;
     public GameObject crawlers1;
     public GameObject crawlers2;
-    public GameObject DroneRepair;
-    public GameObject DroneAirStrike;
     public TestPlayerData testPlayerData;
 
     public static TutorialManager instance;
@@ -70,7 +68,7 @@ public class TutorialManager : MonoBehaviour
 
     private void InitScene()
     {
-        if(sceneLoader== null)
+        if (sceneLoader == null)
         {
             testPlayerData.InittestData();
         }
@@ -78,6 +76,7 @@ public class TutorialManager : MonoBehaviour
         WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
         AudioManager.instance.Init();
         AudioManager.instance.PlayBGMusic(2);
+        DroneAbilityManager.instance.Init();
     }
 
     void Update()
@@ -337,31 +336,24 @@ public class TutorialManager : MonoBehaviour
         mechLoader.loadAltWeapon = true;
         mechLoader.Init();
         tutorialUI.altWeapon.SetActive(true);
-        tutorialUI.altWeaponImage.SetActive(true);
         tutorialUI.pulseShockwave.enabled = true;
         tutorialUI.pulseBar.SetActive(true);
     }
 
     private void EnableAirStrike()
     {
-        DroneRepair.SetActive(false);
-        DroneAirStrike.SetActive(true);
         droneController.enabled = true;
+        droneController.airDropTimer.charges = 1;
         droneController.FullyChargeDrone();
-        droneController.eventSystem.SetSelectedGameObject(DroneAirStrike.GetComponentInChildren<Button>().gameObject);
-        tutorialUI.airDrop.SetActive(true);
         crawlers2.SetActive(true);
         crawlers2.transform.SetParent(null);
     }
 
     private void EnableDroneAndRepair()
     {
-        DroneRepair.SetActive(true);
-        DroneAirStrike.SetActive(false);
         droneController.enabled = true;
+        droneController.airDropTimer.charges = 1;
         droneController.FullyChargeDrone();
-        droneController.eventSystem.SetSelectedGameObject(DroneRepair.GetComponentInChildren<Button>().gameObject);
-        tutorialUI.airDrop.SetActive(true);
     }
 
     public void OpenSkipMenu()

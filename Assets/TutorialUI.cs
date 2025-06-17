@@ -14,12 +14,9 @@ public class TutorialUI : MonoBehaviour
     public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
     public GameObject mainWeapon;
-    public GameObject mainWeaponImage;
     public GameObject altWeapon;
-    public GameObject altWeaponImage;
     public GameObject pulseBar;
     public PulseShockwave pulseShockwave;
-    public GameObject airDrop;
     public float textSpeed = 0.05f;
 
     public TutorialTextWithImage[] inputUIs; // Array of TutorialInputUI components
@@ -83,7 +80,6 @@ public class TutorialUI : MonoBehaviour
     public IEnumerator StartCombatTraining()
     {
         mainWeapon.SetActive(true);
-        mainWeaponImage.SetActive(true);
         currentTextCoroutine = StartCoroutine(PrintText("Weapons have now been enabled. Please get ready for combat training."));
         yield return currentTextCoroutine;
         yield return new WaitForSeconds(1f);

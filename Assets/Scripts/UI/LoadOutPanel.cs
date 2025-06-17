@@ -10,18 +10,12 @@ public class LoadOutPanel : MonoBehaviour
     public WeaponsManager weaponsManager;
     public WeaponsHanger weaponsHanger;
     public MechLoader mechLoader;
-
-    public Image mainImage;
     public GameObject mainWeapon;
     public TMP_Text mainWeaponName;
-    public Image altImage;
     public GameObject altWeapon;
     public TMP_Text altWeaponName;
-    public Image armorImage;
     public GameObject armor;
     public TMP_Text armorName;
-
-    public Sprite[] armorSprites;
     public int currentMainIndex;
     public int currentAltIndex;
     public int currentArmorIndex;
@@ -62,11 +56,8 @@ public class LoadOutPanel : MonoBehaviour
 
     private void ChangeWeaponImage()
     {
-        mainImage.sprite = weaponsManager._assaultWeapons[currentMainIndex].weaponSprite;
         weaponsHanger.SetWeaponToLoadoutMenu(weaponsManager._assaultWeapons[currentMainIndex], mainWeapon.transform);
-        altImage.sprite = weaponsManager._techWeapons[currentAltIndex].weaponSprite;
         weaponsHanger.SetWeaponToLoadoutMenu(weaponsManager._techWeapons[currentAltIndex], altWeapon.transform);
-        //armorImage.sprite = armorSprites[currentArmorIndex];
     }
 
     public void NextMainWeapon()
@@ -110,7 +101,7 @@ public class LoadOutPanel : MonoBehaviour
     public void NextArmor()
     {
         currentArmorIndex++;
-        if (currentArmorIndex >= armorSprites.Length)
+        if (currentArmorIndex >= 3)
         {
             currentArmorIndex = 0;
         }

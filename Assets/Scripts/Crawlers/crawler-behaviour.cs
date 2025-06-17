@@ -233,11 +233,16 @@ public class PursuitState : CrawlerState
     public PursuitState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
         : base(crawler, movement, behavior) { }
     
+
+    private float searchpulseTime = 1f;
+    private float searchpulseTimer;
+
     public override void Enter()
     {
         base.Enter();
         movement.tracking = true;
         movement.canMove = true;
+        searchpulseTime = 1f;
     }
     
     public override void Update()
@@ -247,6 +252,16 @@ public class PursuitState : CrawlerState
         if (crawler.target != null)
         {
             movement.SetDestination(crawler.target.transform.position);
+            
+            if(crawler.target != BattleMech.instance.transform)
+            {
+                searchpulseTimer += Time.deltaTime;
+                if (searchpulseTimer >= searchpulseTime)
+                {
+                    searchpulseTimer = 0f;
+                    crawler.FindClosestTarget();
+                }
+            }
         }
         else
         {

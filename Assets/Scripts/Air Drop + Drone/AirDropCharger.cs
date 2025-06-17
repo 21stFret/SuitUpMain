@@ -18,19 +18,19 @@ public class AirDropCharger : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip airDropSound;
     private bool buttonActive;
+    private float localMaxCharge;
 
     void Start()
     {
         ActivateButton(false);
         SetBars();
+        airDropText.enabled = false;
+        localMaxCharge = DroneMaxCharge;
     }
 
     void Update()
     {
         ChargeOverTime();
-
-        float percentage = DroneCharge / DroneMaxCharge;
-        cover.fillAmount = percentage;
 
         if (charges > 0)
         {
@@ -57,26 +57,33 @@ public class AirDropCharger : MonoBehaviour
                 if (charged)
                 {
                     airDropText.enabled = true;
-                    airDropText.text = "Drone On Standby";
+                    airDropText.text = "STANDBY";
                 }
                 return;
             }
             else
             {
-                airDropText.text = "Drone Ready";
+                airDropText.text = "READY";
             }
         }
         if (charges == 3)
         {
+            cover.fillAmount = 1f;
+            airDropText.text = "FULL";
             return;
         }
         ChargeDrone(chargeRate * Time.deltaTime);
-        if (DroneCharge >= DroneMaxCharge)
+
+        float percentage = DroneCharge / localMaxCharge;
+        cover.fillAmount = percentage;
+
+        if (DroneCharge >= localMaxCharge)
         {
             DroneCharge = 0;
             charges++;
-            airDropText.text = "Drone Ready";
+            airDropText.text = "READY";
             airDropText.enabled = true;
+            localMaxCharge = DroneMaxCharge + (DroneMaxCharge * charges * 0.5f); // Increase max charge by 50% each time
             SetBars();
         }
 
@@ -110,7 +117,7 @@ public class AirDropCharger : MonoBehaviour
         }
         else
         {
-            airDropText.text = "Drone Ready";
+            airDropText.text = "READY";
             airDropText.enabled = true;
         }
     }

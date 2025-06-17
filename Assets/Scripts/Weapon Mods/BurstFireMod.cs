@@ -15,15 +15,17 @@ public class BurtFireMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        
-        burstTime = 0.1f +(baseWeapon.fireRate * 3);
+
+        burstTime = 1.5f;
+        baseWeapon.fireRate /= 1.5f; // Increase fire rate by 50% for burst fire
         runUpgradeManager.ApplyMod(runMod);
+
     }
 
     // Fire Weapon
     public override void Fire()
     {
-        if(cooldown)
+        if (cooldown)
         {
             return;
         }
@@ -35,10 +37,10 @@ public class BurtFireMod : WeaponMod
 
     private void Update()
     {
-        if(firing)
+        if (firing)
         {
             timer += Time.deltaTime;
-            if(timer > burstTime)
+            if (timer > burstTime)
             {
                 baseWeapon.isFiring = false;
                 baseWeapon.weaponOverride = true;
@@ -50,12 +52,12 @@ public class BurtFireMod : WeaponMod
         else
         {
             timer -= Time.deltaTime;
-            if(timer <= 0)
+            if (timer <= 0)
             {
                 timer = 0;
                 cooldown = false;
                 baseWeapon.weaponOverride = false;
-                if(heldfire)
+                if (heldfire)
                 {
                     firing = true;
                     baseWeapon.isFiring = true;
@@ -71,5 +73,11 @@ public class BurtFireMod : WeaponMod
         firing = false;
         heldfire = false;
         timer = 0;
+    }
+    
+    public override void RemoveMods()
+    {
+        base.RemoveMods();
+        baseWeapon.fireRate *= 1.5f; // Reset fire rate to original value
     }
 }

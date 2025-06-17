@@ -38,6 +38,26 @@ public class WeaponModManager : MonoBehaviour
         currentAssaultMod = null;
     }
 
+    public void RemoveAssutaltMod()
+    {
+        if (currentAssaultMod != null)
+        {
+            currentAssaultMod.RemoveMods();
+            currentAssaultMod = null;
+            assualtWeapon.weaponMod = null;
+        }
+    }
+
+    public void RemoveTechMod()
+    {
+        if (currentTechMod != null)
+        {
+            currentTechMod.RemoveMods();
+            currentTechMod = null;
+            techWeapon.weaponMod = null;
+        }
+    }
+
     public WeaponMod FindModByName(string name)
     {
         var mod = mods.Find(x => x.runMod.modName == name);

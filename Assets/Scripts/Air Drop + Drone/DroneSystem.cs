@@ -67,49 +67,57 @@ public class DroneSystem : MonoBehaviour
         currentType = droneType;
         minigun.gameObject.SetActive(false);
         minigun.autoTurret = false;
-        DroneControllerUI droneController = droneAbilityManager.droneControllerUI;
-
+        DroneControllerUI _droneControllerUI = droneAbilityManager.droneControllerUI;
+        
         int missileAmount = GetChargeInt(droneAbilityManager._droneAbilities[(int)droneType], _charges - 1);
-        droneController.missileAmount = missileAmount;
+        _droneControllerUI.missileAmount = missileAmount;
 
         switch (droneType)
         {
             case DroneType.BurstStrike:
-                droneController.missileAmount *= 6;
+                _droneControllerUI.missileLauncher.missilePayload = MissilePayload.Standard;
+                _droneControllerUI.missileAmount *= 6;
                 BattleMech.instance.droneController.MissileStrike(Ordanance.Burst);
                 active = true;
                 break;
             case DroneType.Repair:
+                airDropCrate.repairAmount = missileAmount;
                 InitCrate();
                 break;
             case DroneType.BombingRun:
+                _droneControllerUI.missileLauncher.missilePayload = MissilePayload.Standard;
                 StartCoroutine(MultipleBombingRuns(missileAmount));
                 active = true;
                 break;
             case DroneType.Guided:
-                BattleMech.instance.droneController.MissileStrike(Ordanance.Guided);
+                _droneControllerUI.missileLauncher.missilePayload = MissilePayload.Standard;
+                _droneControllerUI.MissileStrike(Ordanance.Guided);
                 active = true;
                 break;
             case DroneType.Napalm:
-                //BattleMech.instance.droneController.MissileStrike(Ordanance.Napalm);
-                //active = true;
+                _droneControllerUI.missileLauncher.missilePayload = MissilePayload.Napalm;
+                _droneControllerUI.MissileStrike(Ordanance.Burst);
+                active = true;
                 break;
             case DroneType.Mines:
-                BattleMech.instance.droneController.missileLauncher.LaunchMines(missileAmount);
+                _droneControllerUI.missileLauncher.LaunchMines(missileAmount);
                 active = true;
                 break;
             case DroneType.LittleBoy:
-                BattleMech.instance.droneController.LittleBoyLaunch();
+                _droneControllerUI.missileLauncher.missilePayload = MissilePayload.FatMan;
+                _droneControllerUI.LittleBoyLaunch();
                 active = true;
                 break;
             case DroneType.Companion:
                 PingClosestEnemy();
                 minigun.gameObject.SetActive(true);
                 stoppingDistance = 5;
+                companionTime = missileAmount;
                 break;
             case DroneType.Orbital:
                 PingClosestEnemy();
                 stoppingDistance = 0.5f;
+                orbitalStrike.beamDuration = missileAmount;
                 break;
 
         }
@@ -145,6 +153,7 @@ public class DroneSystem : MonoBehaviour
         hasCreate = true;
         airDropCrate.transform.SetParent(CratePivot);
         airDropCrate.crateType = currentType;
+        airDropCrate.gameObject.SetActive(true);
         airDropCrate.Init();
     }
 
@@ -303,7 +312,6 @@ public class DroneSystem : MonoBehaviour
                 break;
             case DroneType.Companion:
                 StartCoroutine(DelayFinishedAbility(companionTime));
-                minigun.damage = companionDamage;
                 minigun.autoTurret = true;
                 break;
         }

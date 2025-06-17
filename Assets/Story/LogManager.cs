@@ -13,26 +13,22 @@ public class LogManager : MonoBehaviour
     public LogUIManager logUIManager;
     public LogEntry currentLog;
     public DoTweenFade doTweenFade;
-
     // Set of discovered log IDs (Serialized to save progress)
     [SerializeField]
     private HashSet<string> discoveredLogs = new HashSet<string>();
     private HashSet<string> readLogs = new HashSet<string>();
-
     // Dictionary to cache logs by category for quick access
     private Dictionary<string, List<LogEntry>> logsByCategory = new Dictionary<string, List<LogEntry>>();
-
-    [InspectorButton("TestDiscoverLog")]
-    public bool logIdToDiscover; // Example log ID to discover
-
     private bool initialized = false;
+    public int discoveredLogsCount => discoveredLogs.Count;
+    
 
     private void OnEnable()
     {
         Initialize();
         LoadUI();
         currentLog = GetRandomUndiscoverdEntry();
-        if(logPrefab==null)
+        if (logPrefab == null)
         {
             return;
         }
