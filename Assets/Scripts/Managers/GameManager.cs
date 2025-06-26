@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public PlayerInput playerInput;
     public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;
-    public WeaponController altWeaponController;
     public AreaManager areaManager;
     public VoidPortalManager voidPortalManager;
     public VoidAreaManager voidAreaManager;
@@ -231,7 +230,6 @@ public class GameManager : MonoBehaviour
     {
         CrawlerSpawner.instance.EndBattle();
         gameActive = false;
-        altWeaponController.ClearWeaponInputs();
         Time.timeScale = 1;
         if(wonGame)
         {

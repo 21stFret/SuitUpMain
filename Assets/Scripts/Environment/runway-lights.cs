@@ -13,7 +13,6 @@ public class RunwayLightsController : MonoBehaviour
     [Header("Light Configuration")]
     [SerializeField] private List<LightPair> lightPairs = new List<LightPair>();
     [SerializeField] private float timeBetweenPairs = 0.5f;
-    [SerializeField] private float lightDuration = 1.0f;
     [SerializeField] private float intensityWhenOn = 1.0f;
     
     [Header("Animation Settings")]

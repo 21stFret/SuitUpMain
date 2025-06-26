@@ -18,20 +18,18 @@ public class PauseModUI : MonoBehaviour
 
     [Header("Dependencies")]
     public RunUpgradeManager runUpgradeManager;
-    public Transform modEntryParent;
     public Transform statEntryParent;
     public PauseMenu pauseMenu;
 
-    private List<ModEntry> modEntryPool = new List<ModEntry>();
+    public List<ModEntry> modEntryPool = new List<ModEntry>();
     public List<ModEntry> statEntryPool = new List<ModEntry>();
+    public List<ModEntry> placedEntries = new List<ModEntry>();
 
     private void Awake()
     {
-        for (int i = 0; i < modEntryParent.childCount; i++)
+        for (int i = 0; i < modEntryPool.Count; i++)
         {
-            ModEntry entry = modEntryParent.GetChild(i).GetComponent<ModEntry>();
-            modEntryPool.Add(entry);
-            entry.pauseModUI = this;
+            modEntryPool[i].pauseModUI = this;
         }
 
         for (int i = 0; i < statEntryParent.childCount; i++)
@@ -39,6 +37,7 @@ public class PauseModUI : MonoBehaviour
             ModEntry entry = statEntryParent.GetChild(i).GetComponent<ModEntry>();
             statEntryPool.Add(entry);
             entry.pauseModUI = this;
+            entry._mod = new RunMod(); // Initialize _mod to avoid null reference issues
         }
 
         modStats = new List<ModStats>();
@@ -47,6 +46,8 @@ public class PauseModUI : MonoBehaviour
 
     public void ShowPauseMods()
     {
+        ModUI.instance.OpenCircuitBoard(true);
+        /*
         // Deactivate all currently active entries
         for (int i = 0; i < statEntryPool.Count; i++)
         {
@@ -72,30 +73,40 @@ public class PauseModUI : MonoBehaviour
             entry.SetupMod(mod);
         }
         StartCoroutine(DelaySetSelected());
+        */
     }
 
-    public void UpdateModEntry(RunMod mod)
-    {
-        var entry = statEntryPool[runUpgradeManager.currentEquipedMods.Count];
-        if (entry != null)
-        {
-            entry.SetupMod(mod);
-        }
-        else
-        {
-            Debug.LogWarning($"No ModEntry found for mod: {mod.modName}");
-        }
-    }
-
-    public ModEntry FindModEntry(RunMod mod)
+    public ModEntry GetStatEntry(int modID)
     {
         for (int i = 0; i < statEntryPool.Count; i++)
         {
             ModEntry entry = statEntryPool[i];
-            if (entry._mod.ID == mod.ID)
+            if(entry._mod.ID == modID)
             {
                 entry.gameObject.SetActive(true);
-                entry.SetupMod(mod);
+                return entry;
+            }
+        }
+        
+        for(int i = 0; i < statEntryPool.Count; i++)
+        {
+            ModEntry entry = statEntryPool[i];
+            if (entry._mod.ID == -1)
+            {
+                entry.gameObject.SetActive(true);
+                return entry;
+            }
+        }
+        return null;
+    }
+
+    public ModEntry GetModEntry(ModCategory category)
+    {
+        foreach (ModEntry entry in modEntryPool)
+        {
+            if (entry._mod.modCategory == category)
+            {
+                entry.gameObject.SetActive(true);
                 return entry;
             }
         }
@@ -111,6 +122,7 @@ public class PauseModUI : MonoBehaviour
 
     public void HidePauseMods()
     {
+        ModUI.instance.CloseCircuitBoard();
         if (pauseModPanel != null)
             pauseModPanel.SetActive(false);
         if (infoPopup != null)

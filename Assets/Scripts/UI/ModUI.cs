@@ -30,7 +30,17 @@ public class ModUI : MonoBehaviour
     [Header("CircuitBoard")]
     public GameObject circuitBoardPanel;
 
-
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void OpenModUI(ModBuildType type)
     {
@@ -87,8 +97,9 @@ public class ModUI : MonoBehaviour
         GameManager.instance.SwapPlayerInput("Gameplay");
     }
 
-    public void OpenCircuitBoard()
+    public void OpenCircuitBoard(bool readOnly)
     {
+        UpgradeCircuitboardManager.instance.CloseMenuButton.gameObject.SetActive(!readOnly);
         circuitBoardPanel.SetActive(true);
         GameManager.instance.SwapPlayerInput("UI");
         eventSystem.SetSelectedGameObject(UpgradeCircuitboardManager.instance.firstSelectedChipSlot);

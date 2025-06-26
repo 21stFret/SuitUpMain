@@ -111,8 +111,7 @@ public class StatMultiplierManager : MonoBehaviour
         if (statDictionary.TryGetValue(statType, out Stat stat))
         {
             stat.RemoveMultiplier(percentageIncrease);
-            float value = GetCurrentValue(statType);
-            SetStat(statType, value);
+            SetStat(statType, percentageIncrease);
         }
         else
         {
@@ -126,7 +125,7 @@ public class StatMultiplierManager : MonoBehaviour
         {
             case StatType.Assault_Damage:
                 // DOne in targetHealth
-                Debug.Log($"MWD Increased by {percentageIncrease}");
+                Debug.Log($"MWD bonuns is {percentageIncrease}");
                 break;
             case StatType.Tech_Damage:
                 // DOne in targetHealth

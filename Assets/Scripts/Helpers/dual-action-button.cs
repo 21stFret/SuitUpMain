@@ -30,7 +30,11 @@ public class DualActionButton : MonoBehaviour, ISelectHandler, IDeselectHandler,
     // Called when button is selected via joystick navigation
     public void OnSelect(BaseEventData eventData)
     {
-        if((bool)inputTracker?.usingMouse)
+        if(inputTracker == null)
+        {
+            inputTracker = InputTracker.instance;
+        }
+        if (inputTracker.usingMouse)
         {
             return;
         }

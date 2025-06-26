@@ -55,9 +55,12 @@ public class MYCharacterController : MonoBehaviour
     public BattleMech battleMech;
     [SerializeField]
     private bool canMove;
-    private float savedDodgeDuration;
-    private float savedDodgeCooldown;
-    private float savedDodgeForce;
+    [HideInInspector]
+    public float savedDodgeDuration;
+    [HideInInspector]
+    public float savedDodgeCooldown;
+    [HideInInspector]
+    public float savedDodgeForce;
 
     [Header("Collision Prevention")]
     [SerializeField] private float collisionCheckDistance = 1f;
