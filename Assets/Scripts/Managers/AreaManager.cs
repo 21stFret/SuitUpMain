@@ -100,8 +100,6 @@ public class AreaManager : MonoBehaviour
                 randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
                 roomPrefab = roomPrefabs[randomIndex];
             }
-            int NinetyAngle = Random.Range(0, 2) * 180;
-            roomPrefab.transform.rotation = Quaternion.Euler(0, NinetyAngle, 0);
             area = roomPrefab.GetComponent<EnvironmentArea>();
             if(directionalDaylight!=null)
             {
@@ -136,7 +134,7 @@ public class AreaManager : MonoBehaviour
     public void LoadDataLog()
     {
         int randomIndex = Random.Range(0, 100);
-        if (randomIndex > 20)
+        if (randomIndex > 10)
         {
             dataLogSpawner.HideDataLog();
             return;

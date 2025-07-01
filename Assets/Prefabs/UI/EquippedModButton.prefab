@@ -93,8 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modIcon: {fileID: 5211194212551893579}
   modRaityGlow: {fileID: 5169315414265691645}
-  conector: {fileID: 5187509257304657880}
-  popupOffset: {x: 400, y: -170, z: 0}
+  popupOffset: {x: 0, y: -100, z: 0}
   pauseModUI: {fileID: 0}
   _mod:
     modCategory: 0
@@ -106,7 +105,11 @@ MonoBehaviour:
     modifiers: []
     rarity: 0
     modValues: []
+    ID: -1
   flipInfoWIndow: 0
+  _init: 0
+  chipSlotUI: {fileID: 0}
+  customHoverButton: {fileID: 0}
 --- !u!114 &7004208173175001869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

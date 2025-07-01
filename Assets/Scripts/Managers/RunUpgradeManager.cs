@@ -44,20 +44,12 @@ public class RunUpgradeManager : MonoBehaviour
     public RunModifierDataReader runModifierDataReader;
     [HideInInspector]
     public List<ModBuildType> randomlySelectedBuilds = new List<ModBuildType>();
-
     private BattleMech BattleMech;
-
-    [InspectorButton("OnButtonClicked")]
-    public bool ReadData;
-
     public ModCategory OverideCategory;
-
     private ModBuildType currentBuildType;
-
     public int RerollCost;
-
     public bool freeReroll = false;
-    public int runningModID = 0;
+    private int runningModCount = 0;
 
     public void SelectNextBuilds()
     {
@@ -72,11 +64,6 @@ public class RunUpgradeManager : MonoBehaviour
             }
             randomlySelectedBuilds.Add(build);
         }
-    }
-
-    private void OnButtonClicked()
-    {
-        LoadData();
     }
 
     public void LoadData()
@@ -97,7 +84,6 @@ public class RunUpgradeManager : MonoBehaviour
 
     public void GenerateListOfUpgradesFromAll(ModBuildType build)
     {
-        Debug.LogWarning("Generating Mods for: " + build);
         listMods.Clear();
         int maxAttempts = 100; // Prevent infinite loop
         currentBuildType = build;
@@ -117,10 +103,6 @@ public class RunUpgradeManager : MonoBehaviour
             case ModBuildType.AGILITY:
                 selectedMods = new List<RunMod>(runModsAgility);
                 break;
-            case ModBuildType.UPGRADE:
-                selectedMods = new List<RunMod>(runModsWeaponUpgrades);
-                selectedMods = RandomiseModType(selectedMods);
-                break;
             default:
                 break;
         }
@@ -131,8 +113,9 @@ public class RunUpgradeManager : MonoBehaviour
         {
             if (selectedMods.Count > 0)
             {
-                RunMod mod = new RunMod();
-                mod = selectedMods[Random.Range(0, selectedMods.Count)];
+                RunMod originalMod = selectedMods[Random.Range(0, selectedMods.Count)];
+
+                RunMod mod = CreateModCopy(originalMod);
 
                 if (listMods.Contains(mod))
                 {
@@ -165,49 +148,13 @@ public class RunUpgradeManager : MonoBehaviour
                         continue;
                     }
                 }
-                
-                if (mod.modCategory == ModCategory.ALT)
-                {
-                    mod = FilterAltWeaponMods(selectedMods);
-                }
-                if (mod.modCategory == ModCategory.MAIN)
-                {
-                    mod = FilterMainWeaponMods(selectedMods);
-                }
 
                 SetModRarity(mod);
 
-                if (mod.modCategory != ModCategory.STATS)
-                {
-                    if (currentEquipedMods.Contains(mod))
-                    {
-                        var _mod = currentEquipedMods.Find(m => m.modName == mod.modName);
-                        if (_mod.rarity >= mod.rarity)
-                        {
-                            maxAttempts--;
-                            Debug.Log($"Already equipped a better or same rarity of this Mod. Load a new Mod instead.");
-                            continue;
-                        }
-                    }
-                }
-
-                if (listMods.Contains(mod))
-                {
-                    selectedMods.Remove(mod);
-                    maxAttempts--;
-                    continue;
-                }
-
-                if(mod == null)
-                {
-                    Debug.LogWarning($"No mod found for {build}");
-                    maxAttempts--;
-                    continue;
-                }
-
-                mod.ID = runningModID++;
+                mod.ID = runningModCount;
+                runningModCount++;
                 listMods.Add(mod);
-
+                selectedMods.Remove(originalMod);
                 i++;
             }
             else
@@ -218,77 +165,7 @@ public class RunUpgradeManager : MonoBehaviour
             maxAttempts--;
         }
 
-        if (listMods.Count < 3)
-        {
-            Debug.LogWarning($"Unable to generate 3 unique mods. Only generated {listMods.Count}");
-        }
-
         ModUI.OpenModUI(build);
-    }
-
-    private List<RunMod> RandomiseModType(List<RunMod> mods)
-    {
-        ModCategory category = (ModCategory)Random.Range(0, 4);
-        print("Selected Category: " + category);
-        List<RunMod> mod = mods.FindAll(mod => mod.modCategory == category);
-        if (mod.Count != 0)
-        {
-            return mod;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private List<RunMod> GetModsForBuild(ModBuildType build, ModCategory category)
-    {
-        switch (build)
-        {
-            case ModBuildType.ASSAULT:
-                return runModsAssault.FindAll(mod => mod.modCategory == category);
-            case ModBuildType.TECH:
-                return runModsTech.FindAll(mod => mod.modCategory == category);
-            case ModBuildType.TANK:
-                return runModsTank.FindAll(mod => mod.modCategory == category);
-            case ModBuildType.AGILITY:
-                return runModsAgility.FindAll(mod => mod.modCategory == category);
-            default:
-                Debug.LogError($"Unknown ModBuildType: {build}");
-                return new List<RunMod>();
-        }
-    }
-
-    private RunMod FilterAltWeaponMods(List<RunMod> mods)
-    {
-        List<RunMod> mod = mods.FindAll(mod => mod.weaponType == WeaponsManager.instance.currentAltWeapon.weaponType);
-        if (mod.Count != 0)
-        {
-            var _mod = mod[Random.Range(0, mod.Count)];
-            _mod.weaponType = WeaponsManager.instance.currentAltWeapon.weaponType;
-            _mod.modCategory = ModCategory.ALT;
-            return _mod;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    private RunMod FilterMainWeaponMods(List<RunMod> mods)
-    {
-        List<RunMod> mod = mods.FindAll(mod => mod.weaponType == WeaponsManager.instance.currentMainWeapon.weaponType);
-        if (mod.Count != 0)
-        {
-            var _mod = mod[Random.Range(0, mod.Count)];
-            _mod.weaponType = WeaponsManager.instance.currentMainWeapon.weaponType;
-            _mod.modCategory = ModCategory.MAIN;
-            return _mod;
-        }
-        else
-        {
-            return null;
-        }
     }
 
     private void SetModRarity(RunMod mod)
@@ -307,26 +184,43 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
+    public void SetModRaritybyInt(RunMod mod, int rarity)
+    {
+        if (rarity < 0 || rarity > 2)
+        {
+            Debug.LogError("Rarity must be between 0 and 2");
+            return;
+        }
+        mod.rarity = rarity;
+
+        for (int j = 0; j < mod.modifiers.Count; j++)
+        {
+            mod.modifiers[j].statValue = mod.modValues[j].values[mod.rarity];
+        }
+    }
+
+    #region Button Methods
+
+    // Triggers when a mod button is clicked in the UI
     public void SelectModButton(int index)
     {
         AudioManager.instance.PlaySFX(SFX.Confirm);
         var mod = listMods[index];
         UpgradeCircuitboardManager.instance.currentRunMod = mod;
-        UpgradeCircuitboardManager.instance.UpdateModEntry(mod);
         ModUI.CloseModUI();
-        ModUI.OpenCircuitBoard();
+        ModUI.OpenCircuitBoard(false);
         GameManager.instance.SpawnPortalsToNextRoom();
     }
 
     public void ReRollMods()
     {
-        if(freeReroll)
+        if (freeReroll)
         {
             GenerateListOfUpgradesFromAll(currentBuildType);
             AudioManager.instance.PlaySFX(SFX.Confirm);
             return;
         }
-        if(PlayerProgressManager.instance.crawlerParts>=RerollCost)
+        if (PlayerProgressManager.instance.crawlerParts >= RerollCost)
         {
             GenerateListOfUpgradesFromAll(currentBuildType);
             CashCollector.instance.AddCrawlerPart(-RerollCost);
@@ -348,6 +242,7 @@ public class RunUpgradeManager : MonoBehaviour
         ModUI.CloseModUI();
         GameManager.instance.SpawnPortalsToNextRoom();
     }
+    #endregion
 
     public void EnableModSelection(RunMod mod)
     {
@@ -385,7 +280,7 @@ public class RunUpgradeManager : MonoBehaviour
 
         currentEquipedMods.Add(mod);
     }
-    
+
     public void DisableModSelection(RunMod mod)
     {
         switch (mod.modCategory)
@@ -398,21 +293,12 @@ public class RunUpgradeManager : MonoBehaviour
                 break;
             case ModCategory.PULSE:
                 pulseShockwave.ResetMods();
-                for (int i = 0; i < mod.modifiers.Count; i++)
-                {
-                    var modifier = mod.modifiers[i];
-                    pulseShockwave.ApplyMod(modifier.statType, modifier.statValue);
-                }
                 break;
             case ModCategory.DASH:
-                for (int i = 0; i < mod.modifiers.Count; i++)
-                {
-                    var modifier = mod.modifiers[i];
-                    BattleMech.myCharacterController.dashModsManager.ApplyMod(modifier.statType, modifier.statValue);
-                }
+                BattleMech.myCharacterController.dashModsManager.RemoveMods();
                 break;
             case ModCategory.STATS:
-                ApplyMod(mod);
+                RemoveMod(mod);
                 break;
         }
 
@@ -446,6 +332,15 @@ public class RunUpgradeManager : MonoBehaviour
         // Implement removal logic for other mod categories if needed
     }
 
+    public Dictionary<StatType, float> GetAllCurrentStats()
+    {
+        return statManager.GetAllCurrentValues();
+    }
+
+    public Dictionary<StatType, float> GetAllCurrentMultipliers()
+    {
+        return statManager.GetAllCurrentMultipliers();
+    }
     public void ResetAllMods()
     {
         foreach (var mod in currentEquipedMods)
@@ -461,23 +356,9 @@ public class RunUpgradeManager : MonoBehaviour
         }
     }
 
-    // This method can be called to recalculate all stats if needed
-    public void RecalculateAllStats()
-    {
-        ResetAllMods();
-        foreach (var mod in currentEquipedMods)
-        {
-            if (mod.modCategory == ModCategory.STATS)
-            {
-                ApplyMod(mod);
-            }
-            // Re-apply other mod types if necessary
-        }
-    }
-
     public RunMod HasModByName(string ModName)
     {
-        if(currentEquipedMods.Any(mod => mod.modName == ModName))
+        if (currentEquipedMods.Any(mod => mod.modName == ModName))
         {
             //Debug.Log("Mod is equipped");
         }
@@ -498,6 +379,59 @@ public class RunUpgradeManager : MonoBehaviour
         return runModsWeaponUpgrades.Find(mod => mod.modName == ModName);
     }
 
+    public List<RunMod> GetWeaponModsByCategory(ModCategory category)
+    {
+        List<RunMod> _runModsWeaponUpgrades = runModsWeaponUpgrades.FindAll(mod => mod.modCategory == category);
+        return _runModsWeaponUpgrades;
+    }
+    
+    public List<RunMod> FilterModsbyWeapon(List<RunMod> mods, WeaponType weaponType)
+    {
+        return mods.Where(mod => mod.weaponType == weaponType).ToList();
+    }
+
+    public List<RunMod> FilterModsbyBuildType(List<RunMod> mods, ModBuildType buildType)
+    {
+        return mods.Where(mod => mod.modBuildType == buildType).ToList();
+    }
+
+    private RunMod CreateModCopy(RunMod original)
+    {
+        RunMod copy = new RunMod();
+        copy.modCategory = original.modCategory;
+        copy.modBuildType = original.modBuildType;
+        copy.weaponType = original.weaponType;
+        copy.sprite = original.sprite;
+        copy.modName = original.modName;
+        copy.modDescription = original.modDescription;
+        copy.rarity = original.rarity;
+        copy.ID = -1; // Will be set later
+
+        // Deep copy modifiers
+        copy.modifiers = new List<Modifier>();
+        foreach (var modifier in original.modifiers)
+        {
+            copy.modifiers.Add(new Modifier
+            {
+                statType = modifier.statType,
+                statValue = modifier.statValue
+            });
+        }
+
+        // Deep copy modValues
+        copy.modValues = new List<ModValues>();
+        foreach (var modValue in original.modValues)
+        {
+            ModValues newModValue = new ModValues();
+            for (int i = 0; i < modValue.values.Length; i++)
+            {
+                newModValue.values[i] = modValue.values[i];
+            }
+            copy.modValues.Add(newModValue);
+        }
+
+        return copy;
+    }
 }
 
 [System.Serializable]

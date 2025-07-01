@@ -36,7 +36,8 @@ public class DashModsManager : MonoBehaviour
         canDamage = false;
         hologram = false;
         characterController.ResetStats();
-        float percent = (Mathf.Abs(value) / 100);
+        damage = 0;
+        float percent = Mathf.Abs(value) / 100;
         switch (type)
         {
             case StatType.Assault:
@@ -65,6 +66,17 @@ public class DashModsManager : MonoBehaviour
                 time = value;
                 break;
         }
+    }
+
+    public void RemoveMods()
+    {
+        speedBoost = 0;
+        invincible = false;
+        canDamage = false;
+        hologram = false;
+        characterController.ResetStats();
+        damage = 0;
+        time = 0;
     }
 
     public void UseMod()

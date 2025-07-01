@@ -34,16 +34,6 @@ public class StatMultiplierManager : MonoBehaviour
 
         private void UpdateCurrentValue()
         {
-            // this method accumlates the current value by multiplying the base value by each multiplier
-            /*
-            currentValue = baseValue;
-            foreach (float multiplier in multipliers)
-            {
-                currentValue *= (1 + multiplier);
-            }
-            */
-
-            //This method adds the mulitpleis up and then applyies it to the base value
             currentValue = baseValue;
             float totalMultiplier = 1;
             foreach (float multiplier in multipliers)
@@ -57,6 +47,11 @@ public class StatMultiplierManager : MonoBehaviour
         {
             baseValue = value;
             UpdateCurrentValue();
+        }
+
+        public float GetCurrentMultiplier()
+        {
+            return currentValue / baseValue;
         }
     }
 
@@ -92,6 +87,16 @@ public class StatMultiplierManager : MonoBehaviour
         return currentValues;
     }
 
+    public Dictionary<StatType, float> GetAllCurrentMultipliers()
+    {
+        Dictionary<StatType, float> currentMultipliers = new Dictionary<StatType, float>();
+        foreach (var stat in stats)
+        {
+            currentMultipliers[stat.type] = stat.GetCurrentMultiplier();
+        }
+        return currentMultipliers;
+    }
+
     public void AddMultiplier(StatType statType, float percentageIncrease)
     {
         if (statDictionary.TryGetValue(statType, out Stat stat))
@@ -111,8 +116,7 @@ public class StatMultiplierManager : MonoBehaviour
         if (statDictionary.TryGetValue(statType, out Stat stat))
         {
             stat.RemoveMultiplier(percentageIncrease);
-            float value = GetCurrentValue(statType);
-            SetStat(statType, value);
+            SetStat(statType, percentageIncrease);
         }
         else
         {
@@ -126,7 +130,7 @@ public class StatMultiplierManager : MonoBehaviour
         {
             case StatType.Assault_Damage:
                 // DOne in targetHealth
-                Debug.Log($"MWD Increased by {percentageIncrease}");
+                Debug.Log($"MWD bonuns is {percentageIncrease}");
                 break;
             case StatType.Tech_Damage:
                 // DOne in targetHealth

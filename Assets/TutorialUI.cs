@@ -10,6 +10,7 @@ public class TutorialUI : MonoBehaviour
     public MechHealth mechHealth;
     public GameObject mechHealthObject;
     public GameObject mechFuelObject;
+    public GameObject mechDroneObject;
     public WeaponFuelManager weaponFuelManager;
     public MechLoader mechLoadOut;
     public ConnectWeaponHolderToManager weaponHolder;

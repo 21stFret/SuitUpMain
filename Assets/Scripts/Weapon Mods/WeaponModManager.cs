@@ -60,8 +60,15 @@ public class WeaponModManager : MonoBehaviour
 
     public WeaponMod FindModByName(string name)
     {
-        var mod = mods.Find(x => x.runMod.modName == name);
-        return mod;
+        for (int i = 0; i < mods.Count; i++)
+        {
+            if (mods[i].runMod.modName == name)
+            {
+                mods[i].runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(name);
+                return mods[i];
+            }
+        }
+        return null;
     }
 
     public void EquipTechWeaponMod(WeaponMod mod)

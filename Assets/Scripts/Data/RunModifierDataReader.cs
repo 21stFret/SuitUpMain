@@ -6,6 +6,7 @@ public class RunModifierDataReader : MonoBehaviour
 {
     public void LoadFromExcell(RunUpgradeManager runUpgradeManager)
     {
+        //int statCount = 0;
         List<Dictionary<string, object>> data = CSVReader.Read("Suit Up Data - Mods");
         for (var i = 0; i < data.Count; i++)
         {
@@ -15,8 +16,7 @@ public class RunModifierDataReader : MonoBehaviour
 
             switch (buildType)
             {
-                case "ASSAULT":
-                case "ASSAULT ": // Handle extra space
+                case "ASSAULT": 
                     runMods = runUpgradeManager.runModsAssault;
                     break;
                 case "TECH":
@@ -193,6 +193,8 @@ public class RunModifierDataReader : MonoBehaviour
             }
             else
             {
+                //rMod.ID = statCount;
+                //statCount++;
                 runMods.Add(rMod);
             }
         }

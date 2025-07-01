@@ -17,13 +17,13 @@ public class HeavyGunsMod : WeaponMod
     public override void Fire()
     {
         base.Fire();
-        myCharacterController.ToggleCanMove(false);
+        myCharacterController.slowedAmount += myCharacterController.maxSpeed * 0.5f; // Slow down the character by 50%
     }
 
     // Stop firing 
     public override void Stop()
     {
         base.Stop();
-        myCharacterController.ToggleCanMove(true);
+        myCharacterController.slowedAmount -= myCharacterController.maxSpeed * 0.5f;
     }
 }

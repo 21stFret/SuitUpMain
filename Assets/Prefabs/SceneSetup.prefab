@@ -26911,7 +26911,6 @@ MonoBehaviour:
   weaponFuelText: {fileID: 5470477178418880381}
   fuelBar: {fileID: 2042783745425026447}
   bonusFuelBar: {fileID: 7243246991161432297}
-  fuelImage: {fileID: 7642371854443127219}
 --- !u!1 &6487039145308564089
 GameObject:
   m_ObjectHideFlags: 0
@@ -30321,9 +30320,11 @@ MonoBehaviour:
   rarityText: {fileID: 7929965898410036948}
   modStats: []
   runUpgradeManager: {fileID: 0}
-  modEntryParent: {fileID: 6786595482226408773}
   statEntryParent: {fileID: 8040234873214513644}
   pauseMenu: {fileID: 0}
+  modEntryPool: []
+  statEntryPool: []
+  placedEntries: []
 --- !u!1 &8420803889055770692
 GameObject:
   m_ObjectHideFlags: 0
@@ -31514,6 +31515,7 @@ MonoBehaviour:
   modNameText: {fileID: 0}
   descriptionText: {fileID: 0}
   rarityText: {fileID: 0}
+  circuitBoardPanel: {fileID: 0}
 --- !u!1 &9116373839218845197
 GameObject:
   m_ObjectHideFlags: 0
