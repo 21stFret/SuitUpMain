@@ -37,7 +37,7 @@ public class DashModsManager : MonoBehaviour
         hologram = false;
         characterController.ResetStats();
         damage = 0;
-        float percent = (Mathf.Abs(value) / 100);
+        float percent = Mathf.Abs(value) / 100;
         switch (type)
         {
             case StatType.Assault:

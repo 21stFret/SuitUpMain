@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>
         {
         { StatType.Health, BattleMech.instance.targetHealth.maxHealth },
-        { StatType.Assault_Damage, BattleMech.instance.weaponController.mainWeaponEquiped.damage},
+        { StatType.Assault_Damage, BattleMech.instance.weaponController.mainWeaponEquiped.damage },
         { StatType.Speed, BattleMech.instance.myCharacterController.Speed },
         { StatType.Fire_Rate, BattleMech.instance.weaponController.mainWeaponEquiped.fireRate },
         { StatType.Tech_Damage, BattleMech.instance.weaponController.altWeaponEquiped.damage},
@@ -94,6 +94,23 @@ public class GameManager : MonoBehaviour
         { StatType.Dash_Cooldown, BattleMech.instance.myCharacterController.dashCooldown},
         { StatType.Pulse_Range, BattleMech.instance.pulseShockwave.range},
         { StatType.Charge_Rate, BattleMech.instance.droneController.airDropTimer.chargeRate},
+        { StatType.Seconds, 0 },
+        { StatType.Heals, 0 },
+        { StatType.Stun_Time, 0 },
+        { StatType.Range, 0 },
+        { StatType.Spread, 0 },
+        { StatType.Extra_Shot, 0 },
+        { StatType.Pierce, 0 },
+        { StatType.Bounce, 0 },
+        { StatType.Force, 0 },
+        { StatType.Split, 0 },
+        { StatType.Chains, 0 },
+        { StatType.Reload_Time, 0 },
+        { StatType.Shield_Health, 0 },
+        { StatType.Unique, 0 },
+        { StatType.Assault, 0 },
+        { StatType.Tech, 0 },
+        { StatType.Invincible, 0 }
         };
 
         statMultiplierManager.LoadBaseValues(baseStats);

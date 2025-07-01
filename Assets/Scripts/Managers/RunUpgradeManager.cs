@@ -298,7 +298,7 @@ public class RunUpgradeManager : MonoBehaviour
                 BattleMech.myCharacterController.dashModsManager.RemoveMods();
                 break;
             case ModCategory.STATS:
-                ApplyMod(mod);
+                RemoveMod(mod);
                 break;
         }
 
@@ -332,6 +332,15 @@ public class RunUpgradeManager : MonoBehaviour
         // Implement removal logic for other mod categories if needed
     }
 
+    public Dictionary<StatType, float> GetAllCurrentStats()
+    {
+        return statManager.GetAllCurrentValues();
+    }
+
+    public Dictionary<StatType, float> GetAllCurrentMultipliers()
+    {
+        return statManager.GetAllCurrentMultipliers();
+    }
     public void ResetAllMods()
     {
         foreach (var mod in currentEquipedMods)
@@ -379,6 +388,11 @@ public class RunUpgradeManager : MonoBehaviour
     public List<RunMod> FilterModsbyWeapon(List<RunMod> mods, WeaponType weaponType)
     {
         return mods.Where(mod => mod.weaponType == weaponType).ToList();
+    }
+
+    public List<RunMod> FilterModsbyBuildType(List<RunMod> mods, ModBuildType buildType)
+    {
+        return mods.Where(mod => mod.modBuildType == buildType).ToList();
     }
 
     private RunMod CreateModCopy(RunMod original)

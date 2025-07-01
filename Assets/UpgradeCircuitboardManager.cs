@@ -31,6 +31,9 @@ public class UpgradeCircuitboardManager : MonoBehaviour
     public ModEntry _modIcon;
     public Button CloseMenuButton;
     public bool readOnly;
+    public GameObject statInfoPanel;
+    public List<StatInfoUI> statInfoUI;
+    public GameObject rootNodeHighlight;
 
     private void Start()
     {
@@ -50,7 +53,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         ineteractSlotAction.action.performed += InteractWithSlot;
         CloseMenuButton.gameObject.SetActive(!readOnly);
         CloseMenuButton.enabled = true;
-        if(currentRunMod != null)
+        if (currentRunMod != null)
         {
             CloseMenuButton.enabled = false;
         }
@@ -64,7 +67,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         }
         if (currentChipSlot == null)
         {
-            Debug.LogError("No chip slot selected. Please select a chip slot before interacting.");
+            //Debug.LogError("No chip slot selected. Please select a chip slot before interacting.");
             return;
         }
         currentChipSlot.InteractWithSlot();
@@ -72,29 +75,69 @@ public class UpgradeCircuitboardManager : MonoBehaviour
 
     public void SelectChipSlot(ChipSlotUI chipSlot)
     {
+        currentChipSlot = chipSlot;
+    }
+
+    public void OnCloseCuircuitBoard()
+    {
         if (currentChipSlot != null)
         {
             currentChipSlot.chipSlotHighlight.SetActive(false);
         }
-        currentChipSlot = chipSlot;
-        currentChipSlot.chipSlotHighlight.SetActive(true);
-    }
-
-    public void RemoveSelectedShipSlot()
-    {
-        if (currentChipSlot == null)
+        if (_modIcon != null)
         {
-            Debug.LogError("No chip slot selected to remove.");
-            return;
+            _modIcon.OnHoverExit();
         }
         currentChipSlot = null;
+        _modIcon = null;
+        CloseMenuButton.enabled = true;
+    }
+
+    public void ShowCurrentStats()
+    {
+        statInfoPanel.SetActive(true);
+        rootNodeHighlight.SetActive(true);
+        var allCurrentMultipliers = runUpgradeManager.GetAllCurrentMultipliers();
+        
+        foreach (var statInfo in statInfoUI)
+        {
+            statInfo.gameObject.SetActive(false);
+        }
+        
+        for (int i = 0; i < allCurrentMultipliers.Count && i < statInfoUI.Count; i++)
+        {
+            StatInfoUI statInfo = statInfoUI[i];
+            if (statInfo == null)
+            {
+                Debug.LogError("StatInfoUI is null for index: " + i);
+                continue;
+            }
+            
+            float statValue = allCurrentMultipliers[(StatType)i];
+            
+            // Skip if value is 0, NaN, or infinity
+            if (statValue == 0 || float.IsNaN(statValue) || float.IsInfinity(statValue))
+            {
+                continue;
+            }
+            
+            statInfo.gameObject.SetActive(true);
+            statInfo.UpdateStatValue(statValue * 100); // Assuming you want to show percentage
+            statInfo.UpdateStatName(((StatType)i).ToString().Replace("_", " "));
+        }
+    }
+
+    public void HideCurrentStats()
+    {
+        statInfoPanel.SetActive(false);
+        rootNodeHighlight.SetActive(false);
     }
 }
 
 [Serializable]
 public class ComboLock
 {
-    public ModBuildType[] buildLocks;
+    public List<ModBuildType> buildLocks;
     public bool isLocked;
 
     public void ResetLock()
@@ -104,33 +147,44 @@ public class ComboLock
 
     public bool TryUnlock(List<ModBuildType> modTypes)
     {
-        int matchCount = 0;
-        foreach (var type in modTypes)
+        // Check if both lists have the same count first
+        if (buildLocks.Count != modTypes.Count)
+            return false;
+        
+        // Create sorted copies and compare
+        var sortedRequired = new List<ModBuildType>(buildLocks);
+        var sortedProvided = new List<ModBuildType>(modTypes);
+        
+        sortedRequired.Sort();
+        sortedProvided.Sort();
+        
+        // Compare sorted lists element by element
+        for (int i = 0; i < sortedRequired.Count; i++)
         {
-            if (Array.Exists(buildLocks, element => element == type))
-            {
-                matchCount++;
-            }
+            if (sortedRequired[i] != sortedProvided[i])
+                return false;
         }
-        if (matchCount >= buildLocks.Length)
-        {
-            isLocked = false;
-            return true;
-        }
-        return false;
+        
+        isLocked = false;
+        return true;
     }
 
     public void CreateRandomLock()
     {
         int randomModType = UnityEngine.Random.Range(0, 4);
-        buildLocks = new ModBuildType[4];
-        for (int i = 0; i < buildLocks.Length; i++)
+        buildLocks.Clear();
+        for (int i = 0; i < 4; i++)
         {
-            buildLocks[i] = (ModBuildType)randomModType;
+            buildLocks.Add((ModBuildType)randomModType);
             randomModType = (randomModType + UnityEngine.Random.Range(0, 4)) % 4; // Ensure variety in mod types
         }
         ResetLock();
         isLocked = true;
     }
+    public List<ModBuildType> GetRequiredCombination()
+    {
+        return buildLocks; // Or whatever your field is called
+    }
+
 
 }

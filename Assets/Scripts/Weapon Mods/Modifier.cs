@@ -29,7 +29,7 @@ public enum StatType
     Split,
     Chains,
     Reload_Time,
-    Shield_Health,
+    Shield_Health
 
 }
 

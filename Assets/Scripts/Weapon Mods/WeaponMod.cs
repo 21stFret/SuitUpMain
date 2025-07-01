@@ -29,16 +29,23 @@ public class WeaponMod : MonoBehaviour
 
     public virtual void RemoveMods()
     {
-        if(runUpgradeManager == null)
+        if (runUpgradeManager == null)
         {
             runUpgradeManager = FindObjectOfType<RunUpgradeManager>();
         }
-        if(runMod != null)
+        if (runMod != null)
         {
             if (runMod.modifiers.Count > 0)
             {
                 runUpgradeManager.RemoveMod(runMod);
             }
+        }
+        if (baseWeapon != null)
+        {
+            baseWeapon.weaponOverride = false;
+            baseWeapon.weaponMod = null;
+            baseWeapon.damage = damage;
+            baseWeapon.range = range;
         }
     }
 

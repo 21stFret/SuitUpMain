@@ -293,6 +293,7 @@ public class PauseMenu : MonoBehaviour
         backImage.SetActive(true);
         if (value)
         {
+            lastSelectedButton = eventSystem.currentSelectedGameObject;
             pauseModUI.ShowPauseMods();
         }
         else
@@ -307,10 +308,7 @@ public class PauseMenu : MonoBehaviour
             OpenPauseMenu();
             return;
         }
-        lastSelectedButton = eventSystem.currentSelectedGameObject;
         SetOnBackAction(() => { ToggleModMenu(false); });
-        eventSystem.SetSelectedGameObject(modSelectedButton);
-        modSelectedButton.GetComponent<ModEntry>().OnHoverEnter();
     }
 
     public void QuickOpenDataLogMenu(InputAction.CallbackContext context)

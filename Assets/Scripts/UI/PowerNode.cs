@@ -14,6 +14,7 @@ public class PowerNode : MonoBehaviour
     private bool _isInitialized = false;
     public ModEntry modEntry;
     public LockUIPopup lockUIPopup;
+    public GameObject nodeHighlight;
 
     public void Start()
     {
@@ -39,13 +40,67 @@ public class PowerNode : MonoBehaviour
         if (comboLocks.Count == 0)
         {
             Debug.LogWarning("No combo locks available to create random locks.");
-            return; // No combo locks to process
+            return;
         }
+
+        List<HashSet<ModBuildType>> usedCombinations = new List<HashSet<ModBuildType>>();
+        int maxAttempts = 100; // Prevent infinite loop
 
         foreach (var lockItem in comboLocks)
         {
-            lockItem.CreateRandomLock();
+            bool uniqueCombinationFound = false;
+            int attempts = 0;
+
+            while (!uniqueCombinationFound && attempts < maxAttempts)
+            {
+                // Create the random lock first
+                lockItem.CreateRandomLock();
+                
+                // Get the combination from the lock (you'll need to add a method to ComboLock to get this)
+                HashSet<ModBuildType> currentCombination = GetLockCombination(lockItem);
+                
+                // Check if this combination already exists
+                bool isDuplicate = false;
+                foreach (var existingCombination in usedCombinations)
+                {
+                    if (currentCombination.SetEquals(existingCombination))
+                    {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                
+                if (!isDuplicate)
+                {
+                    usedCombinations.Add(currentCombination);
+                    uniqueCombinationFound = true;
+                }
+                
+                attempts++;
+            }
+            
+            if (!uniqueCombinationFound)
+            {
+                Debug.LogWarning($"Could not generate unique combination for lock after {maxAttempts} attempts.");
+            }
         }
+    }
+
+    // Helper method to get the combination from a ComboLock
+    private HashSet<ModBuildType> GetLockCombination(ComboLock comboLock)
+    {
+        HashSet<ModBuildType> combination = new HashSet<ModBuildType>();
+        
+        // You'll need to expose the lock combination from ComboLock class
+        // This assumes ComboLock has a property or method to get its required combination
+        List<ModBuildType> lockCombination = comboLock.GetRequiredCombination();
+        
+        foreach (var buildType in lockCombination)
+        {
+            combination.Add(buildType);
+        }
+        
+        return combination;
     }
 
     private void SelectRandomMods()
@@ -85,7 +140,7 @@ public class PowerNode : MonoBehaviour
 
         for (int i = 0; i < comboLocks.Count; i++)
         {
-            var modIcon = UpgradeCircuitboardManager.instance.pauseModUI.GetModEntry(modCategory);
+            var modIcon = modEntry;
             var lockItem = comboLocks[i];
             if (lockItem.TryUnlock(modTypes))
             {
@@ -102,6 +157,7 @@ public class PowerNode : MonoBehaviour
 
                 empowered = true;
                 RunMod runMod = runMods[i];
+                //RunMod runMod = _runUpgradeManager.FilterModsbyBuildType(runMods, modTypes[i])[0];
                 _runUpgradeManager.SetModRaritybyInt(runMod, rarity);
                 _runUpgradeManager.EnableModSelection(runMod);
                 currentRunMod = runMod;
@@ -127,6 +183,7 @@ public class PowerNode : MonoBehaviour
             if (empowered)
             {
                 GameManager.instance.runUpgradeManager.DisableModSelection(currentRunMod);
+                currentRunMod = null;
             }
             empowered = false;
         }
@@ -134,13 +191,22 @@ public class PowerNode : MonoBehaviour
 
     public void ShowLockInfo()
     {
-        //lockUIPopup.transform.localPosition = transform.localPosition + new Vector3(0, -50, 0);
+        nodeHighlight.SetActive(true);
         lockUIPopup.SetupLockInfo(comboLocks, runMods);
         lockUIPopup.gameObject.SetActive(true);
+        if(currentRunMod != null)
+        {
+            modEntry.OnHoverEnter();
+        }
     }
 
     public void HideLockInfo()
     {
+        nodeHighlight.SetActive(false);
         lockUIPopup.gameObject.SetActive(false);
+        if (currentRunMod != null)
+        {
+            modEntry.OnHoverExit();
+        }
     }
 }

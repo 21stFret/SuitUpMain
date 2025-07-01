@@ -29,6 +29,7 @@ public class ModUI : MonoBehaviour
     public TMP_Text rarityText;
     [Header("CircuitBoard")]
     public GameObject circuitBoardPanel;
+    private UpgradeCircuitboardManager _upgradeCircuitboardManager;
 
     private void Awake()
     {
@@ -40,6 +41,11 @@ public class ModUI : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void Start()
+    {
+        _upgradeCircuitboardManager = UpgradeCircuitboardManager.instance;
     }
 
     public void OpenModUI(ModBuildType type)
@@ -99,16 +105,24 @@ public class ModUI : MonoBehaviour
 
     public void OpenCircuitBoard(bool readOnly)
     {
-        UpgradeCircuitboardManager.instance.CloseMenuButton.gameObject.SetActive(!readOnly);
+        _upgradeCircuitboardManager.readOnly = readOnly;
+        _upgradeCircuitboardManager.CloseMenuButton.gameObject.SetActive(!readOnly);
         circuitBoardPanel.SetActive(true);
         GameManager.instance.SwapPlayerInput("UI");
-        eventSystem.SetSelectedGameObject(UpgradeCircuitboardManager.instance.firstSelectedChipSlot);
+        eventSystem.SetSelectedGameObject(_upgradeCircuitboardManager.firstSelectedChipSlot);
     }
 
     public void CloseCircuitBoard()
     {
         circuitBoardPanel.SetActive(false);
+        _upgradeCircuitboardManager.OnCloseCuircuitBoard();
         GameManager.instance.SwapPlayerInput("Gameplay");
+    }
+
+    public void CloseCircuitBoardPauseMenu()
+    {
+        circuitBoardPanel.SetActive(false);
+        _upgradeCircuitboardManager.OnCloseCuircuitBoard();
     }
 
     public void DisplayAllMods()

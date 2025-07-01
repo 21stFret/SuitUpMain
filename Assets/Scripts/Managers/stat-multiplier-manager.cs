@@ -34,16 +34,6 @@ public class StatMultiplierManager : MonoBehaviour
 
         private void UpdateCurrentValue()
         {
-            // this method accumlates the current value by multiplying the base value by each multiplier
-            /*
-            currentValue = baseValue;
-            foreach (float multiplier in multipliers)
-            {
-                currentValue *= (1 + multiplier);
-            }
-            */
-
-            //This method adds the mulitpleis up and then applyies it to the base value
             currentValue = baseValue;
             float totalMultiplier = 1;
             foreach (float multiplier in multipliers)
@@ -57,6 +47,11 @@ public class StatMultiplierManager : MonoBehaviour
         {
             baseValue = value;
             UpdateCurrentValue();
+        }
+
+        public float GetCurrentMultiplier()
+        {
+            return currentValue / baseValue;
         }
     }
 
@@ -90,6 +85,16 @@ public class StatMultiplierManager : MonoBehaviour
             currentValues[stat.type] = stat.currentValue;
         }
         return currentValues;
+    }
+
+    public Dictionary<StatType, float> GetAllCurrentMultipliers()
+    {
+        Dictionary<StatType, float> currentMultipliers = new Dictionary<StatType, float>();
+        foreach (var stat in stats)
+        {
+            currentMultipliers[stat.type] = stat.GetCurrentMultiplier();
+        }
+        return currentMultipliers;
     }
 
     public void AddMultiplier(StatType statType, float percentageIncrease)

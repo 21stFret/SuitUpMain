@@ -47,33 +47,6 @@ public class PauseModUI : MonoBehaviour
     public void ShowPauseMods()
     {
         ModUI.instance.OpenCircuitBoard(true);
-        /*
-        // Deactivate all currently active entries
-        for (int i = 0; i < statEntryPool.Count; i++)
-        {
-            ModEntry entry = statEntryPool[i];
-            entry.gameObject.SetActive(false);
-        }
-
-        if (pauseModPanel != null)
-            pauseModPanel.SetActive(true);
-
-        // Display all equipped mods
-        for (int i = 0; i < runUpgradeManager.currentEquipedMods.Count; i++)
-        {
-            RunMod mod = runUpgradeManager.currentEquipedMods[i];
-            if(mod.modCategory == ModCategory.STATS)
-            {
-                ModEntry stat = statEntryPool[i];
-                stat.gameObject.SetActive(true);
-                stat.SetupMod(mod);
-                continue;
-            }
-            ModEntry entry = modEntryPool[(int)mod.modCategory];
-            entry.SetupMod(mod);
-        }
-        StartCoroutine(DelaySetSelected());
-        */
     }
 
     public ModEntry GetStatEntry(int modID)
@@ -122,7 +95,7 @@ public class PauseModUI : MonoBehaviour
 
     public void HidePauseMods()
     {
-        ModUI.instance.CloseCircuitBoard();
+        ModUI.instance.CloseCircuitBoardPauseMenu();
         if (pauseModPanel != null)
             pauseModPanel.SetActive(false);
         if (infoPopup != null)
@@ -141,8 +114,8 @@ public class PauseModUI : MonoBehaviour
         }
         if (mod.modName == "")
         {
-            modNameText.text = "Empty Slot";
-            descriptionText.text = "Collect mods as you go!";
+            modNameText.text = "Unpowered Node";
+            descriptionText.text = "Power up this Node to unlock its potential!";
             rarityText.text = "";
             return;
         }
