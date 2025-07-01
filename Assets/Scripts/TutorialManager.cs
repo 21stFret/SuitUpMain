@@ -342,6 +342,7 @@ public class TutorialManager : MonoBehaviour
 
     private void EnableAirStrike()
     {
+        tutorialUI.mechDroneObject.SetActive(true);
         droneController.enabled = true;
         droneController.airDropTimer.charges = 1;
         droneController.FullyChargeDrone();
