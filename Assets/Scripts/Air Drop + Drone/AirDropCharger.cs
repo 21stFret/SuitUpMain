@@ -24,8 +24,8 @@ public class AirDropCharger : MonoBehaviour
     {
         ActivateButton(false);
         SetBars();
-        airDropText.enabled = false;
         localMaxCharge = DroneMaxCharge;
+        airDropText.text = "STANDBY";
     }
 
     void Update()

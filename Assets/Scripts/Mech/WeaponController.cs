@@ -26,11 +26,22 @@ public class WeaponController : MonoBehaviour
 
     public void Init(MechWeapon mechWeapon = null)
     {
-        rotatingObject.transform.SetParent(null);
+        if (!initialized)
+        {
+            rotatingObject.transform.SetParent(null);
+            gameplayActionMap = primaryActions.FindActionMap("Gameplay");
+            FireMainWeaponInput = gameplayActionMap.FindAction("FireMain");
+            FireAltWeaponInput = gameplayActionMap.FindAction("FireAlt");
+            ClearWeaponInputs();
+            ResetAim();
+            initialized = true;
+        }
+
         if (mechWeapon != null)
         {
             if (mechWeapon.weaponData.mainWeapon)
             {
+
                 mainWeaponEquiped = mechWeapon;
                 SetMainWeaponInputs();
             }
@@ -40,15 +51,17 @@ public class WeaponController : MonoBehaviour
                 altWeaponEquiped = mechWeapon;
             }
         }
+    }
 
-        ResetAim();
-        initialized = true;
+    void OnDisable()
+    {
+        ClearWeaponInputs();
     }
 
     public void SetFireRate()
     {
         float fireRate = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Fire_Rate);
-        if(fireRate<0)
+        if (fireRate < 0)
         {
             fireRate = 0.05f;
         }
@@ -57,16 +70,12 @@ public class WeaponController : MonoBehaviour
 
     private void SetMainWeaponInputs()
     {
-        gameplayActionMap = primaryActions.FindActionMap("Gameplay");
-        FireAltWeaponInput = gameplayActionMap.FindAction("FireMain");
-        FireAltWeaponInput.performed += FireMain;
-        FireAltWeaponInput.canceled += HaltFireMain;
+        FireMainWeaponInput.performed += FireMain;
+        FireMainWeaponInput.canceled += HaltFireMain;
     }
 
     private void SetAltWeaponInputs()
     {
-        gameplayActionMap = primaryActions.FindActionMap("Gameplay");
-        FireAltWeaponInput = gameplayActionMap.FindAction("FireAlt");
         FireAltWeaponInput.performed += FireAlt;
         FireAltWeaponInput.canceled += HaltFireAlt;
     }
