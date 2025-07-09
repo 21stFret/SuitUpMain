@@ -20,6 +20,16 @@ public class FlameGrenadeMod : WeaponMod
         damage = baseWeapon.damage * (runMod.modifiers[0].statValue/100);
     }
 
+    public override void RemoveMods()
+    {
+        baseWeapon.weaponOverride = false;
+        baseWeapon.weaponFuelManager.constantUse = true;
+        baseWeapon.damage = damage / (runMod.modifiers[0].statValue / 100);
+        overideFire = false;
+        shotTimer = 0;
+        base.RemoveMods();
+    }
+
     public void Update()
     {
         if (!overideFire)
@@ -27,7 +37,7 @@ public class FlameGrenadeMod : WeaponMod
             return;
         }
 
-        if (baseWeapon.weaponFuelManager.weaponFuel - modFuelCostOveride <=0)
+        if (baseWeapon.weaponFuelManager.weaponFuel - modFuelCostOveride <= 0)
         {
             return;
         }

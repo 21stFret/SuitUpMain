@@ -10,23 +10,17 @@ public class CreditsController : MonoBehaviour
     [Header("Scrolling Settings")]
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private float scrollSpeed = 0.1f;
-    
     [Header("Skip Button Settings")]
     [SerializeField] private GameObject skipButton;
     [SerializeField] private float skipButtonDelay = 3f;
     [SerializeField] private float skipHoldDuration = 1.5f;
-    [SerializeField] private string nextSceneName = "MainMenu";
-
     private bool isScrolling = true;
     private float skipHoldTimer = 0f;
     private bool canSkip = false;
     public DoTweenFade doTweenFade;
     public Image fillBar;
-
     private bool pressed;
-
     public PlayerInput playerInput;
-
     public bool loadScene;
 
     private void OnEnable()

@@ -46,7 +46,7 @@ public class ModEntry : MonoBehaviour
             Color rarityColor = mod.rarity switch
             {
                 0 => Color.grey,
-                1 => Color.white,
+                1 => Color.cyan,
                 2 => Color.magenta,
                 _ => Color.white
             };

@@ -15,11 +15,15 @@ public class BurtFireMod : WeaponMod
     public override void Init()
     {
         base.Init();
-
         burstTime = 1.5f;
         baseWeapon.fireRate /= 1.5f; // Increase fire rate by 50% for burst fire
         runUpgradeManager.ApplyMod(runMod);
+    }
 
+    public override void RemoveMods()
+    {
+        base.RemoveMods();
+        baseWeapon.fireRate *= 1.5f; // Reset fire rate to original value
     }
 
     // Fire Weapon
@@ -74,10 +78,5 @@ public class BurtFireMod : WeaponMod
         heldfire = false;
         timer = 0;
     }
-    
-    public override void RemoveMods()
-    {
-        base.RemoveMods();
-        baseWeapon.fireRate *= 1.5f; // Reset fire rate to original value
-    }
+
 }

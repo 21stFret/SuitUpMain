@@ -156,6 +156,7 @@ public class PowerNode : MonoBehaviour
                 }
 
                 empowered = true;
+                UpgradeCircuitboardManager.instance.PowerNodesUnlockedCheck(empowered);
                 RunMod runMod = runMods[i];
                 //RunMod runMod = _runUpgradeManager.FilterModsbyBuildType(runMods, modTypes[i])[0];
                 _runUpgradeManager.SetModRaritybyInt(runMod, rarity);
@@ -184,9 +185,11 @@ public class PowerNode : MonoBehaviour
             {
                 GameManager.instance.runUpgradeManager.DisableModSelection(currentRunMod);
                 currentRunMod = null;
+                UpgradeCircuitboardManager.instance.PowerNodesUnlockedCheck(false);
             }
             empowered = false;
         }
+        
     }
 
     public void ShowLockInfo()

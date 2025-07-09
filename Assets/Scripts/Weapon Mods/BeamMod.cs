@@ -37,6 +37,18 @@ public class BeamMod : WeaponMod
         chargeTimer = chargeTime;
         reloadTimer = reloadTime;
     }
+    
+    public override void RemoveMods()
+    {
+        base.RemoveMods();
+        beam.enabled = false;
+        beamReadyLight.SetActive(false);
+        gun.weaponOverride = false;
+        gun.muzzlecharge.Stop();
+        beamSound.Stop();
+        beamSound.clip = null;
+        loaded = false;
+    }
 
     public void Update()
     {
@@ -45,7 +57,7 @@ public class BeamMod : WeaponMod
             if (firing)
             {
                 shutdown = false;
-                if(chargeTimer == chargeTime)
+                if (chargeTimer == chargeTime)
                 {
                     beamSound.clip = beamopen;
                     beamSound.loop = false;
@@ -64,7 +76,7 @@ public class BeamMod : WeaponMod
                 {
                     return;
                 }
-                if(beamTimer == beamTime)
+                if (beamTimer == beamTime)
                 {
                     beamSound.clip = beamLoop;
                     beamSound.loop = true;

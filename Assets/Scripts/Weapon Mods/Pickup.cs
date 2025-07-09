@@ -35,10 +35,11 @@ public class Pickup : MonoBehaviour
         pickupLight = GetComponentInChildren<Light>(true);
         pickupType = type;
         upgrade = false;
-        if(pickupType == ModBuildType.UPGRADE)
+        if (pickupType == ModBuildType.UPGRADE)
         {
             upgrade = true;
             upgradeModel.SetActive(true);
+            pickupType = GameManager.instance.nextBuildtoLoad;
         }
         pickupModel.SetActive(false);
         StartCoroutine(SetupPickup());
@@ -102,17 +103,19 @@ public class Pickup : MonoBehaviour
     private void PickUp()
     {
         canpickup = false;
-        runUpgradeManager.GenerateListOfUpgradesFromAll(pickupType);
         if (GameManager.instance == null)
         {
             return;
         }
-        if(upgrade)
+        if (upgrade)
         {
             pickupUpgrade.Stop();
             CashCollector.instance.AddArtifact(1);
+            runUpgradeManager.upgradePickup = true;
         }
+        runUpgradeManager.GenerateListOfUpgradesFromAll(pickupType);
         pickupParticles.Stop();
+        BattleMech.instance.myCharacterController.ToggleCanMove(false);
     }
 
     private void RemovePickup()

@@ -72786,6 +72786,9 @@ MonoBehaviour:
   weaponFiringSlowAmount: 0.25
   battleMech: {fileID: 0}
   canMove: 0
+  savedDodgeDuration: 0
+  savedDodgeCooldown: 0
+  savedDodgeForce: 0
   collisionCheckDistance: 2
   collisionMask:
     serializedVersion: 2
@@ -72948,7 +72951,7 @@ MonoBehaviour:
   weaponFuel: 0
   weaponFuelMax: 100
   weaponFuelBonus: 0
-  weaponRechargeRate: 0
+  weaponRechargeRate: 10
   weaponFuelRate: 0
   canRecharge: 1
   constantUse: 0

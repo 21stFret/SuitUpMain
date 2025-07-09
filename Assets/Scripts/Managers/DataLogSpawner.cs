@@ -6,22 +6,19 @@ public class DataLogSpawner : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private LogManager logManager;
-    
     [Header("Spawn Settings")]
     [SerializeField] private int maxSpawnAttempts = 30;
     [SerializeField] private float minDistanceFromPlayer = 10f;
     [SerializeField] private float maxDistanceFromPlayer = 30f;
     [SerializeField] private float heightOffset = 0.5f;
     [SerializeField] private LayerMask collisionCheckLayers;
-    [SerializeField] private float collisionCheckRadius = 1f;
     [SerializeField] private Vector3 boxCastSize = new Vector3(1.5f, 1f, 1.5f);
-    
     [Header("Debug")]
     [SerializeField] private bool showDebugGizmos = false;
     private List<Vector3> debugSpawnPositions = new List<Vector3>();
-
     [InspectorButton("SpawnRandomDataLog")]
     public bool spawnDataLogButton; // Button to trigger log spawning in the inspector
+    
     
     public GameObject SpawnRandomDataLog()
     {
@@ -50,12 +47,12 @@ public class DataLogSpawner : MonoBehaviour
         dataLog.transform.rotation = Quaternion.Euler(0, 0, 0);
         logManager.GenerateGOLog();
         dataLog.GetComponentInChildren<InteractableObject>().ShowPrompt(false);
-        
+
         if (showDebugGizmos)
         {
             debugSpawnPositions.Add(spawnPosition);
         }
-        
+
         return dataLog;
     }
 

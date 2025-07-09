@@ -44,17 +44,13 @@ public class MechHealth : MonoBehaviour
     public bool heal;
 
     private float cachedFillamount;
-    private Image flash;
-
     private bool healthlow;
-
     public float shieldHealth;
     public float shieldHealthMax;
     public Image shieldBar;
     public Material shieldMaterial;
     [ColorUsage(true, true)]
     public Color shieldColor;
-    private bool isFlashing;
     private Coroutine currentFlashRoutine;
     private bool dodgeAchievement;
     private bool isRevengeActive;
@@ -71,7 +67,6 @@ public class MechHealth : MonoBehaviour
             StopCoroutine(currentFlashRoutine);
             currentFlashRoutine = null;
         }
-        isFlashing = false;
     }
 
     public void Init()

@@ -88,6 +88,12 @@ public class ModUI : MonoBehaviour
         eventSystem.SetSelectedGameObject(modButtons[0].gameObject);
     }
 
+    public void ShowHiddenCircuitMenu()
+    {
+        GameManager.instance.SwapPlayerInput("UI");
+        OpenCircuitBoard(false);
+    }
+
     private void SetBuildImages(ModBuildType type)
     {
         //BG.material.color = pickup.pickupColor;
@@ -101,6 +107,7 @@ public class ModUI : MonoBehaviour
         modUI.SetActive(false);
         CashCollector.instance.HideUI();
         GameManager.instance.SwapPlayerInput("Gameplay");
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
     }
 
     public void OpenCircuitBoard(bool readOnly)
@@ -110,19 +117,23 @@ public class ModUI : MonoBehaviour
         circuitBoardPanel.SetActive(true);
         GameManager.instance.SwapPlayerInput("UI");
         eventSystem.SetSelectedGameObject(_upgradeCircuitboardManager.firstSelectedChipSlot);
+        _upgradeCircuitboardManager.OnOpenCircuitBoard();
     }
 
     public void CloseCircuitBoard()
     {
         circuitBoardPanel.SetActive(false);
-        _upgradeCircuitboardManager.OnCloseCuircuitBoard();
+        _upgradeCircuitboardManager.OnCloseCircuitBoard();
         GameManager.instance.SwapPlayerInput("Gameplay");
     }
 
     public void CloseCircuitBoardPauseMenu()
     {
-        circuitBoardPanel.SetActive(false);
-        _upgradeCircuitboardManager.OnCloseCuircuitBoard();
+        if (circuitBoardPanel !=null)
+        {
+            circuitBoardPanel.SetActive(false);
+            _upgradeCircuitboardManager.OnCloseCircuitBoard();
+        }
     }
 
     public void DisplayAllMods()

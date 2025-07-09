@@ -21,10 +21,18 @@ public class DoubleBarrelMod : WeaponMod
         gun.spreadAngle += newSpread;
     }
 
+    public override void RemoveMods()
+    {
+        var SpreadAngle = runMod.modifiers[0].statValue;
+        float newSpread = gun.spreadAngle * (SpreadAngle / 100);
+        gun.spreadAngle -= newSpread;
+        base.RemoveMods();
+    }
+
     // Fire Weapon
     public override void Fire()
     {
-        if(cooldown)
+        if (cooldown)
         {
             return;
         }

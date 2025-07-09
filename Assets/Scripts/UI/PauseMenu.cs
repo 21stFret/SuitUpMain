@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
     public ModUI _modUI;
     public DroneControllerUI droneControllerUI;
     public LogManager logManager;
-    private bool hiddenMenu;
+    private bool hiddenMenu, hiddenCircuitMenu;
     private bool wasPreviouslyConnected = false;
 
     public bool canQuickOpen = false;
@@ -128,15 +128,21 @@ public class PauseMenu : MonoBehaviour
         OpenPauseMenu();
         if (_modUI != null)
         {
-            if(_modUI.modUI.activeSelf)
+            if (_modUI.modUI.activeSelf)
             {
                 hiddenMenu = true;
                 _modUI.CloseModUI();
             }
+            if (_modUI.circuitBoardPanel.activeSelf)
+            {
+                hiddenCircuitMenu = true;
+                _modUI.CloseCircuitBoardPauseMenu();
+            }
         }
-        if(droneControllerUI != null)
+
+        if (droneControllerUI != null)
         {
-            if(droneControllerUI.airdropMenu.activeSelf)
+            if (droneControllerUI.airdropMenu.activeSelf)
             {
                 droneControllerUI.CloseMenu();
             }
@@ -149,6 +155,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         playerInput.SwitchCurrentActionMap("UI");
         BattleMech.instance.myCharacterController.runAudio.Stop();
+        BattleMech.instance.myCharacterController.ToggleCanMove(false);
     }
 
     public void InvokeOnBack(InputAction.CallbackContext context)
@@ -322,16 +329,24 @@ public class PauseMenu : MonoBehaviour
             canQuickOpen = false;
         }
     }
+    
+    public void ResumGameInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ResumeGame();
+        }
+    }
 
     public void ResumeGame()
     {
-        if(!menuOpen)
+        if (!menuOpen)
         {
             return;
         }
         AudioManager.instance.PlaySFX(SFX.Select);
         menuOpen = false;
-        if(cheatsMenu != null)
+        if (cheatsMenu != null)
         {
             cheatsMenu.SetActive(false);
         }
@@ -340,7 +355,7 @@ public class PauseMenu : MonoBehaviour
         settingsMenu.SetActive(false);
         backImage.SetActive(false);
         pauseModUI.HidePauseMods();
-        if(datalogsMenu != null)
+        if (datalogsMenu != null)
         {
             datalogsMenu.SetActive(false);
         }
@@ -348,13 +363,20 @@ public class PauseMenu : MonoBehaviour
         onPressBack = null;
         Time.timeScale = 1;
         isPaused = false;
-        if(hiddenMenu)
+        if (hiddenMenu)
         {
             hiddenMenu = false;
             _modUI.SHowHiddenMenu();
             return;
         }
+        if (hiddenCircuitMenu)
+        {
+            hiddenCircuitMenu = false;
+            _modUI.ShowHiddenCircuitMenu();
+            return;
+        }
         playerInput.SwitchCurrentActionMap("Gameplay");
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
     }
 
     public void SwapControlsMenu()

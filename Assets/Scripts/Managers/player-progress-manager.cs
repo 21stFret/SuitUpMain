@@ -13,7 +13,7 @@ public class PlayerProgressManager : MonoBehaviour
     public float rewardMultiplier;
 
     private PlayerSavedData playerSavedData;
-    private int mutliShotKillCount;
+    public int mutliShotKillCount;
     private bool triggerShotMultiKill;
     private int mutliKillCount;
     private bool triggerMultiKill;
@@ -44,14 +44,11 @@ public class PlayerProgressManager : MonoBehaviour
         expCount += count;
     }
 
-    private void CheckShotMultiKill()
+    public void CheckShotMultiKill()
     {
-        mutliShotKillCount++;
-
         if (!triggerShotMultiKill)
         {
             triggerShotMultiKill = true;
-            StartCoroutine(ResetShotMultiKill());
         }
 
         if (mutliShotKillCount == 3)
@@ -62,36 +59,14 @@ public class PlayerProgressManager : MonoBehaviour
             PlayerAchievements.instance.SetAchievement("SHOTGUN_HIT_10");
     }
 
-    private IEnumerator ResetShotMultiKill()
+    public void CheckMultiKill(int amount)
     {
-        yield return new WaitForSeconds(0.1f);
-        mutliShotKillCount = 0;
-        triggerShotMultiKill = false;
-    }
-
-    private void CheckMultiKill()
-    {
-        mutliKillCount++;
-
-        if (!triggerMultiKill)
-        {
-            triggerMultiKill = true;
-            StartCoroutine(ResetMultiKill());
-        }
-
-        if (mutliKillCount == 15)
+        if (amount >= 15)
             PlayerAchievements.instance.SetAchievement("MULTIKILL_15");
-        if (mutliKillCount == 20)
+        if (amount >= 20)
             PlayerAchievements.instance.SetAchievement("MULTIKILL_20");
-        if (mutliKillCount == 30)
+        if (amount >= 30)
             PlayerAchievements.instance.SetAchievement("MULTIKILL_30");
-    }
-
-    private IEnumerator ResetMultiKill()
-    {
-        yield return new WaitForSeconds(0.1f);
-        mutliKillCount = 0;
-        triggerMultiKill = false;
     }
 
     private void CheckPlayerAchievements(int count, WeaponType weapon)
@@ -140,7 +115,6 @@ public class PlayerProgressManager : MonoBehaviour
     private void UpdateShotgunAchievements(int count)
     {
         playerSavedData._gameStats.shotgunKills += count;
-        CheckShotMultiKill();
     }
 
     private void UpdateFlameAchievements(int count)
@@ -185,7 +159,6 @@ public class PlayerProgressManager : MonoBehaviour
             PlayerAchievements.instance.SetAchievement("GRENADE_250");
         if (playerSavedData._gameStats.grenadeKills == 500)
             PlayerAchievements.instance.SetAchievement("GRENADE_500");
-        CheckMultiKill();
     }
 
 
@@ -197,7 +170,6 @@ public class PlayerProgressManager : MonoBehaviour
         playerSavedData.UpdatePlayerArtifact(artifactCount);
         playerSavedData._gameStats.totalKills += killCount;
         playerSavedData._gameStats.totalPlayTime += playTime;
-        playerSavedData._gameStats.totalParts += crawlerParts;
         playerSavedData._gameStats.totalDistance += GameManager.instance.mechLoadOut.GetComponent<MYCharacterController>().distanceTravelled;
     }
 

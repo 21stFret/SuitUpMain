@@ -7,6 +7,5 @@ public class FractureMod : WeaponMod
     public override void Init()
     {
         base.Init();
-        CryoController gun = baseWeapon as CryoController;
     }
 }

@@ -13,5 +13,13 @@ public class ErazerMod : WeaponMod
         runUpgradeManager.ApplyMod(runMod);
         gun.pierceCount -= (int)pierce;
     }
+
+    public override void RemoveMods()
+    {
+        PlasmaGun gun = baseWeapon as PlasmaGun;
+        var pierce = runMod.modifiers[0].statValue;
+        gun.pierceCount += (int)pierce;
+        base.RemoveMods();
+    }
 }
 
