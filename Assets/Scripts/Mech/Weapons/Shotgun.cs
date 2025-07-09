@@ -14,11 +14,12 @@ public class Shotgun : MechWeapon
     public bool shockRounds;
     public float shockDamage;
     public bool fired;
+    public int multikills;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        shockRounds = false; 
+        shockRounds = false;
     }
 
     private void Update()
@@ -28,7 +29,7 @@ public class Shotgun : MechWeapon
         if (target != null)
         {
             var hunter = target.GetComponent<CrawlerHunter>();
-            if(hunter != null)
+            if (hunter != null)
             {
                 if (hunter.isStealthed)
                 {
@@ -77,6 +78,14 @@ public class Shotgun : MechWeapon
             weaponController.Shotgun(spreadDamage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
         }
         _animator.SetTrigger("Recoil");
+        StartCoroutine(MultishotKillCheck());
+    }
+    
+    private IEnumerator MultishotKillCheck()
+    {
+        PlayerProgressManager.instance.mutliShotKillCount = 0;
+        yield return new WaitForSeconds(fireRate-0.05f);
+        PlayerProgressManager.instance.CheckShotMultiKill();
     }
 }
 

@@ -57,7 +57,7 @@ public class BattleManager : MonoBehaviour
         bool showSurvive = false;
         string showDestroy = "";
         var type = _usingBattleType;
-        GenerateNewBattle(type);
+        GenerateNewBattle();
         switch (type)
         {
             case BattleType.Hunt:
@@ -165,6 +165,7 @@ public class BattleManager : MonoBehaviour
             return Vector3.zero;
         }
         int randomIndex = Random.Range(0, crawlerSpawner.spawnPoints.Count);
+        UpdateSpawnPoints();
         return crawlerSpawner.spawnPoints[randomIndex].transform.position;
     }
 
@@ -203,7 +204,6 @@ public class BattleManager : MonoBehaviour
                 _gameManager.EndGame(true);
                 return;
             }
-
             roomDrop.Init(ModBuildType.UPGRADE);
         }
         else
@@ -231,12 +231,8 @@ public class BattleManager : MonoBehaviour
     {
         crawlerSpawner.battleManager = this;
         crawlerSpawner.waveText.text = "Here they come...";
-        
-        if(GameManager.instance.areaManager.currentRoom != null)
-        {
-            EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
-            crawlerSpawner.spawnPoints = area.spawnPoints;
-        }
+
+        UpdateSpawnPoints();
         crawlerSpawner.LoadBattle();
         if (_usingBattleType == BattleType.Exterminate)
         {
@@ -245,6 +241,19 @@ public class BattleManager : MonoBehaviour
         if (_usingBattleType == BattleType.Hunt)
         {
             crawlerSpawner.SpawnBoss();
+        }
+    }
+
+    private void UpdateSpawnPoints()
+    {
+        if (GameManager.instance.areaManager.currentRoom != null)
+        {
+            EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
+            crawlerSpawner.spawnPoints = area.spawnPoints;
+        }
+        else
+        {
+            Debug.LogError("No current room found in AreaManager!");
         }
     }
     
@@ -276,7 +285,7 @@ public class BattleManager : MonoBehaviour
     }
 
     [SerializeField] public ArmyGenerator armyGen;
-    private void GenerateNewBattle(BattleType type)
+    private void GenerateNewBattle()
     {
         if (armyGen == null)
         {
@@ -285,6 +294,7 @@ public class BattleManager : MonoBehaviour
         }
         currentBattle = Battles[currentBattleIndex];
         armyGen.LoadAllSquadsFromExcel();
+        armyGen.currentBattleType = _usingBattleType;
         currentBattle.battleArmy = armyGen.BuildArmy();
     }
 }

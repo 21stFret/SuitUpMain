@@ -54,7 +54,6 @@ public class ChipSlotUI : MonoBehaviour
         {
             upgradeCircuitboardManager.currentRunMod = currentRunMod;
             currentRunMod = null;
-            SetConnectorLinesActive(ModBuildType.UPGRADE);
             Debug.LogError("No mod selected to place in chip slot.");
             return;
         }
@@ -116,6 +115,12 @@ public class ChipSlotUI : MonoBehaviour
             return;
         }
 
+        if(_modEntry == null)
+        {
+            Debug.LogError("Mod entry is null, cannot remove chip.");
+            return;
+        }
+
         upgradeCircuitboardManager._modIcon = _modEntry;
         upgradeCircuitboardManager._modIcon.OnHoverExit();
         upgradeCircuitboardManager._modIcon.gameObject.SetActive(false);
@@ -136,7 +141,7 @@ public class ChipSlotUI : MonoBehaviour
             }
         }
         currentRunMod = null;
-        SetConnectorLinesActive(ModBuildType.UPGRADE);
+        SetConnectorLinesActive(ModBuildType.Default);
         if (!doublePowerNode)
         {
             for (int i = 0; i < linkedChipSlots.Count; i++)
@@ -209,6 +214,10 @@ public class ChipSlotUI : MonoBehaviour
     public void OnHoverEnter()
     {
         chipSlotHighlight.SetActive(true);
+        if(_modEntry != null)
+        {
+            _modEntry.OnHoverEnter();
+        }
     }
 
     public void OnHoverExit()
@@ -258,12 +267,6 @@ public class ChipSlotUI : MonoBehaviour
         }
         connectorLineA.color = color;
         connectorLineB.color = color;
-        if (modCategory == ModBuildType.UPGRADE)
-        {
-            connectorLineA.color = Color.white;
-            connectorLineB.color = Color.white;
-            return;
-        }
         modBuildType = modCategory;
     }
 }

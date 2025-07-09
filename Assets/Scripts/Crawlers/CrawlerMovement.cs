@@ -20,29 +20,19 @@ public class CrawlerMovement : MonoBehaviour
     public LayerMask SteeringRaycast;
     public float distanceToTarget;
     public bool tracking = true;
-
     // Swarm behavior parameters
     public float separationWeight = 1.5f;
     public float swarmRadius = 5f;
     public float desiredSeparation = 2f; // Desired distance between crawlers
-
     private List<CrawlerMovement> nearbySwarmMembers = new List<CrawlerMovement>();
-
     public ParticleSystem icedEffect;
     private bool isSlowed;
     public float slowedDuration = 2f;
     public float slowedAmount = 0.5f;
-
     public Crawler m_crawler;
     private bool isGrounded;
-
-    [SerializeField] private float obstacleAvoidanceWeight = 2f;
-
     public float wanderRadius = 10f;
-
-    [SerializeField] private float wallStickPrevention = 2f;
     [SerializeField] private float wallCheckDistance = 1.5f;
-
     [Header("Stuck Detection")]
     [SerializeField] private float stuckCheckInterval = 0.5f;
     [SerializeField] private float stuckThreshold = 0.1f;

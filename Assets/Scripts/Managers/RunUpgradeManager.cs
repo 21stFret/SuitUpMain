@@ -9,8 +9,9 @@ public enum ModBuildType
     ASSAULT,
     TECH,
     TANK,
-    AGILITY, 
-    UPGRADE
+    AGILITY,
+    UPGRADE,
+    Default
 }
 
 public enum ModCategory
@@ -50,7 +51,7 @@ public class RunUpgradeManager : MonoBehaviour
     public int RerollCost;
     public bool freeReroll = false;
     private int runningModCount = 0;
-
+    public bool upgradePickup = false;
     public void SelectNextBuilds()
     {
         randomlySelectedBuilds.Clear();
@@ -171,13 +172,21 @@ public class RunUpgradeManager : MonoBehaviour
     private void SetModRarity(RunMod mod)
     {
         int rand = Random.Range(0, 100);
-        if (rand <= 50)
+        if (rand <= 75)
             mod.rarity = 0;
-        else if (rand <= 85)
+        else if (rand <= 90)
             mod.rarity = 1;
         else
             mod.rarity = 2;
 
+        if (upgradePickup)
+        {
+            mod.rarity++;
+            if (mod.rarity > 2)
+            {
+                mod.rarity = 2; // Ensure rarity does not exceed 2
+            }
+        }
         for (int j = 0; j < mod.modifiers.Count; j++)
         {
             mod.modifiers[j].statValue = mod.modValues[j].values[mod.rarity];
@@ -210,6 +219,7 @@ public class RunUpgradeManager : MonoBehaviour
         ModUI.CloseModUI();
         ModUI.OpenCircuitBoard(false);
         GameManager.instance.SpawnPortalsToNextRoom();
+        upgradePickup = false; // Reset after use
     }
 
     public void ReRollMods()

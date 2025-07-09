@@ -75,6 +75,7 @@ public class Grenade : MonoBehaviour
     public virtual void Explode()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
+        int crawlersHit = 0;
         foreach (Collider hit in colliders)
         {
             Rigidbody rb = hit.GetComponent<Rigidbody>();
@@ -84,7 +85,12 @@ public class Grenade : MonoBehaviour
                 rb.AddTorque(Vector3.forward * 3f, ForceMode.Impulse);
             }
             hit.GetComponent<TargetHealth>()?.TakeDamage(damage, weaponType);
+            if (hit.GetComponent<Crawler>() != null)
+            {
+                crawlersHit++;
+            }
         }
+        PlayerProgressManager.instance?.CheckMultiKill(crawlersHit);
         live = false;
         meshRenderer.enabled = false;
         col.enabled = false;

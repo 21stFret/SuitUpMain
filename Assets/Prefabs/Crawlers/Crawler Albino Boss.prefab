@@ -15442,6 +15442,7 @@ MonoBehaviour:
   eliteChance: 0
   sporeEmpowered: 0
   sporedEffect: {fileID: 0}
+  sporedTime: 2
   smashEffect: {fileID: 1020282015054569457}
   smashRadius: 10
   smashDistance: 20
@@ -15547,9 +15548,7 @@ MonoBehaviour:
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
-  obstacleAvoidanceWeight: 2
   wanderRadius: 10
-  wallStickPrevention: 2
   wallCheckDistance: 4
   stuckCheckInterval: 0.5
   stuckThreshold: 0.1
@@ -15610,15 +15609,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crawlerSpawner: {fileID: 0}
-  currentBattle:
-    battleType: 0
-    battleArmy:
-    - crawlerGroups:
-      - type: 0
-        amount: 5
-    burstTimer: 0
-    burstMin: 0
-    burstMax: 5
   burstTimer: 5
   burstSpawnAmount: 0
   timeElapsed: 0
@@ -15628,7 +15618,7 @@ MonoBehaviour:
     - type: 0
       amount: 3
   isActive: 0
-  spawnPosition: {x: 2, y: 4, z: 2}
+  spawnPosition: {fileID: 3101261175861027531}
 --- !u!1 &5013036389789904594
 GameObject:
   m_ObjectHideFlags: 0

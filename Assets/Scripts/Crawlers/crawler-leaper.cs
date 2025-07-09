@@ -133,17 +133,17 @@ public class CrawlerLeaper : Crawler
     {
         base.Die(weapon);
         PlayerSavedData.instance._gameStats.totalElites++;
-        if (PlayerSavedData.instance._gameStats.totalElites == 1)
-        {
-            PlayerAchievements.instance.SetAchievement("ELITE_1");
-        }
-        if (PlayerSavedData.instance._gameStats.totalElites == 5)
+        if (PlayerSavedData.instance._gameStats.totalElites >= 5)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_5");
         }
-        if (PlayerSavedData.instance._gameStats.totalElites == 10)
+        if (PlayerSavedData.instance._gameStats.totalElites >= 20)
         {
-            PlayerAchievements.instance.SetAchievement("ELITE_10");
+            PlayerAchievements.instance.SetAchievement("ELITE_20");
+        }
+        if (PlayerSavedData.instance._gameStats.totalElites >= 100)
+        {
+            PlayerAchievements.instance.SetAchievement("ELITE_100");
         }
     }
 

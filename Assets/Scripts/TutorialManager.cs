@@ -98,6 +98,7 @@ public class TutorialManager : MonoBehaviour
     private IEnumerator RunTutorial()
     {
         EnableMovement();
+        manualWeaponController.Init();
         yield return StartCoroutine(tutorialUI.InitializeMech());
 
         while (currentStage != TutorialStage.Complete)
@@ -315,19 +316,25 @@ public class TutorialManager : MonoBehaviour
     public void PauseTutorial()
     {
         Time.timeScale = 0;
+        DisableMovement();
     }
 
     public void ResumeTutorial()
     {
         Time.timeScale = 1;
+        EnableMovement();
     }
 
     private void EnableMovement()
     {
         myCharacterController.ToggleCanMove(true);
         manualWeaponController.enabled = true;
-        manualWeaponController.Init();
-        playerInput.ActivateInput();
+    }
+
+    private void DisableMovement()
+    {
+        manualWeaponController.enabled = false;
+        myCharacterController.ToggleCanMove(false);
     }
 
     private void EnableSecondaryWeaponAndPulse()
@@ -366,7 +373,7 @@ public class TutorialManager : MonoBehaviour
 
     public void SkipTutorial()
     {
-        ResumeTutorial();
+        Time.timeScale = 1;
         PlayerSavedData.instance.UpdateFirstLoad(false);
         PlayerSavedData.instance.SavePlayerData();
         sceneLoader.LoadScene(2);

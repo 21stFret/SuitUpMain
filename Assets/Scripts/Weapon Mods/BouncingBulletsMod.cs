@@ -12,6 +12,13 @@ public class BouncingBulletsMod : WeaponMod
         baseWeapon.bounces = (int)runMod.modifiers[0].statValue;
     }
 
+    public override void RemoveMods()
+    {
+        base.RemoveMods();
+        runUpgradeManager.RemoveMod(runMod);
+        baseWeapon.bounces = 0;
+    }
+
     // Fire Weapon
     public override void Fire()
     {

@@ -423,9 +423,7 @@ MonoBehaviour:
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
-  obstacleAvoidanceWeight: 2
   wanderRadius: 15
-  wallStickPrevention: 2
   wallCheckDistance: 1.5
   stuckCheckInterval: 0.5
   stuckThreshold: 0.1
@@ -469,7 +467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 1
+  maxHealth: 1.5
   invincible: 0
   alive: 0
   trippyEffect: {fileID: 0}

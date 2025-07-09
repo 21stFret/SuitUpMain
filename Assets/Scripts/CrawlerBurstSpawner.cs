@@ -12,7 +12,7 @@ public class CrawlerBurstSpawner : MonoBehaviour
     public CrawlerSquad crawlerSquad;
     public bool isActive;
 
-    public Vector3 spawnPosition;
+    public Transform spawnPosition;
 
     public void Init()
     {
@@ -39,16 +39,16 @@ public class CrawlerBurstSpawner : MonoBehaviour
             int min = Mathf.RoundToInt(crawlerSpawner.localBurstMin + totalTimeElapsesd);
             min = Mathf.Clamp(min, crawlerSpawner.localBurstMin, crawlerSpawner.localBurstMax);
             burstSpawnAmount = Random.Range(min, crawlerSpawner.localBurstMax);
-            spawnPosition = transform.position;
-            spawnPosition.y +=1;
+            spawnPosition = transform;
+            spawnPosition.position += Vector3.up;
             var newSquad = new List<Crawler>();
-            foreach (CrawlerGroup grouop in crawlerSquad.crawlerGroups)
+            foreach (CrawlerGroup group in crawlerSquad.crawlerGroups)
             {
-                newSquad.AddRange(crawlerSpawner.GenerateNewSquad(grouop.type, grouop.amount));
+                newSquad.AddRange(crawlerSpawner.GenerateNewSquad(group.type, group.amount));
             }
             if(newSquad.Count > 0)
             {
-                crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition);
+                crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition.position);
             }
             else
             {

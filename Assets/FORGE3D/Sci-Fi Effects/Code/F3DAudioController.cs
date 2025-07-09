@@ -458,7 +458,7 @@ namespace FORGE3D
         // Play box hit audio at specific position
         public void BoxHit(Vector3 pos)
         {
-            if (timer_02 >= boxHitDelay)
+            if (timer_01 >= boxHitDelay)
             {
                 AudioSource aSrc =
                     F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
@@ -471,7 +471,7 @@ namespace FORGE3D
                     aSrc.loop = false;
                     aSrc.Play();
 
-                    timer_02 = 0f;
+                    timer_01 = 0f;
                 }
             }
         }

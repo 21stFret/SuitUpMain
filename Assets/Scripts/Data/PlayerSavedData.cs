@@ -28,6 +28,7 @@ public class PlayerSavedData : MonoBehaviour
     public bool demoBuild;
     public int[] _droneAbilities;
     public int[] droneLoadOut;
+    public bool triggeredCircuitTutorial = false;
 
     private void Awake()
     {
@@ -140,6 +141,7 @@ public class PlayerSavedData : MonoBehaviour
         triggeredEasterEgg = false;
         highestDifficulty = 0;
         hasSeenThankYouPanel = false;
+        triggeredCircuitTutorial = false;
         CreateWeaponData();
         CreateDroneAbilityData();
         _gameStats = new GameStats();
@@ -211,6 +213,7 @@ public class PlayerSavedData : MonoBehaviour
         saveData.highestDifficulty = highestDifficulty;
         saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
         saveData.droneAbilities = _droneAbilities;
+        saveData.triggeredCircuitTutorial = triggeredCircuitTutorial;
         saveData.droneLoadOut = droneLoadOut;
 
         string jsonData = JsonUtility.ToJson(saveData, true);
@@ -331,6 +334,7 @@ public class PlayerSavedData : MonoBehaviour
                 triggeredEasterEgg = savedData.triggeredEasterEgg;
                 highestDifficulty = savedData.highestDifficulty;
                 hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
+                triggeredCircuitTutorial = savedData.triggeredCircuitTutorial;
                 if (savedData.droneAbilities.Length == 0)
                 {
                     CreateDroneAbilityData(); // Ensure drone data is initialized if missing
@@ -386,4 +390,5 @@ public class SaveData
     public bool hasSeenThankYouPanel;
     public int[] droneAbilities;
     public int[] droneLoadOut;
+    public bool triggeredCircuitTutorial;
 }

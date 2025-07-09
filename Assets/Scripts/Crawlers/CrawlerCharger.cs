@@ -18,7 +18,7 @@ public class CrawlerCharger : Crawler
     public bool charging;
     public float chargeSpeed;
     public List<Collider> collidersHit;
-    
+
     public bool CheckCanCharge()
     {
         if (crawlerMovement.distanceToTarget < chargeDistance)
@@ -32,7 +32,7 @@ public class CrawlerCharger : Crawler
         }
         return false;
     }
-    
+
 
     public void Charging()
     {
@@ -44,7 +44,7 @@ public class CrawlerCharger : Crawler
                 continue;
             }
 
-            if(collider.CompareTag("Enemy"))
+            if (collider.CompareTag("Enemy"))
             {
                 continue;
             }
@@ -66,7 +66,7 @@ public class CrawlerCharger : Crawler
 
             targetHealth.TakeDamage(chargeDamage, WeaponType.Crawler);
 
-            if(collider.CompareTag("Player"))
+            if (collider.CompareTag("Player"))
             {
                 _crawlerBehavior.TransitionToState(typeof(PursuitState));
             }
@@ -78,11 +78,11 @@ public class CrawlerCharger : Crawler
     {
         charging = true;
         var cachedSpeed = crawlerMovement.speedFinal;
-        var cachedSteer= crawlerMovement.steerSpeed;
+        var cachedSteer = crawlerMovement.steerSpeed;
         var cachedLook = crawlerMovement.lookSpeed;
         crawlerMovement.speedFinal = chargeSpeed;
-        crawlerMovement.steerSpeed = cachedSteer/2;
-        crawlerMovement.lookSpeed = cachedLook/2;
+        crawlerMovement.steerSpeed = cachedSteer / 2;
+        crawlerMovement.lookSpeed = cachedLook / 2;
         animator.speed = 2;
         chargeEffect.Play();
         yield return new WaitForSeconds(chargeTime);
@@ -98,21 +98,22 @@ public class CrawlerCharger : Crawler
     {
         base.Die(weapon);
         PlayerSavedData.instance._gameStats.totalElites++;
-        if(PlayerAchievements.instance == null)
+        if (PlayerAchievements.instance == null)
         {
             return;
         }
-        if (PlayerSavedData.instance._gameStats.totalElites == 1)
-        {
-            PlayerAchievements.instance.SetAchievement("ELITE_1");
-        }
-        if (PlayerSavedData.instance._gameStats.totalElites == 5)
+        if (PlayerSavedData.instance._gameStats.totalElites >= 5)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_5");
         }
-        if (PlayerSavedData.instance._gameStats.totalElites == 10)
+        if (PlayerSavedData.instance._gameStats.totalElites >= 20)
         {
-            PlayerAchievements.instance.SetAchievement("ELITE_10");
+            PlayerAchievements.instance.SetAchievement("ELITE_20");
+        }
+        if (PlayerSavedData.instance._gameStats.totalElites >= 100)
+        {
+            PlayerAchievements.instance.SetAchievement("ELITE_100");
         }
     }
+    
 }

@@ -256,7 +256,7 @@ public class CrawlerSpawner : MonoBehaviour
                     amount *= 2f;
                 }
             }
-            for (int k = 0; k < amount && k < GetCrawlerList(currentSquad.crawlerGroups[j].type).Count; k++)
+            for (int k = 0; k < amount && k < list.Count; k++)
             {
                 _spawnList.Add(list[k]);
             }
@@ -352,7 +352,7 @@ public class CrawlerSpawner : MonoBehaviour
             if (currentCount > restriction)
             {
                 bannedTypes.Add(crawlerType);
-                Debug.Log($"Banned {crawlerType} - Current count: {currentCount}, Limit: {restriction}");
+                //Debug.Log($"Banned {crawlerType} - Current count: {currentCount}, Limit: {restriction}");
             }
         }
         return bannedTypes;

@@ -132,8 +132,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         AudioManager.instance.PlayBattleMusic();
         battleManager.roomDrop.gameObject.SetActive(false);
-        battleManager.SetBattleType();
         areaManager.LoadRoom(currentAreaType);
+        battleManager.SetBattleType();
         battleManager.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(delay/2);
@@ -184,14 +184,7 @@ public class GameManager : MonoBehaviour
             battleManager.ResetOnNewArea();
             return;
         }
-        if (battleManager.currentBattleIndex > battleManager.Battles.Count - 2)
-        {
-            voidPortalManager.StartVoidEffect(false);
-        }
-        else
-        {
-            voidPortalManager.StartAllEffects();
-        }
+        voidPortalManager.StartAllEffects();
     }
 
     public void EndGame(bool won)

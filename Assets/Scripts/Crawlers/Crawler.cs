@@ -486,10 +486,11 @@ public class Crawler : MonoBehaviour
 
         BattleMech.instance.droneController.ChargeDroneOnHit(expWorth);
 
-        if(PlayerProgressManager.instance != null)
+        if (PlayerProgressManager.instance != null)
         {
             PlayerProgressManager.instance.UpdateKillCount(1, weapon);
             PlayerProgressManager.instance.AddExp(expWorth);
+            PlayerProgressManager.instance.mutliShotKillCount++;
         }
     }
 

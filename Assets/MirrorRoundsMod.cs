@@ -15,4 +15,11 @@ public class MirrorRoundsMod : WeaponMod
         plasmaGun.splitCount = (int)runMod.modifiers[0].statValue;
         runUpgradeManager.ApplyMod(runMod);
     }
+
+    public override void RemoveMods()
+    {
+        base.RemoveMods();
+        plasmaGun.mirrorRounds = false;
+        plasmaGun.splitCount = 0;
+    }
 }

@@ -14,5 +14,14 @@ public class CompressorMod : WeaponMod
         float newForce = gun.force * (Force / 100);
         gun.force += newForce;
     }
+
+    public override void RemoveMods()
+    {
+        Shotgun gun = baseWeapon as Shotgun;
+        var Force = runMod.modifiers[0].statValue;
+        float newForce = gun.force * (Force / 100);
+        gun.force -= newForce;
+        base.RemoveMods();
+    }
 }
 

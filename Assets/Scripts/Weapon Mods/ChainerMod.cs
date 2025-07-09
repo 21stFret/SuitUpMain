@@ -14,5 +14,15 @@ public class ChainerMod : WeaponMod
         gun.chainAmount += extraChains;
         gun.range += extraRange;
     }
+
+    public override void RemoveMods()
+    {
+        LightningRodController gun = baseWeapon as LightningRodController;
+        int extraChains = (int)runMod.modifiers[0].statValue;
+        float extraRange = runMod.modifiers[1].statValue;
+        gun.chainAmount -= extraChains;
+        gun.range -= extraRange;
+        base.RemoveMods();
+    }
 }
 

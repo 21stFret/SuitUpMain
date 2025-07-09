@@ -9,6 +9,7 @@ public class ArmyGenerator : MonoBehaviour
     public int MaxSquads = 3;
     public BattleDataReader battleDataReader;
     public AreaType currentAreaType;
+    public BattleType currentBattleType;
 
     public void LoadAllSquadsFromExcel()
     {
@@ -37,7 +38,13 @@ public class ArmyGenerator : MonoBehaviour
         }
 
         List<CrawlerSquad> currentAreaSquads = areaSquads[currentAreaType];
-        int squadCount = Mathf.Min(MaxSquads, currentAreaSquads.Count);
+        int _maxSquads = MaxSquads;
+        if (currentBattleType == BattleType.Survive)
+        {
+            _maxSquads = Mathf.Min(MaxSquads*2, currentAreaSquads.Count);
+        }
+
+        int squadCount = Mathf.Min(_maxSquads, currentAreaSquads.Count);
 
         for (int i = 0; i < squadCount; i++)
         {

@@ -26,14 +26,13 @@ public class WeaponFuelManager : MonoBehaviour
         weaponFuel = weaponFuelMax;
         _enabled = true;
         weaponFuelRate = weapon.weaponFuelUseRate;
-        weaponRechargeRate = 15;
     }
 
     public IEnumerator BoostRecharge(float time)
     {
-        weaponRechargeRate = 30;
+        weaponRechargeRate *= 2;
         yield return new WaitForSeconds(time);
-        weaponRechargeRate = 15;
+        weaponRechargeRate /= 2;
     }
 
     public void RefillFuel(float value)
