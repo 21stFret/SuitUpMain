@@ -11,6 +11,7 @@ public class CrawlerBurstSpawner : MonoBehaviour
     public float totalTimeElapsesd;
     public CrawlerSquad crawlerSquad;
     public bool isActive;
+    public int squadCount;
 
     public Transform spawnPosition;
 
@@ -36,25 +37,18 @@ public class CrawlerBurstSpawner : MonoBehaviour
         if (timeElapsed >= burstTimer)
         {
             timeElapsed = 0f;
-            int min = Mathf.RoundToInt(crawlerSpawner.localBurstMin + totalTimeElapsesd);
-            min = Mathf.Clamp(min, crawlerSpawner.localBurstMin, crawlerSpawner.localBurstMax);
-            burstSpawnAmount = Random.Range(min, crawlerSpawner.localBurstMax);
             spawnPosition = transform;
             spawnPosition.position += Vector3.up;
             var newSquad = new List<Crawler>();
-            foreach (CrawlerGroup group in crawlerSquad.crawlerGroups)
+            for (int i = 0; i <= squadCount; i++)
             {
+                var group = crawlerSquad.crawlerGroups[i];
                 newSquad.AddRange(crawlerSpawner.GenerateNewSquad(group.type, group.amount));
             }
-            if(newSquad.Count > 0)
+            if (newSquad.Count > 0)
             {
                 crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition.position);
             }
-            else
-            {
-                print("No army in list");
-            }
-
         }
     }
 }

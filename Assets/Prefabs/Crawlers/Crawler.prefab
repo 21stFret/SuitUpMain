@@ -283,7 +283,7 @@ MonoBehaviour:
   deathNoise: {fileID: 418313318034436250}
   overrideDeathNoise: 0
   immune: 0
-  _immuneTime: 1
+  _immuneTime: 0.6
   crawlerScale: 0.5
   cashWorth: 2
   expWorth: 3
@@ -299,7 +299,7 @@ MonoBehaviour:
   _targetHealth: {fileID: 0}
   triggeredAttack: 0
   spawnLocation: {x: 0, y: 0, z: 0}
-  SpawnForce: 50
+  SpawnForce: 100
   dummy: 0
   overkill: 0
   spawn: 0
@@ -1929,7 +1929,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.7
+      value: 0.5
       inSlope: 0
       outSlope: 0
       tangentMode: 0

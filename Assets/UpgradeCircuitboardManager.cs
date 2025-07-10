@@ -101,10 +101,6 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         {
             PlayerAchievements.instance.SetAchievement("MOD_1");
         }
-        else if (poweredNodes == 2)
-        {
-            PlayerAchievements.instance.SetAchievement("MOD_2");
-        }
         else if (poweredNodes == 3)
         {
             PlayerAchievements.instance.SetAchievement("MOD_3");
@@ -173,6 +169,8 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         StopAllCoroutines();
         circuitTutPanel.SetActive(false);
         isCircuitTutorialActive = false;
+        statInfoPanel.SetActive(false);
+        rootNodeHighlight.SetActive(false);
     }
 
     public void ShowCurrentStats()
@@ -250,12 +248,16 @@ public class UpgradeCircuitboardManager : MonoBehaviour
                     break;
                 case 3:
                     circuitTutText.text = "The golden corner nodes can double your mod effects! They require any 2 upgrade chips to power them!";
+                    circuitTutPopUp.transform.localPosition = tutorialParts[part].transform.localPosition + offset;
+                    break;
+                case 4:
+                    circuitTutText.text = "These smaller slots do not effect your mech but can be used for storage or sorting!";
                     NextButton.GetComponentInChildren<TMP_Text>().text = "Next";
                     circuitTutPopUp.transform.localPosition = tutorialParts[part].transform.localPosition + offset;
                     NextButton.onClick.RemoveAllListeners();
                     NextButton.onClick.AddListener(NextPart);
                     break;
-                case 4:
+                case 5:
                     circuitTutText.text = "You can check your stats at any time from the Root Node. Good Luck!";
                     NextButton.GetComponentInChildren<TMP_Text>().text = "Finish";
                     NextButton.onClick.RemoveAllListeners();

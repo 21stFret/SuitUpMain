@@ -119,7 +119,7 @@ public class Crawler : MonoBehaviour
         {
             if (BattleManager.instance.dificultyMultiplier > 1)
             {
-                _targetHealth.maxHealth *= 1 + 0.25f * (BattleManager.instance.dificultyMultiplier - 1);
+                _targetHealth.maxHealth *= 1 + 0.5f * (BattleManager.instance.dificultyMultiplier - 1);
             }
 
         }

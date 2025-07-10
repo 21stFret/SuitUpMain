@@ -18,6 +18,7 @@ public class ChipSlotUI : MonoBehaviour
     public List<ChipSlotUI> linkedChipSlots;
     public bool isPowered = true;
     private ModEntry _modEntry;
+    public bool auxNode = false;
 
     public void InteractWithSlot()
     {
@@ -27,15 +28,15 @@ public class ChipSlotUI : MonoBehaviour
             return;
         }
         if (currentRunMod != null)
+        {
+            if (upgradeCircuitboardManager.currentRunMod != null)
             {
-                if (upgradeCircuitboardManager.currentRunMod != null)
-                {
-                    Debug.LogError("Cannot place a new chip while one is already selected.");
-                    return;
-                }
-                RemoveChip();
+                Debug.LogError("Cannot place a new chip while one is already selected.");
                 return;
             }
+            RemoveChip();
+            return;
+        }
         if (upgradeCircuitboardManager.currentRunMod == null)
         {
             print("No mod selected to place in chip slot.");
@@ -57,7 +58,33 @@ public class ChipSlotUI : MonoBehaviour
             Debug.LogError("No mod selected to place in chip slot.");
             return;
         }
+
         currentRunMod = upgradeCircuitboardManager.currentRunMod;
+
+        var modIcon = upgradeCircuitboardManager.pauseModUI.GetStatEntry(currentRunMod.ID);
+        if (modIcon == null)
+        {
+            Debug.LogError("Mod icon not found for: " + currentRunMod.modName);
+            return;
+        }
+
+        modIcon.SetupMod(currentRunMod);
+        modIcon.transform.SetParent(transform.parent, false);
+        modIcon.transform.position = transform.position;
+        modIcon.transform.rotation = transform.rotation;
+        modIcon.transform.localScale = transform.localScale;
+        modIcon.gameObject.SetActive(true);
+        modIcon.chipSlotUI = this;
+        _modEntry = modIcon;
+        upgradeCircuitboardManager.currentRunMod = null;
+        upgradeCircuitboardManager.CloseMenuButton.enabled = true;
+        chipSlotHighlight.SetActive(false);
+
+        if (auxNode)
+        {
+            Debug.LogWarning("Auxiliary node detected, skipping power node checks.");
+            return;
+        }
 
         if (doublePowerNode)
         {
@@ -71,8 +98,6 @@ public class ChipSlotUI : MonoBehaviour
         {
             SetModifiers(true);
         }
-        
-        SetConnectorLinesActive(currentRunMod.modBuildType);
 
         for (int i = 0; i < powerNode.Length; i++)
         {
@@ -89,22 +114,8 @@ public class ChipSlotUI : MonoBehaviour
             }
         }
 
-        var modIcon = upgradeCircuitboardManager.pauseModUI.GetStatEntry(currentRunMod.ID);
-        if (modIcon == null)
-        {
-            Debug.LogError("Mod icon not found for: " + currentRunMod.modName);
-            return;
-        }
-        modIcon.SetupMod(currentRunMod);
-        modIcon.transform.SetParent(transform.parent, false);
-        modIcon.transform.position = transform.position;
-        modIcon.transform.rotation = transform.rotation;
-        modIcon.gameObject.SetActive(true);
-        modIcon.chipSlotUI = this;
-        _modEntry = modIcon;
-        upgradeCircuitboardManager.currentRunMod = null;
-        upgradeCircuitboardManager.CloseMenuButton.enabled = true;
-        chipSlotHighlight.SetActive(false);
+        SetConnectorLinesActive(currentRunMod.modBuildType);
+
     }
 
     public void RemoveChip()
@@ -115,7 +126,7 @@ public class ChipSlotUI : MonoBehaviour
             return;
         }
 
-        if(_modEntry == null)
+        if (_modEntry == null)
         {
             Debug.LogError("Mod entry is null, cannot remove chip.");
             return;
@@ -129,6 +140,12 @@ public class ChipSlotUI : MonoBehaviour
         upgradeCircuitboardManager.CloseMenuButton.enabled = false;
         _modEntry = null;
 
+        if (auxNode)
+        {
+            Debug.LogWarning("Auxiliary node detected, skipping power node checks.");
+            return;
+        }
+
         if (isPowered)
         {
             SetModifiers(false);
@@ -141,7 +158,7 @@ public class ChipSlotUI : MonoBehaviour
             }
         }
         currentRunMod = null;
-        SetConnectorLinesActive(ModBuildType.Default);
+
         if (!doublePowerNode)
         {
             for (int i = 0; i < linkedChipSlots.Count; i++)
@@ -150,7 +167,7 @@ public class ChipSlotUI : MonoBehaviour
                 linkedChipSlots[i].CheckisPowered();
             }
         }
-        
+
         for (int i = 0; i < powerNode.Length; i++)
         {
             powerNode[i].chipSlots.Remove(this);
@@ -158,6 +175,7 @@ public class ChipSlotUI : MonoBehaviour
         }
 
         chipSlotHighlight.SetActive(false);
+        SetConnectorLinesActive(ModBuildType.Default);
     }
 
     private void CheckisPowered()

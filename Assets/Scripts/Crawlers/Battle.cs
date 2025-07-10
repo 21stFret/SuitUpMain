@@ -55,7 +55,6 @@ public struct CrawlerSquad
 {
     public CrawlerGroup[] crawlerGroups;
     
-
     public CrawlerSquad(CrawlerGroup[] crawlersInWave)
     {
         this.crawlerGroups = crawlersInWave;

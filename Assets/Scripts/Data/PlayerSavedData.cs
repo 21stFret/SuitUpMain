@@ -126,6 +126,7 @@ public class PlayerSavedData : MonoBehaviour
     public void ResetAllData()
     {
         CreateData();
+        LogManager.instance.ClearLogs();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 

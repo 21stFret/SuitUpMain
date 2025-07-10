@@ -14,12 +14,12 @@ public class Shotgun : MechWeapon
     public bool shockRounds;
     public float shockDamage;
     public bool fired;
-    public int multikills;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         shockRounds = false;
+        shotsPerBurst += (int)force / 2;
     }
 
     private void Update()

@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     public int currentBattleIndex;
     public CapturePoint capturePoint;
     public Pickup roomDrop;
+    public HealthPickup healthPickup;
     public LayerMask dropLayer;
     public string objectiveMessage;
     public float dificultyMultiplier = 1;
@@ -191,11 +192,23 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
         lightningController.active = false;
+
+        SetPickUpPosition();
+        if (currentBattleIndex % 2 != 1)
+        {
+            roomDrop.gameObject.SetActive(true);
+        }
+        else
+        {
+            healthPickup.gameObject.SetActive(true);
+        }
+
+
         currentBattleIndex++;
         _gameManager.gameActive = false;
         AudioManager.instance.PlayBGMusic(5);
-        roomDrop.gameObject.SetActive(true);
-        SetPickUpPosition();
+
+
 
         if (currentBattleIndex >= Battles.Count)
         {
@@ -224,6 +237,7 @@ public class BattleManager : MonoBehaviour
         pos = crawlerSpawner.spawnPoints[0].transform.position;
         pos.y = 3;
         roomDrop.transform.position = pos;
+        healthPickup.transform.position = pos;
         return;
     }
 

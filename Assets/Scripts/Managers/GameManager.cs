@@ -184,6 +184,11 @@ public class GameManager : MonoBehaviour
             battleManager.ResetOnNewArea();
             return;
         }
+        if (battleManager.currentBattleIndex % 2 == 1)
+        {
+            voidPortalManager.StartVoidEffect(false);
+            return;
+        }
         voidPortalManager.StartAllEffects();
     }
 

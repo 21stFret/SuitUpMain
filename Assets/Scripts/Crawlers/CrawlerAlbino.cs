@@ -213,6 +213,6 @@ public class CrawlerAlbino : Crawler
         burstSpawner = GetComponent<CrawlerBurstSpawner>();
         burstSpawner.crawlerSpawner = crawlerSpawner;
         burstSpawner.Init();
-
+        burstSpawner.squadCount = Mathf.RoundToInt(BattleManager.instance.dificultyMultiplier);
     }
 }
