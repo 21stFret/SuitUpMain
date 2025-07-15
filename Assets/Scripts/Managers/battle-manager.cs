@@ -152,9 +152,12 @@ public class BattleManager : MonoBehaviour
 
     private void SpawnCapturePoint()
     {
-        Vector3 pos = GetRandomSpawnPoint() + Random.insideUnitSphere * 10;
-        pos.y = 1;
-        capturePoint.transform.position = pos;
+        Vector3 pos = GetRandomSpawnPoint();
+        Vector3 directionToCenter = (Vector3.zero - pos).normalized;
+        float randomDistance = Random.Range(0f, 10f);
+        Vector3 spawnPoint = pos + (directionToCenter * randomDistance);
+        spawnPoint.y = 1;
+        capturePoint.transform.position = spawnPoint;
         Invoke("InitCapturePoint", 1);
     }
 

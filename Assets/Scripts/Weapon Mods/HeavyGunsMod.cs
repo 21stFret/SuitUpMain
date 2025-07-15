@@ -11,19 +11,18 @@ public class HeavyGunsMod : WeaponMod
         base.Init();
         runUpgradeManager.ApplyMod(runMod);
         myCharacterController = BattleMech.instance.myCharacterController;
+        if (myCharacterController != null)
+        {
+            myCharacterController.weaponFiringSlowAmount += 0.2f;
+        }
     }
 
-    // Fire Weapon
-    public override void Fire()
+    public override void RemoveMods()
     {
-        base.Fire();
-        myCharacterController.slowedAmount += myCharacterController.maxSpeed * 0.5f; // Slow down the character by 50%
-    }
-
-    // Stop firing 
-    public override void Stop()
-    {
-        base.Stop();
-        myCharacterController.slowedAmount -= myCharacterController.maxSpeed * 0.5f;
+        base.RemoveMods();
+        if (myCharacterController != null)
+        {
+            myCharacterController.weaponFiringSlowAmount -= 0.2f; // Reset slow down effect
+        }
     }
 }

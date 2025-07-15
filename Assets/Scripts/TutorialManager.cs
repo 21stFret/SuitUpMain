@@ -192,7 +192,8 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         canCheckProgress = false;
-        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Drone offensive systems online."));
+        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Each charge of the drone bar will increase the abilites effect!)"));
+        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Offensive systems complete."));
         tutorialUI.HideAllInputUIs();
         currentStage = TutorialStage.SupportSystems;
     }

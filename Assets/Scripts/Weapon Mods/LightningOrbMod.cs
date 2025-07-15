@@ -46,7 +46,7 @@ public class LightningOrbMod : WeaponMod
         lightningOrb.chainAmount = lightningRodController.chainAmount/2;
         lightningOrb.stunTime = lightningRodController.stunTime/2;
         lightningOrb.fireRate = lightningRodController.fireRate;
-        lightningOrb.Init(baseWeapon.damage, baseWeapon.range/3);
+        lightningOrb.Init(baseWeapon.damage, 10);
         currentGrenade++;
         if (currentGrenade >= lightningOrbs.Length)
         {

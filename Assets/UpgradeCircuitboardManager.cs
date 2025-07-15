@@ -171,6 +171,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         isCircuitTutorialActive = false;
         statInfoPanel.SetActive(false);
         rootNodeHighlight.SetActive(false);
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
     }
 
     public void ShowCurrentStats()

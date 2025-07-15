@@ -72,7 +72,7 @@ public class VoidGrenade : Grenade
     {
         while (live)
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, range*0.2f, layerMask);
+            Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, layerMask);
             foreach (Collider collider in colliders)
             {
                 TargetHealth targetHealth = collider.GetComponent<TargetHealth>();
@@ -81,7 +81,7 @@ public class VoidGrenade : Grenade
                     targets.Add(targetHealth);
                 }
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.35f);
         }
         targets.Clear();
     }
