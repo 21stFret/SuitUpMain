@@ -78,7 +78,10 @@ public class Shotgun : MechWeapon
             weaponController.Shotgun(spreadDamage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
         }
         _animator.SetTrigger("Recoil");
-        StartCoroutine(MultishotKillCheck());
+        if(PlayerProgressManager.instance != null)
+        {
+            StartCoroutine(MultishotKillCheck());
+        }
     }
     
     private IEnumerator MultishotKillCheck()

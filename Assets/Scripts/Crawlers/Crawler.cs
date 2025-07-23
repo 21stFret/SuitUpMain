@@ -489,7 +489,6 @@ public class Crawler : MonoBehaviour
         if (PlayerProgressManager.instance != null)
         {
             PlayerProgressManager.instance.UpdateKillCount(1, weapon);
-            PlayerProgressManager.instance.AddExp(expWorth);
             PlayerProgressManager.instance.mutliShotKillCount++;
         }
     }

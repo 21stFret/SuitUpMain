@@ -13,7 +13,7 @@ public class DemoUI : MonoBehaviour
         {
             return;
         }
-        if(!PlayerSavedData.instance.demoBuild)
+        if(!PlayerSavedData.instance.demo)
         {
             gameObject.SetActive(false);
         }

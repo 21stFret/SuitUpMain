@@ -39,7 +39,7 @@ public class WeaponController : MonoBehaviour
 
         if (mechWeapon != null)
         {
-            if (mechWeapon.weaponData.mainWeapon)
+            if (mechWeapon.weaponData.mainWeapon == 1)
             {
 
                 mainWeaponEquiped = mechWeapon;

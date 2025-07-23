@@ -100,22 +100,22 @@ public class AchievementUI : MonoBehaviour
 
 
 
-        statPrefabs[0].value.text = playerSavedData._gameStats.totalKills.ToString();
-        statPrefabs[1].value.text = playerSavedData._gameStats.minigunKills.ToString();
-        statPrefabs[2].value.text = playerSavedData._gameStats.shotgunKills.ToString();
-        statPrefabs[3].value.text = playerSavedData._gameStats.flamerKills.ToString();
-        statPrefabs[4].value.text = playerSavedData._gameStats.lightningKills.ToString();
-        statPrefabs[5].value.text = playerSavedData._gameStats.cryoKills.ToString();
-        statPrefabs[6].value.text = playerSavedData._gameStats.grenadeKills.ToString();
-        statPrefabs[7].value.text = playerSavedData._gameStats.laserKills.ToString();
-        statPrefabs[8].value.text = playerSavedData._gameStats.totalDeaths.ToString();
-        statPrefabs[9].value.text = playerSavedData._gameStats.highestWave.ToString();
-        statPrefabs[10].value.text = playerSavedData._gameStats.totalElites.ToString();
-        statPrefabs[11].value.text = playerSavedData._gameStats.totalBosses.ToString();
-        statPrefabs[12].value.text = playerSavedData._gameStats.totalPlayTime.ToString();
-        statPrefabs[13].value.text = playerSavedData._gameStats.totalUpgrades.ToString();
-        statPrefabs[14].value.text = playerSavedData._gameStats.totalParts.ToString();
-        statPrefabs[15].value.text = playerSavedData._gameStats.totalDistance.ToString();
+        statPrefabs[0].value.text = playerSavedData._stats.totalKills.ToString();
+        statPrefabs[1].value.text = playerSavedData._stats.minigunKills.ToString();
+        statPrefabs[2].value.text = playerSavedData._stats.shotgunKills.ToString();
+        statPrefabs[3].value.text = playerSavedData._stats.flamerKills.ToString();
+        statPrefabs[4].value.text = playerSavedData._stats.lightningKills.ToString();
+        statPrefabs[5].value.text = playerSavedData._stats.cryoKills.ToString();
+        statPrefabs[6].value.text = playerSavedData._stats.grenadeKills.ToString();
+        statPrefabs[7].value.text = playerSavedData._stats.laserKills.ToString();
+        statPrefabs[8].value.text = playerSavedData._stats.totalDeaths.ToString();
+        statPrefabs[9].value.text = playerSavedData._stats.highestWave.ToString();
+        statPrefabs[10].value.text = playerSavedData._stats.totalElites.ToString();
+        statPrefabs[11].value.text = playerSavedData._stats.totalBosses.ToString();
+        statPrefabs[12].value.text = playerSavedData._stats.totalPlayTime.ToString();
+        statPrefabs[13].value.text = playerSavedData._stats.totalUpgrades.ToString();
+        statPrefabs[14].value.text = playerSavedData._stats.totalParts.ToString();
+        statPrefabs[15].value.text = playerSavedData._stats.totalDistance.ToString();
 
         
 

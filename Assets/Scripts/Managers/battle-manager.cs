@@ -75,6 +75,7 @@ public class BattleManager : MonoBehaviour
                 showBar = true;
                 showpercent = true;
                 SpawnCapturePoint();
+                _gameManager.areaManager.DayNightCycle(true);
                 break;
             case BattleType.Survive:
                 objectiveMessage = "Survive the horde!";
@@ -88,6 +89,7 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
+                _gameManager.areaManager.DayNightCycle(true);
                 //color = Color.white;
                 fillAmount = 0;
                 break;
@@ -206,12 +208,9 @@ public class BattleManager : MonoBehaviour
             healthPickup.gameObject.SetActive(true);
         }
 
-
         currentBattleIndex++;
         _gameManager.gameActive = false;
         AudioManager.instance.PlayBGMusic(5);
-
-
 
         if (currentBattleIndex >= Battles.Count)
         {

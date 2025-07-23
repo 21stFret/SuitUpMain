@@ -73,7 +73,7 @@ public class TutorialManager : MonoBehaviour
             testPlayerData.InittestData();
         }
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         AudioManager.instance.Init();
         AudioManager.instance.PlayBGMusic(2);
         DroneAbilityManager.instance.Init();
@@ -375,7 +375,7 @@ public class TutorialManager : MonoBehaviour
     public void SkipTutorial()
     {
         Time.timeScale = 1;
-        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.UpdateFirstLoad(1);
         PlayerSavedData.instance.SavePlayerData();
         sceneLoader.LoadScene(2);
     }

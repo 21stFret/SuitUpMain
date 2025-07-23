@@ -72,7 +72,7 @@ public class CashCollector : MonoBehaviour
     public void AddCrawlerPart(int amount)
     {
         playerProgressManager.crawlerParts += amount;
-        PlayerSavedData.instance._gameStats.totalParts += amount;
+        PlayerSavedData.instance._stats.totalParts += amount;
         ShowUI();
         UpdateUI(PlayerProgressManager.instance.crawlerParts);
     }

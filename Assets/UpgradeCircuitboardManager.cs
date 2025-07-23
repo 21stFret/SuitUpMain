@@ -135,7 +135,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
     {
         if (PlayerSavedData.instance != null)
         {
-            if (PlayerSavedData.instance.triggeredCircuitTutorial)
+            if (PlayerSavedData.instance.circuitTut)
             {
                 circuitTutPanel.SetActive(false);
             }
@@ -299,7 +299,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         isCircuitTutorialActive = false;
         CloseMenuButton.gameObject.SetActive(true);
         part = 0; // Reset part for future tutorials
-        PlayerSavedData.instance.triggeredCircuitTutorial = true;
+        PlayerSavedData.instance.circuitTut = true;
         PlayerSavedData.instance.SavePlayerData();
         eventSystem.SetSelectedGameObject(firstSelectedChipSlot);
     }

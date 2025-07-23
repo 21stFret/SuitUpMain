@@ -64,7 +64,7 @@ public class WeaponFuelManager : MonoBehaviour
 
     void Update()
     {
-        if(!_enabled)
+        if (!_enabled)
         {
             return;
         }
@@ -79,14 +79,14 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void HandleOnUpdateMods()
     {
-        if(GameManager.instance == null)
+        if (GameManager.instance == null)
         {
             return;
         }
         RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Final Reserves");
         if (__selectMod != null)
         {
-            if (weaponFuel<= weaponFuelMax * 0.2 && !lowFuelMod)
+            if (weaponFuel <= weaponFuelMax * 0.2 && !lowFuelMod)
             {
                 lowFuelMod = true;
                 BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod);
@@ -100,7 +100,7 @@ public class WeaponFuelManager : MonoBehaviour
         __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Conservation");
         if (__selectMod != null)
         {
-            if (weaponFuel> weaponFuelMax * 0.8  && !fullFuelMod)
+            if (weaponFuel > weaponFuelMax * 0.8 && !fullFuelMod)
             {
                 fullFuelMod = true;
                 BattleMech.instance.weaponController.altWeaponEquiped.ApplyDamageModifier(__selectMod);
@@ -120,7 +120,7 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void Recharge()
     {
-        if(!canRecharge)
+        if (!canRecharge)
         {
             return;
         }
@@ -147,11 +147,11 @@ public class WeaponFuelManager : MonoBehaviour
 
     private void FuelManagement()
     {
-        if(weapon == null)
+        if (weapon == null)
         {
             return;
         }
-                
+
         if (weaponInUse)
         {
             UseFuel(Time.deltaTime * weaponFuelRate);
@@ -170,6 +170,17 @@ public class WeaponFuelManager : MonoBehaviour
         {
             weaponFuel = 0;
             weapon.Stop();
+            if (constantUse)
+            {
+                StartCoroutine(DisableFuelManager(0.2f));
+            }
         }
+    }
+    
+    private IEnumerator DisableFuelManager(float time)
+    {
+        _enabled = false;
+        yield return new WaitForSeconds(time);
+        _enabled = true;
     }
 }

@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         _myCharacterController = BattleMech.instance.myCharacterController;
         _myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         mechLoadOut.Init();
         InitializeStats();
         AudioManager.instance.Init();
@@ -210,10 +210,10 @@ public class GameManager : MonoBehaviour
         {
             if(won)
             {
-                PlayerSavedData.instance.highestDifficulty++;
-                if(PlayerSavedData.instance.highestDifficulty > 3)
+                PlayerSavedData.instance.topDif++;
+                if(PlayerSavedData.instance.topDif > 3)
                 {
-                    PlayerSavedData.instance.highestDifficulty = 3;
+                    PlayerSavedData.instance.topDif = 3;
                 }
             }
             PlayerSavedData.instance.SavePlayerData();
@@ -248,7 +248,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         if(wonGame)
         {
-            if (!PlayerSavedData.instance.hasSeenThankYouPanel)
+            if (!PlayerSavedData.instance.tyPanel)
             {
                 ShowCredits();
                 return;
