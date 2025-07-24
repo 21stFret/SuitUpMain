@@ -47,33 +47,12 @@ public class CrawlerMovement : MonoBehaviour
     public bool canRotate = true;
 
     private Vector3 currentDirection;
-
-    private bool useavoidance;
     
     private void Start()
     {
         lastPosition = transform.position;
         currentDirection = transform.forward;
     }
-
-    void OnTriggerEnter(Collider other)
-    {
-        // Convert LayerMask to layer number and compare
-        if (((1 << other.gameObject.layer) & SteeringRaycast) != 0)
-        {
-            print("Obstacle detected: " + other.gameObject.name);
-            useavoidance = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (((1 << other.gameObject.layer) & SteeringRaycast) != 0)
-        {
-            useavoidance = false;
-        }
-    }
-
     private void MoveCrawler()
     {
         // 1. Calculate base direction to target
@@ -103,7 +82,7 @@ public class CrawlerMovement : MonoBehaviour
         
         // 3. If path is not clear, check for avoidance directions
         Vector3 avoidanceDirection = Vector3.zero;
-        if (!clearPathToTarget || useavoidance)
+        if (!clearPathToTarget)
         {
             avoidanceDirection = RayCastSteering();
         }

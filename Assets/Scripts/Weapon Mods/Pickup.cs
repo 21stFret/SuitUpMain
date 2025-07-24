@@ -29,19 +29,21 @@ public class Pickup : MonoBehaviour
         Init(pickupType);
     }
 
-    public void Init(ModBuildType type)
+    public void Init(ModBuildType type, bool isUpgrade = false)
+
     {
         pickupCollider = GetComponent<Collider>();
         pickupLight = GetComponentInChildren<Light>(true);
         pickupType = type;
         upgrade = false;
-        if (pickupType == ModBuildType.UPGRADE)
+        if (isUpgrade)
         {
             upgrade = true;
             upgradeModel.SetActive(true);
             pickupType = GameManager.instance.nextBuildtoLoad;
         }
         pickupModel.SetActive(false);
+        gameObject.SetActive(true);
         StartCoroutine(SetupPickup());
     }
 

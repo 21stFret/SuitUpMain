@@ -6,6 +6,7 @@ public class WeaponFuelManager : MonoBehaviour
 {
     public MechWeapon weapon;
     public bool _enabled;
+    public bool cheatlocked;
     public WeaponUI weaponUI;
     public float weaponFuel;
     public float weaponFuelMax = 100;
@@ -26,6 +27,7 @@ public class WeaponFuelManager : MonoBehaviour
         weaponFuel = weaponFuelMax;
         _enabled = true;
         weaponFuelRate = weapon.weaponFuelUseRate;
+        cheatlocked = false;
     }
 
     public IEnumerator BoostRecharge(float time)
@@ -64,7 +66,7 @@ public class WeaponFuelManager : MonoBehaviour
 
     void Update()
     {
-        if (!_enabled)
+        if (!_enabled || cheatlocked)
         {
             return;
         }

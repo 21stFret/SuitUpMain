@@ -189,7 +189,7 @@ public class BattleManager : MonoBehaviour
     public void ObjectiveComplete()
     {
 
-        if(_objectiveComplete)
+        if (_objectiveComplete)
         {
             return;
         }
@@ -199,14 +199,8 @@ public class BattleManager : MonoBehaviour
         lightningController.active = false;
 
         SetPickUpPosition();
-        if (currentBattleIndex % 2 != 1)
-        {
-            roomDrop.gameObject.SetActive(true);
-        }
-        else
-        {
-            healthPickup.gameObject.SetActive(true);
-        }
+
+        bool chipreward = currentBattleIndex % 2 != 1;
 
         currentBattleIndex++;
         _gameManager.gameActive = false;
@@ -219,13 +213,23 @@ public class BattleManager : MonoBehaviour
                 _gameManager.EndGame(true);
                 return;
             }
-            roomDrop.Init(ModBuildType.UPGRADE);
+            roomDrop.Init(_gameManager.nextBuildtoLoad, true);
         }
         else
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-        // add secondary room drop for upgrade when doing mini boss as to not break flow of the player chosen portal
+
+        if (chipreward) // If the index is odd, we show the room drop
+        {
+            roomDrop.gameObject.SetActive(true);
+            healthPickup.gameObject.SetActive(false);
+        }
+        else
+        {
+            roomDrop.gameObject.SetActive(false);
+            healthPickup.gameObject.SetActive(true);
+        }
     }
 
     public void ObjectiveFailed()

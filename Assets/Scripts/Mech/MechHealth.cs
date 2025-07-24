@@ -212,19 +212,22 @@ public class MechHealth : MonoBehaviour
     {
         if (isDead) return;
 
-        if (altShieldActive)
-        {
-            return;
-        }
-
         bool isHeal = damage < 0;
 
-        if (!isHeal && characterController.isDodging)
+        if (!isHeal)
         {
-            return;
+            if (characterController.isDodging)
+            {
+                return;
+            }
+            
+            if (altShieldActive)
+            {
+                return;
+            }
         }
 
-        if(GameManager.instance != null)
+        if (GameManager.instance != null)
         {
             RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Mag Shield");
             if (__selectMod != null)
