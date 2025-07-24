@@ -15,7 +15,7 @@ public class RewardMenu : MonoBehaviour
     {
         cashReward.text = cash.ToString();
         artifactReward.text = artifact.ToString();
-        _multiplier.text = "Reward Multiplier : x" + multiplier.ToString("F1");
+        _multiplier.text = "Difficulty Multiplier : x" + multiplier.ToString("F1");
         int mins = Mathf.FloorToInt(playTime/60);
         string runTime = "Run Time ";
 

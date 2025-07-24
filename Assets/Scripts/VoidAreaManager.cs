@@ -10,6 +10,7 @@ public class VoidAreaManager : MonoBehaviour
     public void InitVoidArea()
     {
         healthPickup.voidPickUp = true;
+        healthPickup.Init();
         healthPickup.ResetPickup();
     }
 }

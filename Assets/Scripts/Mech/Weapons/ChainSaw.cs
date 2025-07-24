@@ -12,17 +12,30 @@ public class ChainSaw : MechWeapon
     private List<TargetHealth> targetHealths = new List<TargetHealth>();
     public ParticleSystem sparks;
     private float _timer;
+    public AudioSource audioSource;
+    public AudioClip lowEngineHum, revingEngine;
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        _animator = GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         //meshRenderer.materials[1].SetColor("_EmissionColor", Color.white);
         bounces = 0;
     }
 
+    public override void Init()
+    {
+        base.Init();
+        _animator.SetBool("Enabled", false);
+        weaponType = WeaponType.Chainsaw;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        if(other.gameObject.tag == "Player")
+        {
+            return;
+        }
         var health = other.GetComponent<TargetHealth>();
         if (health != null && !targetHealths.Contains(health))
         {
@@ -32,6 +45,10 @@ public class ChainSaw : MechWeapon
 
     private void OnTriggerExit(Collider other)
     {
+        if(other.gameObject.tag == "Player")
+        {
+            return;
+        }
         var health = other.GetComponent<TargetHealth>();
         if (health != null && targetHealths.Contains(health))
         {
@@ -41,12 +58,20 @@ public class ChainSaw : MechWeapon
 
     void Update()
     {
-        if(isFiring)
+        if (isFiring)
         {
+            // Validate damage before using it
+            if (float.IsNaN(damage) || float.IsInfinity(damage))
+            {
+                Debug.LogError($"ChainSaw damage is NaN/Infinity: {damage}");
+                return;
+            }
+            
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                // Iterate backwards to safely remove items
+                Debug.Log($"ChainSaw dealing {damage} damage to {targetHealths.Count} targets");
+                
                 for (int i = targetHealths.Count - 1; i >= 0; i--)
                 {
                     var health = targetHealths[i];
@@ -55,7 +80,16 @@ public class ChainSaw : MechWeapon
                         targetHealths.RemoveAt(i);
                         continue;
                     }
-                    health.TakeDamage(damage, WeaponType.Melee);
+                    
+                    // Log before damage
+                    float healthBefore = health.health;
+                    health.TakeDamage(damage, WeaponType.Chainsaw);
+                    
+                    // Check if health became NaN after our damage call
+                    if (float.IsNaN(health.health))
+                    {
+                        Debug.LogError($"Health became NaN after chainsaw damage! Before: {healthBefore}, Damage: {damage}, Target: {health.gameObject.name}");
+                    }
                 }
                 _timer = 0.0f;
             }
@@ -70,6 +104,12 @@ public class ChainSaw : MechWeapon
     {
         base.Fire();
         sparks.Play();
+        _animator.SetBool("Enabled", true);
+        if (audioSource != null)
+        {
+            audioSource.clip = revingEngine;
+            audioSource.Play();
+        }
     }
 
     // Stop firing 
@@ -77,6 +117,22 @@ public class ChainSaw : MechWeapon
     {
         base.Stop();
         sparks.Stop();
-        //targetHealths.Clear();
+        if (audioSource != null)
+        {
+            audioSource.clip = lowEngineHum;
+            audioSource.Play();
+        }
+        StartCoroutine(StopEngine());
+    }
+
+    private IEnumerator StopEngine()
+    {
+        yield return new WaitForSeconds(3f);
+        _animator.SetBool("Enabled", false);
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
+        
     }
 }

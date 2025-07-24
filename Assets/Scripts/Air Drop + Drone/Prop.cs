@@ -15,6 +15,8 @@ public class Prop : MonoBehaviour
     [InspectorButton("RefreshProp")]
     public bool init;
 
+    protected WeaponType killedBy;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
@@ -48,7 +50,8 @@ public class Prop : MonoBehaviour
 
         if (health  <= 0)
         {
-            Die();
+            killedBy = weapon;
+            Die();        
         }
     }
 

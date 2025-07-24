@@ -8,7 +8,7 @@ public class Cheats : MonoBehaviour
     public TargetHealth targetHealth;
     public GameObject UI;
     public WeaponController altWeaponController;
-    private float savedFuelUseRate;
+    public GameObject Chips;
 
     public void ToggleInvincible(bool toggle)
     {
@@ -51,5 +51,15 @@ public class Cheats : MonoBehaviour
         CashCollector.instance.AddArtifact(100);
         PlayerSavedData.instance.SavePlayerData();
         print("Gave you 1 million cash and 100 artifacts!");
+    }
+
+    public void SkipLevel()
+    {
+        BattleManager.instance.ObjectiveComplete();
+    }
+
+    public void ToggleChips(bool toggle)
+    {
+        Chips.SetActive(toggle);
     }
 }

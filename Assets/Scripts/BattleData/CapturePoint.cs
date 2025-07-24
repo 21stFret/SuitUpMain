@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CapturePoint : MonoBehaviour
-{   
+{
     private bool _enabled;
     public ParticleSystem online;
     public ParticleSystem inProgress;
@@ -38,7 +38,7 @@ public class CapturePoint : MonoBehaviour
             }
             return;
         }
-        if(playerInArea)
+        if (playerInArea)
         {
             CapturePointProgress();
             if (!inProgress.isPlaying)
@@ -48,7 +48,7 @@ public class CapturePoint : MonoBehaviour
         }
         else
         {
-            if(inProgress.isPlaying)
+            if (inProgress.isPlaying)
             {
                 inProgress.Stop();
             }
@@ -86,17 +86,20 @@ public class CapturePoint : MonoBehaviour
 
     public void Capture()
     {
-        Debug.Log("Capture Point Captured");
+        CrawlerSpawner.instance.KillAllCrawlers();
+        BattleManager.instance.ObjectiveComplete();
+        GameManager.instance.areaManager.missileLauncher.missilePayload = MissilePayload.FatMan;
+        GameManager.instance.areaManager.missileLauncher.SpawnExplosion(Vector3.zero);
+        PostProcessController.instance.NukeEffect();
+    }
+    
+    public void ProcessCapture()
+    {
         online.Stop();
         inProgress.Stop();
         isCaptured = true;
         _enabled = false;
         captureProgress = 0;
         ball.SetActive(false);
-        CrawlerSpawner.instance.KillAllCrawlers();
-        BattleManager.instance.ObjectiveComplete();
-        GameManager.instance.areaManager.missileLauncher.missilePayload = MissilePayload.FatMan;
-        GameManager.instance.areaManager.missileLauncher.SpawnExplosion(Vector3.zero);
-        PostProcessController.instance.NukeEffect();
     }
 }

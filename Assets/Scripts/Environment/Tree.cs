@@ -26,11 +26,23 @@ public class Tree : Prop
 
     public override void Die()
     {
-        if(burnt)
+        if (!_targetHealth.alive)
         {
             return;
         }
-        TriggerOnFire();
+        if (burnt)
+        {
+            return;
+        }
+        if (killedBy == WeaponType.Chainsaw)
+        {
+            Chainsawed();
+        }
+        else
+        {
+            TriggerOnFire();
+        }
+        base.Die();
     }
 
     public void TriggerOnFire()
@@ -42,16 +54,25 @@ public class Tree : Prop
         StartCoroutine(SetOnFire());
     }
 
+    public void Chainsawed()
+    {
+        normalRoot.SetActive(false);
+        fireRoot.SetActive(false);
+        GetComponent<Collider>().enabled = false;
+        deadRoot.SetActive(true);
+        deadRoot.GetComponent<DeadTree>().Die();
+    }
+
     public IEnumerator SetOnFire()
     {
-        burnt=true;
+        burnt = true;
         fireRoot.SetActive(true);
         fireDamage.EnableDamageArea();
         yield return new WaitForSeconds(burnTime);
         normalRoot.transform.DOScale(0, 2);
         GetComponent<Collider>().enabled = false;
         deadRoot.SetActive(true);
-        yield return new WaitForSeconds(burnTime-1);
+        yield return new WaitForSeconds(burnTime - 1);
         fireDamage.SetDamageActive(false);
         fireRoot.SetActive(false);
     }
