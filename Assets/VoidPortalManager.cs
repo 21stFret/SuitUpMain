@@ -47,6 +47,7 @@ public class VoidPortalManager : MonoBehaviour
         voidPortalEffect.StartEffect();
         SetPortalColor(voidPortalEffect, ModBuildType.UPGRADE);
         RoomPortal portal = voidPortalEffect.GetComponent<RoomPortal>();
+        portal.portalType = ModBuildType.UPGRADE;
         portal.voidPortal = voidTrue;
         portal._active = true;
     }

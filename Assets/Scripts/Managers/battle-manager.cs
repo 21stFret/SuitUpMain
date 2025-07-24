@@ -196,6 +196,10 @@ public class BattleManager : MonoBehaviour
         _objectiveComplete = true;
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
+        if(capturePoint != null && capturePoint.isCaptured)
+        {
+            capturePoint.ProcessCapture();
+        }
         lightningController.active = false;
 
         SetPickUpPosition();
@@ -219,16 +223,17 @@ public class BattleManager : MonoBehaviour
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-
+        
+        healthPickup.Init();
         if (chipreward) // If the index is odd, we show the room drop
         {
             roomDrop.gameObject.SetActive(true);
-            healthPickup.gameObject.SetActive(false);
+            healthPickup.RemovePickup();
         }
         else
         {
             roomDrop.gameObject.SetActive(false);
-            healthPickup.gameObject.SetActive(true);
+            healthPickup.ResetPickup();
         }
     }
 

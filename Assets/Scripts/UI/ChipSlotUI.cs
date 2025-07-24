@@ -99,6 +99,8 @@ public class ChipSlotUI : MonoBehaviour
             SetModifiers(true);
         }
 
+        SetConnectorLinesActive(currentRunMod.modBuildType);
+        
         for (int i = 0; i < powerNode.Length; i++)
         {
             powerNode[i].chipSlots.Add(this);
@@ -113,9 +115,6 @@ public class ChipSlotUI : MonoBehaviour
                 linkedChipSlots[i].CheckisPowered();
             }
         }
-
-        SetConnectorLinesActive(currentRunMod.modBuildType);
-
     }
 
     public void RemoveChip()
@@ -285,6 +284,10 @@ public class ChipSlotUI : MonoBehaviour
         }
         connectorLineA.color = color;
         connectorLineB.color = color;
+        if(modCategory == ModBuildType.Default)
+        {
+            return;
+        }
         modBuildType = modCategory;
     }
 }

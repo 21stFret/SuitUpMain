@@ -90,6 +90,11 @@ public class DamageArea : MonoBehaviour
     {
         while (damageActive)
         {
+            if (targetsInRange.Count == 0)
+            {
+                yield return new WaitForSeconds(damageInterval);
+                continue;
+            }
             for (int i = targetsInRange.Count - 1; i >= 0; i--)
             {
                 if (targetsInRange[i] != null && targetsInRange[i].gameObject.activeInHierarchy)

@@ -12,13 +12,21 @@ public class HealthPickup : MonoBehaviour
     public  GameObject obj;
     public bool Fuel;
     public bool Drone;
-
     private BattleMech battleMech;
 
-    private void Awake()
+    public void Init()
     {
-        col = GetComponent<Collider>();
+        if (obj == null)
+        {
+            obj = gameObject;
+        }
+        if (col == null)
+        {
+            col = GetComponent<Collider>();
+        }
         canpickup = true;
+        col.enabled = true;
+        obj.SetActive(true);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -100,15 +108,18 @@ public class HealthPickup : MonoBehaviour
         }
 
 
-
-        if(meterFull)
+        if(!voidPickUp && !midlevelPickUp)
         {
-            return;
+            if (meterFull)
+            {
+                return;
+            }
         }
+
         RemovePickup();
     }
 
-    private void RemovePickup()
+    public void RemovePickup()
     {
         canpickup = false;
         col.enabled = false;

@@ -10,7 +10,11 @@ public class ShieldAlt : MechWeapon
     public ParticleSystem shieldEffect;
     private MechHealth mechHealth;
     private bool isShieldActive = false;
-    
+    public AudioSource audioSource;
+    public AudioClip shieldActivateSound;
+    public AudioClip shieldDeactivateSound;
+    public AudioClip shieldLoopSound;
+
     public override void Init()
     {
         mechHealth = BattleMech.instance.mechHealth;
@@ -28,7 +32,7 @@ public class ShieldAlt : MechWeapon
             isShieldActive = false;
             _animator.SetBool("ShieldActive", false);
         }
-        if(weaponFuelManager.weaponFuel == weaponFuelManager.weaponFuelMax)
+        if (weaponFuelManager.weaponFuel == weaponFuelManager.weaponFuelMax)
         {
             isShieldActive = true;
             _animator.SetBool("ShieldActive", true);
@@ -38,13 +42,15 @@ public class ShieldAlt : MechWeapon
     // Fire Weapon
     public override void Fire()
     {
-        base.Fire();
         if (!isShieldActive)
         {
             return;
         }
+        base.Fire();
         shieldEffect.Play();
         mechHealth.altShieldActive = true;
+        StartCoroutine(ActivateShield());
+
     }
 
     // Stop firing 
@@ -53,5 +59,27 @@ public class ShieldAlt : MechWeapon
         base.Stop();
         shieldEffect.Stop();
         mechHealth.altShieldActive = false;
+        if (audioSource != null)
+        {
+            audioSource.clip = shieldDeactivateSound;
+            audioSource.loop = false;
+            audioSource.Play();
+        }
+    }
+    
+    private IEnumerator ActivateShield()
+    {
+        if (audioSource != null)
+        {
+            audioSource.clip = shieldActivateSound;
+            audioSource.Play();
+        }
+        yield return new WaitForSeconds(0.5f);
+        if (audioSource != null)
+        {
+            audioSource.clip = shieldLoopSound;
+            audioSource.loop = true;
+            audioSource.Play();
+        }
     }
 }

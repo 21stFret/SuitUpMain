@@ -29,6 +29,10 @@ public class CrawlerBomber : Crawler
         deathNoise.clip = splatSound;
         ExplodeIfInRange();
         base.Die(killedBy);
+        if(bombsacks == null || originalPositions == null)
+        {
+            return;
+        }
         for (int i = 0; i < bombsacks.Length; i++)
         {
             if (bombsacks[i] != null && originalPositions[i] != null)

@@ -100,7 +100,7 @@ public class DroneControllerUI : MonoBehaviour
                 continue;
             }
             droneInput.gameObject.SetActive(true);
-            GameObject uiObject = uiObjects[i];
+            GameObject uiObject = uiObjects[(int)droneInput.droneType];
             uiObject.transform.SetParent(droneInput.UIObject.transform);
             uiObject.transform.localPosition = Vector3.zero;
             uiObject.SetActive(true);

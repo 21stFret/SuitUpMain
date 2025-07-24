@@ -134,8 +134,8 @@ public class SequenceInputController : MonoBehaviour
 
     public void LoadSetSequence()
     {
-        sequenceLength = 8;
-        currentSequence = new Direction[8];
+        sequenceLength = 4;
+        currentSequence = new Direction[sequenceLength];
         for (int i = 0; i < sequenceLength; i++)
         {
             switch (i)
@@ -144,24 +144,12 @@ public class SequenceInputController : MonoBehaviour
                     currentSequence[i] = Direction.Up;
                     break;
                 case 1:
-                    currentSequence[i] = Direction.Up;
+                    currentSequence[i] = Direction.Down;
                     break;
                 case 2:
-                    currentSequence[i] = Direction.Down;
+                    currentSequence[i] = Direction.Left;
                     break;
                 case 3:
-                    currentSequence[i] = Direction.Down;
-                    break;
-                case 4:
-                    currentSequence[i] = Direction.Left;
-                    break;
-                case 5:
-                    currentSequence[i] = Direction.Right;
-                    break;
-                case 6:
-                    currentSequence[i] = Direction.Left;
-                    break;
-                case 7:
                     currentSequence[i] = Direction.Right;
                     break;
             }

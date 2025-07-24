@@ -23,6 +23,7 @@ public class AreaIntro : MonoBehaviour
 
     public void ShowAreaIntro()
     {
+        areaIntroImage.gameObject.SetActive(true);
         areaIntroImage.sprite = areaIntroSprites[(int)GameManager.instance.currentAreaType];
         fadeIn = true;
         fadeTime = 0.0f;
@@ -47,16 +48,21 @@ public class AreaIntro : MonoBehaviour
         if (fadeIn)
         {
             fadeTime += Time.deltaTime;
-            if (fadeInTime <= fadeTime)
+            if (fadeTime >= fadeInTime)
             {
+                fadeTime = fadeInTime;
                 fadeIn = false;
             }
         }
-        else{
+        else
+        {
             fadeTime -= Time.deltaTime;
-            if (fadeInTime <= fadeTime)
+            if (fadeTime <= 0)
             {
-                enabled = false;
+                _enabled = false;
+                areaIntroImage.gameObject.SetActive(false);
+                material.SetFloat(shader, fadeMinValue);
+                return;
             }
         }
         material.SetFloat(shader, Mathf.Lerp(fadeMinValue, fadeMaxValue, fadeTime/fadeInTime));

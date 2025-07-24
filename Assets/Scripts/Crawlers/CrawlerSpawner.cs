@@ -527,15 +527,16 @@ public class CrawlerSpawner : MonoBehaviour
 
     public void EndBattle()
     {
-        if(!isActive)
+        if (!isActive)
         {
             return;
         }
         isActive = false;
-        if(hordePortal.isActive)
+        if (hordePortal.isActive)
         {
             hordePortal.StopEffect();
         }
+        KillAllCrawlers();
     }
 
     public void KillAllCrawlers()

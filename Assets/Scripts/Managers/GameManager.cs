@@ -175,13 +175,20 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPortalsToNextRoom()
     {
-        voidPortalManager.transform.position = playerInput.transform.position;
+        voidPortalManager.transform.position = battleManager.crawlerSpawner.spawnPoints[0].position;
         battleManager.crawlerSpawner.waveText.text = "Head through the Portal!";
 
         if (battleManager.currentBattleIndex > battleManager.Battles.Count - 1)
         {
             voidPortalManager.StartVoidEffect(true);
+            voidPortalManager.transform.position = BattleMech.instance.transform.position;
+            battleManager.currentBattleIndex = 0;
             battleManager.ResetOnNewArea();
+            return;
+        }
+        if (battleManager.currentBattleIndex % 2 == 1)
+        {
+            voidPortalManager.StartVoidEffect(false);
             return;
         }
         voidPortalManager.StartAllEffects();

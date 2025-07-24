@@ -135,6 +135,10 @@ public class WeaponsUpgradeUI : MonoBehaviour
             currentWeapon = weaponsManager._techWeapons[_index];
             UpdateUI(currentWeapon.baseWeaponInfo, currentWeapon.weaponData.level);
         }
+        if (currentWeapon.name == "Chainsaw")
+        {
+            currentWeapon.GetComponentInChildren<Animator>().SetBool("Enabled", false);
+        }
         currentWeapon.transform.position = weaponParent.position;
         currentWeapon.transform.rotation = weaponParent.rotation;
         currentWeapon.transform.SetParent(weaponParent);

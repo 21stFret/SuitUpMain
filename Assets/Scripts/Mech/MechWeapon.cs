@@ -10,6 +10,8 @@ public enum WeaponType
     Flame,
     Lightning,
     Cryo,
+    Chainsaw,
+    Shield,
     AoE,
     Crawler,
     Spore,
