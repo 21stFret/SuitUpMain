@@ -132,16 +132,16 @@ public class CrawlerLeaper : Crawler
     public override void Die(WeaponType weapon)
     {
         base.Die(weapon);
-        PlayerSavedData.instance._gameStats.totalElites++;
-        if (PlayerSavedData.instance._gameStats.totalElites >= 5)
+        PlayerSavedData.instance._stats.totalElites++;
+        if (PlayerSavedData.instance._stats.totalElites >= 5)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_5");
         }
-        if (PlayerSavedData.instance._gameStats.totalElites >= 20)
+        if (PlayerSavedData.instance._stats.totalElites >= 20)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_20");
         }
-        if (PlayerSavedData.instance._gameStats.totalElites >= 100)
+        if (PlayerSavedData.instance._stats.totalElites >= 100)
         {
             PlayerAchievements.instance.SetAchievement("ELITE_100");
         }

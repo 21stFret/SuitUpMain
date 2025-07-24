@@ -7,6 +7,7 @@ public class HealthPickup : MonoBehaviour
     bool canpickup = true;
     public float amount = 10f;
     public bool voidPickUp = false;
+    public bool midlevelPickUp = false;
     private Collider col;
     public  GameObject obj;
     public bool Fuel;
@@ -67,12 +68,21 @@ public class HealthPickup : MonoBehaviour
         }
         else
         {
+            
             if (voidPickUp)
             {
                 GameManager.instance.CompleteVoidRoom();
                 meterFull = false;
                 // 25% of max health
                 float amount = battleMech.targetHealth.maxHealth * 0.25f;
+                battleMech.RepairArmour(amount);
+            }
+            if (midlevelPickUp)
+            {
+                GameManager.instance.SpawnPortalsToNextRoom();
+                meterFull = false;
+                // 5% of max health
+                float amount = battleMech.targetHealth.maxHealth * 0.05f;
                 battleMech.RepairArmour(amount);
             }
             else

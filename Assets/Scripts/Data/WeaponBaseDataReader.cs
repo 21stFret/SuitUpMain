@@ -15,7 +15,7 @@ public class WeaponBaseDataReader : MonoBehaviour
         // Process each weapon (columns in CSV)
         // First column (index 0) is for row labels, so we start from index 1
         // The weapon columns are: Minigun, Shotgun, Plasma, Flamer, Shocker, Cryo
-        for (int weaponIndex = 0; weaponIndex < 6; weaponIndex++) // 6 weapons total
+        for (int weaponIndex = 0; weaponIndex < 8; weaponIndex++) // 8 weapons total
         {
             BaseWeaponInfo BWD;
             if (weaponIndex < weaponsManager._assaultWeapons.Length)

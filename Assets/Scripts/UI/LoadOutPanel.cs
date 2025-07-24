@@ -31,7 +31,7 @@ public class LoadOutPanel : MonoBehaviour
 
     public void OnEnable()
     {
-        int difficulty = PlayerSavedData.instance.highestDifficulty;
+        int difficulty = PlayerSavedData.instance.topDif;
         currentDifficulty = difficulty-1;
         ScrollDifficulties(true);
         weaponsManager = WeaponsManager.instance;
@@ -69,7 +69,7 @@ public class LoadOutPanel : MonoBehaviour
         {
             currentMainIndex = 0;
         }
-        if (!weaponsManager._assaultWeapons[currentMainIndex].weaponData.unlocked)
+        if (weaponsManager._assaultWeapons[currentMainIndex].weaponData.unlocked == 0)
         {
             NextMainWeapon();
             return;
@@ -88,7 +88,7 @@ public class LoadOutPanel : MonoBehaviour
         {
             currentAltIndex = 0;
         }
-        if (!weaponsManager._techWeapons[currentAltIndex].weaponData.unlocked)
+        if (weaponsManager._techWeapons[currentAltIndex].weaponData.unlocked == 0)
         {
             NextAltWeapon();
             return;
@@ -131,7 +131,7 @@ public class LoadOutPanel : MonoBehaviour
 
         DifficultyButtonImage.sprite = DifficultyButtonSprites[currentDifficulty];
 
-        if(PlayerSavedData.instance.highestDifficulty < currentDifficulty)
+        if(PlayerSavedData.instance.topDif < currentDifficulty)
         {
             DifficultyButtonText.text = "Locked";
             DifficultyDecription.text = "Complete the previous difficulty to unlock!";

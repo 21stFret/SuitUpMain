@@ -73,7 +73,7 @@ public class TutorialManager : MonoBehaviour
             testPlayerData.InittestData();
         }
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         AudioManager.instance.Init();
         AudioManager.instance.PlayBGMusic(2);
         DroneAbilityManager.instance.Init();
@@ -192,7 +192,8 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
         canCheckProgress = false;
-        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Drone offensive systems online."));
+        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Each charge of the drone bar will increase the abilites effect!)"));
+        yield return tutorialUI.currentTextCoroutine = tutorialUI.StartCoroutine(tutorialUI.PrintText("Offensive systems complete."));
         tutorialUI.HideAllInputUIs();
         currentStage = TutorialStage.SupportSystems;
     }
@@ -374,7 +375,7 @@ public class TutorialManager : MonoBehaviour
     public void SkipTutorial()
     {
         Time.timeScale = 1;
-        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.UpdateFirstLoad(1);
         PlayerSavedData.instance.SavePlayerData();
         sceneLoader.LoadScene(2);
     }

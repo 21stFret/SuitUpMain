@@ -15,7 +15,8 @@ public enum WeaponType
     Spore,
     Default,
     Trap,
-    Heal
+    Heal,
+    Melee,
 }
 
 [Serializable]
@@ -75,9 +76,13 @@ public class MechWeapon : MonoBehaviour
     {
         SetValues();
 
-        if(weaponData.mainWeapon)
+        if(weaponData.mainWeapon == 1)
         {
             rangeSensor = GetComponent<RangeSensor>();
+            if (rangeSensor == null)
+            {
+                return;
+            }
             rangeSensor.Sphere.Radius = range;
             sensor.enabled = true;
         }
@@ -130,7 +135,7 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Fire()
     {
-        if(!weaponData.mainWeapon)
+        if(weaponData.mainWeapon == 0)
         {
             weaponFuelManager.weaponInUse = true;
         }
@@ -169,7 +174,7 @@ public class MechWeapon : MonoBehaviour
 
     public virtual void Stop()
     {
-        if (!weaponData.mainWeapon)
+        if (weaponData.mainWeapon == 0)
         {
             weaponFuelManager.weaponInUse = false;
         }

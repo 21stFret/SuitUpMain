@@ -11,24 +11,22 @@ using Steamworks;
 public class PlayerSavedData : MonoBehaviour
 {
     public static PlayerSavedData instance;
-    public float _BGMVolume             {get; private set;} 
-    public float _SFXVolume             {get; private set;} 
-    public int _playerLevel             {get; private set;} 
-    public WeaponData[] _mainWeaponData {get; private set;} 
-    public WeaponData[] _altWeaponData  {get; private set;} 
+    public float _BGMV             {get; private set;} 
+    public float _SFXV             {get; private set;} 
+    public WeaponData[] _mwData {get; private set;} 
+    public WeaponData[] _awData  {get; private set;} 
     public int _Cash                    {get; private set;} 
-    public int _Exp                     {get; private set;} 
-    public int _Artifact                {get; private set;} 
-    public Vector2 _playerLoadout       {get; private set;} 
-    public bool _firstLoad              {get; private set;}
-    public bool triggeredEasterEgg;
-    public bool hasSeenThankYouPanel = false;
-    public GameStats _gameStats         {get; private set;}
-    public int highestDifficulty;
-    public bool demoBuild;
-    public int[] _droneAbilities;
-    public int[] droneLoadOut;
-    public bool triggeredCircuitTutorial = false;
+    public byte _Artifact                {get; private set;} 
+    public Vector2 _loadout       {get; private set;} 
+    public byte _fplay              {get; private set;}
+    public bool EastE;
+    public bool tyPanel = false;
+    public GameStats _stats         {get; private set;}
+    public byte topDif;
+    public bool demo;
+    public int[] _droneAb;
+    public int[] droneLO;
+    public bool circuitTut = false;
 
     private void Awake()
     {
@@ -53,170 +51,197 @@ public class PlayerSavedData : MonoBehaviour
 
     public void UpdatePlayerArtifact(int amount)
     {
-        _Artifact += amount;
-    }
-
-    public void UpdatePlayerLevel(int level)
-    {
-        _playerLevel = level;
-    }
-
-    public void UpdatePlayerExp(int exp)
-    {
-        _Exp += exp;
-        CheckLevel();
+        _Artifact += (byte)amount;
     }
 
     public bool HasCompletedEasyMode()
     {
-        return highestDifficulty>0;
-    }
-
-    private void CheckLevel()
-    {
-        var requiredExp = 100 + (20* _playerLevel);
-        if(_Exp >= requiredExp)
-        {
-            _playerLevel++;
-        }
+        return topDif>0;
     }
 
     public void UpdateMainWeaponData(WeaponData weaponData, int index)
     {
-        _mainWeaponData[index] = weaponData;
+        _mwData[index] = weaponData;
     }
 
     public void UpdateAltWeaponData(WeaponData weaponData, int index)
     {
-        _altWeaponData[index] = weaponData;
+        _awData[index] = weaponData;
     }
 
     public void UpdateMainWeaponLoadout(int mainWeapon)
     {
-        Vector2 loadout = new Vector2(mainWeapon, _playerLoadout.y);
-        _playerLoadout = loadout;
+        Vector2 loadout = new Vector2(mainWeapon, _loadout.y);
+        _loadout = loadout;
     }
 
     public void UpdateAltWeaponLoadout(int altWeapon)
     {
-        Vector2 loadout = new Vector2(_playerLoadout.x, altWeapon);
-        _playerLoadout = loadout;
+        Vector2 loadout = new Vector2(_loadout.x, altWeapon);
+        _loadout = loadout;
     }
 
-    public void UpdateFirstLoad(bool firstLoad)
+    public void UpdateFirstLoad(byte firstLoad)
     {
-        _firstLoad = firstLoad;
+        _fplay = firstLoad;
     }
 
     public void UpdateBGMVolume(float volume)
     {
-        _BGMVolume = volume;
+        _BGMV = volume;
     }
 
     public void UpdateSFXVolume(float volume)
     {
-        _SFXVolume = volume;
+        _SFXV = volume;
     }
 
     public void UpdateDroneLoadout(int[] loadout)
     {
-        droneLoadOut = loadout;
+        droneLO = loadout;
     }
 
     public void ResetAllData()
     {
         CreateData();
+        LogManager.instance.ClearLogs();
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
 
     public void CreateData()
     {
-        _firstLoad = true;
-        _BGMVolume = 0.5f;
-        _SFXVolume = 0.5f;
-        _playerLevel = 0;
+        _fplay = 0;
+        _BGMV = 0.5f;
+        _SFXV = 0.5f;
         _Cash = 0;
-        _Exp = 0;
         _Artifact = 0;
-        triggeredEasterEgg = false;
-        highestDifficulty = 0;
-        hasSeenThankYouPanel = false;
-        triggeredCircuitTutorial = false;
+        EastE = false;
+        topDif = 0;
+        tyPanel = false;
+        circuitTut = false;
         CreateWeaponData();
         CreateDroneAbilityData();
-        _gameStats = new GameStats();
+        _stats = new GameStats();
         SavePlayerData();
     }
 
     public void CreateWeaponData()
     {
-        _mainWeaponData = new WeaponData[3];
-        for (int i = 0; i < _mainWeaponData.Length; i++)
+        _mwData = new WeaponData[4];
+        for (int i = 0; i < _mwData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
-            _mainWeaponData[i] = weaponData;
-            _mainWeaponData[i].weaponIndex = i;
-            _mainWeaponData[i].unlocked = false;
-            _mainWeaponData[i].level = 0;
-            _mainWeaponData[i].mainWeapon = true;
+            _mwData[i] = weaponData;
+            _mwData[i].weaponIndex = (byte)i;
+            _mwData[i].unlocked = 0;
+            _mwData[i].level = 0;
+            _mwData[i].mainWeapon = 1;
         }
-        _altWeaponData = new WeaponData[3];
-        for (int i = 0; i < _altWeaponData.Length; i++)
+        _awData = new WeaponData[4];
+        for (int i = 0; i < _awData.Length; i++)
         {
             WeaponData weaponData = new WeaponData();
-            _altWeaponData[i] = weaponData;
-            _altWeaponData[i].weaponIndex = i;
-            _altWeaponData[i].unlocked = false;
-            _altWeaponData[i].level = 0;
-            _altWeaponData[i].mainWeapon = false;
+            _awData[i] = weaponData;
+            _awData[i].weaponIndex = (byte)i;
+            _awData[i].unlocked = 0;
+            _awData[i].level = 0;
+            _awData[i].mainWeapon = 0;
         }
-        _mainWeaponData[0].unlocked = true;
-        _altWeaponData[0].unlocked = true;
-        _playerLoadout = new Vector2(0, 0);
+        _mwData[0].unlocked = 1;
+        _awData[0].unlocked = 1;
+        _loadout = new Vector2(0, 0);
+    }
+
+    public void PatchWeaponData( WeaponData[] mainWeaponData, WeaponData[] altWeaponData)
+    {
+        // Ensure the main weapon data is initialized
+        if (mainWeaponData.Length != 4)
+        {
+            print("Patching main weapon data");
+            var oldMainWeaponData = mainWeaponData;
+            var newMainWeaponData = new WeaponData[4];
+            for (int i = 0; i < newMainWeaponData.Length; i++)
+            {
+                if (i < oldMainWeaponData.Length)
+                {
+                    newMainWeaponData[i] = oldMainWeaponData[i];
+                }
+                else
+                {
+                    newMainWeaponData[i] = new WeaponData(); // Initialize new entries
+                    newMainWeaponData[i].weaponIndex = (byte)i;
+                    newMainWeaponData[i].mainWeapon = 1; // Ensure main weapon flag is set
+                    newMainWeaponData[i].unlocked = (i == 0) ? (byte)1 : (byte)0; // Only the first weapon is unlocked by default
+                    newMainWeaponData[i].level = 0; // Reset level for new entries
+                }
+            }
+            _mwData = newMainWeaponData;
+        }
+        // Ensure the alt weapon data is initialized
+        if (altWeaponData.Length != 4)
+        {
+            print("Patching alt weapon data");
+            var oldAltWeaponData = altWeaponData;
+            var newAltWeaponData = new WeaponData[4];
+            for (int i = 0; i < newAltWeaponData.Length; i++)
+            {
+                if (i < oldAltWeaponData.Length)
+                {
+                    newAltWeaponData[i] = oldAltWeaponData[i];
+                }
+                else
+                {
+                    newAltWeaponData[i] = new WeaponData(); // Initialize new entries
+                    newAltWeaponData[i].weaponIndex = (byte)i;
+                    newAltWeaponData[i].mainWeapon = 0; // Ensure main weapon flag is set
+                    newAltWeaponData[i].unlocked = (i == 0) ? (byte)1 : (byte)0; // Only the first weapon is unlocked by default
+                    newAltWeaponData[i].level = 0; // Reset level for new entries
+                }
+            }
+            _awData = newAltWeaponData;
+        }
     }
 
     public void CreateDroneAbilityData()
     {
-        _droneAbilities = new int[15];
-        for (int i = 0; i < _droneAbilities.Length; i++)
+        _droneAb = new int[15];
+        for (int i = 0; i < _droneAb.Length; i++)
         {
-            _droneAbilities[i] = -1; // -1 means locked
+            _droneAb[i] = -1; // -1 means locked
         }
-        _droneAbilities[0] = 0; // 0 means unlocked
-        _droneAbilities[1] = 0;
+        _droneAb[0] = 0; // 0 means unlocked
+        _droneAb[1] = 0;
 
-        droneLoadOut = new int[5];
-        for (int i = 0; i < droneLoadOut.Length; i++)
+        droneLO = new int[5];
+        for (int i = 0; i < droneLO.Length; i++)
         {
-            droneLoadOut[i] = -2;
+            droneLO[i] = -2;
         }
-        droneLoadOut[0] = 0;
-        droneLoadOut[1] = 1;
+        droneLO[0] = 0;
+        droneLO[1] = 1;
     }
 
     public void SavePlayerData()
     {
         SaveData saveData = new SaveData();
         // Assign the values from the PlayerSavedData instance to the SaveData instance
-        saveData.BGMVolume = _BGMVolume;
-        saveData.SFXVolume = _SFXVolume;
-        saveData.playerLevel = _playerLevel;
-        saveData.playerCash = _Cash;
-        saveData.playerExp = _Exp;
-        saveData.playerArtifact = _Artifact;
-        saveData.mainWeaponData = _mainWeaponData;
-        saveData.altWeaponData = _altWeaponData;
-        saveData.playerLoadout = _playerLoadout;
-        saveData.firstLoad = _firstLoad;
-        saveData.gameStats = _gameStats;
-        saveData.triggeredEasterEgg = triggeredEasterEgg;
-        saveData.highestDifficulty = highestDifficulty;
-        saveData.hasSeenThankYouPanel = hasSeenThankYouPanel;
-        saveData.droneAbilities = _droneAbilities;
-        saveData.triggeredCircuitTutorial = triggeredCircuitTutorial;
-        saveData.droneLoadOut = droneLoadOut;
+        saveData.BGMVolume = _BGMV;
+        saveData.SFXVolume = _SFXV;
+        saveData.cash = _Cash;
+        saveData.arti = _Artifact;
+        saveData.mwData = _mwData;
+        saveData.awData = _awData;
+        saveData.loadout = _loadout;
+        saveData.fplay = _fplay;
+        saveData.stats = _stats;
+        saveData.eastE = EastE;
+        saveData.topDif = topDif;
+        saveData.tyPanel = tyPanel;
+        saveData.droneAb = _droneAb;
+        saveData.cirTut = circuitTut;
+        saveData.droneLO = droneLO;
 
-        string jsonData = JsonUtility.ToJson(saveData, true);
+        string jsonData = JsonUtility.ToJson(saveData, false);
         byte[] byteData = Encoding.UTF8.GetBytes(jsonData); // Changed from ASCII to UTF8
 
         if (SteamManager.Initialized)
@@ -312,38 +337,37 @@ public class PlayerSavedData : MonoBehaviour
             {
                 bool corrupted = false;
                 SaveData savedData = JsonUtility.FromJson<SaveData>(jsonData);
-                _BGMVolume = savedData.BGMVolume;
-                _SFXVolume = savedData.SFXVolume;
-                _playerLevel = savedData.playerLevel;
-                _Cash = savedData.playerCash;
-                _Exp = savedData.playerExp;
-                _Artifact = savedData.playerArtifact;
-                if (savedData.mainWeaponData.Length == 0 || savedData.altWeaponData.Length == 0)
+                _BGMV = savedData.BGMVolume;
+                _SFXV = savedData.SFXVolume;
+                _Cash = savedData.cash;
+                _Artifact = savedData.arti;
+                if (savedData.mwData.Length == 0 || savedData.awData.Length == 0)
                 {
                     CreateWeaponData(); // Ensure weapon data is initialized if missing
                     corrupted = true;
                 }
                 else
                 {
-                    _mainWeaponData = savedData.mainWeaponData;
-                    _altWeaponData = savedData.altWeaponData;
-                    _playerLoadout = savedData.playerLoadout;
+                    _mwData = savedData.mwData;
+                    _awData = savedData.awData;
+                    _loadout = savedData.loadout;
                 }
-                _firstLoad = savedData.firstLoad;
-                _gameStats = savedData.gameStats;
-                triggeredEasterEgg = savedData.triggeredEasterEgg;
-                highestDifficulty = savedData.highestDifficulty;
-                hasSeenThankYouPanel = savedData.hasSeenThankYouPanel;
-                triggeredCircuitTutorial = savedData.triggeredCircuitTutorial;
-                if (savedData.droneAbilities.Length == 0)
+                PatchWeaponData(savedData.mwData, savedData.awData);
+                _fplay = savedData.fplay;
+                _stats = savedData.stats;
+                EastE = savedData.eastE;
+                topDif = savedData.topDif;
+                tyPanel = savedData.tyPanel;
+                circuitTut = savedData.cirTut;
+                if (savedData.droneAb.Length == 0)
                 {
                     CreateDroneAbilityData(); // Ensure drone data is initialized if missing
                     corrupted = true;
                 }
                 else
                 {
-                    _droneAbilities = savedData.droneAbilities;
-                    droneLoadOut = savedData.droneLoadOut;
+                    _droneAb = savedData.droneAb;
+                    droneLO = savedData.droneLO;
                 }
 
                 if (corrupted)
@@ -374,21 +398,19 @@ public class PlayerSavedData : MonoBehaviour
 
 public class SaveData
 {
-    public int playerLevel;
-    public int playerCash;
-    public int playerExp;
-    public int playerArtifact;
-    public GameStats gameStats;
-    public WeaponData[] mainWeaponData;
-    public WeaponData[] altWeaponData;
-    public Vector2 playerLoadout;
-    public bool firstLoad;
+    public int cash;
+    public byte arti;
+    public GameStats stats;
+    public WeaponData[] mwData;
+    public WeaponData[] awData;
+    public Vector2 loadout;
+    public byte fplay;
     public float BGMVolume;
     public float SFXVolume;
-    public int highestDifficulty;
-    public bool triggeredEasterEgg;
-    public bool hasSeenThankYouPanel;
-    public int[] droneAbilities;
-    public int[] droneLoadOut;
-    public bool triggeredCircuitTutorial;
+    public byte topDif;
+    public bool eastE;
+    public bool tyPanel;
+    public int[] droneAb;
+    public int[] droneLO;
+    public bool cirTut;
 }

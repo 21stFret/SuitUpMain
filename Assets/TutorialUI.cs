@@ -99,7 +99,7 @@ public class TutorialUI : MonoBehaviour
 
     public IEnumerator EndTutorial()
     {
-        PlayerSavedData.instance.UpdateFirstLoad(false);
+        PlayerSavedData.instance.UpdateFirstLoad(1);
         PlayerSavedData.instance.SavePlayerData();
         currentTextCoroutine = StartCoroutine(PrintText("All systems check complete. Ready for live combat!"));
         yield return currentTextCoroutine;

@@ -190,16 +190,16 @@ public class CrawlerAlbino : Crawler
         base.Die(weapon);
         burstSpawner.isActive = false;
         crawlerSpawner.huntedTarget = null;
-        PlayerSavedData.instance._gameStats.totalBosses++;
-        if (PlayerSavedData.instance._gameStats.totalBosses == 1)
+        PlayerSavedData.instance._stats.totalBosses++;
+        if (PlayerSavedData.instance._stats.totalBosses == 1)
         {
             PlayerAchievements.instance.SetAchievement("BOSS_1");
         }
-        if (PlayerSavedData.instance._gameStats.totalBosses == 5)
+        if (PlayerSavedData.instance._stats.totalBosses == 5)
         {
             PlayerAchievements.instance.SetAchievement("BOSS_5");
         }
-        if (PlayerSavedData.instance._gameStats.totalBosses == 10)
+        if (PlayerSavedData.instance._stats.totalBosses == 10)
         {
             PlayerAchievements.instance.SetAchievement("BOSS_10");
         }
@@ -213,6 +213,6 @@ public class CrawlerAlbino : Crawler
         burstSpawner = GetComponent<CrawlerBurstSpawner>();
         burstSpawner.crawlerSpawner = crawlerSpawner;
         burstSpawner.Init();
-
+        burstSpawner.squadCount = Mathf.RoundToInt(BattleManager.instance.dificultyMultiplier);
     }
 }

@@ -21,6 +21,21 @@ public class LogManager : MonoBehaviour
     private Dictionary<string, List<LogEntry>> logsByCategory = new Dictionary<string, List<LogEntry>>();
     private bool initialized = false;
     public int discoveredLogsCount => discoveredLogs.Count;
+
+    // Singleton instance
+    public static LogManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
     
 
     private void OnEnable()
@@ -242,6 +257,11 @@ public class LogManager : MonoBehaviour
     public void ClearLogs()
     {
         PlayerPrefs.DeleteKey("DiscoveredLogs");
+        PlayerPrefs.DeleteKey("ReadLogs");
+
         discoveredLogs.Clear();
+        readLogs.Clear();
+        logsByCategory.Clear();
+        initialized = false;
     }
 }

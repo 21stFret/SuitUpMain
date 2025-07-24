@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
-using static UnityEngine.Rendering.DebugUI;
 
 public class MechHealth : MonoBehaviour
 {
@@ -58,6 +57,9 @@ public class MechHealth : MonoBehaviour
     private bool fullHealthMod;
 
     public float mechDefense = 0.5f;
+
+    //Alt weapon shield
+    public bool altShieldActive = false;
 
     public void OnDisable()
     {
@@ -212,12 +214,20 @@ public class MechHealth : MonoBehaviour
 
         bool isHeal = damage < 0;
 
-        if (!isHeal && characterController.isDodging)
+        if (!isHeal)
         {
-            return;
+            if (characterController.isDodging)
+            {
+                return;
+            }
+            
+            if (altShieldActive)
+            {
+                return;
+            }
         }
 
-        if(GameManager.instance != null)
+        if (GameManager.instance != null)
         {
             RunMod __selectMod = GameManager.instance.runUpgradeManager.HasModByName("Mag Shield");
             if (__selectMod != null)
@@ -415,8 +425,8 @@ public class MechHealth : MonoBehaviour
         targetHealth.alive = false;
         BattleMech.instance.OnDie();
 
-        PlayerSavedData.instance._gameStats.totalDeaths++;
-        if (PlayerSavedData.instance._gameStats.totalDeaths == 100)
+        PlayerSavedData.instance._stats.totalDeaths++;
+        if (PlayerSavedData.instance._stats.totalDeaths == 100)
         {
             PlayerAchievements.instance.SetAchievement("DIE_100");
         }

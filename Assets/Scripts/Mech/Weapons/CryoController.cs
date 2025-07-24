@@ -59,6 +59,14 @@ public class CryoController : MechWeapon
             return;
         }
 
+        if (weaponFuelManager.weaponFuel - weaponFuelUseRate <= 0)
+        {
+            // No fuel left, stop firing
+            Debug.Log("CryoController: No fuel left to fire.");
+            Stop();
+            return;
+        }
+
         if (shotTimer >= fireRate)
         {
             shotTimer = 0;
@@ -71,7 +79,7 @@ public class CryoController : MechWeapon
     public override void Stop()
     {
         base.Stop();
-        shotTimer = fireRate;
+        shotTimer = fireRate / 2;
     }
 
 }

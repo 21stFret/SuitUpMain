@@ -5,7 +5,6 @@ public class PlayerProgressManager : MonoBehaviour
 {
     public static PlayerProgressManager instance;
     public int killCount;
-    public int expCount;
     public int cashCount;
     public int artifactCount;
     public int crawlerParts;
@@ -26,9 +25,9 @@ public class PlayerProgressManager : MonoBehaviour
 
     public void ReachedWaveNumber(int waveNumber)
     {
-        if (waveNumber > playerSavedData._gameStats.highestWave)
+        if (waveNumber > playerSavedData._stats.highestWave)
         {
-            playerSavedData._gameStats.highestWave = waveNumber;
+            playerSavedData._stats.highestWave = waveNumber;
         }
     }
 
@@ -37,11 +36,6 @@ public class PlayerProgressManager : MonoBehaviour
         killCount += count;
         GameManager.instance.gameUI.UpdateKillCount(killCount);
         CheckPlayerAchievements(count, weapon);
-    }
-
-    public void AddExp(int count)
-    {
-        expCount += count;
     }
 
     public void CheckShotMultiKill()
@@ -102,62 +96,62 @@ public class PlayerProgressManager : MonoBehaviour
 
     private void UpdateMinigunAchievements(int count)
     {
-        playerSavedData._gameStats.minigunKills += count;
+        playerSavedData._stats.minigunKills += count;
 
-        if (playerSavedData._gameStats.minigunKills == 50)
+        if (playerSavedData._stats.minigunKills == 50)
             PlayerAchievements.instance.SetAchievement("MINIGUN_50");
-        if (playerSavedData._gameStats.minigunKills == 500)
+        if (playerSavedData._stats.minigunKills == 500)
             PlayerAchievements.instance.SetAchievement("MINIGUN_500");
-        if (playerSavedData._gameStats.minigunKills == 2000)
+        if (playerSavedData._stats.minigunKills == 2000)
             PlayerAchievements.instance.SetAchievement("MINIGUN_2000");
     }
 
     private void UpdateShotgunAchievements(int count)
     {
-        playerSavedData._gameStats.shotgunKills += count;
+        playerSavedData._stats.shotgunKills += count;
     }
 
     private void UpdateFlameAchievements(int count)
     {
-        playerSavedData._gameStats.flamerKills += count;
-        if (playerSavedData._gameStats.flamerKills == 100)
+        playerSavedData._stats.flamerKills += count;
+        if (playerSavedData._stats.flamerKills == 100)
             PlayerAchievements.instance.SetAchievement("BURN_100");
-        if (playerSavedData._gameStats.flamerKills == 500)
+        if (playerSavedData._stats.flamerKills == 500)
             PlayerAchievements.instance.SetAchievement("BURN_500");
-        if (playerSavedData._gameStats.flamerKills == 1000)
+        if (playerSavedData._stats.flamerKills == 1000)
             PlayerAchievements.instance.SetAchievement("BURN_1000");
     }
 
     private void UpdateLightningAchievements(int count)
     {
-        playerSavedData._gameStats.lightningKills += count;
-        if (playerSavedData._gameStats.lightningKills == 50)
+        playerSavedData._stats.lightningKills += count;
+        if (playerSavedData._stats.lightningKills == 50)
             PlayerAchievements.instance.SetAchievement("SHOCK_50");
-        if (playerSavedData._gameStats.lightningKills == 200)
+        if (playerSavedData._stats.lightningKills == 200)
             PlayerAchievements.instance.SetAchievement("SHOCK_200");
-        if (playerSavedData._gameStats.lightningKills == 500)
+        if (playerSavedData._stats.lightningKills == 500)
             PlayerAchievements.instance.SetAchievement("SHOCK_500");
     }
 
     private void UpdateCryoAchievements(int count)
     {
-        playerSavedData._gameStats.cryoKills += count;
-        if (playerSavedData._gameStats.cryoKills == 25)
+        playerSavedData._stats.cryoKills += count;
+        if (playerSavedData._stats.cryoKills == 25)
             PlayerAchievements.instance.SetAchievement("FREEZE_25");
-        if (playerSavedData._gameStats.cryoKills == 50)
+        if (playerSavedData._stats.cryoKills == 50)
             PlayerAchievements.instance.SetAchievement("FREEZE_50");
-        if (playerSavedData._gameStats.cryoKills == 100)
+        if (playerSavedData._stats.cryoKills == 100)
             PlayerAchievements.instance.SetAchievement("FREEZE_100");
     }
 
     private void UpdateGrenadeAchievements(int count)
     {
-        playerSavedData._gameStats.grenadeKills += count;
-        if (playerSavedData._gameStats.grenadeKills == 50)
+        playerSavedData._stats.grenadeKills += count;
+        if (playerSavedData._stats.grenadeKills == 50)
             PlayerAchievements.instance.SetAchievement("GRENADE_50");
-        if (playerSavedData._gameStats.grenadeKills == 250)
+        if (playerSavedData._stats.grenadeKills == 250)
             PlayerAchievements.instance.SetAchievement("GRENADE_250");
-        if (playerSavedData._gameStats.grenadeKills == 500)
+        if (playerSavedData._stats.grenadeKills == 500)
             PlayerAchievements.instance.SetAchievement("GRENADE_500");
     }
 
@@ -166,11 +160,10 @@ public class PlayerProgressManager : MonoBehaviour
     private void UpdatePlayerStats()
     {
         playerSavedData.UpdatePlayerCash(cashCount);
-        playerSavedData.UpdatePlayerExp(expCount);
         playerSavedData.UpdatePlayerArtifact(artifactCount);
-        playerSavedData._gameStats.totalKills += killCount;
-        playerSavedData._gameStats.totalPlayTime += playTime;
-        playerSavedData._gameStats.totalDistance += GameManager.instance.mechLoadOut.GetComponent<MYCharacterController>().distanceTravelled;
+        playerSavedData._stats.totalKills += killCount;
+        playerSavedData._stats.totalPlayTime += playTime;
+        playerSavedData._stats.totalDistance += GameManager.instance.mechLoadOut.GetComponent<MYCharacterController>().distanceTravelled;
     }
 
     private void EndGameAchievements()
@@ -183,37 +176,37 @@ public class PlayerProgressManager : MonoBehaviour
 
     private void CheckPlayTimeAchievements()
     {
-        if (playerSavedData._gameStats.totalPlayTime > 3600)
+        if (playerSavedData._stats.totalPlayTime > 3600)
             PlayerAchievements.instance.SetAchievement("PLAY_TIME_60");
-        if (playerSavedData._gameStats.totalPlayTime > 10800)
+        if (playerSavedData._stats.totalPlayTime > 10800)
             PlayerAchievements.instance.SetAchievement("PLAY_TIME_180");
-        if (playerSavedData._gameStats.totalPlayTime > 25200)
+        if (playerSavedData._stats.totalPlayTime > 25200)
             PlayerAchievements.instance.SetAchievement("PLAY_TIME_420");
     }
 
     private void CheckTotalPartsAchievements()
     {
-        if (playerSavedData._gameStats.totalParts > 100)
+        if (playerSavedData._stats.totalParts > 100)
             PlayerAchievements.instance.SetAchievement("ABLOOD_100");
-        if (playerSavedData._gameStats.totalParts > 500)
+        if (playerSavedData._stats.totalParts > 500)
             PlayerAchievements.instance.SetAchievement("ABLOOD_500");
-        if (playerSavedData._gameStats.totalParts > 1000)
+        if (playerSavedData._stats.totalParts > 1000)
             PlayerAchievements.instance.SetAchievement("ABLOOD_1000");
     }
 
     private void CheckTotalDistanceAchievements()
     {
-        if (playerSavedData._gameStats.totalDistance > 1000)
+        if (playerSavedData._stats.totalDistance > 1000)
             PlayerAchievements.instance.SetAchievement("DISTANCE_1000");
-        if (playerSavedData._gameStats.totalDistance > 10000)
+        if (playerSavedData._stats.totalDistance > 10000)
             PlayerAchievements.instance.SetAchievement("DISTANCE_10000");
-        if (playerSavedData._gameStats.totalDistance > 42195)
+        if (playerSavedData._stats.totalDistance > 42195)
             PlayerAchievements.instance.SetAchievement("DISTANCE_42195");
     }
 
     private void CheckTotalKillsAchievements()
     {
-        int totalKills = playerSavedData._gameStats.totalKills;
+        int totalKills = playerSavedData._stats.totalKills;
         if (totalKills >= 10000)
             PlayerAchievements.instance.SetAchievement("KILL_10000");
         else if (totalKills >= 5000)

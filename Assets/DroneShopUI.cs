@@ -72,7 +72,7 @@ public class DroneShopUI : MonoBehaviour
             equipOption.index = i;
             equipOption.hoverButton.onClick.RemoveAllListeners();
             equipOption.hoverButton.onClick.AddListener(() => SelectEquipSlot(equipOption.index));
-            var savedData = PlayerSavedData.instance.droneLoadOut[i];
+            var savedData = PlayerSavedData.instance.droneLO[i];
             if (savedData == -2)
             {
                 equipOption.UpdateEquipSlot(droneAbilityManager._droneAbilities[0], true);
@@ -157,7 +157,7 @@ public class DroneShopUI : MonoBehaviour
         {
             return;
         }
-        int savedData = PlayerSavedData.instance.droneLoadOut[currentSelectedEquipSlot.index];
+        int savedData = PlayerSavedData.instance.droneLO[currentSelectedEquipSlot.index];
         if (savedData == -2)
         {
             abilityNameText.text = "Unlock New Slot";
@@ -244,7 +244,7 @@ public class DroneShopUI : MonoBehaviour
                 currentSelectedOption.UpdateAbilityInfo(ability);
                 currentSelectedOption.lockIcon.SetActive(false);
                 currentSelectedOption.iconObjectParent.SetActive(true);
-                PlayerSavedData.instance._droneAbilities[currentSelectedOption.index] = 0;
+                PlayerSavedData.instance._droneAb[currentSelectedOption.index] = 0;
                 currentSelectedAbility = ability;
                 UpdateAbilityInfo(currentSelectedAbility, true);
             }
@@ -274,7 +274,7 @@ public class DroneShopUI : MonoBehaviour
             AudioManager.instance.PlaySFX(SFX.Unlock);
             currentSelectedEquipSlot.lockIcon.SetActive(false);
             currentSelectedEquipSlot.iconObjectParent.SetActive(true);
-            PlayerSavedData.instance.droneLoadOut[currentSelectedEquipSlot.index] = -1;
+            PlayerSavedData.instance.droneLO[currentSelectedEquipSlot.index] = -1;
             SetupButtons();
             currentSelectedEquipSlot = null;
         }
@@ -331,7 +331,7 @@ public class DroneShopUI : MonoBehaviour
         {
             HighlightEquipSlots(false);
             currentSelectedEquipSlot.UpdateEquipSlot(currentSelectedAbility, false);
-            PlayerSavedData.instance.droneLoadOut[currentSelectedEquipSlot.index] = currentSelectedAbility.droneAbilityID;
+            PlayerSavedData.instance.droneLO[currentSelectedEquipSlot.index] = currentSelectedAbility.droneAbilityID;
             currentSelectedAbility = null;
             SetupButtons();
         }

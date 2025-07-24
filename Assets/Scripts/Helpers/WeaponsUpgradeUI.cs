@@ -140,7 +140,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
         currentWeapon.transform.SetParent(weaponParent);
         currentWeapon.transform.localScale = new Vector3(60, 60, 60);
         currentWeaponIndex = _index;
-        ShowLockedPanel(!currentWeapon.weaponData.unlocked);
+        ShowLockedPanel(currentWeapon.weaponData.unlocked == 0);
     }
 
     public void ShowLockedPanel(bool value)
@@ -178,9 +178,9 @@ public class WeaponsUpgradeUI : MonoBehaviour
             return;
         }
         StartCoroutine(pauseInput(1.1f));
-        if (!currentWeapon.weaponData.unlocked)
+        if (currentWeapon.weaponData.unlocked == 0)
         {
-            if(_playerSavedData.demoBuild)
+            if(_playerSavedData.demo)
             {
                 string _text = "Locked in Demo";
                 cantAffordPanel.GetComponentInChildren<TMP_Text>().text = _text;
@@ -213,10 +213,10 @@ public class WeaponsUpgradeUI : MonoBehaviour
             lockUpgradebutton = true;
             statsUI.RemoveCash(currentWeapon.baseWeaponInfo._cost[currentWeapon.weaponData.level]);
             currentWeapon.weaponData.level++;
-            _playerSavedData._gameStats.totalUpgrades++;
+            _playerSavedData._stats.totalUpgrades++;
             if (PlayerAchievements.instance != null)
             {
-                if (_playerSavedData._gameStats.totalUpgrades == 1)
+                if (_playerSavedData._stats.totalUpgrades == 1)
                 {
                     PlayerAchievements.instance.SetAchievement("UPGRADE_1");
                 }
@@ -279,7 +279,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
             print("Not enough cash");
             return false;
         }
-        if(currentWeapon.weaponData.level ==4 && _playerSavedData.demoBuild)
+        if(currentWeapon.weaponData.level ==4 && _playerSavedData.demo)
         {
             string _text = "Demo Build Max Level Reached";
             cantAffordPanel.GetComponentInChildren<TMP_Text>().text = _text;
@@ -344,7 +344,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
             }
 
             weaponInfoUIs[i].amount.text = itemlist[i].ToString();
-            if (!currentWeapon.weaponData.unlocked)
+            if (currentWeapon.weaponData.unlocked == 0)
             {
                 weaponInfoUIs[i].boostedlevel.text = "";
                 continue;
@@ -388,7 +388,7 @@ public class WeaponsUpgradeUI : MonoBehaviour
             Ulevel.text = "Max";
             return;
         }
-        if(!currentWeapon.weaponData.unlocked)
+        if(currentWeapon.weaponData.unlocked == 0)
         {
             level.gameObject.SetActive(true);
             arrows.SetActive(false);

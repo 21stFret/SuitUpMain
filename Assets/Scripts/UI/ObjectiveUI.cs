@@ -11,7 +11,7 @@ public class ObjectiveUI : MonoBehaviour
     public Image objectiveBG;
     public GameObject surviveText;
     public GameObject destoryText;
-    public TMP_Text progressText;
+    public GameObject uploadText;
     public TMP_Text percentageText;
     public Animator hintAnimator;
     public TMP_Text hintText;
@@ -20,19 +20,41 @@ public class ObjectiveUI : MonoBehaviour
 
     public void Init(bool showBar, bool showPercent, bool showSurvive, string showDestroy)
     {
-        objectiveBar.enabled = showBar;
-        objectiveBG.enabled = showBar;
+        objectiveBar.enabled = true;
+        objectiveBG.enabled = true;
         objectiveBar.fillAmount = 0;
-        surviveText.SetActive(showSurvive);
-        percentageText.text = "";
-        percentageText.enabled = showPercent;
-        progressText.text = BattleManager.instance._usingBattleType == BattleType.Survive ? "survive" : "upload";
+        HideAll();
+        switch (BattleManager.instance._usingBattleType)
+        {
+            case BattleType.Survive:
+                surviveText.SetActive(true);
+                break;
+            case BattleType.Hunt:
+                destoryText.SetActive(true);
+                break;
+            case BattleType.Upload:
+                uploadText.SetActive(true);
+                percentageText.enabled = true;
+                break;
+            default:
+                break;
+        }
+
         if(showDestroy != "")
         {
             destoryText.GetComponent<TMP_Text>().text = showDestroy;       
             destoryText.SetActive(true);
         }
         objectivePanel.SetActive(showBar);
+    }
+
+    private void HideAll()
+    {
+        percentageText.text = "";
+        percentageText.enabled = false;
+        surviveText.SetActive(false);
+        destoryText.SetActive(false);
+        uploadText.SetActive(false);
     }
 
     public void UpdateBar(float fillamount)
@@ -72,8 +94,9 @@ public class ObjectiveUI : MonoBehaviour
     {
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
-        progressText.text = "";
         objectivePanel.SetActive(false);
+        HideAll();
+
     }
 
     public IEnumerator ObjectiveComplete()
@@ -81,7 +104,6 @@ public class ObjectiveUI : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         objectiveBar.enabled = false;
         objectiveBG.enabled = false;
-        progressText.text = "";
         objectivePanel.SetActive(false);
         yield return new WaitForSeconds(1f);
         string objective = "Objective Complete! \n Collect reward to continue!";

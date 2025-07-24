@@ -475,10 +475,12 @@ public class FleeState : CrawlerState
     private float stuckThreshold = 0.1f; // Minimum distance that should be moved
     private int stuckCounter = 0;
     private int maxStuckChecks = 3; // How many checks before considering truly stuck
-    
-    public FleeState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior) 
+    private float fleeTime = 2f;
+    private float fleeTime2 = 2f;
+
+    public FleeState(Crawler crawler, CrawlerMovement movement, CrawlerBehavior behavior)
         : base(crawler, movement, behavior) { }
-    
+
     public override void Enter()
     {
         base.Enter();
@@ -486,10 +488,22 @@ public class FleeState : CrawlerState
         movement.tracking = false;
         isCornered = false;
         CalculateFleePosition();
+        fleeTime = 2f;
+        fleeTime2 = 2f;
     }
 
     public override void Update()
     {
+        fleeTime -= Time.deltaTime;
+        if (fleeTime <= 0)
+        {
+            fleeTime2 -= Time.deltaTime;
+            if (fleeTime2 <= 0)
+            {
+                behavior.TransitionToState(typeof(IdleState));
+            }
+            return;
+        }
         if (Time.time - lastCorneredCheck > corneredCheckInterval)
         {
             CheckIfCornered();

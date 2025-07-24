@@ -50,11 +50,11 @@ public class BaseManager : MonoBehaviour
         BattleMech.instance.playerInput.SwitchCurrentActionMap("UI");
         BattleMech.instance.playerInput.SwitchCurrentActionMap("Gameplay");
         weaponHolder.SetupWeaponsManager();
-        if(PlayerSavedData.instance._mainWeaponData == null)
+        if(PlayerSavedData.instance._mwData == null)
         {
             playerData.InittestData();
         }
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         mechLoadOut.Init();
         AudioManager.instance.Init();
         AudioManager.instance.PlayBGMusic(3);
@@ -71,7 +71,7 @@ public class BaseManager : MonoBehaviour
     private bool ShouldShowThankYouPanel()
     {
         return PlayerSavedData.instance.HasCompletedEasyMode() && 
-               !PlayerSavedData.instance.hasSeenThankYouPanel;
+               !PlayerSavedData.instance.tyPanel;
     }
 
     private void ShowThankYouPanel()
@@ -86,7 +86,7 @@ public class BaseManager : MonoBehaviour
     public void CloseThankYouPanel()
     {
         thankYouPanel.SetActive(false);
-        PlayerSavedData.instance.hasSeenThankYouPanel = true;
+        PlayerSavedData.instance.tyPanel = true;
         PlayerSavedData.instance.SavePlayerData();
         BattleMech.instance.playerInput.SwitchCurrentActionMap(actionMap);
         if (actionMap == "UI")
@@ -111,7 +111,7 @@ public class BaseManager : MonoBehaviour
             AudioManager.instance.PlayButtonSFX((int)SFX.Error);
             return;
         }
-        if(loadOutPanel.currentDifficulty >0 && PlayerSavedData.instance.demoBuild)
+        if(loadOutPanel.currentDifficulty >0 && PlayerSavedData.instance.demo)
         {
             ShowThankYouPanel();
             return;

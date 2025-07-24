@@ -14,12 +14,12 @@ public class Shotgun : MechWeapon
     public bool shockRounds;
     public float shockDamage;
     public bool fired;
-    public int multikills;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         shockRounds = false;
+        shotsPerBurst += (int)force / 2;
     }
 
     private void Update()
@@ -78,7 +78,10 @@ public class Shotgun : MechWeapon
             weaponController.Shotgun(spreadDamage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
         }
         _animator.SetTrigger("Recoil");
-        StartCoroutine(MultishotKillCheck());
+        if(PlayerProgressManager.instance != null)
+        {
+            StartCoroutine(MultishotKillCheck());
+        }
     }
     
     private IEnumerator MultishotKillCheck()

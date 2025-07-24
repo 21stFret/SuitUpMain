@@ -219,7 +219,7 @@ namespace FORGE3D
 
             if (ordananceType == Ordanance.Guided)
             {
-                Collider[] colliders = Physics.OverlapSphere(center, radius * 2, layerMask);
+                Collider[] colliders = Physics.OverlapSphere(center, radius * 3, layerMask);
                 if (colliders.Length > 0)
                 {
                     foreach (var collider in colliders)

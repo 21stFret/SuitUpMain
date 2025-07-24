@@ -125,6 +125,7 @@ public class ModUI : MonoBehaviour
         circuitBoardPanel.SetActive(false);
         _upgradeCircuitboardManager.OnCloseCircuitBoard();
         GameManager.instance.SwapPlayerInput("Gameplay");
+        BattleMech.instance.myCharacterController.ToggleCanMove(true);
     }
 
     public void CloseCircuitBoardPauseMenu()

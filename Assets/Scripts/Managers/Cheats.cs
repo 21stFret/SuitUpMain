@@ -22,20 +22,14 @@ public class Cheats : MonoBehaviour
 
     public void ToggleAltWeaponAmmo(bool toggle)
     {
-        if(savedFuelUseRate == 0)
+        if (toggle)
         {
-            savedFuelUseRate = altWeaponController.altWeaponEquiped.weaponFuelUseRate;
-        }
-
-        if(toggle)
-        {
-            altWeaponController.altWeaponEquiped.weaponFuelUseRate = 0;
+            altWeaponController.altWeaponEquiped.weaponFuelManager.cheatlocked = true;
         }
         else
         {
-            altWeaponController.altWeaponEquiped.weaponFuelUseRate = savedFuelUseRate;
+            altWeaponController.altWeaponEquiped.weaponFuelManager.cheatlocked = false;
         }
-
     }
 
     public void ToggleFreeDroneUse(bool toggle)

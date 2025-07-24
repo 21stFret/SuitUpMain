@@ -21,7 +21,7 @@ public class InitTestScene : MonoBehaviour
     {
         BattleMech.instance.myCharacterController.ToggleCanMove(true);
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         mechLoadOut.Init();
         crawlerSpawner.Init();
         crawlerSpawner.isActive = spawnersActive;

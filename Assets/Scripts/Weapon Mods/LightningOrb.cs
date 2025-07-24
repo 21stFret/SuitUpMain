@@ -98,20 +98,15 @@ public class LightningOrb : Grenade
         targets.Clear();
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].CompareTag("Enemy"))
+            if (targets.Count >= chainAmount)
             {
-
-                if (targets.Find(x => x.transform == colliders[i].transform))
-                {
-                    continue;
-                }
-   
-                if (targets.Count >= chainAmount)
-                {
-                    LightningLinkCrawlers();
-                    return;
-                }
-                targets.Add(colliders[i].gameObject.GetComponent<TargetHealth>());
+                LightningLinkCrawlers();
+                return;
+            }
+            TargetHealth targetHealth = colliders[i].GetComponent<TargetHealth>();
+            if (targetHealth != null && !targets.Contains(targetHealth))
+            {
+                targets.Add(targetHealth);
             }
         }
         LightningLinkCrawlers();

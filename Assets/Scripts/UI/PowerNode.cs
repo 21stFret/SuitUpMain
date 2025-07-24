@@ -136,7 +136,7 @@ public class PowerNode : MonoBehaviour
         }
 
 
-        rarity = Mathf.Clamp(rarity / chipSlots.Count, 0, 3); // Ensure rarity is within bounds
+        rarity = Mathf.Clamp(rarity / chipSlots.Count - 1, 0, 3); // Ensure rarity is within bounds
 
         for (int i = 0; i < comboLocks.Count; i++)
         {

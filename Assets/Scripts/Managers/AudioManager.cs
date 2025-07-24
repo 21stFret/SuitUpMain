@@ -94,8 +94,8 @@ public class AudioManager : MonoBehaviour
     public void Init()
     {
         //Get initial volumes
-        musicVolume = PlayerSavedData.instance._BGMVolume;
-        sfxVolume = PlayerSavedData.instance._SFXVolume;
+        musicVolume = PlayerSavedData.instance._BGMV;
+        sfxVolume = PlayerSavedData.instance._SFXV;
         // Set initial volumes
         SetMusicVolume(musicVolume);
         SetSFXVolume(sfxVolume);

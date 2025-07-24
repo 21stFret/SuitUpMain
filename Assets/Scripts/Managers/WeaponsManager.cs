@@ -55,8 +55,8 @@ public class WeaponsManager : MonoBehaviour
             _techWeapons[i].weaponData = altWeapons[i];
         }
 
-        mainWeapon = (int)_playerSavedData._playerLoadout.x;
-        altWeapon = (int)_playerSavedData._playerLoadout.y;
+        mainWeapon = (int)_playerSavedData._loadout.x;
+        altWeapon = (int)_playerSavedData._loadout.y;
         if (weaponBaseDataReader == null)
         {
             weaponBaseDataReader = GetComponent<WeaponBaseDataReader>();
@@ -95,7 +95,7 @@ public class WeaponsManager : MonoBehaviour
     public void UnlockWeapon(int index, bool mainWeapon)
     {
         var weapon = mainWeapon ? _assaultWeapons[index] : _techWeapons[index];
-        weapon.weaponData.unlocked = true;
+        weapon.weaponData.unlocked = 1;
         UpdateWeaponData();
     }
 }
@@ -103,8 +103,8 @@ public class WeaponsManager : MonoBehaviour
 [System.Serializable]
 public class WeaponData
 {
-    public int weaponIndex;
-    public bool mainWeapon;
-    public bool unlocked;
-    public int level;
+    public byte weaponIndex;
+    public byte mainWeapon;
+    public byte unlocked;
+    public byte level;
 }
