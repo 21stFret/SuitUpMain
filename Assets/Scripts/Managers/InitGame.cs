@@ -14,7 +14,7 @@ public class InitGame : MonoBehaviour
     private void DelayedStart()
     {
         PlayerSavedData.instance.LoadPlayerData();
-        PlayerSavedData.instance.demoBuild = demoBuild;
+        PlayerSavedData.instance.demo = demoBuild;
         Time.timeScale = 1;
         AudioManager.instance.Init();
     }

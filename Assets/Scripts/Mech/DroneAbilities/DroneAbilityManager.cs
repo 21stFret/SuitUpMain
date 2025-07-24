@@ -41,9 +41,9 @@ public class DroneAbilityManager : MonoBehaviour
 
     private void LoadDroneAbilities()
     {
-        for (int i = 0; i < PlayerSavedData.instance.droneLoadOut.Length; i++)
+        for (int i = 0; i < PlayerSavedData.instance.droneLO.Length; i++)
         {
-            int index = PlayerSavedData.instance.droneLoadOut[i];
+            int index = PlayerSavedData.instance.droneLO[i];
             if (index >= 0)
             {
                 if(equipAbilitesOnAwake)
@@ -58,7 +58,7 @@ public class DroneAbilityManager : MonoBehaviour
     {
         for (int i = 0; i < _droneAbilities.Count; i++)
         {
-            _droneAbilities[i].unlocked = PlayerSavedData.instance._droneAbilities[i] == 0 ? true : false;
+            _droneAbilities[i].unlocked = PlayerSavedData.instance._droneAb[i] == 0 ? true : false;
         }
     }
 

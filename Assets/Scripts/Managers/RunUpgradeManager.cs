@@ -104,6 +104,8 @@ public class RunUpgradeManager : MonoBehaviour
             case ModBuildType.AGILITY:
                 selectedMods = new List<RunMod>(runModsAgility);
                 break;
+            case ModBuildType.UPGRADE:
+                break; // No mods for upgrades, handled separately
             default:
                 break;
         }
@@ -161,6 +163,7 @@ public class RunUpgradeManager : MonoBehaviour
             else
             {
                 Debug.LogWarning($"No mod found for {build}");
+                break;
             }
 
             maxAttempts--;

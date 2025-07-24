@@ -349,6 +349,10 @@ public class CrawlerSpawner : MonoBehaviour
                     restriction = 50; // No restrictions for other types
                     break;
             }
+            if(hordeBattle)
+            {
+                restriction *=2; // De-restrict during horde battles
+            }
             if (currentCount > restriction)
             {
                 bannedTypes.Add(crawlerType);

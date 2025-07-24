@@ -79,6 +79,6 @@ public class GameUI : MonoBehaviour
         completePanel.GetComponentInParent<DoTweenFade>().PlayTween();
         eventSystem.SetSelectedGameObject(completeButton);
         var GM = PlayerProgressManager.instance;
-        rewardMenu.SetRewards(GM.cashCount, GM.expCount, GM.artifactCount, GM.playTime, GM.rewardMultiplier);
+        rewardMenu.SetRewards(GM.cashCount, GM.artifactCount, GM.playTime, GM.rewardMultiplier);
     }
 }

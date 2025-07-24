@@ -36,6 +36,11 @@ public class TargetHealth : MonoBehaviour
 
     public void SetNewMaxHealth()
     {
+        if(health <=0 || maxHealth <= 0)
+        {
+            Debug.LogWarning("Health or maxHealth is zero or less, cannot set new max health.");
+            return;
+        }
         float curtentHealthPercent = health / maxHealth;
         float oldMaxhealth = maxHealth;
         maxHealth = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Health);
@@ -68,6 +73,19 @@ public class TargetHealth : MonoBehaviour
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Crawler, float stunTime = 0, Crawler crawler = null)
     {
+    // Sanitize health at the start
+    if (float.IsNaN(health) || float.IsInfinity(health))
+    {
+        Debug.LogWarning($"Health was NaN/Infinity on {gameObject.name}, resetting to 0");
+        health = 0;
+    }
+    
+    // Also sanitize damage
+    if (float.IsNaN(damage) || float.IsInfinity(damage))
+    {
+        Debug.LogWarning($"Damage was NaN/Infinity, setting to 0");
+        damage = 0;
+    }
         if (!alive)
         {
             return;
@@ -133,7 +151,11 @@ public class TargetHealth : MonoBehaviour
                 }
                 if(BattleMech.instance.droneController != null)
                 {
-                    BattleMech.instance.droneController.ChargeDroneOnHit(damage / 5);
+                    if(damage > 0)
+                    {
+                        BattleMech.instance.droneController.ChargeDroneOnHit(damage / 5);
+                    }
+     
                 }
 
             }

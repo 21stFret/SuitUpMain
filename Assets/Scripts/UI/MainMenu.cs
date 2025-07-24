@@ -46,7 +46,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(int value)
     {
-        if (PlayerSavedData.instance._firstLoad)
+        if (PlayerSavedData.instance._fplay ==0)
         {
             sceneLoader.LoadScene(3, true);
         }

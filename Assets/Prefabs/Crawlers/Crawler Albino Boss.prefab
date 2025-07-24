@@ -15396,7 +15396,7 @@ MonoBehaviour:
   meshRenderer: {fileID: 0}
   target: {fileID: 0}
   crawlerSpawner: {fileID: 0}
-  attackDamage: 6
+  attackDamage: 8
   attackRange: 12
   seekRange: 10
   speed: 500
@@ -15415,7 +15415,7 @@ MonoBehaviour:
   dropRate: 50
   ScreamChance: 100
   isStunned: 0
-  canBeStunned: 1
+  canBeStunned: 0
   objectStateHandler: {fileID: 0}
   crawlerType: 2
   partPrefab: {fileID: 429874779361648519, guid: ccbb54ed3abb6954fb90433953c8f280,
@@ -15569,7 +15569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 200
+  maxHealth: 400
   invincible: 0
   alive: 0
   trippyEffect: {fileID: 0}
@@ -15616,8 +15616,13 @@ MonoBehaviour:
   crawlerSquad:
     crawlerGroups:
     - type: 0
+      amount: 5
+    - type: 1
+      amount: 2
+    - type: 3
       amount: 3
   isActive: 0
+  squadCount: 0
   spawnPosition: {fileID: 3101261175861027531}
 --- !u!1 &5013036389789904594
 GameObject:

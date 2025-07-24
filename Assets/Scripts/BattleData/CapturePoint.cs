@@ -8,6 +8,7 @@ public class CapturePoint : MonoBehaviour
     public ParticleSystem online;
     public ParticleSystem inProgress;
     public float captureTime;
+    private float _captureTime;
     public float captureProgress;
     public float captureSpeed;
     public bool isCaptured;
@@ -23,6 +24,8 @@ public class CapturePoint : MonoBehaviour
         _enabled = true;
         online.Play();
         ball.SetActive(true);
+        _captureTime = captureTime + (0.25f * BattleManager.instance.dificultyMultiplier);
+        GameUI.instance.objectiveUI.UpdateUpload("0%");
     }
 
     public void Update()
@@ -55,14 +58,14 @@ public class CapturePoint : MonoBehaviour
     public void CapturePointProgress()
     {
         captureProgress += Time.deltaTime * captureSpeed;
-        if (captureProgress >= captureTime)
+        if (captureProgress >= _captureTime)
         {
             Capture();
             return;
         }
-        var fillAmount = captureProgress / captureTime;
+        var fillAmount = captureProgress / _captureTime;
         GameUI.instance.objectiveUI.UpdateBar(fillAmount);
-        GameUI.instance.objectiveUI.UpdateUpload( (fillAmount*100).ToString("0")+"%");
+        GameUI.instance.objectiveUI.UpdateUpload((fillAmount * 100).ToString("0") + "%");
     }
 
     public void OnTriggerEnter(Collider other)
@@ -92,5 +95,8 @@ public class CapturePoint : MonoBehaviour
         ball.SetActive(false);
         CrawlerSpawner.instance.KillAllCrawlers();
         BattleManager.instance.ObjectiveComplete();
+        GameManager.instance.areaManager.missileLauncher.missilePayload = MissilePayload.FatMan;
+        GameManager.instance.areaManager.missileLauncher.SpawnExplosion(Vector3.zero);
+        PostProcessController.instance.NukeEffect();
     }
 }

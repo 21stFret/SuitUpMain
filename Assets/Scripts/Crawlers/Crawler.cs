@@ -119,7 +119,7 @@ public class Crawler : MonoBehaviour
         {
             if (BattleManager.instance.dificultyMultiplier > 1)
             {
-                _targetHealth.maxHealth *= 1 + 0.25f * (BattleManager.instance.dificultyMultiplier - 1);
+                _targetHealth.maxHealth *= 1 + 0.5f * (BattleManager.instance.dificultyMultiplier - 1);
             }
 
         }
@@ -489,7 +489,6 @@ public class Crawler : MonoBehaviour
         if (PlayerProgressManager.instance != null)
         {
             PlayerProgressManager.instance.UpdateKillCount(1, weapon);
-            PlayerProgressManager.instance.AddExp(expWorth);
             PlayerProgressManager.instance.mutliShotKillCount++;
         }
     }

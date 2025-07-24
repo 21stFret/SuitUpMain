@@ -12,6 +12,7 @@ public class BattleManager : MonoBehaviour
     public int currentBattleIndex;
     public CapturePoint capturePoint;
     public Pickup roomDrop;
+    public HealthPickup healthPickup;
     public LayerMask dropLayer;
     public string objectiveMessage;
     public float dificultyMultiplier = 1;
@@ -74,6 +75,7 @@ public class BattleManager : MonoBehaviour
                 showBar = true;
                 showpercent = true;
                 SpawnCapturePoint();
+                _gameManager.areaManager.DayNightCycle(true);
                 break;
             case BattleType.Survive:
                 objectiveMessage = "Survive the horde!";
@@ -87,6 +89,7 @@ public class BattleManager : MonoBehaviour
                 break;
             case BattleType.Exterminate:
                 objectiveMessage = "Exterminate all enemies!";
+                _gameManager.areaManager.DayNightCycle(true);
                 //color = Color.white;
                 fillAmount = 0;
                 break;
@@ -151,9 +154,12 @@ public class BattleManager : MonoBehaviour
 
     private void SpawnCapturePoint()
     {
-        Vector3 pos = GetRandomSpawnPoint() + Random.insideUnitSphere * 10;
-        pos.y = 1;
-        capturePoint.transform.position = pos;
+        Vector3 pos = GetRandomSpawnPoint();
+        Vector3 directionToCenter = (Vector3.zero - pos).normalized;
+        float randomDistance = Random.Range(0f, 10f);
+        Vector3 spawnPoint = pos + (directionToCenter * randomDistance);
+        spawnPoint.y = 1;
+        capturePoint.transform.position = spawnPoint;
         Invoke("InitCapturePoint", 1);
     }
 
@@ -183,7 +189,7 @@ public class BattleManager : MonoBehaviour
     public void ObjectiveComplete()
     {
 
-        if(_objectiveComplete)
+        if (_objectiveComplete)
         {
             return;
         }
@@ -191,11 +197,14 @@ public class BattleManager : MonoBehaviour
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
         lightningController.active = false;
+
+        SetPickUpPosition();
+
+        bool chipreward = currentBattleIndex % 2 != 1;
+
         currentBattleIndex++;
         _gameManager.gameActive = false;
         AudioManager.instance.PlayBGMusic(5);
-        roomDrop.gameObject.SetActive(true);
-        SetPickUpPosition();
 
         if (currentBattleIndex >= Battles.Count)
         {
@@ -204,13 +213,23 @@ public class BattleManager : MonoBehaviour
                 _gameManager.EndGame(true);
                 return;
             }
-            roomDrop.Init(ModBuildType.UPGRADE);
+            roomDrop.Init(_gameManager.nextBuildtoLoad, true);
         }
         else
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-        // add secondary room drop for upgrade when doing mini boss as to not break flow of the player chosen portal
+
+        if (chipreward) // If the index is odd, we show the room drop
+        {
+            roomDrop.gameObject.SetActive(true);
+            healthPickup.gameObject.SetActive(false);
+        }
+        else
+        {
+            roomDrop.gameObject.SetActive(false);
+            healthPickup.gameObject.SetActive(true);
+        }
     }
 
     public void ObjectiveFailed()
@@ -224,6 +243,7 @@ public class BattleManager : MonoBehaviour
         pos = crawlerSpawner.spawnPoints[0].transform.position;
         pos.y = 3;
         roomDrop.transform.position = pos;
+        healthPickup.transform.position = pos;
         return;
     }
 

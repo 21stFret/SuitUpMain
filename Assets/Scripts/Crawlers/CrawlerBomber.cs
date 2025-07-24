@@ -31,7 +31,7 @@ public class CrawlerBomber : Crawler
         base.Die(killedBy);
         for (int i = 0; i < bombsacks.Length; i++)
         {
-            if (bombsacks[i] != null)
+            if (bombsacks[i] != null && originalPositions[i] != null)
             {
                 bombsacks[i].transform.localPosition = originalPositions[i];
             }

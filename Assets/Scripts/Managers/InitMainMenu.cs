@@ -12,7 +12,7 @@ public class InitMainMenu : MonoBehaviour
     {
         PlayerSavedData.instance.LoadPlayerData();
         weaponHolder.SetupWeaponsManager();
-        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mainWeaponData, PlayerSavedData.instance._altWeaponData);
+        WeaponsManager.instance.LoadWeaponsData(PlayerSavedData.instance._mwData, PlayerSavedData.instance._awData);
         mechLoadOut.Init();
         print("Init Main Menu");
     }

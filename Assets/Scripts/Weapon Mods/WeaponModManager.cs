@@ -127,7 +127,7 @@ public class WeaponModManager : MonoBehaviour
         {
             return;
         }
-        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentAssaultMod.runMod.modName);
+        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentTechMod.runMod.modName);
 
         GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
     }
