@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FORGE3D;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum AreaType
@@ -104,14 +105,17 @@ public class AreaManager : MonoBehaviour
                 randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
                 roomPrefab = roomPrefabs[randomIndex];
             }
+
+            area = roomPrefab.GetComponent<EnvironmentArea>();
+            
             if (directionalDaylight != null)
             {
-                if (area == null)
+                bool dark = false;
+                if (area != null)
                 {
-                    Debug.LogError("Area is null, cannot set insideArea.");
-                    return;
+                    dark = area.insideArea;
                 }
-                bool dark = area.insideArea;
+                // If the area is a battle type and it's a survival battle, set dark to true 
                 if (BattleManager.instance._usingBattleType == BattleType.Survive)
                 {
                     dark = true;

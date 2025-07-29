@@ -43,10 +43,6 @@ public class ChipSlotUI : MonoBehaviour
             return;
         }
         PlaceChip();
-        if (upgradeCircuitboardManager.currentRunMod == null)
-        {
-            upgradeCircuitboardManager.CloseMenuButton.enabled = true;
-        }
     }
 
     public void PlaceChip()

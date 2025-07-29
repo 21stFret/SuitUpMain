@@ -68,11 +68,6 @@ public class UpgradeCircuitboardManager : MonoBehaviour
         ineteractSlotAction.action.Enable();
         ineteractSlotAction.action.performed += InteractWithSlot;
         CloseMenuButton.gameObject.SetActive(!readOnly);
-        CloseMenuButton.enabled = true;
-        if (currentRunMod != null)
-        {
-            CloseMenuButton.enabled = false;
-        }
     }
 
     public void PowerNodesUnlockedCheck(bool value)
@@ -133,6 +128,7 @@ public class UpgradeCircuitboardManager : MonoBehaviour
 
     public void OnOpenCircuitBoard()
     {
+        CloseMenuButton.enabled = false;
         if (PlayerSavedData.instance != null)
         {
             if (PlayerSavedData.instance.circuitTut)
