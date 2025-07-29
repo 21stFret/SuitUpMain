@@ -132,8 +132,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         AudioManager.instance.PlayBattleMusic();
         battleManager.roomDrop.gameObject.SetActive(false);
-        areaManager.LoadRoom(currentAreaType);
         battleManager.SetBattleType();
+        areaManager.LoadRoom(currentAreaType);        
         battleManager.UpdateCrawlerSpawner();
         playerInput.transform.position = Vector3.zero;
         yield return new WaitForSeconds(delay/2);
@@ -176,13 +176,16 @@ public class GameManager : MonoBehaviour
     public void SpawnPortalsToNextRoom()
     {
         voidPortalManager.transform.position = battleManager.crawlerSpawner.spawnPoints[0].position;
+        if (battleManager.currentBattleIndex == 0)
+        {
+            voidPortalManager.transform.position = voidPortalManager.voidPortalLocation.position;
+        }
         battleManager.crawlerSpawner.waveText.text = "Head through the Portal!";
 
         if (battleManager.currentBattleIndex > battleManager.Battles.Count - 1)
         {
             voidPortalManager.StartVoidEffect(true);
             voidPortalManager.transform.position = BattleMech.instance.transform.position;
-            battleManager.currentBattleIndex = 0;
             battleManager.ResetOnNewArea();
             return;
         }

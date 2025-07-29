@@ -51,8 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetHealth: {fileID: 6849771450873759248}
-  damageNumberPrefab: {fileID: 0}
-  damageNumbersOn: 0
+  _collider: {fileID: 0}
   init: 0
   spreadRadius: 0
   ignitionDelay: 1
@@ -78,7 +77,8 @@ MonoBehaviour:
   maxHealth: 1
   invincible: 0
   alive: 0
-  immuneWeapons: 000000000100000005000000
+  trippyEffect: {fileID: 0}
+  immuneWeapons: 00000000010000000500000006000000070000000c000000
   damageNumbersOn: 0
   damageNumberPrefab: {fileID: 0}
 --- !u!136 &6543697546441132215

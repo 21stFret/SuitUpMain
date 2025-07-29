@@ -155,7 +155,7 @@ public class CrawlerSpawner : MonoBehaviour
             {
                 spawnList.Add(spawnListArmy[i]);
             }
-            SpawnFromArmy(spawnList, Vector3.zero);
+            SpawnFromArmy(spawnList);
         }
     }
 
@@ -265,9 +265,9 @@ public class CrawlerSpawner : MonoBehaviour
         StartCoroutine(SpawnBurstCrawlerFromList(_spawnList));
     }
     
-    public void SpawnFromArmy(List<Crawler> armyList, Vector3 loc)
+    public void SpawnFromArmy(List<Crawler> armyList, Transform loc = null)
     {
-        if (loc != Vector3.zero)    
+        if (loc != null)
         {
             StartCoroutine(SpawnBurstCrawlerFromList(armyList, loc));
         }
@@ -408,13 +408,17 @@ public class CrawlerSpawner : MonoBehaviour
         activeSpawnCoroutines.Add(spawnCoroutine);
     }
     
-    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Vector3 location)
+    private IEnumerator SpawnBurstCrawlerFromList(List<Crawler> bugs, Transform targetLocation)
     {
 
         if (!isActive) yield break;
         foreach (Crawler crawler in bugs)
         {
             AddToActiveList(crawler);
+        }
+        if (targetLocation != null)
+        {
+            spawnPoint = targetLocation;
         }
 
         var spawnCoroutine = StartCoroutine(SpawnRandomizer(bugs, spawnPoint));

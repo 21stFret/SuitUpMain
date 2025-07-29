@@ -129,7 +129,7 @@ public class PulseShockwave : MonoBehaviour
             if (crawler != null)
             {
                 float stunDuration = canStun? stunTime :0.8f;
-                crawler.StartCoroutine(crawler.StunCralwer(stunDuration));
+                crawler.StartCoroutine(crawler.StunCrawler(stunDuration));
                 crawlerCount++;
             }
             if(!canStun)

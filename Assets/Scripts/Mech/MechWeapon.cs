@@ -18,7 +18,6 @@ public enum WeaponType
     Default,
     Trap,
     Heal,
-    Melee,
 }
 
 [Serializable]

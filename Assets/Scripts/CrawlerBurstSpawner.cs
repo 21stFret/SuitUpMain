@@ -12,7 +12,6 @@ public class CrawlerBurstSpawner : MonoBehaviour
     public CrawlerSquad crawlerSquad;
     public bool isActive;
     public int squadCount;
-
     public Transform spawnPosition;
 
     public void Init()
@@ -30,15 +29,12 @@ public class CrawlerBurstSpawner : MonoBehaviour
         }
     }
 
-
     private void BurstTimer()
     {
         timeElapsed += Time.deltaTime;
         if (timeElapsed >= burstTimer)
         {
             timeElapsed = 0f;
-            spawnPosition = transform;
-            spawnPosition.position += Vector3.up;
             var newSquad = new List<Crawler>();
             for (int i = 0; i <= squadCount; i++)
             {
@@ -47,7 +43,7 @@ public class CrawlerBurstSpawner : MonoBehaviour
             }
             if (newSquad.Count > 0)
             {
-                crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition.position);
+                crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition);
             }
         }
     }

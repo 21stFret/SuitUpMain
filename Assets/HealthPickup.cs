@@ -121,6 +121,10 @@ public class HealthPickup : MonoBehaviour
 
     public void RemovePickup()
     {
+        if(col == null)
+        {
+            Init();
+        }
         canpickup = false;
         col.enabled = false;
         obj.SetActive(false);
@@ -128,6 +132,10 @@ public class HealthPickup : MonoBehaviour
 
     public void ResetPickup()
     {
+        if(col == null)
+        {
+            Init();
+        }
         canpickup = true;
         col.enabled = true;
         obj.SetActive(true);

@@ -489,7 +489,7 @@ public class FleeState : CrawlerState
         isCornered = false;
         CalculateFleePosition();
         fleeTime = 2f;
-        fleeTime2 = 2f;
+        fleeTime2 = 1f;
     }
 
     public override void Update()
@@ -497,6 +497,7 @@ public class FleeState : CrawlerState
         fleeTime -= Time.deltaTime;
         if (fleeTime <= 0)
         {
+            movement.SetDestination(crawler.transform.position);
             fleeTime2 -= Time.deltaTime;
             if (fleeTime2 <= 0)
             {

@@ -9,7 +9,7 @@ public class ShieldAlt : MechWeapon
     public Animator _animator;
     public ParticleSystem shieldEffect;
     private MechHealth mechHealth;
-    private bool isShieldActive = false;
+    public bool isShieldActive = false;
     public AudioSource audioSource;
     public AudioClip shieldActivateSound;
     public AudioClip shieldDeactivateSound;
@@ -17,6 +17,7 @@ public class ShieldAlt : MechWeapon
 
     public override void Init()
     {
+        base.Init();
         mechHealth = BattleMech.instance.mechHealth;
         weaponFuelManager.Init(this);
     }
@@ -32,13 +33,14 @@ public class ShieldAlt : MechWeapon
             isShieldActive = false;
             _animator.SetBool("ShieldActive", false);
         }
-        if (weaponFuelManager.weaponFuel == weaponFuelManager.weaponFuelMax)
+        if (weaponFuelManager.weaponFuel >= weaponFuelManager.weaponFuelMax)
         {
             isShieldActive = true;
             _animator.SetBool("ShieldActive", true);
         }
 
     }
+    
     // Fire Weapon
     public override void Fire()
     {
@@ -50,7 +52,6 @@ public class ShieldAlt : MechWeapon
         shieldEffect.Play();
         mechHealth.altShieldActive = true;
         StartCoroutine(ActivateShield());
-
     }
 
     // Stop firing 

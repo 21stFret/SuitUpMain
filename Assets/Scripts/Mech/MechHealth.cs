@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
+
 
 public class MechHealth : MonoBehaviour
 {
@@ -223,6 +225,18 @@ public class MechHealth : MonoBehaviour
             
             if (altShieldActive)
             {
+                if (GameManager.instance != null)
+                {
+                    RunMod ___selectMod = GameManager.instance.runUpgradeManager.HasModByName("Reflect");
+                    if (___selectMod != null)
+                    {
+                        float percent = (Mathf.Abs(___selectMod.modifiers[0].statValue) / 100);
+                        float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
+                        print("feedback damage is " + feedbackDamage);
+                        crawler?.TakeDamage(feedbackDamage, WeaponType.Shield);
+                    }
+                }
+
                 return;
             }
         }
@@ -332,7 +346,7 @@ public class MechHealth : MonoBehaviour
         {
             float percent = (Mathf.Abs(__selectMod.modifiers[0].statValue) / 100);
             float feedbackDamage = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Tech_Damage) * percent;
-            print("feedback damage is "+feedbackDamage);
+            print("feedback damage is " + feedbackDamage);
             crawler?.TakeDamage(feedbackDamage, WeaponType.Lightning);
             return;
         }
@@ -423,6 +437,8 @@ public class MechHealth : MonoBehaviour
         mainObject.SetActive(false);
         topHalfObject.SetActive(false);
         targetHealth.alive = false;
+        if (BattleManager.instance != null && BattleManager.instance.currentBattleCoroutine != null)
+            BattleManager.instance.StopCoroutine(BattleManager.instance.currentBattleCoroutine);
         BattleMech.instance.OnDie();
 
         PlayerSavedData.instance._stats.totalDeaths++;

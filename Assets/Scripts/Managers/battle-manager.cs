@@ -31,6 +31,8 @@ public class BattleManager : MonoBehaviour
 
     private bool _objectiveComplete;
 
+    public Coroutine currentBattleCoroutine;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -42,6 +44,11 @@ public class BattleManager : MonoBehaviour
         _gameManager = GameManager.instance;
         currentBattle = Battles[currentBattleIndex];
         _usingBattleType = currentBattle.battleType;
+        if (currentBattleCoroutine != null)
+        {
+            StopCoroutine(currentBattleCoroutine);
+        }
+        currentBattleCoroutine = null;
 
         _objectiveComplete = false;
 
@@ -66,7 +73,7 @@ public class BattleManager : MonoBehaviour
                 color = Color.red;
                 fillAmount = 1;
                 AudioManager.instance.PlayBossMusic(1);
-                StartCoroutine(HuntBattle());
+                currentBattleCoroutine = StartCoroutine(HuntBattle());
                 break;
             case BattleType.Upload:
                 objectiveMessage = "Locate the drop and upload the data";
@@ -83,7 +90,7 @@ public class BattleManager : MonoBehaviour
                 fillAmount = 0;
                 surviveTimeT = surviveTime;
                 showBar = true;
-                StartCoroutine(SurviveBattle());
+                currentBattleCoroutine = StartCoroutine(SurviveBattle());
                 AudioManager.instance.PlayBossMusic(0);
                 showSurvive = true;
                 break;
@@ -116,8 +123,6 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
         ObjectiveComplete();
-        crawlerSpawner.KillAllCrawlers();
-        crawlerSpawner.EndBattle();
         lightningController.active = false;
         _gameManager.areaManager.DayNightCycle(false);
         GameUI.instance.objectiveUI.HideObjectivePanel();
@@ -146,7 +151,6 @@ public class BattleManager : MonoBehaviour
         ObjectiveComplete();
         GameUI.instance.StartCoroutine(GameUI.instance.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
-        crawlerSpawner.KillAllCrawlers();
         lightningController.active = false;
         _gameManager.areaManager.DayNightCycle(false);
         GameUI.instance.objectiveUI.HideObjectivePanel();
@@ -154,12 +158,6 @@ public class BattleManager : MonoBehaviour
 
     private void SpawnCapturePoint()
     {
-        Vector3 pos = GetRandomSpawnPoint();
-        Vector3 directionToCenter = (Vector3.zero - pos).normalized;
-        float randomDistance = Random.Range(0f, 10f);
-        Vector3 spawnPoint = pos + (directionToCenter * randomDistance);
-        spawnPoint.y = 1;
-        capturePoint.transform.position = spawnPoint;
         Invoke("InitCapturePoint", 1);
     }
 
@@ -183,12 +181,17 @@ public class BattleManager : MonoBehaviour
     private void InitCapturePoint()
     {
         //  called by invoke in spawnCapturePoint
+        Vector3 pos = GetRandomSpawnPoint();
+        Vector3 directionToCenter = (Vector3.zero - pos).normalized;
+        float randomDistance = Random.Range(5f, 20f);
+        Vector3 spawnPoint = pos + (directionToCenter * randomDistance);
+        spawnPoint.y = 1;
+        capturePoint.transform.position = spawnPoint;
         capturePoint.Init();
     }
 
     public void ObjectiveComplete()
     {
-
         if (_objectiveComplete)
         {
             return;
@@ -196,7 +199,7 @@ public class BattleManager : MonoBehaviour
         _objectiveComplete = true;
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
-        if(capturePoint != null && capturePoint.isCaptured)
+        if(capturePoint != null && !capturePoint.isCaptured)
         {
             capturePoint.ProcessCapture();
         }
@@ -273,6 +276,7 @@ public class BattleManager : MonoBehaviour
     {
         if (GameManager.instance.areaManager.currentRoom != null)
         {
+            print("Updating spawn points for CrawlerSpawner");
             EnvironmentArea area = GameManager.instance.areaManager.currentRoom.GetComponentInChildren<EnvironmentArea>();
             crawlerSpawner.spawnPoints = area.spawnPoints;
         }

@@ -204,7 +204,7 @@ public class Crawler : MonoBehaviour
         }
     }
 
-    public IEnumerator StunCralwer(float stunTime)
+    public IEnumerator StunCrawler(float stunTime)
     {
         if(!canBeStunned)
         {
@@ -351,7 +351,7 @@ public class Crawler : MonoBehaviour
 
         if (stunTime > 0)
         {
-            StartCoroutine(StunCralwer(stunTime));
+            StartCoroutine(StunCrawler(stunTime));
         }
 
         if (target == null && killedBy != WeaponType.AoE)
@@ -396,7 +396,7 @@ public class Crawler : MonoBehaviour
     
     public void DealyedDamage(float damage, float delay, WeaponType weapon)
     {
-        StartCoroutine(StunCralwer(delay));
+        StartCoroutine(StunCrawler(delay));
         StartCoroutine(DealyedDamageCoroutine(damage, delay-0.1f, weapon));
     }
 
@@ -523,7 +523,7 @@ public class Crawler : MonoBehaviour
                     burningPatchScript.burnDuration = selectMod.modifiers[0].statValue;
                     burningPatchScript.EnableDamageArea();
                 }
-            break;
+                break;
             case WeaponType.Cryo:
                 RunMod _selectMod = GameManager.instance.runUpgradeManager.HasModByName("Fracture");
                 if (_selectMod != null)
@@ -535,7 +535,7 @@ public class Crawler : MonoBehaviour
                     var particleSystem = fractureEffect.GetComponent<ParticleSystem>();
                     particleSystem.Play();
                     var colliders = Physics.OverlapSphere(transform.position, 5f);
-                    float damage = _selectMod.modifiers[0].statValue /100 * BattleMech.instance.weaponController.altWeaponEquiped.damage;
+                    float damage = _selectMod.modifiers[0].statValue / 100 * BattleMech.instance.weaponController.altWeaponEquiped.damage;
                     foreach (var col in colliders)
                     {
                         var health = col.GetComponent<TargetHealth>();
@@ -549,6 +549,15 @@ public class Crawler : MonoBehaviour
                             rb.AddForce((col.transform.position - transform.position).normalized * 50, ForceMode.Impulse);
                         }
                     }
+                }
+                break;
+            case WeaponType.Chainsaw:
+                var ___selectMod = GameManager.instance.runUpgradeManager.HasModByName("Vampire");
+                if (___selectMod != null)
+                {
+                    float mofValue = 0;
+                    mofValue += ___selectMod.modifiers[0].statValue;
+                    BattleMech.instance.mechHealth.Heal(BattleMech.instance.targetHealth.maxHealth * (mofValue / 100));
                 }
                 break;
 
