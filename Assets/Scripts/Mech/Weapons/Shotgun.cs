@@ -74,7 +74,8 @@ public class Shotgun : MechWeapon
         {
             int newI = i - (shotsPerBurst / 2);
             weaponController.range = range;
-            float spreadDamage = damage / shotsPerBurst;
+            float spreadDamage = damage / (shotsPerBurst/2);
+            spreadDamage = Mathf.Max(spreadDamage, 0.1f); // Ensure minimum damage
             weaponController.Shotgun(spreadDamage, force, newI, spreadAngle, shotsPerBurst, i, stunTime, shockRounds, shockDamage);
         }
         _animator.SetTrigger("Recoil");

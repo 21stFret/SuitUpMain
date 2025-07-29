@@ -80,7 +80,6 @@ namespace FORGE3D
 
         void OnHitEnemy()
         {
-            damageTimer += Time.deltaTime;
             if (damageTimer >= damageInterval)
             {
                 damageTimer = 0;
@@ -261,6 +260,8 @@ namespace FORGE3D
             // Raycast for laser beams
             if (!OneShot)
                 Raycast();
+
+            damageTimer += Time.deltaTime;
         }
     }
 }
