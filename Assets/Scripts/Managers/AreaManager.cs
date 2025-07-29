@@ -55,7 +55,11 @@ public class AreaManager : MonoBehaviour
         {
             currentRoom.SetActive(false);
             area = currentRoom.GetComponent<EnvironmentArea>();
-            area.RefreshArea();
+            if (area != null)
+            {
+                area.RefreshArea();
+            }
+
         }
         List<GameObject> roomPrefabs = null;
         switch (areaType)
