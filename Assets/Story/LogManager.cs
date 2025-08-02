@@ -36,7 +36,7 @@ public class LogManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
 
     private void OnEnable()
     {
@@ -71,9 +71,9 @@ public class LogManager : MonoBehaviour
             logsByCategory[log.category].Add(log);
         }
 
-        if(sequenceInputController!=null)
+        if (sequenceInputController != null)
         {
-            sequenceInputController.OnSequenceComplete +=  () => DiscoverLog(currentLog.id);
+            sequenceInputController.OnSequenceComplete += () => DiscoverLog(currentLog.id);
             sequenceInputController.OnSequenceFailed += () => HideSequencer();
         }
     }
@@ -177,13 +177,13 @@ public class LogManager : MonoBehaviour
         List<LogEntry> undiscoveredLogs = new List<LogEntry>();
         foreach (var log in logDatabase.allLogs)
         {
-            if(BattleManager.instance!=null)
+            if (BattleManager.instance != null)
             {
                 if (log.rarity > BattleManager.instance.dificultyMultiplier)
                 {
                     continue;
                 }
-            }           
+            }
 
             if (!discoveredLogs.Contains(log.id))
             {
@@ -263,5 +263,14 @@ public class LogManager : MonoBehaviour
         readLogs.Clear();
         logsByCategory.Clear();
         initialized = false;
+    }
+
+    public void DiscoverAllLogs()
+    {
+        foreach (var log in logDatabase.allLogs)
+        {
+            DiscoverLog(log.id);
+        }
+        print("All logs have been discovered!");
     }
 }

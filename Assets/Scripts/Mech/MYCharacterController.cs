@@ -372,7 +372,6 @@ public class MYCharacterController : MonoBehaviour
     public void SetBonusSpeed()
     {
         bonusSpeed = BattleMech.instance.statMultiplierManager.GetCurrentValue(StatType.Speed);
-        print("Base Speed: " + Speed + " and Bonus Speed: " + bonusSpeed);
     }
 
     public void SetDashCooldown(float value)

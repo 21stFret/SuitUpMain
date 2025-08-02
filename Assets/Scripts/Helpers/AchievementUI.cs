@@ -112,10 +112,10 @@ public class AchievementUI : MonoBehaviour
         statPrefabs[9].value.text = playerSavedData._stats.highestWave.ToString();
         statPrefabs[10].value.text = playerSavedData._stats.totalElites.ToString();
         statPrefabs[11].value.text = playerSavedData._stats.totalBosses.ToString();
-        statPrefabs[12].value.text = playerSavedData._stats.totalPlayTime.ToString();
+        statPrefabs[12].value.text = playerSavedData._stats.totalPlayTime.ToString("0.0");
         statPrefabs[13].value.text = playerSavedData._stats.totalUpgrades.ToString();
         statPrefabs[14].value.text = playerSavedData._stats.totalParts.ToString();
-        statPrefabs[15].value.text = playerSavedData._stats.totalDistance.ToString();
+        statPrefabs[15].value.text = playerSavedData._stats.totalDistance.ToString("0");
 
         
 

@@ -186,7 +186,7 @@ public class IdleState : CrawlerState
             randomPos.y = crawler.transform.position.y;
 
             var colliders = Physics.OverlapSphere(randomPos, 1f, movement.SteeringRaycast);
-            if (colliders.Length == 0 && Vector3.Distance(crawler.transform.position, randomPos) >= movement.wanderRadius*0.2 && Vector3.Distance(Vector3.zero, randomPos) < 40)
+            if (colliders.Length == 0 && Vector3.Distance(crawler.transform.position, randomPos) >= movement.wanderRadius*0.1)
             {
                 return randomPos;
             }

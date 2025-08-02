@@ -121,7 +121,7 @@ public class PowerNode : MonoBehaviour
     public void TryLocks()
     {
         List<ModBuildType> modTypes = new List<ModBuildType>();
-        int rarity = -1;
+        int rarity = 0;
 
         if (chipSlots.Count == 0)
         {
@@ -135,8 +135,9 @@ public class PowerNode : MonoBehaviour
             rarity += chip.currentRunMod.rarity;
         }
 
-
-        rarity = Mathf.Clamp(rarity / chipSlots.Count - 1, 0, 3); // Ensure rarity is within bounds
+        rarity++;
+        rarity /= Mathf.RoundToInt(chipSlots.Count);
+        rarity = Mathf.Clamp(rarity, 0, 3); // Ensure rarity is within bounds
 
         for (int i = 0; i < comboLocks.Count; i++)
         {

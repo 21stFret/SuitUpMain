@@ -136,6 +136,11 @@ public class AreaManager : MonoBehaviour
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
+            EnvironmentArea area = currentRoom.GetComponent<EnvironmentArea>();
+            if (area != null)
+            {
+                area.RefreshArea();
+            }
         }
         voidArea.SetActive(true);
         currentRoom = voidArea;
