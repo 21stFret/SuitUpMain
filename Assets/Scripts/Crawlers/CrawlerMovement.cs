@@ -6,8 +6,8 @@ using UnityEngine.Rendering;
 public class CrawlerMovement : MonoBehaviour
 {
     [SerializeField]
-    private Transform movementTarget;
-    [SerializeField] private Vector3 destination;
+    public Transform movementTarget;
+    public Vector3 destination;
     public float speedFinal;
     public float steerSpeed = 2f;
     public float lookSpeed = 5f;
@@ -283,6 +283,7 @@ public class CrawlerMovement : MonoBehaviour
     public void SetTarget(Transform transform, bool hivemindlock = false)
     {
         movementTarget = transform;
+        //print("Setting movement target for: " + name + " to " + transform.name);
         m_crawler.target = transform;
         SetDestination(movementTarget.position);
         if(hivemindlock)
@@ -300,6 +301,7 @@ public class CrawlerMovement : MonoBehaviour
     public void SetDestination(Vector3 position, bool forceRotation=false)
     {
         destination = position;
+        //print("Setting destination for: " + name + " to " + position);
         distanceToTarget = Vector3.Distance(destination, transform.position);
 
         if(forceRotation)
@@ -317,6 +319,7 @@ public class CrawlerMovement : MonoBehaviour
         UpdateNearbySwarmMembers();
         if(destination == Vector3.zero)
         {
+            //Debug.LogWarning($"[{gameObject.name}] Destination is zero in FixedUpdate! MovementTarget: {(movementTarget != null ? movementTarget.name : "null")}");
             return;
         }
 
@@ -365,9 +368,13 @@ public class CrawlerMovement : MonoBehaviour
         foreach (Collider col in nearbyColliders)
         {
             CrawlerMovement crawler = col.GetComponent<CrawlerMovement>();
-            if (crawler != null && crawler != this)
+            if (crawler != null)
             {
-                nearbySwarmMembers.Add(crawler);
+                if (crawler == this) continue; // Skip self
+                if (crawler.m_crawler !=null)
+                {
+                    nearbySwarmMembers.Add(crawler);
+                }
             }
         }
     }

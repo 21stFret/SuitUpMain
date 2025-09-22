@@ -25,7 +25,6 @@ public enum CrawlerType
 
 public class Crawler : MonoBehaviour
 {
-    private RangeSensor rangeSensor;
     [HideInInspector]
     public Rigidbody rb;
     [HideInInspector]
@@ -34,7 +33,8 @@ public class Crawler : MonoBehaviour
     public SkinnedMeshRenderer meshRenderer;
     [HideInInspector]
     public Transform target;
-    private Collider _collider;
+    [HideInInspector]
+    public Collider _collider;
     [HideInInspector]
     public CrawlerSpawner crawlerSpawner;
 
@@ -54,6 +54,7 @@ public class Crawler : MonoBehaviour
     public AudioSource deathNoise;
     public bool overrideDeathNoise;
     protected bool inRange;
+    public LayerMask playerLayer;
     [SerializeField]
     private bool immune;
     public float _immuneTime = 1;
@@ -112,6 +113,7 @@ public class Crawler : MonoBehaviour
 
     public virtual void Init()
     {
+        crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
         dead = false;
         overrideDeathNoise = false;
         _targetHealth = GetComponent<TargetHealth>();
@@ -125,20 +127,24 @@ public class Crawler : MonoBehaviour
         }
         _targetHealth.Init(this);
         _collider = GetComponent<Collider>();
+        _collider.enabled = false;
         animator = GetComponent<Animator>();
-        crawlerMovement = GetComponent<CrawlerMovement>();
-        crawlerMovement.m_crawler = this;
-        rangeSensor = GetComponent<RangeSensor>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         if (meshRenderer != null)
         {
             originalMaterial = meshRenderer.material;
+            meshRenderer.enabled = false;
+        }
+        rb = GetComponent<Rigidbody>();
+        playerLayer = LayerMask.GetMask("Player");
+        crawlerMovement = GetComponent<CrawlerMovement>();
+        if (crawlerMovement != null)
+        {
+            crawlerMovement.m_crawler = this;
+            crawlerMovement.enabled = false;
         }
         SetSpeed();
-        rb = GetComponent<Rigidbody>();
-        _collider.enabled = false;
-        crawlerMovement.enabled = false;
-        meshRenderer.enabled = false;
+
     }
 
     public virtual void MakeElite(bool _becomeElite)
@@ -198,7 +204,6 @@ public class Crawler : MonoBehaviour
     {
         if (forceSpawn && _targetHealth==null)
         {
-            crawlerSpawner = FindObjectOfType<CrawlerSpawner>();
             Init();
             Spawn();
         }
@@ -267,14 +272,12 @@ public class Crawler : MonoBehaviour
     public void FindClosestTarget(float trueFind = 0)
     {
         float range = trueFind>0? trueFind : seekRange;
-        rangeSensor.SetSphereShape(range);
-        rangeSensor.Pulse();
-        var _targets = rangeSensor.GetNearestDetection();
-        if (!_targets)
+        var _targets = Physics.OverlapSphere(transform.position, range, playerLayer);
+        if (_targets.Length == 0)
         {
             return;
         }
-        target = _targets.transform;
+        target = _targets[0].transform;
         crawlerMovement.SetTarget(target);
     }
 
@@ -440,14 +443,20 @@ public class Crawler : MonoBehaviour
         tag = "Untagged";
         rb.constraints = RigidbodyConstraints.FreezeAll;
         _collider.enabled = false;
-        crawlerMovement.enabled = false;
+        if(crawlerMovement != null)
+        {
+            crawlerMovement.enabled = false;
+        }
         meshRenderer.enabled = false;
         target = null;
-        DeathBlood.transform.position = transform.position;
-        DeathBlood.transform.SetParent(null);
-        DeathBlood.gameObject.SetActive(true);
-        DeathBlood.Play();
-        
+        if(DeathBlood != null)
+        {
+            DeathBlood.transform.position = transform.position;
+            DeathBlood.transform.SetParent(null);
+            DeathBlood.gameObject.SetActive(true);
+            DeathBlood.Play();
+        }
+
         if(_crawlerBehavior == null)
         {
             return;

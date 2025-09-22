@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
         runUpgradeManager.LoadData();
         wonGame = false;
         droneAbilityManager.Init();
+        battleManager.crawlerSpawner.Init();
 
         if (!playOnAwake) return;
 
@@ -77,7 +78,6 @@ public class GameManager : MonoBehaviour
         currentRoomIndex = -1;
         gameActive = true;
         battleManager.currentBattleIndex = 0;
-        battleManager.crawlerSpawner.Init();
         LoadNextRoom(0);
     }
 
