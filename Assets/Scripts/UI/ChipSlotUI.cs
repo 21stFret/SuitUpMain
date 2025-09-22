@@ -43,10 +43,6 @@ public class ChipSlotUI : MonoBehaviour
             return;
         }
         PlaceChip();
-        if (upgradeCircuitboardManager.currentRunMod == null)
-        {
-            upgradeCircuitboardManager.CloseMenuButton.enabled = true;
-        }
     }
 
     public void PlaceChip()
@@ -139,11 +135,7 @@ public class ChipSlotUI : MonoBehaviour
         upgradeCircuitboardManager.CloseMenuButton.enabled = false;
         _modEntry = null;
 
-        if (auxNode)
-        {
-            Debug.LogWarning("Auxiliary node detected, skipping power node checks.");
-            return;
-        }
+
 
         if (isPowered)
         {
@@ -157,6 +149,12 @@ public class ChipSlotUI : MonoBehaviour
             }
         }
         currentRunMod = null;
+        
+        if (auxNode)
+        {
+            Debug.LogWarning("Auxiliary node detected, skipping power node checks.");
+            return;
+        }
 
         if (!doublePowerNode)
         {

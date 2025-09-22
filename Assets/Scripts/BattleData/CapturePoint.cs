@@ -86,7 +86,6 @@ public class CapturePoint : MonoBehaviour
 
     public void Capture()
     {
-        CrawlerSpawner.instance.KillAllCrawlers();
         BattleManager.instance.ObjectiveComplete();
         GameManager.instance.areaManager.missileLauncher.missilePayload = MissilePayload.FatMan;
         GameManager.instance.areaManager.missileLauncher.SpawnExplosion(Vector3.zero);
@@ -100,6 +99,7 @@ public class CapturePoint : MonoBehaviour
         isCaptured = true;
         _enabled = false;
         captureProgress = 0;
+        playerInArea = false;
         ball.SetActive(false);
     }
 }

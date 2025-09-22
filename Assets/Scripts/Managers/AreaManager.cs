@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FORGE3D;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum AreaType
@@ -50,10 +51,16 @@ public class AreaManager : MonoBehaviour
         CashCollector.instance.DestroyParts();
         missileLauncher.RefreshMines();
         allRooms.ForEach(room => room.SetActive(false));
-
+        EnvironmentArea area = null;
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
+            area = currentRoom.GetComponent<EnvironmentArea>();
+            if (area != null)
+            {
+                area.RefreshArea();
+            }
+
         }
         List<GameObject> roomPrefabs = null;
         switch (areaType)
@@ -82,17 +89,15 @@ public class AreaManager : MonoBehaviour
         }
 
         GameObject roomPrefab;
-        EnvironmentArea area;
 
-        if(BattleManager.instance._usingBattleType == BattleType.Hunt)
+        if (BattleManager.instance._usingBattleType == BattleType.Hunt)
         {
             roomPrefab = roomPrefabs[roomPrefabs.Count - 1];
-            area = roomPrefab.GetComponent<EnvironmentArea>();
         }
         else
         {
             // leave the final room as the boss room
-            int randomIndex = Random.Range(0, roomPrefabs.Count-1);
+            int randomIndex = Random.Range(0, roomPrefabs.Count - 1);
             roomPrefab = roomPrefabs[randomIndex];
             if (roomPrefab == currentRoom)
             {
@@ -100,11 +105,18 @@ public class AreaManager : MonoBehaviour
                 randomIndex = (randomIndex + 1) % (roomPrefabs.Count - 1);
                 roomPrefab = roomPrefabs[randomIndex];
             }
+
             area = roomPrefab.GetComponent<EnvironmentArea>();
-            if(directionalDaylight!=null)
+            
+            if (directionalDaylight != null)
             {
-                bool dark = area.insideArea;
-                if(BattleManager.instance._usingBattleType == BattleType.Survive)
+                bool dark = false;
+                if (area != null)
+                {
+                    dark = area.insideArea;
+                }
+                // If the area is a battle type and it's a survival battle, set dark to true 
+                if (BattleManager.instance._usingBattleType == BattleType.Survive)
                 {
                     dark = true;
                 }
@@ -116,7 +128,6 @@ public class AreaManager : MonoBehaviour
 
         roomPrefab.SetActive(true);
         currentRoom = roomPrefab;
-        area.RefreshArea();
         LoadDataLog();
     }
 
@@ -125,6 +136,11 @@ public class AreaManager : MonoBehaviour
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
+            EnvironmentArea area = currentRoom.GetComponent<EnvironmentArea>();
+            if (area != null)
+            {
+                area.RefreshArea();
+            }
         }
         voidArea.SetActive(true);
         currentRoom = voidArea;

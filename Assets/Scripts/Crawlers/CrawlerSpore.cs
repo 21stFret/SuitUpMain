@@ -13,15 +13,27 @@ public class CrawlerSpore : Crawler
 
     private bool damamgeInitialized = false;
 
+    private bool exploded = false;
+
     public override void Spawn(bool daddy = false)
     {
         base.Spawn(daddy);
         timer = sporeTimer / 2;
+        exploded = false;
     }
 
 
     public override void Die(WeaponType killedBy)
     {
+        if (dead)
+        {
+            return;
+        }
+        if (exploded)
+        {
+            return;
+        }
+        exploded = true;
         sporePrefab.transform.parent = null;
         sporePrefab.transform.position = transform.position;
         sporePrefab.SetActive(true);

@@ -17,9 +17,12 @@ public class Prop : MonoBehaviour
 
     protected WeaponType killedBy;
 
+    private bool _isInitialized = false;
+
     private void Awake()
     {
         _collider = GetComponent<Collider>();
+        _isInitialized = false;
     }
 
     private void Start()
@@ -29,12 +32,24 @@ public class Prop : MonoBehaviour
 
     public virtual void Init()
     {
+        if (_isInitialized)
+            return;
+        _isInitialized = true;
         if (_targetHealth == null)
         {
             _targetHealth = GetComponent<TargetHealth>();
             if (_targetHealth == null)
             {
                 //print("No target health found on " + gameObject.name);
+                return;
+            }
+        }
+        if(_collider == null)
+        {
+            _collider = GetComponent<Collider>();
+            if (_collider == null)
+            {
+                //print("No collider found on " + gameObject.name);
                 return;
             }
         }
@@ -68,9 +83,10 @@ public class Prop : MonoBehaviour
 
     public virtual void RefreshProp()
     {
-        _collider.enabled = true;
-        gameObject.SetActive(true);
         Init();
+        _collider.enabled = true;
+        health = healthMax;
+        gameObject.SetActive(true);
     }
 
     // Add this to the object with the collider

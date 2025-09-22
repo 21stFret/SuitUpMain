@@ -35,10 +35,7 @@ public class WeaponMod : MonoBehaviour
         }
         if (runMod != null)
         {
-            if (runMod.modifiers.Count > 0)
-            {
-                runUpgradeManager.RemoveMod(runMod);
-            }
+            runUpgradeManager.RemoveMod(runMod);
         }
         if (baseWeapon != null)
         {

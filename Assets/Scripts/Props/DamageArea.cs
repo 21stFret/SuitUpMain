@@ -97,14 +97,19 @@ public class DamageArea : MonoBehaviour
             }
             for (int i = targetsInRange.Count - 1; i >= 0; i--)
             {
-                if (targetsInRange[i] != null && targetsInRange[i].gameObject.activeInHierarchy)
-                {
-                    targetsInRange[i].TakeDamage(damageAmount, damageType);
-                }
-                else
+                if (Vector3.Distance(transform.position, targetsInRange[i].transform.position) > triggerCollider.radius + radiusExtender)
                 {
                     targetsInRange.RemoveAt(i);
+                    continue;
                 }
+                if (targetsInRange[i] != null && targetsInRange[i].gameObject.activeInHierarchy)
+                    {
+                        targetsInRange[i].TakeDamage(damageAmount, damageType);
+                    }
+                    else
+                    {
+                        targetsInRange.RemoveAt(i);
+                    }
             }
             yield return new WaitForSeconds(damageInterval);
         }

@@ -201,7 +201,6 @@ GameObject:
   - component: {fileID: 4026478879676073528}
   - component: {fileID: 4026478879676073534}
   - component: {fileID: 4026478879676073532}
-  - component: {fileID: 95319451911253448}
   - component: {fileID: 7385233175854182989}
   - component: {fileID: 8265754060228884709}
   - component: {fileID: 8835100205756127941}
@@ -282,6 +281,9 @@ MonoBehaviour:
   dead: 0
   deathNoise: {fileID: 418313318034436250}
   overrideDeathNoise: 0
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
   immune: 0
   _immuneTime: 0.6
   crawlerScale: 0.5
@@ -342,53 +344,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &95319451911253448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3941810313144788156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f00a8324cac4f1e84ad1644ec747516, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnDetected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnLostDetection:
-    m_PersistentCalls:
-      m_Calls: []
-  OnSomeDetection:
-    m_PersistentCalls:
-      m_Calls: []
-  OnNoDetection:
-    m_PersistentCalls:
-      m_Calls: []
-  signalFilter:
-    IgnoreList: []
-    EnableTagFilter: 0
-    AllowedTags: []
-  DetectionMode: 0
-  Shape: 0
-  Sphere:
-    Radius: 10
-  Box:
-    HalfExtents: {x: 0.5, y: 0.5, z: 0.5}
-  Capsule:
-    Radius: 0.5
-    Height: 1
-  DetectsOnLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  IgnoreTriggerColliders: 0
-  pulseRoutine:
-    Mode:
-      value: 0
-    UpdateFunction: 0
-    Interval:
-      value: 0.5
 --- !u!114 &7385233175854182989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,7 +426,7 @@ MonoBehaviour:
   invincible: 0
   alive: 0
   trippyEffect: {fileID: 0}
-  immuneWeapons: 07000000
+  immuneWeapons: 09000000
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}

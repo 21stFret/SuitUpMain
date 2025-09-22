@@ -14,6 +14,7 @@ public class ChainSaw : MechWeapon
     private float _timer;
     public AudioSource audioSource;
     public AudioClip lowEngineHum, revingEngine;
+    private Coroutine _stopEngineCoroutine;
 
     private void Awake()
     {
@@ -70,7 +71,7 @@ public class ChainSaw : MechWeapon
             _timer += Time.deltaTime;
             if (_timer > fireRate)
             {
-                Debug.Log($"ChainSaw dealing {damage} damage to {targetHealths.Count} targets");
+                //Debug.Log($"ChainSaw dealing {damage} damage to {targetHealths.Count} targets");
                 
                 for (int i = targetHealths.Count - 1; i >= 0; i--)
                 {
@@ -107,8 +108,14 @@ public class ChainSaw : MechWeapon
         _animator.SetBool("Enabled", true);
         if (audioSource != null)
         {
+            audioSource.loop = true;
             audioSource.clip = revingEngine;
             audioSource.Play();
+        }
+        if (_stopEngineCoroutine != null)
+        {
+            StopCoroutine(_stopEngineCoroutine);
+            _stopEngineCoroutine = null;
         }
     }
 
@@ -122,7 +129,7 @@ public class ChainSaw : MechWeapon
             audioSource.clip = lowEngineHum;
             audioSource.Play();
         }
-        StartCoroutine(StopEngine());
+        _stopEngineCoroutine = StartCoroutine(StopEngine());
     }
 
     private IEnumerator StopEngine()

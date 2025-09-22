@@ -10,6 +10,9 @@ public class WeaponModManager : MonoBehaviour
     public WeaponController weaponController;
     public WeaponMod currentTechMod;
     public WeaponMod currentAssaultMod;
+
+    public WeaponMod TESTcurrentTechMod;
+    public WeaponMod TESTcurrentAssaultMod;
     public List<WeaponMod> currentMods = new List<WeaponMod>();
 
     [InspectorButton("EquipAssaultModTEst")]
@@ -111,23 +114,31 @@ public class WeaponModManager : MonoBehaviour
 
     public void EquipAssaultModTEst()
     {
-        if (currentAssaultMod == null)
+        if (TESTcurrentAssaultMod == null)
         {
             return;
         }
 
-        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentAssaultMod.runMod.modName);
+        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(TESTcurrentAssaultMod.runMod.modName);
+        for (int i = 0; i < runMod.modifiers.Count; i++)
+        {
+            runMod.modifiers[i].statValue = runMod.modValues[i].values[2];
+        }
 
         GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
     }
 
     public void EquipTechModTEst()
     {
-        if (currentTechMod == null)
+        if (TESTcurrentTechMod == null)
         {
             return;
         }
-        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(currentTechMod.runMod.modName);
+        RunMod runMod = GameManager.instance.runUpgradeManager.GetWeaponModByName(TESTcurrentTechMod.runMod.modName);
+        for (int i = 0; i < runMod.modifiers.Count; i++)
+        {
+            runMod.modifiers[i].statValue = runMod.modValues[i].values[2];
+        }
 
         GameManager.instance.runUpgradeManager.EnableModSelection(runMod);
     }

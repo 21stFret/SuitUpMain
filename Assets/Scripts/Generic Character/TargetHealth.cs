@@ -166,7 +166,7 @@ public class TargetHealth : MonoBehaviour
     {
         if(damageNumberPrefab == null)
         {
-            Debug.LogError("DamageNumber prefab is not assigned in TargetHealth script on " + gameObject.name);
+            //Debug.LogError("DamageNumber prefab is not assigned in TargetHealth script on " + gameObject.name);
             return;
         }
         if (weapon == WeaponType.Default)
@@ -260,11 +260,15 @@ public class TargetHealth : MonoBehaviour
                 return 1;
             case WeaponType.Plasma:
                 return 1;
+            case WeaponType.Chainsaw:
+                return 1;
             case WeaponType.Cryo:
                 return 2;
             case WeaponType.Lightning:
                 return 2;
             case WeaponType.Flame:
+                return 2;
+            case WeaponType.Shield:
                 return 2;
             case WeaponType.Crawler:
                 return 0;

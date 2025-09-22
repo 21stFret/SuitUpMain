@@ -2337,6 +2337,7 @@ MonoBehaviour:
   eliteChance: 4
   sporeEmpowered: 0
   sporedEffect: {fileID: 7940181536480010164}
+  sporedTime: 2
   DeathEffect: {fileID: 5698520181082743242}
   spawnCount: 4
   explosionRadius: 8
@@ -2463,9 +2464,7 @@ MonoBehaviour:
   slowedDuration: 2
   slowedAmount: 0.5
   m_crawler: {fileID: 0}
-  obstacleAvoidanceWeight: 1
   wanderRadius: 20
-  wallStickPrevention: 2
   wallCheckDistance: 1.5
   stuckCheckInterval: 0.5
   stuckThreshold: 0.1
@@ -2490,7 +2489,7 @@ MonoBehaviour:
   invincible: 0
   alive: 0
   trippyEffect: {fileID: 0}
-  immuneWeapons: 07000000
+  immuneWeapons: 
   damageNumbersOn: 1
   damageNumberPrefab: {fileID: 1259023133563206875, guid: 7b8c01b1d7077754fbbd8454e3cbab63,
     type: 3}

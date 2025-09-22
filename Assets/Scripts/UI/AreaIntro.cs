@@ -18,13 +18,21 @@ public class AreaIntro : MonoBehaviour
     public Sprite[] areaIntroSprites;
     public Image areaIntroImage;
 
-    [InspectorButton("ShowAreaIntro")]
-    public bool showAreaIntro;
+    [InspectorButton("ShowAreaIntroT")]
+    public bool showAreaIntroT;
 
     public void ShowAreaIntro()
     {
         areaIntroImage.gameObject.SetActive(true);
         areaIntroImage.sprite = areaIntroSprites[(int)GameManager.instance.currentAreaType];
+        fadeIn = true;
+        fadeTime = 0.0f;
+        _enabled = true;
+    }
+
+    public void ShowAreaIntroT()
+    {
+        areaIntroImage.gameObject.SetActive(true);
         fadeIn = true;
         fadeTime = 0.0f;
         _enabled = true;

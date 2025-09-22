@@ -49,7 +49,9 @@ public class Cheats : MonoBehaviour
         richcheck = true;
         CashCollector.instance.AddCash(1000000);
         CashCollector.instance.AddArtifact(100);
+        PlayerSavedData.instance.topDif = 3;
         PlayerSavedData.instance.SavePlayerData();
+        LogManager.instance.DiscoverAllLogs();
         print("Gave you 1 million cash and 100 artifacts!");
     }
 
