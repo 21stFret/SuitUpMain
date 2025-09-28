@@ -4995,6 +4995,7 @@ MonoBehaviour:
   lootChance: 0
   explosionEffect: {fileID: 1296795278480684578}
   breakableObject: {fileID: 2522599901935693220}
+  rb: {fileID: 0}
 --- !u!82 &8552825021022463991
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5130,8 +5131,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f623f2701c0a53d418a3c7a4551d66a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetHealth: {fileID: 0}
+  crate: {fileID: 0}
   damageAmount: 10
-  range: 5
+  damageRange: 5
+  force: 40
 --- !u!1 &1369574915792631223
 GameObject:
   m_ObjectHideFlags: 0

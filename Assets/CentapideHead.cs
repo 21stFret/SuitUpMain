@@ -17,6 +17,7 @@ public class CentapideHead : Crawler
     public float explosionForce = 1000f;
     public LayerMask layerMask;
     public GameObject eggs;
+    public centipideAI aiScript;
     
     // Path recording system
     private Queue<Vector3> pathPoints = new Queue<Vector3>();
@@ -25,6 +26,7 @@ public class CentapideHead : Crawler
 
     public float damageInterval = 1f; // Time between damage applications
     private float damageTimer = 0f;
+    public CentapideHead connectedHead;
 
     private void Start()
     {
@@ -36,11 +38,15 @@ public class CentapideHead : Crawler
         Init();
         meshRenderer.enabled = true;
         _collider.enabled = true;
+        if (!followingCentipede)
+        {
+            InitAiTarget();
+        }
     }
 
     private void Update()
     {
-        if(dead)
+        if (dead)
         {
             return;
         }
@@ -58,6 +64,11 @@ public class CentapideHead : Crawler
             damageTimer = 0f;
             DealDamageToTargetsInRange();
         }
+        
+        if(centiTarget == null)
+        {
+            centiTarget = aiTarget;
+        }
     }
 
     private void DealDamageToTargetsInRange()
@@ -70,7 +81,7 @@ public class CentapideHead : Crawler
                 var targetHealth = hitCollider.GetComponent<TargetHealth>();
                 if (targetHealth != null && targetHealth.alive)
                 {
-                    targetHealth.TakeDamage(10);
+                    targetHealth.TakeDamage(attackDamage);
                 }
                 var rigidbody = hitCollider.GetComponent<Rigidbody>();
                 if (rigidbody != null)
@@ -96,7 +107,7 @@ public class CentapideHead : Crawler
         eggs.SetActive(false);
         foreach (var segment in bodySegments)
         {
-            if(segment != null)
+            if (segment != null)
             {
                 var crawler = segment.GetComponent<Crawler>();
                 if (crawler != null)
@@ -111,6 +122,25 @@ public class CentapideHead : Crawler
                 }
             }
         }
+        if (connectedHead != null)
+        {
+            connectedHead.InitAiTarget();
+        }
+    }
+
+    public void InitAiTarget()
+    {
+        if (aiTarget != null)
+        {
+            centiTarget = aiTarget;
+            aiTarget.transform.parent = null;
+        }
+        if (aiScript != null)
+        {
+            aiScript.enabled = true;
+            aiScript.simpleOrbit.ForcePositionInFrontofPlayer();
+        }
+        followingCentipede = false;
     }
 
     private void ExplodeIfInRange()
@@ -124,7 +154,7 @@ public class CentapideHead : Crawler
                 Vector3 direction = collider.transform.position - transform.position;
                 rb.AddForce(direction.normalized * explosionForce, ForceMode.Impulse);
                 float attackDamageAfterRange = attackDamage * (1 - (Vector3.Distance(transform.position, collider.transform.position) / explosionRadius));
-                if(rb.GetComponent<TargetHealth>() != null)
+                if (rb.GetComponent<TargetHealth>() != null)
                 {
                     rb.GetComponent<TargetHealth>().TakeDamage(attackDamageAfterRange, WeaponType.Crawler);
                 }
@@ -161,16 +191,23 @@ public class CentapideHead : Crawler
             
             // Find the point in our path that's closest to this distance
             int targetIndex = FindPathIndexAtDistance(pathArray, desiredDistance);
-            
+
+            float _moveSpeed = moveSpeed;
+
+            if(aiScript != null && aiScript.targetingPlayer)
+            {
+                _moveSpeed *= 1.5f;
+            }
+
             if (targetIndex >= 0 && targetIndex < pathArray.Length)
             {
                 // Smoothly move to the path point
                 bodySegments[i].transform.position = Vector3.Lerp(
                     bodySegments[i].transform.position,
                     pathArray[targetIndex],
-                    Time.deltaTime * moveSpeed
+                    Time.deltaTime * _moveSpeed
                 );
-                
+
                 // Smoothly rotate to match the path rotation
                 bodySegments[i].transform.rotation = Quaternion.Lerp(
                     bodySegments[i].transform.rotation,

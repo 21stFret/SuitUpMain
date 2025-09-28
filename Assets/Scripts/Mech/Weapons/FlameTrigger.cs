@@ -35,6 +35,7 @@ public class FlameTrigger : MonoBehaviour
         if (!isOn)
         {
             timer = 0;
+            triggerSensor.Clear();
             return;
         }
 

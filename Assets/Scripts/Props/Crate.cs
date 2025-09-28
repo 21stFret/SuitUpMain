@@ -12,7 +12,7 @@ public class Crate : Prop
     private Vector3 originalPosition;
     private Vector3 originalRoation;
     private Renderer rend;
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     public override void Init()
     {
@@ -67,14 +67,16 @@ public class Crate : Prop
         Init();
         base.RefreshProp();
         rend.enabled = true;
-        if(rb != null)
+        if (rb != null)
         {
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         transform.position = originalPosition;
         transform.eulerAngles = originalRoation;
         explosionEffect.transform.parent = transform;
         explosionEffect.transform.localPosition = Vector3.zero;
+        _targetHealth.alive = true;
     }
     
 
