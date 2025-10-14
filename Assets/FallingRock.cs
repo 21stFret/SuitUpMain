@@ -25,6 +25,10 @@ public class FallingRock : MonoBehaviour
             {
                 targetHealth.TakeDamage(damageAmount);
             }
+            if(hitCollider.CompareTag("BigEnvironment"))
+            {
+                hitCollider.GetComponent<BreakableEnvironment>().Hit();
+            }
         }
 
     }
