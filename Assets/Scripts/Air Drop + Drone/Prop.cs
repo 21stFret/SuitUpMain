@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Prop : MonoBehaviour
 {
-    private float health;
-    private float healthMax;
     public TargetHealth _targetHealth;
 
     public Collider _collider;
@@ -54,19 +52,15 @@ public class Prop : MonoBehaviour
             }
         }
         _targetHealth.Init(null, null, this);
-        healthMax = _targetHealth.maxHealth;
-        health = healthMax;
         _collider.enabled = true;
     }
 
-    public void TakeDamage(float damage, WeaponType weapon)
+    public void TakeDamage(WeaponType weapon)
     {
-        health -= damage;
-
-        if (health  <= 0)
+        if (_targetHealth.health <= 0)
         {
             killedBy = weapon;
-            Die();        
+            Die();
         }
     }
 
@@ -85,7 +79,7 @@ public class Prop : MonoBehaviour
     {
         Init();
         _collider.enabled = true;
-        health = healthMax;
+        _targetHealth.Init();
         gameObject.SetActive(true);
     }
 

@@ -36,7 +36,7 @@ public class CrawlerBurstSpawner : MonoBehaviour
         {
             timeElapsed = 0f;
             var newSquad = new List<Crawler>();
-            for (int i = 0; i <= squadCount; i++)
+            for (int i = 0; i < squadCount && i < crawlerSquad.crawlerGroups.Length; i++)
             {
                 var group = crawlerSquad.crawlerGroups[i];
                 newSquad.AddRange(crawlerSpawner.GenerateNewSquad(group.type, group.amount));

@@ -80,6 +80,9 @@ namespace FORGE3D
         [Header("Box")] public AudioClip[] boxHit;
         public float boxHitDelay;
 
+        [Header("Boulder")] public AudioClip[] boulderHit;
+        public float boulderHitDelay;
+
         [Header("Spit")] public AudioClip[] spitHit;
         public float spitHitDelay;
 
@@ -463,6 +466,26 @@ namespace FORGE3D
                 AudioSource aSrc =
                     F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
                         boxHit[Random.Range(0, boxHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
+                if (aSrc != null)
+                {
+                    aSrc.pitch = Random.Range(0.8f, 1f);
+                    aSrc.volume = Random.Range(0.8f, 1f);
+                    aSrc.minDistance = 15f;
+                    aSrc.loop = false;
+                    aSrc.Play();
+
+                    timer_01 = 0f;
+                }
+            }
+        }
+
+        public void BoulderHit(Vector3 pos)
+        {
+            if (timer_01 >= boxHitDelay)
+            {
+                AudioSource aSrc =
+                    F3DPoolManager.Pools["GeneratedPool"].SpawnAudio(audioSource,
+                        boulderHit[Random.Range(0, boulderHit.Length)], pos, null).gameObject.GetComponent<AudioSource>();
                 if (aSrc != null)
                 {
                     aSrc.pitch = Random.Range(0.8f, 1f);

@@ -3491,12 +3491,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!114 &5215084365935618401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10462,6 +10462,8 @@ MonoBehaviour:
   napalmHitDelay: 0
   boxHit: []
   boxHitDelay: 0
+  boulderHit: []
+  boulderHitDelay: 0
   spitHit: []
   spitHitDelay: 0
 --- !u!1 &2795793284856367287
@@ -11100,6 +11102,7 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!114 &9044941546547167546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21068,12 +21071,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &5849034134639134601
 GameObject:
   m_ObjectHideFlags: 0

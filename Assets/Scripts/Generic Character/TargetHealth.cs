@@ -73,19 +73,19 @@ public class TargetHealth : MonoBehaviour
 
     public void TakeDamage(float damage, WeaponType weaponType = WeaponType.Crawler, float stunTime = 0, Crawler crawler = null)
     {
-    // Sanitize health at the start
-    if (float.IsNaN(health) || float.IsInfinity(health))
-    {
-        Debug.LogWarning($"Health was NaN/Infinity on {gameObject.name}, resetting to 0");
-        health = 0;
-    }
-    
-    // Also sanitize damage
-    if (float.IsNaN(damage) || float.IsInfinity(damage))
-    {
-        Debug.LogWarning($"Damage was NaN/Infinity, setting to 0");
-        damage = 0;
-    }
+        // Sanitize health at the start
+        if (float.IsNaN(health) || float.IsInfinity(health))
+        {
+            Debug.LogWarning($"Health was NaN/Infinity on {gameObject.name}, resetting to 0");
+            health = 0;
+        }
+        
+        // Also sanitize damage
+        if (float.IsNaN(damage) || float.IsInfinity(damage))
+        {
+            Debug.LogWarning($"Damage was NaN/Infinity, setting to 0");
+            damage = 0;
+        }
         if (!alive)
         {
             return;
@@ -127,7 +127,8 @@ public class TargetHealth : MonoBehaviour
 
         if (_prop != null)
         {
-            _prop.TakeDamage(damage, weaponType);
+            health -= damage;
+            _prop.TakeDamage(weaponType);
             if (damageNumbersOn)
             {
                 DamageNumbers(damage, weaponType);

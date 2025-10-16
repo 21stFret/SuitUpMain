@@ -28,12 +28,10 @@ public class CrawlerDaddy : Crawler
         }
         if(killedBy != WeaponType.Default)
         {
-            Vector3 pos = transform.position;
-            pos.y += 3;
-            spawnCount = Random.Range(2, 5);
-            spawnCount *= isElite ? 2 : 1;
             if(spawn)
             {
+                spawnCount = Random.Range(2, 5);
+                spawnCount *= isElite ? 2 : 1;
                 crawlerSpawner.SpawnAtPoint(transform, spawnCount);
             }
             if(isElite)

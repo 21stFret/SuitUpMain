@@ -28,6 +28,14 @@ public class CentapideHead : Crawler
     private float damageTimer = 0f;
     public CentapideHead connectedHead;
 
+    public CentipideBossManager centipideBossManager;
+
+    public AudioSource centipideCrawlSound;
+    public List<AudioClip> centipideCrawlClips;
+
+    public ParticleSystem diggingEffect;
+    public float groundLevel = 0f;
+
     private void Start()
     {
         // Initialize path indices for each segment
@@ -64,11 +72,62 @@ public class CentapideHead : Crawler
             damageTimer = 0f;
             DealDamageToTargetsInRange();
         }
-        
-        if(centiTarget == null)
+
+        if (centiTarget == null)
         {
             centiTarget = aiTarget;
         }
+
+        // Handle crawl sound
+        if (centipideCrawlSound != null && !centipideCrawlSound.isPlaying && centipideCrawlClips.Count > 0)
+        {
+            centipideCrawlSound.clip = centipideCrawlClips[Random.Range(0, centipideCrawlClips.Count)];
+            centipideCrawlSound.Play();
+        }
+
+        // Handle digging effect
+        if (diggingEffect != null && !diggingEffect.isPlaying)
+        {
+            if (WithinRange(transform.position.y, groundLevel, 0.2f))
+            {
+                diggingEffect.transform.parent = null;
+                diggingEffect.transform.position = new Vector3(transform.position.x, groundLevel, transform.position.z);
+                diggingEffect.Play();
+                float diggingDuration = CountConnectedSegments() * 0.1f; // Example: 0.5 seconds per segment
+                StartCoroutine(StopDiggingEffectAfterDelay(diggingDuration));
+            }
+        }
+    }
+
+    private static bool WithinRange(float a, float b, float range)
+    {
+        return Mathf.Abs(a - b) <= range;
+    }
+
+    private IEnumerator StopDiggingEffectAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (diggingEffect != null)
+        {
+            diggingEffect.Stop();
+        }
+    }
+    
+    private int CountConnectedSegments()
+    {
+        int count = 1; // Start with 1 for the head
+        foreach (var segment in bodySegments)
+        {
+            if (segment != null)
+            {
+                count++;
+            }
+            else
+            {
+                break; // Stop counting if a segment is missing
+            }
+        }
+        return count;
     }
 
     private void DealDamageToTargetsInRange()
@@ -126,6 +185,10 @@ public class CentapideHead : Crawler
         {
             connectedHead.InitAiTarget();
         }
+        if(centipideBossManager != null)
+        {
+            centipideBossManager.CheckDeadHeads();
+        }
     }
 
     public void InitAiTarget()
@@ -138,7 +201,6 @@ public class CentapideHead : Crawler
         if (aiScript != null)
         {
             aiScript.enabled = true;
-            aiScript.simpleOrbit.ForcePositionInFrontofPlayer();
         }
         followingCentipede = false;
     }

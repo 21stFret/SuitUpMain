@@ -14,6 +14,8 @@ public class Crate : Prop
     private Renderer rend;
     public Rigidbody rb;
 
+    public bool isBoulder;
+
     public override void Init()
     {
         base.Init();
@@ -42,7 +44,14 @@ public class Crate : Prop
         }
         breakableObject.transform.parent = null;
         breakableObject.Break();
-        F3DAudioController.instance.BoxHit(transform.position);
+        if (!isBoulder)
+        {
+            F3DAudioController.instance.BoxHit(transform.position);
+        }
+        else
+        {
+            F3DAudioController.instance.BoulderHit(transform.position);
+        }
         explosionEffect.Play();
         explosionEffect.transform.parent = null;
         if(rend != null)

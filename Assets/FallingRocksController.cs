@@ -9,6 +9,8 @@ public class FallingRocksController : MonoBehaviour
     public float fallIntervalMax = 2f; // Time between falls
     public float fallIntervalMin = 0.5f;
     private float fallInterval = 2f;
+    private float shakeInterval = 0.2f;
+    private float shakeTimer = 0f;
     private float fallTimer = 0f;
     public Transform playerTransform;
     private int rockIndex = 0;
@@ -28,12 +30,18 @@ public class FallingRocksController : MonoBehaviour
         falling = true;
     }
 
+    public void StopFalling()
+    {
+        falling = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (!falling) return;
 
         fallTimer += Time.deltaTime;
+        shakeTimer += Time.deltaTime;
         if (fallTimer >= fallInterval)
         {
             fallTimer = 0f;
@@ -50,6 +58,13 @@ public class FallingRocksController : MonoBehaviour
             rock.transform.position = spawnPosition;
             rock.SetActive(true);
             rock.GetComponentInChildren<FallingRock>(true).Fall(spawnPosition);
+
+            ScreenShakeUtility.Instance.ShakeScreen(0.8f);
+        }
+        if(shakeTimer >= shakeInterval)
+        {
+            ScreenShakeUtility.Instance.ShakeScreen(0.2f);
+            shakeTimer = 0f;
         }
     }
 }

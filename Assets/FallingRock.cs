@@ -10,11 +10,11 @@ public class FallingRock : MonoBehaviour
     public float damageRange = 5f;
     public float force;
 
-
     void OnCollisionEnter(Collision collision)
     {
         if (targetHealth != null)
         {
+            targetHealth.Init(null, null, crate);
             targetHealth.TakeDamage(10);
         }
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, damageRange);
@@ -23,7 +23,7 @@ public class FallingRock : MonoBehaviour
             var targetHealth = hitCollider.GetComponent<TargetHealth>();
             if (targetHealth != null && targetHealth.alive)
             {
-                targetHealth.TakeDamage(damageAmount);
+                targetHealth.TakeDamage(damageAmount, WeaponType.Trap);
             }
             if(hitCollider.CompareTag("BigEnvironment"))
             {

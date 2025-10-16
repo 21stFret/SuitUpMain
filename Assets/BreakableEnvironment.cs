@@ -11,7 +11,13 @@ public class BreakableEnvironment : MonoBehaviour
         if (hit) return;
         GetComponent<Collider>().enabled = false;
         GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<BreakableObject>().Break();
+        var breakableObject = GetComponent<BreakableObject>();
+        if (breakableObject != null)
+        {
+            breakableObject.transform.parent = null;
+            breakableObject.transform.position = transform.position + transform.up * 1;
+            breakableObject.Break();
+        }
         hit = true;
     }
     
