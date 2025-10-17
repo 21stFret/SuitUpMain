@@ -92,7 +92,9 @@ public class centipideAI : MonoBehaviour
         {
             if(centapideHead.transform.position.y > groundY)
             {
-               emerging = false;
+                emerging = false;
+                speed /= 2f;
+                centapideHead.speed /= 2f;
             }
             return;
         }
@@ -216,8 +218,10 @@ public class centipideAI : MonoBehaviour
         isBuried = false;
         emerging = true;
         groundY = emergeHeight-0.2f;
-        transform.position = PredictPlayerPosition() + Random.insideUnitSphere * 15f; 
+        transform.position = PredictPlayerPosition() + Random.insideUnitSphere * 5f;
         transform.position = new Vector3(transform.position.x, emergeHeight, transform.position.z);
+        speed *= 2f;
+        centapideHead.speed *= 2f;    
         RandomiseStats();
     }
 }

@@ -13,6 +13,9 @@ public class CrawlerBurstSpawner : MonoBehaviour
     public bool isActive;
     public int squadCount;
     public Transform spawnPosition;
+    [HideInInspector]
+    public List<Crawler> _activeCrawlers = new List<Crawler>();
+    public int maxCrawlers = 10;
 
     public void Init()
     {
@@ -44,6 +47,11 @@ public class CrawlerBurstSpawner : MonoBehaviour
             if (newSquad.Count > 0)
             {
                 crawlerSpawner.SpawnFromArmy(newSquad, spawnPosition);
+                _activeCrawlers.AddRange(newSquad);
+                foreach (var crawler in newSquad)
+                {
+                    crawler._burstSpawner = this;
+                }
             }
         }
     }

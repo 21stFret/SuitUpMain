@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
         runUpgradeManager.weaponModManager.RemoveCurrentMods();
         nextBuildtoLoad = (ModBuildType)Random.Range(0, 4);
         currentRoomIndex = -1;
+        areaManager.currentRoom = null;
         gameActive = true;
         battleManager.currentBattleIndex = 0;
         LoadNextRoom(0);

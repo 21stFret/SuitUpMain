@@ -62,6 +62,6 @@ public class StoryDataReader : MonoBehaviour
             logDatabase.allLogs.Add(log);
         }
         
-        Debug.Log($"Loaded {logDatabase.allLogs.Count} story logs from CSV");
+        //Debug.Log($"Loaded {logDatabase.allLogs.Count} story logs from CSV");
     }
 }

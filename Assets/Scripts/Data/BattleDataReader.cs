@@ -10,7 +10,7 @@ public class BattleDataReader : MonoBehaviour
 
     public Dictionary<AreaType, List<CrawlerSquad>> LoadSquadsFromExcel()
     {
-        Debug.Log("Loading Squads for all Area Types");
+        //Debug.Log("Loading Squads for all Area Types");
         Dictionary<AreaType, List<CrawlerSquad>> areaSquads = new Dictionary<AreaType, List<CrawlerSquad>>();
         string fileName = usingTestData ? "Suit Up Data - Enemy Squads Test" : "Suit Up Data - Enemy Squads";
         List<Dictionary<string, object>> data = CSVReader.Read(fileName);
@@ -67,7 +67,7 @@ public class BattleDataReader : MonoBehaviour
 
         foreach (var kvp in areaSquads)
         {
-            Debug.Log($"Loaded {kvp.Value.Count} squads for Area Type: {kvp.Key}");
+            //Debug.Log($"Loaded {kvp.Value.Count} squads for Area Type: {kvp.Key}");
         }
 
         return areaSquads;

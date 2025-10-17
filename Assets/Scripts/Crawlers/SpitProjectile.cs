@@ -84,7 +84,7 @@ public class SpitProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("Hit " + other.name);
+        //print("Spit Hit " + other.name);
         Explode();
 
     }

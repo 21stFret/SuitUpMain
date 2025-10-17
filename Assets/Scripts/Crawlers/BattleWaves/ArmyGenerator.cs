@@ -25,7 +25,7 @@ public class ArmyGenerator : MonoBehaviour
         {
             areaSquads.Add(kvp.Key, kvp.Value);
         }
-        Debug.Log($"Loaded squads for {areaSquads.Count} area types.");
+        //Debug.Log($"Loaded squads for {areaSquads.Count} area types.");
     }
 
     public List<CrawlerSquad> BuildArmy()
@@ -52,7 +52,7 @@ public class ArmyGenerator : MonoBehaviour
             battleArmy.Add(currentAreaSquads[randomIndex]);
         }
 
-        Debug.Log($"Built an army with {battleArmy.Count} squads for area type: {currentAreaType}");
+        //Debug.Log($"Built an army with {battleArmy.Count} squads for area type: {currentAreaType}");
         return battleArmy;
     }
 

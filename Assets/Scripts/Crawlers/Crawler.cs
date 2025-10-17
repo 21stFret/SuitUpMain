@@ -20,7 +20,8 @@ public enum CrawlerType
     Leaper,
     Hunter,
     Bomber,
-    Spore
+    Spore,
+    Centipede
 }
 
 public class Crawler : MonoBehaviour
@@ -64,7 +65,6 @@ public class Crawler : MonoBehaviour
     public int dropRate;
     public float ScreamChance;
     public bool isStunned;
-    public bool canBeStunned = true;
 
     public TriggerSensor.ObjectStateHandler objectStateHandler;
 
@@ -105,6 +105,8 @@ public class Crawler : MonoBehaviour
     public float eliteChance = 5;
     public bool sporeEmpowered;
     public ParticleSystem sporedEffect;
+    [HideInInspector]
+    public CrawlerBurstSpawner _burstSpawner;
 
     private void TestSpawn()
     {
@@ -211,29 +213,32 @@ public class Crawler : MonoBehaviour
 
     public IEnumerator StunCrawler(float stunTime)
     {
-        if(!canBeStunned)
+        if (isStunned)
         {
             yield break;
         }
-        if(isStunned)
-        {
-            yield break;
-        }
-        isStunned = true;
-        crawlerMovement.enabled = false;
-        animator.speed = 0;
-        yield return new WaitForSeconds(stunTime);
-
         if (dead)
         {
             yield break;
         }
+        if(crawlerMovement == null)
+        {
+            yield break;
+        }
+
+        isStunned = true;
+        crawlerMovement.enabled = false;
+        animator.speed = 0;
+
+        yield return new WaitForSeconds(stunTime);
 
         crawlerMovement.enabled = true;
         animator.speed = 1;
-        // Stun immunity for 1 second
-        yield return new WaitForSeconds(2);
+
+        yield return new WaitForSeconds(1);
+
         isStunned = false;
+
     }
 
     private void SetSpeed()
@@ -406,6 +411,10 @@ public class Crawler : MonoBehaviour
     private IEnumerator DealyedDamageCoroutine(float damage, float delay, WeaponType weapon)
     {
         yield return new WaitForSeconds(delay);
+        if(_targetHealth == null)
+        {
+            Init();
+        }
         _targetHealth.TakeDamage(damage, weapon);
     }
 
@@ -432,9 +441,14 @@ public class Crawler : MonoBehaviour
 
     public virtual void Die(WeaponType weapon)
     {
-        if(crawlerSpawner != null)
+        if (crawlerSpawner != null)
         {
             crawlerSpawner.AddtoRespawnList(this, crawlerType);
+        }
+        if(_burstSpawner != null)
+        {
+            _burstSpawner._activeCrawlers.Remove(this);
+            _burstSpawner = null;
         }
         dead = true;
         _targetHealth.health = 0;

@@ -26,6 +26,7 @@ public class CentapideHead : Crawler
 
     public float damageInterval = 1f; // Time between damage applications
     private float damageTimer = 0f;
+    public float damageRadius = 1.5f;
     public CentapideHead connectedHead;
 
     public CentipideBossManager centipideBossManager;
@@ -88,7 +89,7 @@ public class CentapideHead : Crawler
         // Handle digging effect
         if (diggingEffect != null && !diggingEffect.isPlaying)
         {
-            if (WithinRange(transform.position.y, groundLevel, 0.2f))
+            if (WithinRange(transform.position.y, groundLevel, 0.15f))
             {
                 diggingEffect.transform.parent = null;
                 diggingEffect.transform.position = new Vector3(transform.position.x, groundLevel, transform.position.z);
@@ -134,7 +135,7 @@ public class CentapideHead : Crawler
     {
         foreach (var segment in bodySegments)
         {
-            Collider[] hitColliders = Physics.OverlapSphere(segment.transform.position, 1.5f, playerLayer);
+            Collider[] hitColliders = Physics.OverlapSphere(segment.transform.position, damageRadius, playerLayer);
             foreach (var hitCollider in hitColliders)
             {
                 var targetHealth = hitCollider.GetComponent<TargetHealth>();
@@ -171,9 +172,8 @@ public class CentapideHead : Crawler
                 var crawler = segment.GetComponent<Crawler>();
                 if (crawler != null)
                 {
-
                     crawler.enabled = true;
-                    crawler.Init();
+                    crawlerSpawner.AddCrawlerToList(crawler, CrawlerType.Crawler);
                     crawler.Spawn();
                     crawler.rb.useGravity = true;
                     // Exclude nothing layer
@@ -181,6 +181,7 @@ public class CentapideHead : Crawler
                 }
             }
         }
+        crawlerSpawner.UpdateCrawlerList(CrawlerType.Crawler);
         if (connectedHead != null)
         {
             connectedHead.InitAiTarget();

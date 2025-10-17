@@ -191,6 +191,10 @@ public class CrawlerAlbino : Crawler
         burstSpawner.isActive = false;
         crawlerSpawner.huntedTarget = null;
         PlayerSavedData.instance._stats.totalBosses++;
+        if(PlayerAchievements.instance == null)
+        {
+            return;
+        }
         if (PlayerSavedData.instance._stats.totalBosses == 1)
         {
             PlayerAchievements.instance.SetAchievement("BOSS_1");

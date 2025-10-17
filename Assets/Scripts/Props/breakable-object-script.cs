@@ -89,6 +89,7 @@ public class BreakableObject : MonoBehaviour
             if (rb != null)
             {
                 // Reset velocity
+                rb.isKinematic = false;
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
 

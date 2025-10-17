@@ -24,11 +24,6 @@ public class Pickup : MonoBehaviour
     [InspectorButton("SetupPickupT")]
     public bool canpickup;
 
-    private void Start()
-    {
-        Init(pickupType);
-    }
-
     public void Init(ModBuildType type, bool isUpgrade = false)
 
     {
@@ -40,6 +35,7 @@ public class Pickup : MonoBehaviour
         {
             upgrade = true;
             upgradeModel.SetActive(true);
+            pickupModel.SetActive(false);
             pickupType = GameManager.instance.nextBuildtoLoad;
         }
         pickupModel.SetActive(false);
@@ -56,11 +52,6 @@ public class Pickup : MonoBehaviour
             PickUp();
             RemovePickup();
         }
-    }
-
-    private void SetupPickupT()
-    {
-        StartCoroutine(SetupPickup());
     }
 
     private IEnumerator SetupPickup()

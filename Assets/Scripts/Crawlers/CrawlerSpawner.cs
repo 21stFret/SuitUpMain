@@ -193,6 +193,19 @@ public class CrawlerSpawner : MonoBehaviour
         }
     }
 
+    public void UpdateCrawlerList(CrawlerType type)
+    {
+        List<Crawler> list = GetCrawlerList(type);
+        InitCrawlerList(list, type);
+    }
+
+    public void AddCrawlerToList(Crawler crawler, CrawlerType type)
+    {
+        List<Crawler> list = GetCrawlerList(type);
+        list.Add(crawler);
+        crawler.Init();
+    }
+
     public void BeginSpawningSquads()
     {
         if(!isActive)
@@ -464,7 +477,7 @@ public class CrawlerSpawner : MonoBehaviour
                     SelectSpawnPoint();
                     PlaySpawnEffect();
                     yield return new WaitForSeconds(1f);
-                    print($"Spawning {splitBugs.Count} crawlers at {spawnPoint.name}");
+                    //print($"Spawning {splitBugs.Count} crawlers at {spawnPoint.name}");
                     var spawnCoroutine = StartCoroutine(SpawnRandomizer(splitBugs, spawnPoint));
                     activeSpawnCoroutines.Add(spawnCoroutine);
                     splitBugs.Clear();

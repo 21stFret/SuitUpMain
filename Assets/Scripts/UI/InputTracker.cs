@@ -104,7 +104,7 @@ public class InputTracker : MonoBehaviour
             }
             lastControlScheme = playerInput.currentControlScheme;
             OnInputChange?.Invoke();
-            print("Control Scheme Change, Invoke called");
+            //print("Control Scheme Change, Invoke called");
         }
         if (usingMouse)
         {

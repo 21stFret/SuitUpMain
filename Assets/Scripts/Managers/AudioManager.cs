@@ -97,8 +97,8 @@ public class AudioManager : MonoBehaviour
         musicVolume = PlayerSavedData.instance._BGMV;
         sfxVolume = PlayerSavedData.instance._SFXV;
         // Set initial volumes
-        SetMusicVolume(musicVolume);
-        SetSFXVolume(sfxVolume);
+        SetMusicVolume(musicVolume, true);
+        SetSFXVolume(sfxVolume, true);
     }
 
     // Play a music clip
@@ -199,22 +199,28 @@ public class AudioManager : MonoBehaviour
         soundEffect.Stop();
     }
     // Adjust music volume
-    public void SetMusicVolume(float volume)
+    public void SetMusicVolume(float volume, bool noSave = false)
     {
         musicVolume = volume;
         float adjustedVolume = volume * 0.5f;
         float targetVolume = Mathf.Log10(adjustedVolume) * 20;
         audioMixer.SetFloat("BGMVolume", targetVolume);
         PlayerSavedData.instance.UpdateBGMVolume(musicVolume);
-        PlayerSavedData.instance.SavePlayerData();
+        if (!noSave)
+        {
+            PlayerSavedData.instance.SavePlayerData();
+        }
     }
 
     // Adjust sound effects volume
-    public void SetSFXVolume(float volume)
+    public void SetSFXVolume(float volume, bool noSave = false)
     {
         sfxVolume = volume;
         audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
         PlayerSavedData.instance.UpdateSFXVolume(sfxVolume);
-        PlayerSavedData.instance.SavePlayerData();
+        if (!noSave)
+        {
+            PlayerSavedData.instance.SavePlayerData();
+        }
     }
 }

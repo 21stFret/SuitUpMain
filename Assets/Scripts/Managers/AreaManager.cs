@@ -55,12 +55,6 @@ public class AreaManager : MonoBehaviour
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
-            area = currentRoom.GetComponent<EnvironmentArea>();
-            if (area != null)
-            {
-                area.RefreshArea();
-            }
-
         }
         List<GameObject> roomPrefabs = null;
         switch (areaType)
@@ -90,7 +84,8 @@ public class AreaManager : MonoBehaviour
 
         GameObject roomPrefab;
 
-        if (BattleManager.instance._usingBattleType == BattleType.Hunt)
+        if (BattleManager.instance._usingBattleType == BattleType.Hunt || 
+            BattleManager.instance._usingBattleType == BattleType.MiniBoss)
         {
             roomPrefab = roomPrefabs[roomPrefabs.Count - 1];
         }
@@ -107,7 +102,7 @@ public class AreaManager : MonoBehaviour
             }
 
             area = roomPrefab.GetComponent<EnvironmentArea>();
-            
+
             if (directionalDaylight != null)
             {
                 bool dark = false;
@@ -122,12 +117,19 @@ public class AreaManager : MonoBehaviour
                 }
                 DayNightCycle(dark);
             }
+            
             TreeClusterGeneration levelGen = roomPrefab.GetComponentInChildren<TreeClusterGeneration>();
             if (levelGen != null) levelGen.GenerateTreeClusters();
+
+            if (area != null)
+            {
+                area.RefreshArea();
+            }
         }
 
         roomPrefab.SetActive(true);
         currentRoom = roomPrefab;
+
         LoadDataLog();
     }
 
@@ -136,11 +138,6 @@ public class AreaManager : MonoBehaviour
         if (currentRoom != null)
         {
             currentRoom.SetActive(false);
-            EnvironmentArea area = currentRoom.GetComponent<EnvironmentArea>();
-            if (area != null)
-            {
-                area.RefreshArea();
-            }
         }
         voidArea.SetActive(true);
         currentRoom = voidArea;

@@ -165,7 +165,10 @@ public class PulseShockwave : MonoBehaviour
         }
         if (crawlerCount > 8)
         {
-            PlayerAchievements.instance.SetAchievement("SHOCKWAVE_1");
+            if (PlayerAchievements.instance != null)
+            {
+                PlayerAchievements.instance.SetAchievement("SHOCKWAVE_1");
+            }
         }
     }
 }

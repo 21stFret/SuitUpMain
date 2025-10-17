@@ -180,7 +180,7 @@ public class PowerNode : MonoBehaviour
                     modIcon.gameObject.SetActive(false);
                 }
                 // Handle the case when the lock is still locked
-                Debug.Log("Lock still locked.");
+                //Debug.Log("Lock still locked.");
             }
             if (empowered)
             {

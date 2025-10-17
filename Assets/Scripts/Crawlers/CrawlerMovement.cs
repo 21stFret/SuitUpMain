@@ -32,25 +32,11 @@ public class CrawlerMovement : MonoBehaviour
     public Crawler m_crawler;
     private bool isGrounded;
     public float wanderRadius = 10f;
-    [SerializeField] private float wallCheckDistance = 1.5f;
-    [Header("Stuck Detection")]
-    [SerializeField] private float stuckCheckInterval = 0.5f;
-    [SerializeField] private float stuckThreshold = 0.1f;
-    [SerializeField] private int maxStuckChecks = 3;
-    [SerializeField] private float unstuckForce = 50f;
-    [SerializeField] private float upwardForce = 20f;
-
-    private Vector3 lastPosition;
-    private int stuckCounter;
-    private float lastStuckCheck;
-
     public bool canRotate = true;
-
     private Vector3 currentDirection;
     
     private void Start()
     {
-        lastPosition = transform.position;
         currentDirection = transform.forward;
     }
     private void MoveCrawler()
@@ -148,49 +134,10 @@ public class CrawlerMovement : MonoBehaviour
 
     public void ChargeMovement(float _speed)
     {
-
         if (movementTarget == null) return;
-        
         // Apply force towards predicted position
         rb.AddForce(transform.forward * _speed * Time.deltaTime, ForceMode.Acceleration);
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, _speed);
-    }
-
-    private void CheckIfStuck()
-    {
-        float distanceMoved = Vector3.Distance(lastPosition, transform.position);
-        lastPosition = transform.position;
-        lastStuckCheck = 0;
-
-        if (distanceMoved < stuckThreshold)
-        {
-            stuckCounter++;
-            if (stuckCounter >= maxStuckChecks)
-            {
-                ApplyUnstuckForce();
-                stuckCounter = 0;
-            }
-        }
-        else
-        {
-            stuckCounter = 0;
-        }
-    }
-
-    private void ApplyUnstuckForce()
-    {
-        // Get direction to center of map (assuming 0,0,0 is center)
-        Vector3 directionToCenter = (Vector3.zero - transform.position).normalized;
-        
-        // Add upward component
-        Vector3 unstuckDirection = (directionToCenter + Vector3.up).normalized;
-        
-        // Apply the force
-        rb.velocity = Vector3.zero; // Clear current velocity
-        rb.AddForce(unstuckDirection * unstuckForce + Vector3.up * upwardForce, ForceMode.Impulse);
-        
-
-        Debug.Log($"Unstuck force applied to {gameObject.name}");
     }
 
     private Vector3 RayCastSteering()
@@ -244,34 +191,6 @@ public class CrawlerMovement : MonoBehaviour
         }
 
         return obstacleDetected ? avoidanceDirection.normalized : Vector3.zero;
-    }
-
-    private Vector3 CheckWallSticking()
-    {
-        Vector3 rightCheck = transform.right;
-        Vector3 leftCheck = -transform.right;
-        Vector3 avoidForce = Vector3.zero;
-        
-        // Check right wall
-        if (Physics.Raycast(transform.position, rightCheck, wallCheckDistance, SteeringRaycast))
-        {
-            avoidForce += -rightCheck;
-        }
-        
-        // Check left wall
-        if (Physics.Raycast(transform.position, leftCheck, wallCheckDistance, SteeringRaycast))
-        {
-            avoidForce += -leftCheck;
-        }
-
-        if (avoidForce != Vector3.zero)
-        {
-            // Add a small upward force to help break away from walls
-            avoidForce += transform.forward;
-            Debug.DrawRay(transform.position, avoidForce, Color.magenta);
-        }
-
-        return avoidForce.normalized;
     }
 
     private void Awake()
@@ -335,11 +254,7 @@ public class CrawlerMovement : MonoBehaviour
         {
             return;
         }
-        lastStuckCheck += Time.deltaTime;
-        if (lastStuckCheck >= stuckCheckInterval)
-        {
-            CheckIfStuck();
-        }
+
     }
 
     private void CheckGround()

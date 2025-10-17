@@ -6,7 +6,7 @@ public class KillsoneTirgger : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        print($"{other} entered Killzone trigger");
+        //print($"{other} entered Killzone trigger");
 
         Crawler crawler = other.GetComponent<Crawler>();
         if(crawler)

@@ -121,8 +121,8 @@ public class ResolutionManager : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         
         // Output debug info
-        Debug.Log($"Resolution manager initialized with {filteredResolutions.Count} resolutions");
-        Debug.Log($"Current resolution: {Screen.width}x{Screen.height}, Fullscreen: {Screen.fullScreen}");
+        //Debug.Log($"Resolution manager initialized with {filteredResolutions.Count} resolutions");
+        //Debug.Log($"Current resolution: {Screen.width}x{Screen.height}, Fullscreen: {Screen.fullScreen}");
     }
     
     void InitializeResolutionData()
@@ -161,7 +161,7 @@ public class ResolutionManager : MonoBehaviour
             .Where(res => res.width <= nativeResolution.width && res.height <= nativeResolution.height)
             .ToList();
 
-        Debug.Log($"Initialized with {filteredResolutions.Count} common resolutions including native {nativeResolution.width}x{nativeResolution.height}");
+        //Debug.Log($"Initialized with {filteredResolutions.Count} common resolutions including native {nativeResolution.width}x{nativeResolution.height}");
     }
     
     void SetupResolutionDropdown()
@@ -210,19 +210,19 @@ public class ResolutionManager : MonoBehaviour
         // Add the value changed listener
         resolutionDropdown.onValueChanged.AddListener(OnResolutionChanged);
         
-        Debug.Log($"Dropdown setup complete. Selected index: {currentResolutionIndex}");
+        //Debug.Log($"Dropdown setup complete. Selected index: {currentResolutionIndex}");
     }
     
     void OnResolutionChanged(int index)
     {
         pendingResolutionIndex = index;
-        Debug.Log($"Resolution changed to index: {index}");
+        //Debug.Log($"Resolution changed to index: {index}");
     }
     
     void OnFullscreenToggled(bool isFullscreen)
     {
         pendingFullscreenValue = isFullscreen;
-        Debug.Log($"Fullscreen toggled: {isFullscreen}");
+        //Debug.Log($"Fullscreen toggled: {isFullscreen}");
     }
     
     public void ShowConfirmationPopup()

@@ -52,12 +52,18 @@ public class BattleManager : MonoBehaviour
 
         _objectiveComplete = false;
 
-        if (_gameManager.currentAreaType == AreaType.Jungle && 
+        if (_gameManager.currentAreaType == AreaType.Jungle &&
             currentBattleIndex == Battles.Count - 1)
         {
             _usingBattleType = BattleType.Hunt;
         }
 
+        if (_gameManager.currentAreaType == AreaType.Desert &&
+        currentBattleIndex == Battles.Count - 1)
+        {
+            _usingBattleType = BattleType.MiniBoss;
+        }
+        
         Color color = Color.white;
         float fillAmount = 0;
         bool showBar = false;
@@ -66,6 +72,7 @@ public class BattleManager : MonoBehaviour
         string showDestroy = "";
         var type = _usingBattleType;
         GenerateNewBattle();
+        bool skip = false;
         switch (type)
         {
             case BattleType.Hunt:
@@ -100,32 +107,41 @@ public class BattleManager : MonoBehaviour
                 //color = Color.white;
                 fillAmount = 0;
                 break;
+            case BattleType.MiniBoss:
+                objectiveMessage = "Defeat the Centipedes!";
+                AudioManager.instance.PlayBossMusic(2);
+                CentipideBossManager.instance.StartBossFight();
+                color = Color.red;
+                fillAmount = 1;
+                AudioManager.instance.PlayBossMusic(1);
+                _gameManager.areaManager.DayNightCycle(true);
+                _gameManager.gameUI.objectiveUI.Init(true, false, false, "Centipede Boss");
+                GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
+                _gameManager.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
+                skip = true;
+                break;
         }
+        if (skip) return;
         _gameManager.gameUI.objectiveUI.Init(showBar, showpercent, showSurvive, showDestroy);
         GameManager.instance.gameUI.objectiveUI.objectiveBar.color = color;
         _gameManager.gameUI.objectiveUI.objectiveBar.fillAmount = fillAmount;
     }
-
-    private Crawler GetHuntedTarget()
-    {
-        return crawlerSpawner.huntedTarget;
-    }
-
+    
     private IEnumerator HuntBattle()
     {
         _gameManager.areaManager.DayNightCycle(true);
         lightningController.active = true;
         yield return new WaitForSeconds(0.5f);
-        _gameManager.gameUI.objectiveUI.Init(true, false, false, GetHuntedTarget().name);
-        while (crawlerSpawner.huntedTarget != null && GetHuntedTarget()._targetHealth.health > 0)
+        _gameManager.gameUI.objectiveUI.Init(true, false, false, "Mutant Crawler");
+        var hunted = crawlerSpawner.huntedTarget;
+        while (hunted != null && hunted._targetHealth.health > 0)
         {
-            _gameManager.gameUI.objectiveUI.UpdateBar(GetHuntedTarget()._targetHealth.health / GetHuntedTarget()._targetHealth.maxHealth);
+            _gameManager.gameUI.objectiveUI.UpdateBar(hunted._targetHealth.health / hunted._targetHealth.maxHealth);
             yield return null;
         }
         ObjectiveComplete();
         lightningController.active = false;
         _gameManager.areaManager.DayNightCycle(false);
-        GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
     private IEnumerator SurviveBattle()
@@ -199,7 +215,7 @@ public class BattleManager : MonoBehaviour
         _objectiveComplete = true;
         StartCoroutine(_gameManager.gameUI.objectiveUI.ObjectiveComplete());
         crawlerSpawner.EndBattle();
-        if(capturePoint != null && !capturePoint.isCaptured)
+        if (capturePoint != null && !capturePoint.isCaptured)
         {
             capturePoint.ProcessCapture();
         }
@@ -226,7 +242,7 @@ public class BattleManager : MonoBehaviour
         {
             roomDrop.Init(_gameManager.nextBuildtoLoad);
         }
-        
+
         healthPickup.Init();
         if (chipreward) // If the index is odd, we show the room drop
         {
@@ -238,11 +254,8 @@ public class BattleManager : MonoBehaviour
             roomDrop.gameObject.SetActive(false);
             healthPickup.ResetPickup();
         }
-    }
 
-    public void ObjectiveFailed()
-    {
-        crawlerSpawner.EndBattle();
+        GameUI.instance.objectiveUI.HideObjectivePanel();
     }
 
     private void SetPickUpPosition()
