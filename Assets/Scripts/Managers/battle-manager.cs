@@ -59,7 +59,7 @@ public class BattleManager : MonoBehaviour
         }
 
         if (_gameManager.currentAreaType == AreaType.Desert &&
-        currentBattleIndex == Battles.Count - 1)
+        currentBattleIndex == Battles.Count - 1 && dificultyMultiplier > 1)
         {
             _usingBattleType = BattleType.MiniBoss;
         }

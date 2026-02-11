@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private bool wonGame;
     private BattleManager battleManager;
-    private bool triggeredAreaIntro;
+    public bool triggeredAreaIntro;
     public AreaIntro areaIntro;
 
     private void Awake()

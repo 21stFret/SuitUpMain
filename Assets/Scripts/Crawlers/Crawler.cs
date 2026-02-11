@@ -101,6 +101,16 @@ public class Crawler : MonoBehaviour
     public float eliteHealthMultiplier = 2f;
     public float eliteSpeedMultiplier = 1.5f;
     public float eliteSteerMultiplier = 1.25f;
+    private float eliteDamage;
+    private float eliteHealth;
+    private float eliteSpeed;
+    private float eliteSteer;
+    private float baseDamage;
+    private float baseHealth;
+    private float baseSpeed;
+    private float baseSteer;
+    private int hasSetEliteStats;
+
     protected Material originalMaterial;
     public float eliteChance = 5;
     public bool sporeEmpowered;
@@ -123,7 +133,7 @@ public class Crawler : MonoBehaviour
         {
             if (BattleManager.instance.dificultyMultiplier > 1)
             {
-                _targetHealth.maxHealth *= 1 + 0.5f * (BattleManager.instance.dificultyMultiplier - 1);
+                _targetHealth.maxHealth *= 1 + 0.2f * (BattleManager.instance.dificultyMultiplier - 1);
             }
 
         }
@@ -146,7 +156,7 @@ public class Crawler : MonoBehaviour
             crawlerMovement.enabled = false;
         }
         SetSpeed();
-
+        SetEliteStats();
     }
 
     public virtual void MakeElite(bool _becomeElite)
@@ -156,13 +166,14 @@ public class Crawler : MonoBehaviour
             if (!_becomeElite)
             {
                 meshRenderer.material = originalMaterial;
-                attackDamage /= eliteDamageMultiplier;
-                _targetHealth.maxHealth /= eliteHealthMultiplier;
-                _targetHealth.health = _targetHealth.maxHealth;
+                // Revert stats
+                attackDamage = baseDamage;
+                _targetHealth.maxHealth = baseHealth;
+                _targetHealth.health = baseHealth;
                 if (crawlerMovement != null)
                 {
-                    crawlerMovement.speedFinal /= eliteSpeedMultiplier;
-                    crawlerMovement.steerSpeed /= eliteSteerMultiplier;
+                    crawlerMovement.speedFinal = baseSpeed;
+                    crawlerMovement.steerSpeed = baseSteer;
                 }
                 crawlerScale /= 1.2f;
                 isElite = false;
@@ -176,17 +187,15 @@ public class Crawler : MonoBehaviour
             {
                 meshRenderer.material = eliteMaterial;
             }
-            
-            // Modify stats
-            attackDamage *= eliteDamageMultiplier;
-            _targetHealth.maxHealth *= eliteHealthMultiplier;
-            _targetHealth.health = _targetHealth.maxHealth;
-            
-            // Modify movement
+
+            // Apply stats
+            attackDamage = eliteDamage;
+            _targetHealth.maxHealth = eliteHealth;
+            _targetHealth.health = eliteHealth;
             if (crawlerMovement != null)
             {
-                crawlerMovement.speedFinal *= eliteSpeedMultiplier;
-                crawlerMovement.steerSpeed *= eliteSteerMultiplier;
+                crawlerMovement.speedFinal = eliteSpeed;
+                crawlerMovement.steerSpeed = eliteSteer;
             }
             
             crawlerScale *= 1.2f; // Make them slightly bigger
@@ -247,6 +256,20 @@ public class Crawler : MonoBehaviour
         float min = speed - scaleFActor;
         float max = speed + scaleFActor;
         _finalSpeed = Random.Range(min, max);
+    }
+
+    private void SetEliteStats()
+    {
+        if (hasSetEliteStats == 0) return;
+        baseDamage = attackDamage;
+        baseHealth = _targetHealth.maxHealth;
+        baseSpeed = crawlerMovement.speedFinal;
+        baseSteer = crawlerMovement.steerSpeed;
+        eliteDamage = attackDamage * eliteDamageMultiplier;
+        eliteHealth = _targetHealth.maxHealth * eliteHealthMultiplier;
+        eliteSpeed = crawlerMovement.speedFinal * eliteSpeedMultiplier;
+        eliteSteer = crawlerMovement.steerSpeed * eliteSteerMultiplier;
+        hasSetEliteStats = 1;
     }
 
     private void Update()
@@ -684,17 +707,16 @@ public class Crawler : MonoBehaviour
         }
         sporeEmpowered = true;
         StartCoroutine(SporeEmpowerRoutine());
-        StartCoroutine(SpawnImmunity(sporedTime));
     }
 
     private IEnumerator SporeEmpowerRoutine()
     {
         sporedEffect.Play();
-        crawlerMovement.speedFinal *= 1.2f;
-        attackDamage *= 1.3f;
+        crawlerMovement.speedFinal *= 1.1f;
+        attackDamage *= 1.1f;
         yield return new WaitForSeconds(sporedTime);
-        crawlerMovement.speedFinal /= 1.2f;
-        attackDamage /= 1.3f;
+        crawlerMovement.speedFinal /= 1.1f;
+        attackDamage /= 1.1f;
         sporedEffect.Stop();
         sporeEmpowered = false;
     }

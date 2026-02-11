@@ -57,26 +57,27 @@ public class centipideAI : MonoBehaviour
         zigzagFrequency = Random.Range(5f, 10f);
         predictionTime = Random.Range(5f, 10f);
         directionChangeInterval = Random.Range(1f, 4f);
-        buryChance = Random.Range(0.4f, 1f);
-        buryCheckInterval = Random.Range(4f, 6f);
+        buryChance = Random.Range(0.4f, 0.7f);
+        buryCheckInterval = Random.Range(8f, 12f);
     }
 
     private void BuryCheck()
     {
         buryCheckTimer += Time.deltaTime;
-        if (buryCheckTimer >= buryCheckInterval)
+        if (isBuried)
         {
-            buryCheckTimer = 0f;
-            if(isBuried)
+            if (buryCheckTimer >= 5f)
             {
+                buryCheckTimer = 0f;
                 EmergeFromGround();
             }
-            else
+        }
+        else if (buryCheckTimer >= buryCheckInterval)
+        {
+            buryCheckTimer = 0f;
+            if (Random.value < buryChance)
             {
-                if (Random.value < buryChance)
-                {
-                    BuryInGround();
-                }
+                BuryInGround();
             }
         }
     }

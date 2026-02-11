@@ -78,14 +78,6 @@ public class Prop : MonoBehaviour
     public virtual void RefreshProp()
     {
         Init();
-        if (_collider != null)
-        {
-            _collider.enabled = true;
-        }
-        if (_targetHealth != null)
-        {
-            _targetHealth.Init();
-        }
         gameObject.SetActive(true);
     }
 

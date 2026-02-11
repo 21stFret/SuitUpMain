@@ -6,6 +6,7 @@ public class CentipideBossManager : MonoBehaviour
 {
     public static CentipideBossManager instance;
     public List<CentapideHead> firstPhaseHeads, secondPhaseHeads, thirdPhaseHeads, bossHeads;
+    private List<CentapideHead> allHeads = new List<CentapideHead>();
     public GameObject bossHead;
     public GameObject firstPhaseParents;
     public List<GameObject> secondPhaseParents;
@@ -43,8 +44,20 @@ public class CentipideBossManager : MonoBehaviour
         centipideRoarSound.Play();
         firstPhaseParents.SetActive(true);
         finalHeadsIndex = 0;
-        totalHeads = firstPhaseHeads.Count + secondPhaseHeads.Count + thirdPhaseHeads.Count + bossHeads.Count;
+        allHeads.Clear();
+        allHeads.AddRange(firstPhaseHeads);
+        allHeads.AddRange(secondPhaseHeads);
+        allHeads.AddRange(thirdPhaseHeads);
+        allHeads.AddRange(bossHeads);
+        totalHeads = allHeads.Count;
         deadHeads = 0;
+        fallingTimer = fallingDuration;
+        foreach (var head in allHeads)
+        {
+            head._targetHealth = head.GetComponent<TargetHealth>();
+            head._targetHealth.maxHealth *= BattleManager.instance.dificultyMultiplier;
+        }
+
     }
 
     void Update()
@@ -52,12 +65,12 @@ public class CentipideBossManager : MonoBehaviour
         if (rockfallingPhase)
         {
             fallingTimer -= Time.deltaTime;
-            if (fallingTimer <= 0f && fallingRocksController != null)
+            if (fallingTimer <= 0f)
             {
                 fallingTimer = fallingDuration;
                 fallingRocksController.StopFalling();
                 rockfallingPhase = false;
-                if(phaseThreeStarted)
+                if (phaseThreeStarted)
                 {
                     StartFinalPhase();
                     return;
